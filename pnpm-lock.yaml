@@ -3,6 +3,8 @@ lockfileVersion: 5.4
 specifiers:
   '@commitlint/cli': ^17.0.3
   '@commitlint/config-conventional': ^17.0.3
+  '@tweenjs/tween.js': ^18.6.4
+  '@types/three': ^0.143.0
   '@typescript-eslint/eslint-plugin': ^5.33.0
   '@typescript-eslint/parser': ^5.33.0
   '@vitejs/plugin-vue': ^3.0.0
@@ -16,21 +18,26 @@ specifiers:
   eslint-plugin-prettier: ^4.2.1
   eslint-plugin-promise: ^6.0.0
   eslint-plugin-vue: ^9.3.0
+  glsl-noise: ^0.0.0
   husky: ^8.0.1
+  lil-gui: ^0.17.0
   lint-staged: ^13.0.3
   postcss: ^8.4.16
   prettier: ^2.7.1
   rollup: ^2.77.2
   sass: ^1.54.3
+  stats.js: ^0.17.0
   stylelint: ^14.9.1
   stylelint-config-prettier: ^9.0.3
   stylelint-config-recess-order: ^3.0.0
   stylelint-config-standard: ^26.0.0
   stylelint-config-standard-scss: ^5.0.0
   stylelint-prettier: ^2.0.0
+  three: ^0.143.0
   typescript: ^4.6.4
   vite: ^3.0.0
   vite-plugin-eslint: ^1.7.0
+  vite-plugin-glsl: ^0.3.0
   vue: ^3.2.37
   vue-tsc: ^0.38.4
 
@@ -40,6 +47,8 @@ dependencies:
 devDependencies:
   '@commitlint/cli': 17.0.3
   '@commitlint/config-conventional': 17.0.3
+  '@tweenjs/tween.js': 18.6.4
+  '@types/three': 0.143.0
   '@typescript-eslint/eslint-plugin': 5.33.0_njno5y7ry2l2lcmiu4tywxkwnq
   '@typescript-eslint/parser': 5.33.0_qugx7qdu5zevzvxaiqyxfiwquq
   '@vitejs/plugin-vue': 3.0.1_vite@3.0.4+vue@3.2.37
@@ -53,21 +62,26 @@ devDependencies:
   eslint-plugin-prettier: 4.2.1_h62lvancfh4b7r6zn2dgodrh5e
   eslint-plugin-promise: 6.0.0_eslint@8.21.0
   eslint-plugin-vue: 9.3.0_eslint@8.21.0
+  glsl-noise: 0.0.0
   husky: 8.0.1
+  lil-gui: 0.17.0
   lint-staged: 13.0.3
   postcss: 8.4.16
   prettier: 2.7.1
   rollup: 2.77.2
   sass: 1.54.3
+  stats.js: 0.17.0
   stylelint: 14.9.1
   stylelint-config-prettier: 9.0.3_stylelint@14.9.1
   stylelint-config-recess-order: 3.0.0_stylelint@14.9.1
   stylelint-config-standard: 26.0.0_stylelint@14.9.1
   stylelint-config-standard-scss: 5.0.0_cujuozyz774mlknuvi23rtftku
   stylelint-prettier: 2.0.0_ajb4dyjcjxvkvtnz4mzu4n3pcq
+  three: 0.143.0
   typescript: 4.7.4
   vite: 3.0.4_sass@1.54.3
   vite-plugin-eslint: 1.7.0_eslint@8.21.0+vite@3.0.4
+  vite-plugin-glsl: 0.3.0
   vue-tsc: 0.38.9_typescript@4.7.4
 
 packages:
@@ -395,6 +409,10 @@ packages:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: true
 
+  /@tweenjs/tween.js/18.6.4:
+    resolution: {integrity: sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ==}
+    dev: true
+
   /@types/eslint/8.4.5:
     resolution: {integrity: sha512-dhsC09y1gpJWnK+Ff4SGvCuSnk9DaU0BJZSzOwa6GVSg65XtTugLBITDAAzRU5duGBoXBHpdR/9jHGxJjNflJQ==}
     dependencies:
@@ -428,6 +446,16 @@ packages:
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
+    dev: true
+
+  /@types/three/0.143.0:
+    resolution: {integrity: sha512-c5PonXOt8xk5q4ygmyjOX4Ec+FA7gwfdcMT/PveE9xrJs/0DDcf2lJkWrhEcmvx2ZefQCQBcogABnGqB0P4OsA==}
+    dependencies:
+      '@types/webxr': 0.5.0
+    dev: true
+
+  /@types/webxr/0.5.0:
+    resolution: {integrity: sha512-IUMDPSXnYIbEO2IereEFcgcqfDREOgmbGqtrMpVPpACTU6pltYLwHgVkrnYv0XhWEcjio9sYEfIEzgn3c7nDqA==}
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.33.0_njno5y7ry2l2lcmiu4tywxkwnq:
@@ -2095,6 +2123,10 @@ packages:
     resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
     dev: true
 
+  /glsl-noise/0.0.0:
+    resolution: {integrity: sha512-b/ZCF6amfAUb7dJM/MxRs7AetQEahYzJ8PtgfrmEdtw6uyGOr+ZSGtgjFm6mfsBkxJ4d2W7kg+Nlqzqvn3Bc0w==}
+    dev: true
+
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: true
@@ -2454,6 +2486,10 @@ packages:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+    dev: true
+
+  /lil-gui/0.17.0:
+    resolution: {integrity: sha512-MVBHmgY+uEbmJNApAaPbtvNh1RCAeMnKym82SBjtp5rODTYKWtM+MXHCifLe2H2Ti1HuBGBtK/5SyG4ShQ3pUQ==}
     dev: true
 
   /lilconfig/2.0.5:
@@ -3270,6 +3306,10 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
+  /stats.js/0.17.0:
+    resolution: {integrity: sha512-hNKz8phvYLPEcRkeG1rsGmV5ChMjKDAWU7/OJJdDErPBNChQXxCo3WZurGpnWc6gZhAzEPFad1aVgyOANH1sMw==}
+    dev: true
+
   /string-argv/0.3.1:
     resolution: {integrity: sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==}
     engines: {node: '>=0.6.19'}
@@ -3556,6 +3596,10 @@ packages:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
 
+  /three/0.143.0:
+    resolution: {integrity: sha512-oKcAGYHhJ46TGEuHjodo2n6TY2R6lbvrkp+feKZxqsUL/WkH7GKKaeu6RHeyb2Xjfk2dPLRKLsOP0KM2VgT8Zg==}
+    dev: true
+
   /through/2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
     dev: true
@@ -3739,6 +3783,13 @@ packages:
       eslint: 8.21.0
       rollup: 2.77.2
       vite: 3.0.4_sass@1.54.3
+    dev: true
+
+  /vite-plugin-glsl/0.3.0:
+    resolution: {integrity: sha512-cH7ni+Y3Vz1yOumvrP/71hXVdyTxZIaYYNDeK7KMvO5nzo0uGZZrrkwEVUaESS8/5dYemb/6G0YBj3jsP2sW1A==}
+    engines: {node: '>= 14.18.0', npm: '>= 6.14.17'}
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
     dev: true
 
   /vite/3.0.4_sass@1.54.3:
