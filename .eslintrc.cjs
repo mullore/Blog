@@ -1,15 +1,20 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
-    // node: true
+    es2021: true,
+    node: true,
+    'vue/setup-compiler-macros': true // 使用setup语法糖
   },
   extends: [
-    'plugin:vue/vue3-essential',
-    'standard',
+    // 第1种情况
+    'eslint:recommended',
     // 1. 接入 prettier 的规则
     'prettier',
-    'plugin:prettier/recommended'
+    'standard',
+    'plugin:prettier/recommended',
+    'plugin:vue/vue3-essential',
+    'plugin:vue/vue3-recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -22,6 +27,21 @@ module.exports = {
     'prettier/prettier': 'error',
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
-    'react/react-in-jsx-scope': 'off'
+    // 这句不能少不然报错
+    'vue/comment-directive': 0,
+    // key 为规则名，value 配置内容
+    'no-cond-assign': ['error', 'always'],
+    '@typescript-eslint/ban-ts-comment': 'error',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    // 忽略默认的禁令类型
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          '{}': false
+        }
+      }
+    ]
   }
 };

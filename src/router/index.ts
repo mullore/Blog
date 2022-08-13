@@ -2,12 +2,12 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/Index'
-  }
+    redirect: '/Index',
+  },
 ];
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 // 导航守卫
 router.beforeEach((to, from, next) => {
