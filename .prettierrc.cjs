@@ -1,10 +1,11 @@
 // .prettierrc.js
 module.exports = {
+
   // 行尾是否使用分号，默认为true
   semi: true,
   // trailingComma: "none", // 是否使用尾逗号
   // EndOfLineState: "auto",
-  EndOfLine: "auto",
+  endOfLine: "auto",
   //一行的字符数，如果超过会进行换行，默认为100
   printWidth: 100,
   // 一个 tab 代表几个空格数，默认为 2 个
@@ -16,7 +17,7 @@ module.exports = {
   // 对象的 key 仅在必要时用引号
   quoteProps: 'as-needed',
   // jsx 不使用单引号，而使用双引号
-  jsxSingleQuote: false,
+  jsxSingleQuote: true,
   // 尾随逗号
   trailingComma: 'all',
   // 对象大括号直接是否有空格，默认为 true，效果：{ a: 1 }
@@ -37,6 +38,6 @@ module.exports = {
   // 根据显示样式决定 html 要不要折行
   htmlWhitespaceSensitivity: 'css',
   // 换行符使用 lf
-  endOfLine: 'lf',
+  endOfLine: 'lf'
 
 };
