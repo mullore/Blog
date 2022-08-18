@@ -4,7 +4,8 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import rough from 'roughjs';
+// import rough from 'roughjs';
+import rough from 'roughjs'
 
 onMounted(() => {
   const rc = rough.canvas(document.getElementById('demo') as any);

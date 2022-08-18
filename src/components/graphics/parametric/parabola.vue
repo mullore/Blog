@@ -41,8 +41,8 @@ function parabola(x0: number, y0: number, p: number, min: number, max: number) {
 }
 
 onMounted(() => {
-  const canvas = <HTMLCanvasElement>document.getElementById('demo');
-  const ctx = <CanvasRenderingContext2D>canvas.getContext('2d');
+  const canvas = document.getElementById('demo') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   ctx.translate(canvas.width / 2, canvas.height / 2);
   ctx.scale(1, -1);
   draw(ctx, parabola(0, 0, 5.5, -10, 10))

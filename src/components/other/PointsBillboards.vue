@@ -1,8 +1,6 @@
-<template>
-</template>
+<template></template>
 
 <script lang="ts">
-
 import {
 	creatGeometry,
 	createCamera,
@@ -12,7 +10,7 @@ import {
 	createBloom,
 	createRender,
 	animate,
-} from "@/types/hooks/PointBillborads.ts";
+} from '@/types/hooks/PointBillborads';
 export default {
 	setup() {
 		//
@@ -21,7 +19,7 @@ export default {
 		//
 		creatGeometry();
 		createCamera();
-		createBloom()
+		createBloom();
 		createRender();
 		createOrbitControls();
 		animate();

@@ -56,8 +56,8 @@ const quadricBezier = parametric(
 );
 
 onMounted(() => {
-  const canvas = <HTMLCanvasElement>document.getElementById('demo')
-  const ctx = <CanvasRenderingContext2D>canvas.getContext('2d')
+  const canvas = document.getElementById('demo') as HTMLCanvasElement
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
   ctx.translate(canvas.width / 2, canvas.height / 2)
   ctx.scale(1, -1)
 
@@ -71,6 +71,7 @@ onMounted(() => {
     p1.rotate(2 * Math.PI / count)
     p2.rotate(2 * Math.PI / count)
 
+    // @ts-ignore
     quadricBezier(0, 1, 100, [p0, p1, p2]).draw(ctx)
 
   }

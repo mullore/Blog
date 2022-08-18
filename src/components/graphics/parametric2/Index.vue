@@ -76,9 +76,9 @@ const star = parametric(
 )
 onMounted(() => {
   //获取画布
-  const canvas = <HTMLCanvasElement>document.getElementById('demo')
+  const canvas = document.getElementById('demo') as HTMLCanvasElement
   //设置画布绘制环境
-  const ctx = <CanvasRenderingContext2D>canvas.getContext('2d')
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
   //设置坐标系原点坐标
   ctx.translate(canvas.width / 2, canvas.height / 2)
   //Y轴翻转

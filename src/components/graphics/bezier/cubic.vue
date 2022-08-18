@@ -48,7 +48,9 @@ interface croodY {
   y: number;
 }
 
+
 const cubicBezier = parametric(
+  // @ts-ignore
   (t: number, [{ x: x0 }, { x: x1 }, { x: x2 }, { x: x3 }]: Array<croodX>) =>
     (1 - t) ** 3 * x0 + 3 * t * (1 - t) ** 2 * x1 + 3 * (1 - t) * t ** 2 * x2 + t ** 3 * x3,
   (t: number, [{ y: y0 }, { y: y1 }, { y: y2 }, { y: y3 }]: Array<croodY>) =>
@@ -73,6 +75,7 @@ onMounted(() => {
     p1.rotate((Math.PI * 2) / count);
     p2.rotate((Math.PI * 2) / count);
     p3.rotate((Math.PI * 2) / count);
+    //  @ts-ignore
     cubicBezier(0, 1, 100, [p0, p1, p2, p3]).draw(ctx);
   }
 });

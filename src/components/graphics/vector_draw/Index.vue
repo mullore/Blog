@@ -72,9 +72,9 @@ function draw(context: CanvasRenderingContext2D, points: Array<Object>, strokeSt
 
 onMounted(() => {
   //获取画布元素
-  const canvas = <HTMLCanvasElement>document.getElementById('demo');
+  const canvas = document.getElementById('demo') as HTMLCanvasElement;
   //定义画布绘制环境
-  const ctx = <CanvasRenderingContext2D>canvas.getContext('2d');
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   //定义坐标系原点坐标
   ctx.translate(canvas.width / 2, canvas.height / 2)
   //y轴翻转

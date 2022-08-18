@@ -33,10 +33,10 @@ function drawBranch(context: CanvasRenderingContext2D, v0: any, length: any, thi
   context.stroke();
 
   if (thickness > 2) {
-    
+
     // context 是我们的 Canvas2D 上下文
     // v0是起始向量
-    // length 是当前树枝的长度 
+    // length 是当前树枝的长度
     // thickness 是当前树枝的粗细
     // dir 是当前树枝的方向，用与 x 轴的夹角表示，单位是弧度。
     // bias 是一个随机偏向因子，用来让树枝的朝向有一定的随机性
@@ -77,9 +77,9 @@ function drawBranch(context: CanvasRenderingContext2D, v0: any, length: any, thi
 
 onMounted(() => {
   //获取画布
-  const canvas = <HTMLCanvasElement>document.querySelector('canvas');
+  const canvas = document.querySelector('canvas') as HTMLCanvasElement;
   //定义绘画环境
-  const ctx = <CanvasRenderingContext2D>canvas.getContext('2d');
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   //坐标变换将坐标原点从左上角移动到左下角，并且让 y 轴翻转为向上
   ctx.translate(0, canvas.height)
   ctx.scale(1, -1);
@@ -89,7 +89,7 @@ onMounted(() => {
   const v0 = new Vector2D(256, 0);
   // context 是我们的 Canvas2D 上下文
   // v0是起始向量
-  // length 是当前树枝的长度 
+  // length 是当前树枝的长度
   // thickness 是当前树枝的粗细
   // dir 是当前树枝的方向，用与 x 轴的夹角表示，单位是弧度。
   // bias 是一个随机偏向因子，用来让树枝的朝向有一定的随机性

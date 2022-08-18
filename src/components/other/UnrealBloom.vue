@@ -9,7 +9,7 @@ import {
   createRenderPass,
   createLight,
   reSize,
-} from '../../types/hooks/UnrealBloom';
+} from '@/types/hooks/UnrealBloom';
 export default {
   setup() {
     createCamera();
