@@ -30,18 +30,8 @@ export default class {
 
     for (let y = 0; y < this.#AMOUNT; y++) {
       for (let x = 0; x < this.#AMOUNT; x++) {
-        const subcamera: THREE.PerspectiveCamera | any = new THREE.PerspectiveCamera(
-          40,
-          this.#ASPECT_RATIO,
-          0.1,
-          10,
-        );
-        subcamera.viewport = new THREE.Vector4(
-          Math.floor(x * WIDTH),
-          Math.floor(y * HEIGHT),
-          Math.ceil(WIDTH),
-          Math.ceil(HEIGHT),
-        );
+        const subcamera: THREE.PerspectiveCamera | any = new THREE.PerspectiveCamera(40, this.#ASPECT_RATIO, 0.1, 10);
+        subcamera.viewport = new THREE.Vector4(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
         subcamera.position.x = x / this.#AMOUNT - 0.5;
         subcamera.position.y = 0.5 - y / this.#AMOUNT;
         subcamera.position.z = 1.5;
@@ -111,12 +101,7 @@ export default class {
       for (let y = 0; y < this.#AMOUNT; y++) {
         for (let x = 0; x < this.#AMOUNT; x++) {
           const subcamera: any = this.#camera.cameras[this.#AMOUNT * y + x];
-          subcamera.viewport.set(
-            Math.floor(x * WIDTH),
-            Math.floor(y * HEIGHT),
-            Math.ceil(WIDTH),
-            Math.ceil(HEIGHT),
-          );
+          subcamera.viewport.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
           subcamera.aspect = this.#ASPECT_RATIO;
           subcamera.updateProjectionMatrix();
         }

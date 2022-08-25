@@ -4,10 +4,11 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-// import rough from 'roughjs';
-import rough from 'roughjs'
+
+// import rough from 'roughjs'
 
 onMounted(() => {
+  const rough = require('roughjs/bundled/rough.cjs')
   const rc = rough.canvas(document.getElementById('demo') as any);
   const ctx = rc.ctx;
   // 等于

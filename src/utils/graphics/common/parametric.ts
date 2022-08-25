@@ -1,8 +1,4 @@
-function draw(
-  points: Array<Object>,
-  context: CanvasRenderingContext2D,
-  { strokeStyle = 'black', fillStyle = null, close = false } = {},
-) {
+function draw(points: Array<Object>, context: CanvasRenderingContext2D, { strokeStyle = 'black', fillStyle = null, close = false } = {}) {
   context.strokeStyle = strokeStyle;
   context.beginPath();
   context.moveTo(...(points[0] as [number, number]));

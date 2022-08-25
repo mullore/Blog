@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import glsl from 'vite-plugin-glsl';
-// vite.config.ts
 import viteEslint from 'vite-plugin-eslint';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import path from 'path';

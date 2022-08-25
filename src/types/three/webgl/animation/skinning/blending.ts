@@ -41,10 +41,7 @@ export default class bleadings {
   }
 
   public createMesh() {
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(100, 100),
-      new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }),
-    );
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
 
     mesh.rotation.x = -Math.PI / 2;
     mesh.receiveShadow = true;
@@ -195,12 +192,8 @@ export default class bleadings {
       'modify run weight': 0.0,
       'modify time scale': 1.0,
     };
-    folder1
-      .add(this.#settings, 'show model')
-      .onChange((visibility: any) => (this.#model = visibility));
-    folder1
-      .add(this.#settings, 'show skeleton')
-      .onChange((visibility: any) => (this.#skeleton.visible = visibility));
+    folder1.add(this.#settings, 'show model').onChange((visibility: any) => (this.#model = visibility));
+    folder1.add(this.#settings, 'show skeleton').onChange((visibility: any) => (this.#skeleton.visible = visibility));
     folder2.add(this.#settings, 'deactivate all');
     folder2.add(this.#settings, 'activate all');
     folder3.add(this.#settings, 'pause/continue');
@@ -235,9 +228,7 @@ export default class bleadings {
       .onChange((weight: any) => {
         this.setWeight(this.#runAction, weight);
       });
-    folder6
-      .add(this.#settings, 'modify time scale', 0.0, 1.5, 0.01)
-      .onChange((speed: any) => (this.#mixer.timeScale = speed));
+    folder6.add(this.#settings, 'modify time scale', 0.0, 1.5, 0.01).onChange((speed: any) => (this.#mixer.timeScale = speed));
 
     // folder1.open();
     // folder2.open();

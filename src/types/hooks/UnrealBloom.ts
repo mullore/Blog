@@ -76,12 +76,7 @@ export function createRenderPass() {
   // kernelSize 控制泛光的偏移量
   // sigma 控制泛光的锐利程度，值越高，泛光越模糊
   // Resolution 定义泛光的解析图，如果该值太低，结果的方块化就会越严重
-  const bloomPass = new UnrealBloomPass(
-    new three.Vector2(window.innerWidth, window.innerHeight),
-    1.5,
-    0.4,
-    0.85,
-  );
+  const bloomPass = new UnrealBloomPass(new three.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
 
   // 图像的二值化，就是将图像上的像素点的灰度值设置为0或255，也就是将整个图像呈现出明显的只有黑和白的视觉效果。
   bloomPass.threshold = params.bloomThreshold;

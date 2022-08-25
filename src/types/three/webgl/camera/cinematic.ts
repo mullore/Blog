@@ -69,10 +69,7 @@ export default class {
   public createGeometry() {
     const gemomerty = new Three.BoxGeometry(20, 20, 20);
     for (let i = 0; i < 1000; i++) {
-      const object = new Three.Mesh(
-        gemomerty,
-        new Three.MeshLambertMaterial({ color: Math.random() * 0xffffff }),
-      );
+      const object = new Three.Mesh(gemomerty, new Three.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
       object.position.x = Math.random() * 800 - 400;
       object.position.y = Math.random() * 800 - 400;
       object.position.z = Math.random() * 800 - 400;
@@ -117,23 +114,11 @@ export default class {
 
   public createGui() {
     const gui = new GUI();
-    gui
-      .add(this.#effectController, 'focalLength', 1, 135, 0.01)
-      .onChange(this.matChanger.bind(this))
-      .name('焦距');
-    gui
-      .add(this.#effectController, 'fstop', 1.8, 22, 0.01)
-      .onChange(this.matChanger.bind(this))
-      .name('光圈范围');
-    gui
-      .add(this.#effectController, 'focalDepth', 0.1, 100, 0.001)
-      .onChange(this.matChanger.bind(this))
-      .name('焦点深度');
+    gui.add(this.#effectController, 'focalLength', 1, 135, 0.01).onChange(this.matChanger.bind(this)).name('焦距');
+    gui.add(this.#effectController, 'fstop', 1.8, 22, 0.01).onChange(this.matChanger.bind(this)).name('光圈范围');
+    gui.add(this.#effectController, 'focalDepth', 0.1, 100, 0.001).onChange(this.matChanger.bind(this)).name('焦点深度');
     // 貌似选中全部的意思
-    gui
-      .add(this.#effectController, 'showFocus', true)
-      .onChange(this.matChanger.bind(this))
-      .name('展示选中');
+    gui.add(this.#effectController, 'showFocus', true).onChange(this.matChanger.bind(this)).name('展示选中');
     this.matChanger();
 
     window.onresize = () => {
@@ -155,12 +140,7 @@ export default class {
     this.#camera.postprocessing.bokeh_uniforms.znear.value = this.#camera.near;
     this.#camera.postprocessing.bokeh_uniforms.zfar.value = this.#camera.far;
 
-    this.#camera.setLens(
-      this.#effectController?.focalLength as number,
-      undefined,
-      this.#effectController.fstop,
-      this.#camera.coc,
-    );
+    this.#camera.setLens(this.#effectController?.focalLength as number, undefined, this.#effectController.fstop, this.#camera.coc);
 
     this.#effectController.focalDepth = this.#camera.postprocessing.bokeh_uniforms.focalDepth.value;
   }
@@ -190,15 +170,13 @@ export default class {
       this.#camera.focusAt(targetDistance);
 
       if (this.#INTERSECTED !== intersects[0].object) {
-        if (this.#INTERSECTED)
-          this.#INTERSECTED.material.emissive.setHex(this.#INTERSECTED.currentHex);
+        if (this.#INTERSECTED) this.#INTERSECTED.material.emissive.setHex(this.#INTERSECTED.currentHex);
         this.#INTERSECTED = intersects[0].object;
         this.#INTERSECTED.curentHex = this.#INTERSECTED.material.emissive.getHex();
         this.#INTERSECTED.material.emissive.setHex(0xff0000);
       }
     } else {
-      if (this.#INTERSECTED)
-        this.#INTERSECTED.material.emissive.setHex(this.#INTERSECTED.curentHex);
+      if (this.#INTERSECTED) this.#INTERSECTED.material.emissive.setHex(this.#INTERSECTED.curentHex);
       this.#INTERSECTED = null;
     }
 
