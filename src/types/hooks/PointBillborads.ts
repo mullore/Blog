@@ -2,11 +2,9 @@ import * as three from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import dat from 'dat.gui';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
-let scene: any, camera: any, renderer: any, material: any, stats: any, composer: any;
+// composer: any
+let scene: any, camera: any, renderer: any, material: any, stats: any ;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -81,7 +79,7 @@ export function createCamera() {
 
 // 控制器
 export function createOrbitControls() {
-  const clock = new three.Clock(); // 创建THREE.Clock对象，用于计算上次调用经过的时间
+  // const clock = new three.Clock(); // 创建THREE.Clock对象，用于计算上次调用经过的时间
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.autoRotate = true; // 是否自动旋转
 }

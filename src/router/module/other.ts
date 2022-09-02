@@ -23,6 +23,11 @@ export const other = [
         name: 'Sprites',
         component: () => import('@/components/other/PintSprites.vue'),
       },
+      {
+        path: 'PrintItem',
+        name: 'PrintItem',
+        component: () => import('@/components/other/PrintItem'),
+      },
     ],
   },
 ];
