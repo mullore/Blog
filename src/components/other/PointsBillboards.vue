@@ -1,31 +1,23 @@
-<template></template>
-
-<script lang="ts">
+<script lang="ts" setup>
+import { onMounted } from 'vue';
 import {
-	creatGeometry,
-	createCamera,
-	createGui,
-	createState,
-	createOrbitControls,
-	createBloom,
-	createRender,
-	animate,
+  creatGeometry,
+  createCamera,
+  createGui,
+  createState,
+  createOrbitControls,
+  createBloom,
+  createRender,
+  animate,
 } from '@/types/hooks/PointBillborads';
-export default {
-	setup() {
-		//
-		createGui();
-		createState();
-		//
-		creatGeometry();
-		createCamera();
-		createBloom();
-		createRender();
-		createOrbitControls();
-		animate();
-	},
-};
+onMounted(() => {
+  createGui();
+  createState();
+  creatGeometry();
+  createCamera();
+  createBloom();
+  createRender();
+  createOrbitControls();
+  animate();
+});
 </script>
-
-<style scoped>
-</style>

@@ -1,6 +1,4 @@
-<template></template>
-
-<script lang="ts">
+<script lang="ts" setup>
 import {
   createGeometry,
   createCamera,
@@ -10,18 +8,15 @@ import {
   createLight,
   reSize,
 } from '@/types/hooks/UnrealBloom';
-export default {
-  setup() {
-    createCamera();
-    createRender();
-    createOrbitControls();
-    createRenderPass();
-    createLight();
-    createGeometry();
-    reSize();
-  },
-};
-</script>
+import { onMounted } from 'vue';
+onMounted(() => {
+  createCamera();
+  createRender();
+  createOrbitControls();
+  createRenderPass();
+  createLight();
+  createGeometry();
+  reSize();
+})
 
-<style scoped>
-</style>
+</script>

@@ -1,6 +1,4 @@
-<template></template>
-
-<script lang="ts">
+<script lang="ts" setup>
 import {
 	attribute,
 	createGeometry,
@@ -10,18 +8,15 @@ import {
 	render,
 	animate,
 } from '@/types/hooks/pointsWanves';
-export default {
-	setup() {
-		attribute();
-		createGeometry();
-		createCamera();
-		createRender();
-		createListener();
-		render();
-		animate();
-	},
-};
+import { onMounted } from 'vue';
+onMounted(() => {
+	attribute();
+	createGeometry();
+	createCamera();
+	createRender();
+	createListener();
+	render();
+	animate();
+})
 </script>
 
-<style>
-</style>
