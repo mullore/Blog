@@ -3,8 +3,6 @@ module.exports = {
   endOfLine: 'auto',
   //一行的字符数，如果超过会进行换行，默认为100
   printWidth: 140,
-  // 一个 tab 代表几个空格数，默认为 2 个
-  tabWidth: 2,
   // 字符串是否使用单引号，默认为 false，使用双引号
   singleQuote: true,
   // jsx 不使用单引号，而使用双引号
@@ -13,6 +11,4 @@ module.exports = {
   trailingComma: 'all',
   // jsx 标签的反尖括号需要换行
   jsxBracketSameLine: false,
-  // 换行符使用 lf
-  endOfLine: 'lf',
 };

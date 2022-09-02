@@ -59,18 +59,23 @@ module.exports = {
         extendDefaults: true,
       },
     ],
-    'vue/html-self-closing': [
-      'error',
-      {
-        html: {
-          void: 'always',
-          normal: 'always',
-          component: 'always',
-        },
-        svg: 'always',
-        math: 'always',
-      },
-    ],
+    // 要求组件命称始终为多词组件名称
+    'vue/multi-word-component-names': 'off',
+    'vue/valid-template-root': 'off',
+    'vue/html-self-closing': 'off',
+    'prettier/prettier': 'off',
+    // 'vue/html-self-closing': [
+    //   'error',
+    //   {
+    //     html: {
+    //       void: 'never',
+    //       normal: 'always',
+    //       component: 'always',
+    //     },
+    //     svg: 'always',
+    //     math: 'always',
+    //   },
+    // ],
     'vue/max-attributes-per-line': [
       'error',
       {
@@ -80,12 +85,6 @@ module.exports = {
         multiline: {
           max: 1,
         },
-      },
-    ],
-    'vue/multi-word-component-names': [
-      'error',
-      {
-        ignores: [],
       },
     ],
   },

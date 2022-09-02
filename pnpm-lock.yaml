@@ -28,6 +28,7 @@ specifiers:
   postcss: ^8.4.16
   prettier: ^2.7.1
   rollup: ^2.77.2
+  roughjs: ^4.5.2
   sass: ^1.54.3
   stats.js: ^0.17.0
   stylelint: ^14.9.1
@@ -49,6 +50,7 @@ specifiers:
 dependencies:
   '@vitejs/plugin-vue-jsx': 2.0.0_vite@3.0.4+vue@3.2.37
   dat.gui: 0.7.9
+  roughjs: 4.5.2
   vue: 3.2.37
   vue-router: 4.1.3_vue@3.2.37
 
@@ -3213,6 +3215,10 @@ packages:
       lines-and-columns: 1.2.4
     dev: true
 
+  /path-data-parser/0.1.0:
+    resolution: {integrity: sha512-NOnmBpt5Y2RWbuv0LMzsayp3lVylAHLPUTut412ZA3l+C4uw4ZVkQbjShYCQ8TCpUMdPapr4YjUqLYD6v68j+w==}
+    dev: false
+
   /path-exists/3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
     engines: {node: '>=4'}
@@ -3258,6 +3264,17 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
     dev: true
+
+  /points-on-curve/0.2.0:
+    resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
+    dev: false
+
+  /points-on-path/0.2.1:
+    resolution: {integrity: sha512-25ClnWWuw7JbWZcgqY/gJ4FQWadKxGWk+3kR/7kD0tCaDtPPMj7oHu2ToLaVhfpnHrZzYby2w6tUA0eOIuUg8g==}
+    dependencies:
+      path-data-parser: 0.1.0
+      points-on-curve: 0.2.0
+    dev: false
 
   /postcss-media-query-parser/0.2.3:
     resolution: {integrity: sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig==}
@@ -3471,6 +3488,14 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+
+  /roughjs/4.5.2:
+    resolution: {integrity: sha512-2xSlLDKdsWyFxrveYWk9YQ/Y9UfK38EAMRNkYkMqYBJvPX8abCa9PN0x3w02H8Oa6/0bcZICJU+U95VumPqseg==}
+    dependencies:
+      path-data-parser: 0.1.0
+      points-on-curve: 0.2.0
+      points-on-path: 0.2.1
+    dev: false
 
   /run-parallel/1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
