@@ -1,12 +1,12 @@
 export const other = [
   {
-    path: '/Ohter',
+    path: '/Other',
     component: () => import('@/views/Home.vue'),
     children: [
       {
         path: 'Bloom',
         name: 'Bloom',
-        component: () => import('@/components/other/UnrealBloom.vue'),
+        component: () => import('@/examples-three-webgl/postprocessing/unreal/bloom/UnrealBloom.vue'),
       },
       {
         path: 'Point',
@@ -16,12 +16,12 @@ export const other = [
       {
         path: 'Wanves',
         name: 'Wanves',
-        component: () => import('@/components/other/PointsWanves.vue'),
+        component: () => import('@/examples-three-webgl/points/waves/PointsWanves.vue'),
       },
       {
         path: 'Sprites',
         name: 'Sprites',
-        component: () => import('@/components/other/PintSprites.vue'),
+        component: () => import('@/examples-three-webgl/points/sprites/PintSprites.vue'),
       },
       {
         path: 'PrintItem',

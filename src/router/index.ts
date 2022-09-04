@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/Index',
     name: 'Index',
-    component: () => import('@/components/other/PointsBillboards.vue'),
+    component: () => import('@/examples-three-webgl/points/billborads/PointsBillboards.vue'),
   },
   ...other,
   ...three,

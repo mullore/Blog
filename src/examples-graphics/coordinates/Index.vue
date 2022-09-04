@@ -2,11 +2,9 @@
   <canvas id="demo" width="512" height="256" />
 </template>
 
-<script lang="ts" setup>
+<script lang='ts' setup>
 import { onMounted } from 'vue';
-
 // import rough from 'roughjs'
-
 onMounted(() => {
   const rough = require('roughjs/bundled/rough.cjs')
   const rc = rough.canvas(document.getElementById('demo') as any);

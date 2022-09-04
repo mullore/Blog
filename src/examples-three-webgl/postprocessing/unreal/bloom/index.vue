@@ -17,6 +17,5 @@ onMounted(() => {
   createLight();
   createGeometry();
   reSize();
-})
-
+});
 </script>

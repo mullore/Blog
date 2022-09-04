@@ -6,7 +6,7 @@ export const graphics = [
       {
         path: 'coordinates',
         name: 'coordinates',
-        component: () => import('@/components/graphics/coordinates/Index.vue'),
+        component: () => import('@/graphics/coordinates/Index.vue'),
         meta: {
           title: '绘画(rough)',
         },
@@ -14,7 +14,7 @@ export const graphics = [
       {
         path: 'vectorTree',
         name: 'vectorTree',
-        component: () => import('@/components/graphics/vector_tree/Index.vue'),
+        component: () => import('@/graphics/vector_tree/Index.vue'),
         meta: {
           title: '树形',
         },
@@ -22,7 +22,7 @@ export const graphics = [
       {
         path: 'vectorDraw',
         name: 'vectorDraw',
-        component: () => import('@/components/graphics/vector_draw/Index.vue'),
+        component: () => import('@/graphics/vector_draw/Index.vue'),
         meta: {
           title: '多边形',
         },
@@ -30,7 +30,7 @@ export const graphics = [
       {
         path: 'parametric',
         name: 'parametric',
-        component: () => import('@/components/graphics/parametric/Index.vue'),
+        component: () => import('@/graphics/parametric/Index.vue'),
         meta: {
           title: '圆圈',
         },
@@ -38,7 +38,7 @@ export const graphics = [
       {
         path: 'ellipse',
         name: 'ellipse',
-        component: () => import('@/components/graphics/parametric/ellipse.vue'),
+        component: () => import('@/graphics/parametric/ellipse.vue'),
         meta: {
           title: '椭圆',
         },
@@ -46,7 +46,7 @@ export const graphics = [
       {
         path: 'parabola',
         name: 'parabola',
-        component: () => import('@/components/graphics/parametric/parabola.vue'),
+        component: () => import('@/graphics/parametric/parabola.vue'),
         meta: {
           title: '抛物线',
         },
@@ -54,7 +54,7 @@ export const graphics = [
       {
         path: 'parametric2',
         name: 'parametric2',
-        component: () => import('@/components/graphics/parametric2/Index.vue'),
+        component: () => import('@/graphics/parametric2/Index.vue'),
         meta: {
           title: '其他曲线方程',
         },
@@ -62,7 +62,7 @@ export const graphics = [
       {
         path: 'quadratic',
         name: 'quadratic',
-        component: () => import('@/components/graphics/bezier/quadratic.vue'),
+        component: () => import('@/graphics/bezier/quadratic.vue'),
         meta: {
           title: '二次贝塞尔曲线',
         },
@@ -70,7 +70,7 @@ export const graphics = [
       {
         path: 'cubic',
         name: 'cubic',
-        component: () => import('@/components/graphics/bezier/cubic.vue'),
+        component: () => import('@/graphics/bezier/cubic.vue'),
         meta: {
           title: '三次贝塞尔曲线',
         },
