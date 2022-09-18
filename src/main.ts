@@ -1,37 +1,40 @@
 import { createApp } from 'vue';
 import './style.css';
 import App from './App.vue';
-import router from './router';
+// import router from './router';
 import { registerMicroApps, start } from 'qiankun';
 
+
+/**
+ * Step1 初始化应用（可选）
+ */
 registerMicroApps([
   {
     name: 'graphics', // app name registered
-    entry: '//localhost:3000',
+    entry: 'http://localhost:3000',
     container: '#yourContainer',
     activeRule: '/graphics',
   },
   {
     name: 'three',
-    entry: '//localhost:8080',
+    entry: 'http://localhost:8080',
     container: '#container',
     activeRule: '/three',
   },
   {
     name: 'webgl-fundamentals',
-    entry: '//localhost:8081',
+    entry: 'http://localhost:8081',
     container: '#container',
     activeRule: '/webgl-fundamentals',
   },
   {
     name: 'webgl-fundamentals2',
-    // entry: { scripts: ['//localhost:7100/main.js'] },
-    entry: '//localhost:4200',
+    entry: 'http://localhost:7108/',
     container: '#container',
     activeRule: '/webgl-fundamentals2',
   },
-]);
+] );
 
 start();
 
-createApp(App).use(router).mount('#app');
+createApp(App).mount('#app');

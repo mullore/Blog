@@ -5,6 +5,10 @@
 </script>
 
 <template>
+  <div id="container"></div>
+  <a href="/webgl-fundamentals2" target="_blank">
+    <img src="/vite.svg" class="logo" alt="Vite logo" />
+  </a>
   <!--   <img alt="Vue logo" src="./assets/logo.png" />-->
   <!--   <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />-->
   <router-view />
