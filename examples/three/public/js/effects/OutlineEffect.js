@@ -78,7 +78,7 @@
 			const originalMaterials = {}; // object.uuid -> originalOnBeforeRender
 			// save before render and release after render.
 
-			const originalOnBeforeRenders = {}; //this.cache = cache;  // for debug
+			const originalOnBeforeRenders = {}; // this.cache = cache;  // for debug
 
 			const uniformsOutline = {
 				outlineThickness: {
@@ -101,7 +101,7 @@
 
 				return new THREE.ShaderMaterial( {
 					type: 'OutlineEffect',
-					uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib[ 'fog' ], THREE.UniformsLib[ 'displacementmap' ], uniformsOutline ] ),
+					uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib.fog, THREE.UniformsLib.displacementmap, uniformsOutline ] ),
 					vertexShader: vertexShader,
 					fragmentShader: fragmentShader,
 					side: THREE.BackSide

@@ -49,11 +49,11 @@
 			this.minDistance = 0;
 			this.maxDistance = Infinity;
 			this.keys = [ 'KeyA',
-				/*A*/
+				/* A */
 				'KeyS',
-				/*S*/
+				/* S */
 				'KeyD'
-				/*D*/
+				/* D */
 			];
 			this.mouseButtons = {
 				LEFT: THREE.MOUSE.ROTATE,
@@ -65,22 +65,22 @@
 			const EPS = 0.000001;
 			const lastPosition = new THREE.Vector3();
 			let lastZoom = 1;
-			let _state = STATE.NONE,
-				_keyState = STATE.NONE,
-				_touchZoomDistanceStart = 0,
-				_touchZoomDistanceEnd = 0,
-				_lastAngle = 0;
+			let _state = STATE.NONE;
+				let _keyState = STATE.NONE;
+				let _touchZoomDistanceStart = 0;
+				let _touchZoomDistanceEnd = 0;
+				let _lastAngle = 0;
 
-			const _eye = new THREE.Vector3(),
-				_movePrev = new THREE.Vector2(),
-				_moveCurr = new THREE.Vector2(),
-				_lastAxis = new THREE.Vector3(),
-				_zoomStart = new THREE.Vector2(),
-				_zoomEnd = new THREE.Vector2(),
-				_panStart = new THREE.Vector2(),
-				_panEnd = new THREE.Vector2(),
-				_pointers = [],
-				_pointerPositions = {}; // for reset
+			const _eye = new THREE.Vector3();
+				const _movePrev = new THREE.Vector2();
+				const _moveCurr = new THREE.Vector2();
+				const _lastAxis = new THREE.Vector3();
+				const _zoomStart = new THREE.Vector2();
+				const _zoomEnd = new THREE.Vector2();
+				const _panStart = new THREE.Vector2();
+				const _panEnd = new THREE.Vector2();
+				const _pointers = [];
+				const _pointerPositions = {}; // for reset
 
 
 			this.target0 = this.target.clone();
@@ -127,12 +127,12 @@
 
 			this.rotateCamera = function () {
 
-				const axis = new THREE.Vector3(),
-					quaternion = new THREE.Quaternion(),
-					eyeDirection = new THREE.Vector3(),
-					objectUpDirection = new THREE.Vector3(),
-					objectSidewaysDirection = new THREE.Vector3(),
-					moveDirection = new THREE.Vector3();
+				const axis = new THREE.Vector3();
+					const quaternion = new THREE.Quaternion();
+					const eyeDirection = new THREE.Vector3();
+					const objectUpDirection = new THREE.Vector3();
+					const objectSidewaysDirection = new THREE.Vector3();
+					const moveDirection = new THREE.Vector3();
 				return function rotateCamera() {
 
 					moveDirection.set( _moveCurr.x - _movePrev.x, _moveCurr.y - _movePrev.y, 0 );
@@ -243,9 +243,9 @@
 
 			this.panCamera = function () {
 
-				const mouseChange = new THREE.Vector2(),
-					objectUp = new THREE.Vector3(),
-					pan = new THREE.Vector3();
+				const mouseChange = new THREE.Vector2();
+					const objectUp = new THREE.Vector3();
+					const pan = new THREE.Vector3();
 				return function panCamera() {
 
 					mouseChange.copy( _panEnd ).sub( _panStart );
@@ -466,7 +466,7 @@
 
 				if ( _keyState !== STATE.NONE ) {
 
-					return;
+					
 
 				} else if ( event.code === scope.keys[ STATE.ROTATE ] && ! scope.noRotate ) {
 

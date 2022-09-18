@@ -19,8 +19,8 @@
 				vertexShader: depthShader.vertexShader,
 				fragmentShader: depthShader.fragmentShader
 			} );
-			this.materialDepth.uniforms[ 'mNear' ].value = near;
-			this.materialDepth.uniforms[ 'mFar' ].value = far; // In case of cinematicCamera, having a default lens set is important
+			this.materialDepth.uniforms.mNear.value = near;
+			this.materialDepth.uniforms.mFar.value = far; // In case of cinematicCamera, having a default lens set is important
 
 			this.setLens();
 			this.initPostProcessing();
@@ -80,7 +80,7 @@
 			if ( this.depthOfField < 0 ) this.depthOfField = 0;
 			this.sdistance = this.smoothstep( this.near, this.far, this.focus );
 			this.ldistance = this.linearize( 1 - this.sdistance );
-			this.postprocessing.bokeh_uniforms[ 'focalDepth' ].value = this.ldistance;
+			this.postprocessing.bokeh_uniforms.focalDepth.value = this.ldistance;
 
 		}
 
@@ -95,18 +95,18 @@
 				this.postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight );
 				const bokeh_shader = THREE.BokehShader;
 				this.postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
-				this.postprocessing.bokeh_uniforms[ 'tColor' ].value = this.postprocessing.rtTextureColor.texture;
-				this.postprocessing.bokeh_uniforms[ 'tDepth' ].value = this.postprocessing.rtTextureDepth.texture;
-				this.postprocessing.bokeh_uniforms[ 'manualdof' ].value = 0;
-				this.postprocessing.bokeh_uniforms[ 'shaderFocus' ].value = 0;
-				this.postprocessing.bokeh_uniforms[ 'fstop' ].value = 2.8;
-				this.postprocessing.bokeh_uniforms[ 'showFocus' ].value = 1;
-				this.postprocessing.bokeh_uniforms[ 'focalDepth' ].value = 0.1; //console.log( this.postprocessing.bokeh_uniforms[ "focalDepth" ].value );
+				this.postprocessing.bokeh_uniforms.tColor.value = this.postprocessing.rtTextureColor.texture;
+				this.postprocessing.bokeh_uniforms.tDepth.value = this.postprocessing.rtTextureDepth.texture;
+				this.postprocessing.bokeh_uniforms.manualdof.value = 0;
+				this.postprocessing.bokeh_uniforms.shaderFocus.value = 0;
+				this.postprocessing.bokeh_uniforms.fstop.value = 2.8;
+				this.postprocessing.bokeh_uniforms.showFocus.value = 1;
+				this.postprocessing.bokeh_uniforms.focalDepth.value = 0.1; // console.log( this.postprocessing.bokeh_uniforms[ "focalDepth" ].value );
 
-				this.postprocessing.bokeh_uniforms[ 'znear' ].value = this.near;
-				this.postprocessing.bokeh_uniforms[ 'zfar' ].value = this.near;
-				this.postprocessing.bokeh_uniforms[ 'textureWidth' ].value = window.innerWidth;
-				this.postprocessing.bokeh_uniforms[ 'textureHeight' ].value = window.innerHeight;
+				this.postprocessing.bokeh_uniforms.znear.value = this.near;
+				this.postprocessing.bokeh_uniforms.zfar.value = this.near;
+				this.postprocessing.bokeh_uniforms.textureWidth.value = window.innerWidth;
+				this.postprocessing.bokeh_uniforms.textureHeight.value = window.innerHeight;
 				this.postprocessing.materialBokeh = new THREE.ShaderMaterial( {
 					uniforms: this.postprocessing.bokeh_uniforms,
 					vertexShader: bokeh_shader.vertexShader,

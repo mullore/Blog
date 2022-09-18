@@ -15,32 +15,32 @@ function queryKey(Components) {
     var T = Components[n];
 
     if (!componentRegistered(T)) {
-      throw new Error(`Tried to create a query with an unregistered component`);
+      throw new Error('Tried to create a query with an unregistered component');
     }
 
-    if (typeof T === "object") {
-      var operator = T.operator === "not" ? "!" : T.operator;
+    if (typeof T === 'object') {
+      var operator = T.operator === 'not' ? '!' : T.operator;
       ids.push(operator + T.Component._typeId);
     } else {
       ids.push(T._typeId);
     }
   }
 
-  return ids.sort().join("-");
+  return ids.sort().join('-');
 }
 
 // Detector for browser's "window"
-const hasWindow = typeof window !== "undefined";
+const hasWindow = typeof window !== 'undefined';
 
 // performance.now() "polyfill"
 const now =
-  hasWindow && typeof window.performance !== "undefined"
+  hasWindow && typeof window.performance !== 'undefined'
     ? performance.now.bind(performance)
     : Date.now.bind(Date);
 
 function componentRegistered(T) {
   return (
-    (typeof T === "object" && T.Component._typeId !== undefined) ||
+    (typeof T === 'object' && T.Component._typeId !== undefined) ||
     (T.isComponent && T._typeId !== undefined)
   );
 }
@@ -77,7 +77,7 @@ class SystemManager {
   }
 
   unregisterSystem(SystemClass) {
-    let system = this.getSystem(SystemClass);
+    const system = this.getSystem(SystemClass);
     if (system === undefined) {
       console.warn(
         `Can unregister system '${SystemClass.getName()}'. It doesn't exist.`
@@ -119,7 +119,7 @@ class SystemManager {
   executeSystem(system, delta, time) {
     if (system.initialized) {
       if (system.canExecute()) {
-        let startTime = now();
+        const startTime = now();
         system.execute(delta, time);
         system.executeTime = now() - startTime;
         this.lastExecutedSystem = system;
@@ -168,7 +168,7 @@ class ObjectPool {
     this.T = T;
     this.isObjectPool = true;
 
-    if (typeof initialSize !== "undefined") {
+    if (typeof initialSize !== 'undefined') {
       this.expand(initialSize);
     }
   }
@@ -230,7 +230,7 @@ class EventDispatcher {
    * @param {Function} listener Callback to trigger when the event is fired
    */
   addEventListener(eventName, listener) {
-    let listeners = this._listeners;
+    const listeners = this._listeners;
     if (listeners[eventName] === undefined) {
       listeners[eventName] = [];
     }
@@ -303,7 +303,7 @@ class Query {
     this.NotComponents = [];
 
     Components.forEach((component) => {
-      if (typeof component === "object") {
+      if (typeof component === 'object') {
         this.NotComponents.push(component.Component);
       } else {
         this.Components.push(component);
@@ -311,7 +311,7 @@ class Query {
     });
 
     if (this.Components.length === 0) {
-      throw new Error("Can't create a query without components");
+      throw new Error('Can\'t create a query without components');
     }
 
     this.entities = [];
@@ -394,9 +394,9 @@ class Query {
   }
 }
 
-Query.prototype.ENTITY_ADDED = "Query#ENTITY_ADDED";
-Query.prototype.ENTITY_REMOVED = "Query#ENTITY_REMOVED";
-Query.prototype.COMPONENT_CHANGED = "Query#COMPONENT_CHANGED";
+Query.prototype.ENTITY_ADDED = 'Query#ENTITY_ADDED';
+Query.prototype.ENTITY_REMOVED = 'Query#ENTITY_REMOVED';
+Query.prototype.COMPONENT_CHANGED = 'Query#COMPONENT_CHANGED';
 
 /**
  * @private
@@ -518,7 +518,7 @@ class Component {
           this[key] = props[key];
         } else {
           const schemaProp = schema[key];
-          if (schemaProp.hasOwnProperty("default")) {
+          if (schemaProp.hasOwnProperty('default')) {
             this[key] = schemaProp.type.clone(schemaProp.default);
           } else {
             const type = schemaProp.type;
@@ -564,7 +564,7 @@ class Component {
     for (const key in schema) {
       const schemaProp = schema[key];
 
-      if (schemaProp.hasOwnProperty("default")) {
+      if (schemaProp.hasOwnProperty('default')) {
         this[key] = schemaProp.type.copy(schemaProp.default, this[key]);
       } else {
         const type = schemaProp.type;
@@ -612,7 +612,7 @@ class EntityPool extends ObjectPool {
     super(entityClass, undefined);
     this.entityManager = entityManager;
 
-    if (typeof initialSize !== "undefined") {
+    if (typeof initialSize !== 'undefined') {
       this.expand(initialSize);
     }
   }
@@ -666,7 +666,7 @@ class EntityManager {
   createEntity(name) {
     var entity = this._entityPool.acquire();
     entity.alive = true;
-    entity.name = name || "";
+    entity.name = name || '';
     if (name) {
       if (this._entitiesByNames[name]) {
         console.warn(`Entity name '${name}' already exist`);
@@ -691,7 +691,7 @@ class EntityManager {
   entityAddComponent(entity, Component, values) {
     // @todo Probably define Component._typeId with a default value and avoid using typeof
     if (
-      typeof Component._typeId === "undefined" &&
+      typeof Component._typeId === 'undefined' &&
       !this.world.componentsManager._ComponentsMap[Component._typeId]
     ) {
       throw new Error(
@@ -702,7 +702,7 @@ class EntityManager {
     if (~entity._ComponentTypes.indexOf(Component)) {
       {
         console.warn(
-          "Component type already exists on entity.",
+          'Component type already exists on entity.',
           entity,
           Component.getName()
         );
@@ -789,7 +789,7 @@ class EntityManager {
    * @param {Entity} entity Entity from which the components will be removed
    */
   entityRemoveAllComponents(entity, immediately) {
-    let Components = entity._ComponentTypes;
+    const Components = entity._ComponentTypes;
 
     for (let j = Components.length - 1; j >= 0; j--) {
       if (Components[j].__proto__ !== SystemStateComponent)
@@ -805,7 +805,7 @@ class EntityManager {
   removeEntity(entity, immediately) {
     var index = this._entities.indexOf(entity);
 
-    if (!~index) throw new Error("Tried to remove entity not in list");
+    if (!~index) throw new Error('Tried to remove entity not in list');
 
     entity.alive = false;
     this.entityRemoveAllComponents(entity, immediately);
@@ -846,23 +846,23 @@ class EntityManager {
     }
 
     for (let i = 0; i < this.entitiesToRemove.length; i++) {
-      let entity = this.entitiesToRemove[i];
-      let index = this._entities.indexOf(entity);
+      const entity = this.entitiesToRemove[i];
+      const index = this._entities.indexOf(entity);
       this._releaseEntity(entity, index);
     }
     this.entitiesToRemove.length = 0;
 
     for (let i = 0; i < this.entitiesWithComponentsToRemove.length; i++) {
-      let entity = this.entitiesWithComponentsToRemove[i];
+      const entity = this.entitiesWithComponentsToRemove[i];
       while (entity._ComponentTypesToRemove.length > 0) {
-        let Component = entity._ComponentTypesToRemove.pop();
+        const Component = entity._ComponentTypesToRemove.pop();
 
         var component = entity._componentsToRemove[Component._typeId];
         delete entity._componentsToRemove[Component._typeId];
         component.dispose();
         this.world.componentsManager.componentRemovedFromEntity(Component);
 
-        //this._entityRemoveComponentSync(entity, Component, index);
+        // this._entityRemoveComponentSync(entity, Component, index);
       }
     }
 
@@ -912,10 +912,10 @@ class EntityManager {
   }
 }
 
-const ENTITY_CREATED = "EntityManager#ENTITY_CREATE";
-const ENTITY_REMOVED = "EntityManager#ENTITY_REMOVED";
-const COMPONENT_ADDED = "EntityManager#COMPONENT_ADDED";
-const COMPONENT_REMOVE = "EntityManager#COMPONENT_REMOVE";
+const ENTITY_CREATED = 'EntityManager#ENTITY_CREATE';
+const ENTITY_REMOVED = 'EntityManager#ENTITY_REMOVED';
+const COMPONENT_ADDED = 'EntityManager#COMPONENT_ADDED';
+const COMPONENT_REMOVE = 'EntityManager#COMPONENT_REMOVE';
 
 class ComponentManager {
   constructor() {
@@ -984,7 +984,7 @@ class ComponentManager {
   }
 }
 
-const Version = "0.3.1";
+const Version = '0.3.1';
 
 const proxyMap = new WeakMap();
 
@@ -1036,7 +1036,7 @@ class Entity {
 
     this.alive = false;
 
-    //if there are state components on a entity, it can't be removed completely
+    // if there are state components on a entity, it can't be removed completely
     this.numStateComponents = 0;
   }
 
@@ -1181,8 +1181,8 @@ class World {
 
     this.eventQueues = {};
 
-    if (hasWindow && typeof CustomEvent !== "undefined") {
-      var event = new CustomEvent("ecsy-world-created", {
+    if (hasWindow && typeof CustomEvent !== 'undefined') {
+      var event = new CustomEvent('ecsy-world-created', {
         detail: { world: this, version: Version },
       });
       window.dispatchEvent(event);
@@ -1297,11 +1297,11 @@ class System {
         var queryConfig = this.constructor.queries[queryName];
         var Components = queryConfig.components;
         if (!Components || Components.length === 0) {
-          throw new Error("'components' attribute can't be empty in a query");
+          throw new Error('\'components\' attribute can\'t be empty in a query');
         }
 
         // Detect if the components have already been registered
-        let unregisteredComponents = Components.filter(
+        const unregisteredComponents = Components.filter(
           (Component) => !componentRegistered(Component)
         );
 
@@ -1311,7 +1311,7 @@ class System {
               this.constructor.name
             }.${queryName}' with unregistered components: [${unregisteredComponents
               .map((c) => c.getName())
-              .join(", ")}]`
+              .join(', ')}]`
           );
         }
 
@@ -1326,7 +1326,7 @@ class System {
         };
 
         // Reactive configuration added/removed/changed
-        var validEvents = ["added", "removed", "changed"];
+        var validEvents = ['added', 'removed', 'changed'];
 
         const eventMapping = {
           added: Query.prototype.ENTITY_ADDED,
@@ -1339,20 +1339,20 @@ class System {
             if (!this.execute) {
               console.warn(
                 `System '${this.getName()}' has defined listen events (${validEvents.join(
-                  ", "
+                  ', '
                 )}) for query '${queryName}' but it does not implement the 'execute' method.`
               );
             }
 
             // Is the event enabled on this system's query?
             if (queryConfig.listen[eventName]) {
-              let event = queryConfig.listen[eventName];
+              const event = queryConfig.listen[eventName];
 
-              if (eventName === "changed") {
+              if (eventName === 'changed') {
                 query.reactive = true;
                 if (event === true) {
                   // Any change on the entity from the components in the query
-                  let eventList = (this.queries[queryName][eventName] = []);
+                  const eventList = (this.queries[queryName][eventName] = []);
                   query.eventDispatcher.addEventListener(
                     Query.prototype.COMPONENT_CHANGED,
                     (entity) => {
@@ -1363,7 +1363,7 @@ class System {
                     }
                   );
                 } else if (Array.isArray(event)) {
-                  let eventList = (this.queries[queryName][eventName] = []);
+                  const eventList = (this.queries[queryName][eventName] = []);
                   query.eventDispatcher.addEventListener(
                     Query.prototype.COMPONENT_CHANGED,
                     (entity, changedComponent) => {
@@ -1378,7 +1378,7 @@ class System {
                   );
                 }
               } else {
-                let eventList = (this.queries[queryName][eventName] = []);
+                const eventList = (this.queries[queryName][eventName] = []);
 
                 query.eventDispatcher.addEventListener(
                   eventMapping[eventName],
@@ -1407,7 +1407,7 @@ class System {
 
   // @question rename to clear queues?
   clearEvents() {
-    for (let queryName in this.queries) {
+    for (const queryName in this.queries) {
       var query = this.queries[queryName];
       if (query.added) {
         query.added.length = 0;
@@ -1419,7 +1419,7 @@ class System {
         if (Array.isArray(query.changed)) {
           query.changed.length = 0;
         } else {
-          for (let name in query.changed) {
+          for (const name in query.changed) {
             query.changed[name].length = 0;
           }
         }
@@ -1438,10 +1438,10 @@ class System {
 
     if (this.constructor.queries) {
       var queries = this.constructor.queries;
-      for (let queryName in queries) {
-        let query = this.queries[queryName];
-        let queryDefinition = queries[queryName];
-        let jsonQuery = (json.queries[queryName] = {
+      for (const queryName in queries) {
+        const query = this.queries[queryName];
+        const queryDefinition = queries[queryName];
+        const jsonQuery = (json.queries[queryName] = {
           key: this._queries[queryName].key,
         });
 
@@ -1456,7 +1456,7 @@ class System {
         if (jsonQuery.reactive) {
           jsonQuery.listen = {};
 
-          const methods = ["added", "removed", "changed"];
+          const methods = ['added', 'removed', 'changed'];
           methods.forEach((method) => {
             if (query[method]) {
               jsonQuery.listen[method] = {
@@ -1479,7 +1479,7 @@ System.getName = function () {
 
 function Not(Component) {
   return {
-    operator: "not",
+    operator: 'not',
     Component: Component,
   };
 }
@@ -1535,7 +1535,7 @@ const copyCopyable = (src, dest) => {
 const cloneClonable = (src) => src && src.clone();
 
 function createType(typeDefinition) {
-  var mandatoryProperties = ["name", "default", "copy", "clone"];
+  var mandatoryProperties = ['name', 'default', 'copy', 'clone'];
 
   var undefinedProperties = mandatoryProperties.filter((p) => {
     return !typeDefinition.hasOwnProperty(p);
@@ -1544,7 +1544,7 @@ function createType(typeDefinition) {
   if (undefinedProperties.length > 0) {
     throw new Error(
       `createType expects a type definition with the following properties: ${undefinedProperties.join(
-        ", "
+        ', '
       )}`
     );
   }
@@ -1559,42 +1559,42 @@ function createType(typeDefinition) {
  */
 const Types = {
   Number: createType({
-    name: "Number",
+    name: 'Number',
     default: 0,
     copy: copyValue,
     clone: cloneValue,
   }),
 
   Boolean: createType({
-    name: "Boolean",
+    name: 'Boolean',
     default: false,
     copy: copyValue,
     clone: cloneValue,
   }),
 
   String: createType({
-    name: "String",
-    default: "",
+    name: 'String',
+    default: '',
     copy: copyValue,
     clone: cloneValue,
   }),
 
   Array: createType({
-    name: "Array",
+    name: 'Array',
     default: [],
     copy: copyArray,
     clone: cloneArray,
   }),
 
   Ref: createType({
-    name: "Ref",
+    name: 'Ref',
     default: undefined,
     copy: copyValue,
     clone: cloneValue,
   }),
 
   JSON: createType({
-    name: "JSON",
+    name: 'JSON',
     default: null,
     copy: copyJSON,
     clone: cloneJSON,
@@ -1602,8 +1602,8 @@ const Types = {
 };
 
 function generateId(length) {
-  var result = "";
-  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -1612,7 +1612,7 @@ function generateId(length) {
 }
 
 function injectScript(src, onLoad) {
-  var script = document.createElement("script");
+  var script = document.createElement('script');
   // @todo Use link to the ecsy-devtools repo?
   script.src = src;
   script.onload = onLoad;
@@ -1622,13 +1622,13 @@ function injectScript(src, onLoad) {
 /* global Peer */
 
 function hookConsoleAndErrors(connection) {
-  var wrapFunctions = ["error", "warning", "log"];
+  var wrapFunctions = ['error', 'warning', 'log'];
   wrapFunctions.forEach((key) => {
-    if (typeof console[key] === "function") {
+    if (typeof console[key] === 'function') {
       var fn = console[key].bind(console);
       console[key] = (...args) => {
         connection.send({
-          method: "console",
+          method: 'console',
           type: key,
           args: JSON.stringify(args),
         });
@@ -1637,9 +1637,9 @@ function hookConsoleAndErrors(connection) {
     }
   });
 
-  window.addEventListener("error", (error) => {
+  window.addEventListener('error', (error) => {
     connection.send({
-      method: "error",
+      method: 'error',
       error: JSON.stringify({
         message: error.error.message,
         stack: error.error.stack,
@@ -1649,7 +1649,7 @@ function hookConsoleAndErrors(connection) {
 }
 
 function includeRemoteIdHTML(remoteId) {
-  let infoDiv = document.createElement("div");
+  const infoDiv = document.createElement('div');
   infoDiv.style.cssText = `
     align-items: center;
     background-color: #333;
@@ -1675,79 +1675,79 @@ function includeRemoteIdHTML(remoteId) {
 
 function enableRemoteDevtools(remoteId) {
   if (!hasWindow) {
-    console.warn("Remote devtools not available outside the browser");
+    console.warn('Remote devtools not available outside the browser');
     return;
   }
 
   window.generateNewCode = () => {
     window.localStorage.clear();
     remoteId = generateId(6);
-    window.localStorage.setItem("ecsyRemoteId", remoteId);
+    window.localStorage.setItem('ecsyRemoteId', remoteId);
     window.location.reload(false);
   };
 
-  remoteId = remoteId || window.localStorage.getItem("ecsyRemoteId");
+  remoteId = remoteId || window.localStorage.getItem('ecsyRemoteId');
   if (!remoteId) {
     remoteId = generateId(6);
-    window.localStorage.setItem("ecsyRemoteId", remoteId);
+    window.localStorage.setItem('ecsyRemoteId', remoteId);
   }
 
-  let infoDiv = includeRemoteIdHTML(remoteId);
+  const infoDiv = includeRemoteIdHTML(remoteId);
 
   window.__ECSY_REMOTE_DEVTOOLS_INJECTED = true;
   window.__ECSY_REMOTE_DEVTOOLS = {};
 
-  let Version = "";
+  let Version = '';
 
   // This is used to collect the worlds created before the communication is being established
-  let worldsBeforeLoading = [];
-  let onWorldCreated = (e) => {
+  const worldsBeforeLoading = [];
+  const onWorldCreated = (e) => {
     var world = e.detail.world;
     Version = e.detail.version;
     worldsBeforeLoading.push(world);
   };
-  window.addEventListener("ecsy-world-created", onWorldCreated);
+  window.addEventListener('ecsy-world-created', onWorldCreated);
 
-  let onLoaded = () => {
+  const onLoaded = () => {
     // var peer = new Peer(remoteId);
     var peer = new Peer(remoteId, {
-      host: "peerjs.ecsy.io",
+      host: 'peerjs.ecsy.io',
       secure: true,
       port: 443,
       config: {
         iceServers: [
-          { url: "stun:stun.l.google.com:19302" },
-          { url: "stun:stun1.l.google.com:19302" },
-          { url: "stun:stun2.l.google.com:19302" },
-          { url: "stun:stun3.l.google.com:19302" },
-          { url: "stun:stun4.l.google.com:19302" },
+          { url: 'stun:stun.l.google.com:19302' },
+          { url: 'stun:stun1.l.google.com:19302' },
+          { url: 'stun:stun2.l.google.com:19302' },
+          { url: 'stun:stun3.l.google.com:19302' },
+          { url: 'stun:stun4.l.google.com:19302' },
         ],
       },
       debug: 3,
     });
 
-    peer.on("open", (/* id */) => {
-      peer.on("connection", (connection) => {
+    peer.on('open', (/* id */) => {
+      peer.on('connection', (connection) => {
         window.__ECSY_REMOTE_DEVTOOLS.connection = connection;
-        connection.on("open", function () {
+        connection.on('open', function () {
           // infoDiv.style.visibility = "hidden";
-          infoDiv.innerHTML = "Connected";
+          infoDiv.innerHTML = 'Connected';
 
           // Receive messages
-          connection.on("data", function (data) {
-            if (data.type === "init") {
-              var script = document.createElement("script");
-              script.setAttribute("type", "text/javascript");
+          connection.on('data', function (data) {
+            if (data.type === 'init') {
+              var script = document.createElement('script');
+              script.setAttribute('type', 'text/javascript');
               script.onload = () => {
                 script.parentNode.removeChild(script);
 
                 // Once the script is injected we don't need to listen
                 window.removeEventListener(
-                  "ecsy-world-created",
+                  'ecsy-world-created',
                   onWorldCreated
                 );
                 worldsBeforeLoading.forEach((world) => {
-                  var event = new CustomEvent("ecsy-world-created", {
+                  var event = new CustomEvent('ecsy-world-created', {
                     detail: { world: world, version: Version },
                   });
                   window.dispatchEvent(event);
@@ -1758,11 +1758,11 @@ function enableRemoteDevtools(remoteId) {
               script.onload();
 
               hookConsoleAndErrors(connection);
-            } else if (data.type === "executeScript") {
-              let value = eval(data.script);
+            } else if (data.type === 'executeScript') {
+              const value = eval(data.script);
               if (data.returnEval) {
                 connection.send({
-                  method: "evalReturn",
+                  method: 'evalReturn',
                   value: value,
                 });
               }
@@ -1775,7 +1775,7 @@ function enableRemoteDevtools(remoteId) {
 
   // Inject PeerJS script
   injectScript(
-    "https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js",
+    'https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js',
     onLoaded
   );
 }
@@ -1784,7 +1784,7 @@ if (hasWindow) {
   const urlParams = new URLSearchParams(window.location.search);
 
   // @todo Provide a way to disable it if needed
-  if (urlParams.has("enable-remote-devtools")) {
+  if (urlParams.has('enable-remote-devtools')) {
     enableRemoteDevtools();
   }
 }

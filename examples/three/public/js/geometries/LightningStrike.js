@@ -410,8 +410,8 @@
 
 				if ( time < subray.birthTime ) {
 
-					//&& ( ! this.rayParameters.isEternal || scope.currentSubray.recursion > 0 ) ) {
-					return;
+					// && ( ! this.rayParameters.isEternal || scope.currentSubray.recursion > 0 ) ) {
+					
 
 				} else if ( this.rayParameters.isEternal && scope.currentSubray.recursion == 0 ) {
 
@@ -658,7 +658,7 @@
 		}
 
 		createPrismFaces( vertex
-			/*, index*/
+			/*, index */
 		) {
 
 			const indices = this.indices;

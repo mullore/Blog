@@ -91,13 +91,13 @@
 				fragmentShader: shader.fragmentShader,
 				vertexShader: shader.vertexShader
 			} );
-			material.uniforms[ 'tDiffuse' ].value = renderTarget.texture;
-			material.uniforms[ 'color' ].value = scope.color;
-			material.uniforms[ 'textureMatrix' ].value = textureMatrix;
+			material.uniforms.tDiffuse.value = renderTarget.texture;
+			material.uniforms.color.value = scope.color;
+			material.uniforms.textureMatrix.value = textureMatrix;
 
 			if ( useDepthTexture ) {
 
-				material.uniforms[ 'tDepth' ].value = renderTarget.depthTexture;
+				material.uniforms.tDepth.value = renderTarget.depthTexture;
 
 			}
 
@@ -107,12 +107,12 @@
 
 			this.doRender = function ( renderer, scene, camera ) {
 
-				material.uniforms[ 'maxDistance' ].value = scope.maxDistance;
-				material.uniforms[ 'color' ].value = scope.color;
-				material.uniforms[ 'opacity' ].value = scope.opacity;
+				material.uniforms.maxDistance.value = scope.maxDistance;
+				material.uniforms.color.value = scope.color;
+				material.uniforms.opacity.value = scope.opacity;
 				vecTemp0.copy( camera.position ).normalize();
 				vecTemp1.copy( vecTemp0 ).reflect( yAxis );
-				material.uniforms[ 'fresnelCoe' ].value = ( vecTemp0.dot( vecTemp1 ) + 1. ) / 2.; // TODO: Also need to use glsl viewPosition and viewNormal per pixel.
+				material.uniforms.fresnelCoe.value = ( vecTemp0.dot( vecTemp1 ) + 1. ) / 2.; // TODO: Also need to use glsl viewPosition and viewNormal per pixel.
 
 				reflectorWorldPosition.setFromMatrixPosition( scope.matrixWorld );
 				cameraWorldPosition.setFromMatrixPosition( camera.matrixWorld );
@@ -140,12 +140,12 @@
 
 				virtualCamera.updateMatrixWorld();
 				virtualCamera.projectionMatrix.copy( camera.projectionMatrix );
-				material.uniforms[ 'virtualCameraNear' ].value = camera.near;
-				material.uniforms[ 'virtualCameraFar' ].value = camera.far;
-				material.uniforms[ 'virtualCameraMatrixWorld' ].value = virtualCamera.matrixWorld;
-				material.uniforms[ 'virtualCameraProjectionMatrix' ].value = camera.projectionMatrix;
-				material.uniforms[ 'virtualCameraProjectionMatrixInverse' ].value = camera.projectionMatrixInverse;
-				material.uniforms[ 'resolution' ].value = scope.resolution; // Update the texture matrix
+				material.uniforms.virtualCameraNear.value = camera.near;
+				material.uniforms.virtualCameraFar.value = camera.far;
+				material.uniforms.virtualCameraMatrixWorld.value = virtualCamera.matrixWorld;
+				material.uniforms.virtualCameraProjectionMatrix.value = camera.projectionMatrix;
+				material.uniforms.virtualCameraProjectionMatrixInverse.value = camera.projectionMatrixInverse;
+				material.uniforms.resolution.value = scope.resolution; // Update the texture matrix
 
 				textureMatrix.set( 0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0 );
 				textureMatrix.multiply( virtualCamera.projectionMatrix );

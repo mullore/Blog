@@ -1683,8 +1683,8 @@ class ColladaLoader extends Loader {
 
 			//
 
-			let transparent = parameters[ 'transparent' ];
-			let transparency = parameters[ 'transparency' ];
+			let transparent = parameters.transparent;
+			let transparency = parameters.transparency;
 
 			// <transparency> does not exist but <transparent>
 

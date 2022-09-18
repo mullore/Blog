@@ -33,8 +33,8 @@ class MeshStandardNode extends StandardNode {
 
 	build( builder ) {
 
-		const props = this.properties,
-			inputs = this.inputs;
+		const props = this.properties;
+			const inputs = this.inputs;
 
 		if ( builder.isShader( 'fragment' ) ) {
 
@@ -42,8 +42,8 @@ class MeshStandardNode extends StandardNode {
 			// * color
 			// * map
 
-			const color = builder.findNode( props.color, inputs.color ),
-				map = builder.resolve( props.map );
+			const color = builder.findNode( props.color, inputs.color );
+				const map = builder.resolve( props.map );
 
 			this.color = map ? new OperatorNode( color, map, OperatorNode.MUL ) : color;
 
@@ -51,8 +51,8 @@ class MeshStandardNode extends StandardNode {
 			// * roughness
 			// * roughnessMap
 
-			const roughness = builder.findNode( props.roughness, inputs.roughness ),
-				roughnessMap = builder.resolve( props.roughnessMap );
+			const roughness = builder.findNode( props.roughness, inputs.roughness );
+				const roughnessMap = builder.resolve( props.roughnessMap );
 
 			this.roughness = roughnessMap ? new OperatorNode( roughness, new SwitchNode( roughnessMap, 'g' ), OperatorNode.MUL ) : roughness;
 
@@ -60,8 +60,8 @@ class MeshStandardNode extends StandardNode {
 			// * metalness
 			// * metalnessMap
 
-			const metalness = builder.findNode( props.metalness, inputs.metalness ),
-				metalnessMap = builder.resolve( props.metalnessMap );
+			const metalness = builder.findNode( props.metalness, inputs.metalness );
+				const metalnessMap = builder.resolve( props.metalnessMap );
 
 			this.metalness = metalnessMap ? new OperatorNode( metalness, new SwitchNode( metalnessMap, 'b' ), OperatorNode.MUL ) : metalness;
 

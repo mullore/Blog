@@ -39,9 +39,9 @@ class KTXLoader extends CompressedTextureLoader {
 const HEADER_LEN = 12 + ( 13 * 4 ); // identifier + header elements (not including key value meta-data pairs)
 // load types
 const COMPRESSED_2D = 0; // uses a gl.compressedTexImage2D()
-//const COMPRESSED_3D = 1; // uses a gl.compressedTexImage3D()
-//const TEX_2D = 2; // uses a gl.texImage2D()
-//const TEX_3D = 3; // uses a gl.texImage3D()
+// const COMPRESSED_3D = 1; // uses a gl.compressedTexImage3D()
+// const TEX_2D = 2; // uses a gl.texImage2D()
+// const TEX_3D = 3; // uses a gl.texImage3D()
 
 class KhronosTextureContainer {
 

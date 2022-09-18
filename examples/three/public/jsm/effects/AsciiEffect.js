@@ -14,12 +14,12 @@ class AsciiEffect {
 
 		// Some ASCII settings
 
-		const bResolution = ! options[ 'resolution' ] ? 0.15 : options[ 'resolution' ]; // Higher for more details
-		const iScale = ! options[ 'scale' ] ? 1 : options[ 'scale' ];
-		const bColor = ! options[ 'color' ] ? false : options[ 'color' ]; // nice but slows down rendering!
-		const bAlpha = ! options[ 'alpha' ] ? false : options[ 'alpha' ]; // Transparency
-		const bBlock = ! options[ 'block' ] ? false : options[ 'block' ]; // blocked characters. like good O dos
-		const bInvert = ! options[ 'invert' ] ? false : options[ 'invert' ]; // black is white, white is black
+		const bResolution = ! options.resolution ? 0.15 : options.resolution; // Higher for more details
+		const iScale = ! options.scale ? 1 : options.scale;
+		const bColor = ! options.color ? false : options.color; // nice but slows down rendering!
+		const bAlpha = ! options.alpha ? false : options.alpha; // Transparency
+		const bBlock = ! options.block ? false : options.block; // blocked characters. like good O dos
+		const bInvert = ! options.invert ? false : options.invert; // black is white, white is black
 
 		const strResolution = 'low';
 
@@ -222,7 +222,7 @@ class AsciiEffect {
 					if ( iAlpha == 0 ) {
 
 						// should calculate alpha instead, but quick hack :)
-						//fBrightness *= (iAlpha / 255);
+						// fBrightness *= (iAlpha / 255);
 						fBrightness = 1;
 
 					}
@@ -236,8 +236,8 @@ class AsciiEffect {
 					}
 
 					// good for debugging
-					//fBrightness = Math.floor(fBrightness * 10);
-					//strThisChar = fBrightness;
+					// fBrightness = Math.floor(fBrightness * 10);
+					// strThisChar = fBrightness;
 
 					let strThisChar = aCharList[ iCharIdx ];
 

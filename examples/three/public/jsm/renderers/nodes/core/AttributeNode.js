@@ -25,7 +25,7 @@ class AttributeNode extends Node {
 
 	}
 
-	getAttributeName( /*builder*/ ) {
+	getAttributeName( /* builder */ ) {
 
 		return this._attributeName;
 

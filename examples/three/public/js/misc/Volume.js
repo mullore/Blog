@@ -289,20 +289,20 @@
    */
 		extractPerpendicularPlane: function ( axis, RASIndex ) {
 
-			var iLength,
-				jLength,
-				sliceAccess,
-				planeMatrix = new THREE.Matrix4().identity(),
-				volume = this,
-				planeWidth,
-				planeHeight,
-				firstSpacing,
-				secondSpacing,
-				positionOffset,
-				IJKIndex;
-			var axisInIJK = new THREE.Vector3(),
-				firstDirection = new THREE.Vector3(),
-				secondDirection = new THREE.Vector3();
+			var iLength;
+				var jLength;
+				var sliceAccess;
+				var planeMatrix = new THREE.Matrix4().identity();
+				var volume = this;
+				var planeWidth;
+				var planeHeight;
+				var firstSpacing;
+				var secondSpacing;
+				var positionOffset;
+				var IJKIndex;
+			var axisInIJK = new THREE.Vector3();
+				var firstDirection = new THREE.Vector3();
+				var secondDirection = new THREE.Vector3();
 			var dimensions = new THREE.Vector3( this.xLength, this.yLength, this.zLength );
 
 			switch ( axis ) {

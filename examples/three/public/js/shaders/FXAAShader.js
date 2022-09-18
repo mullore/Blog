@@ -29,7 +29,7 @@
 
 		}`,
 		fragmentShader: // FXAA 3.11 implementation by NVIDIA, ported to webgl by Agost Biro (biro@archilogic.com)
-		//----------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------------------
 		// File:				es3-kepler\FXAA\assets\shaders/FXAA_DefaultES.frag
 		// SDK Version: v3.00
 		// Email:			 gameworks@nvidia.com
@@ -61,7 +61,7 @@
 		// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 		// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		//
-		//----------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------------------
 
   /* glsl */
   `

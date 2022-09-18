@@ -107,7 +107,7 @@
 			this.debugger.node = 0;
 			this.debugger.nodeID = type;
 			this.debugger.log();
-			return;
+			
 
 		},
 
@@ -279,7 +279,7 @@
 				case 'TAMP':
 					this.parseXVAL( 'amplitude', length );
 					break;
-					//Texture Mapping Form
+					// Texture Mapping Form
 
 				case 'TMAP':
 					this.setupForm( 'textureMap', length );
@@ -795,7 +795,7 @@
 
 			while ( this.reader.offset < finalOffset ) {
 
-				var numverts = this.reader.getUint16(); //var flags = numverts & 64512; // 6 high order bits are flags - ignoring for now
+				var numverts = this.reader.getUint16(); // var flags = numverts & 64512; // 6 high order bits are flags - ignoring for now
 
 				numverts = numverts & 1023; // remaining ten low order bits are vertex num
 
@@ -833,7 +833,7 @@
 			var type = this.reader.getIDTag();
 			if ( type === 'SURF' ) this.parseMaterialIndices( finalOffset ); else {
 
-				//PART, SMGP, COLR not supported
+				// PART, SMGP, COLR not supported
 				this.reader.skip( length - 4 );
 
 			}

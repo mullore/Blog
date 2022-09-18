@@ -48,13 +48,13 @@
 
 		const header = pvrDatas.header;
 		let bpp, format;
-		const metaLen = header[ 12 ],
-			pixelFormat = header[ 2 ],
-			height = header[ 6 ],
-			width = header[ 7 ],
+		const metaLen = header[ 12 ];
+			const pixelFormat = header[ 2 ];
+			const height = header[ 6 ];
+			const width = header[ 7 ];
 			// numSurfs = header[ 9 ],
-			numFaces = header[ 10 ],
-			numMipmaps = header[ 11 ];
+			const numFaces = header[ 10 ];
+			const numMipmaps = header[ 11 ];
 
 		switch ( pixelFormat ) {
 
@@ -102,22 +102,22 @@
 	function _parseV2( pvrDatas ) {
 
 		const header = pvrDatas.header;
-		const headerLength = header[ 0 ],
-			height = header[ 1 ],
-			width = header[ 2 ],
-			numMipmaps = header[ 3 ],
-			flags = header[ 4 ],
+		const headerLength = header[ 0 ];
+			const height = header[ 1 ];
+			const width = header[ 2 ];
+			const numMipmaps = header[ 3 ];
+			const flags = header[ 4 ];
 			// dataLength = header[ 5 ],
 			// bpp =  header[ 6 ],
 			// bitmaskRed = header[ 7 ],
 			// bitmaskGreen = header[ 8 ],
 			// bitmaskBlue = header[ 9 ],
-			bitmaskAlpha = header[ 10 ],
+			const bitmaskAlpha = header[ 10 ];
 			// pvrTag = header[ 11 ],
-			numSurfs = header[ 12 ];
+			const numSurfs = header[ 12 ];
 		const TYPE_MASK = 0xff;
-		const PVRTC_2 = 24,
-			PVRTC_4 = 25;
+		const PVRTC_2 = 24;
+			const PVRTC_4 = 25;
 		const formatFlags = flags & TYPE_MASK;
 		let bpp, format;
 
@@ -164,15 +164,15 @@
 			isCubemap: pvrDatas.isCubemap
 		};
 		const buffer = pvrDatas.buffer;
-		let dataOffset = pvrDatas.dataPtr,
-			dataSize = 0,
-			blockSize = 0,
-			blockWidth = 0,
-			blockHeight = 0,
-			widthBlocks = 0,
-			heightBlocks = 0;
-		const bpp = pvrDatas.bpp,
-			numSurfs = pvrDatas.numSurfaces;
+		let dataOffset = pvrDatas.dataPtr;
+			let dataSize = 0;
+			let blockSize = 0;
+			let blockWidth = 0;
+			let blockHeight = 0;
+			let widthBlocks = 0;
+			let heightBlocks = 0;
+		const bpp = pvrDatas.bpp;
+			const numSurfs = pvrDatas.numSurfaces;
 
 		if ( bpp === 2 ) {
 
@@ -192,8 +192,8 @@
 
 		while ( mipLevel < pvrDatas.numMipmaps ) {
 
-			const sWidth = pvrDatas.width >> mipLevel,
-				sHeight = pvrDatas.height >> mipLevel;
+			const sWidth = pvrDatas.width >> mipLevel;
+				const sHeight = pvrDatas.height >> mipLevel;
 			widthBlocks = sWidth / blockWidth;
 			heightBlocks = sHeight / blockHeight; // Clamp to minimum number of blocks
 

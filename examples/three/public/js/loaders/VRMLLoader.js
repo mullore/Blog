@@ -1437,12 +1437,12 @@
 			function buildIndexedFaceSetNode( node ) {
 
 				let color, coord, normal, texCoord;
-				let ccw = true,
-					solid = true,
-					creaseAngle = 0;
+				let ccw = true;
+					let solid = true;
+					let creaseAngle = 0;
 				let colorIndex, coordIndex, normalIndex, texCoordIndex;
-				let colorPerVertex = true,
-					normalPerVertex = true;
+				let colorPerVertex = true;
+					let normalPerVertex = true;
 				const fields = node.fields;
 
 				for ( let i = 0, l = fields.length; i < l; i ++ ) {
@@ -1870,9 +1870,9 @@
 
 			function buildConeNode( node ) {
 
-				let radius = 1,
-					height = 2,
-					openEnded = false;
+				let radius = 1;
+					let height = 2;
+					let openEnded = false;
 				const fields = node.fields;
 
 				for ( let i = 0, l = fields.length; i < l; i ++ ) {
@@ -1914,8 +1914,8 @@
 
 			function buildCylinderNode( node ) {
 
-				let radius = 1,
-					height = 2;
+				let radius = 1;
+					let height = 2;
 				const fields = node.fields;
 
 				for ( let i = 0, l = fields.length; i < l; i ++ ) {
@@ -2715,8 +2715,8 @@
 				const array = attribute.array;
 				const itemSize = attribute.itemSize;
 				const array2 = new array.constructor( indices.length * itemSize );
-				let index = 0,
-					index2 = 0;
+				let index = 0;
+					let index2 = 0;
 
 				for ( let i = 0, l = indices.length; i < l; i ++ ) {
 
@@ -2976,24 +2976,24 @@
 
 			super( tokenVocabulary );
 			const $ = this;
-			const Version = tokenVocabulary[ 'Version' ];
-			const LCurly = tokenVocabulary[ 'LCurly' ];
-			const RCurly = tokenVocabulary[ 'RCurly' ];
-			const LSquare = tokenVocabulary[ 'LSquare' ];
-			const RSquare = tokenVocabulary[ 'RSquare' ];
-			const Identifier = tokenVocabulary[ 'Identifier' ];
-			const RouteIdentifier = tokenVocabulary[ 'RouteIdentifier' ];
-			const StringLiteral = tokenVocabulary[ 'StringLiteral' ];
-			const HexLiteral = tokenVocabulary[ 'HexLiteral' ];
-			const NumberLiteral = tokenVocabulary[ 'NumberLiteral' ];
-			const TrueLiteral = tokenVocabulary[ 'TrueLiteral' ];
-			const FalseLiteral = tokenVocabulary[ 'FalseLiteral' ];
-			const NullLiteral = tokenVocabulary[ 'NullLiteral' ];
-			const DEF = tokenVocabulary[ 'DEF' ];
-			const USE = tokenVocabulary[ 'USE' ];
-			const ROUTE = tokenVocabulary[ 'ROUTE' ];
-			const TO = tokenVocabulary[ 'TO' ];
-			const NodeName = tokenVocabulary[ 'NodeName' ];
+			const Version = tokenVocabulary.Version;
+			const LCurly = tokenVocabulary.LCurly;
+			const RCurly = tokenVocabulary.RCurly;
+			const LSquare = tokenVocabulary.LSquare;
+			const RSquare = tokenVocabulary.RSquare;
+			const Identifier = tokenVocabulary.Identifier;
+			const RouteIdentifier = tokenVocabulary.RouteIdentifier;
+			const StringLiteral = tokenVocabulary.StringLiteral;
+			const HexLiteral = tokenVocabulary.HexLiteral;
+			const NumberLiteral = tokenVocabulary.NumberLiteral;
+			const TrueLiteral = tokenVocabulary.TrueLiteral;
+			const FalseLiteral = tokenVocabulary.FalseLiteral;
+			const NullLiteral = tokenVocabulary.NullLiteral;
+			const DEF = tokenVocabulary.DEF;
+			const USE = tokenVocabulary.USE;
+			const ROUTE = tokenVocabulary.ROUTE;
+			const TO = tokenVocabulary.TO;
+			const NodeName = tokenVocabulary.NodeName;
 			$.RULE( 'vrml', function () {
 
 				$.SUBRULE( $.version );

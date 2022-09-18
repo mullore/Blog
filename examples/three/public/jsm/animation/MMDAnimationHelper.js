@@ -526,8 +526,8 @@ class MMDAnimationHelper {
 		if ( mixer && this.enabled.animation ) {
 
 			// alternate solution to save/restore bones but less performant?
-			//mesh.pose();
-			//this._updatePropertyMixersBuffer( mesh );
+			// mesh.pose();
+			// this._updatePropertyMixersBuffer( mesh );
 
 			this._restoreBones( mesh );
 
@@ -664,7 +664,7 @@ class MMDAnimationHelper {
 
 					// disable IK of the bone the corresponding rigidBody type of which is 1 or 2
 					// because its rotation will be overriden by physics
-					link.enabled = bones[ link.index ].rigidBodyType > 0 ? false : true;
+					link.enabled = !(bones[ link.index ].rigidBodyType > 0);
 
 				} else {
 

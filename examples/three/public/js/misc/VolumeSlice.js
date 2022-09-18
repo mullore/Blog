@@ -113,12 +113,12 @@
 
 			}
 
-			var iLength = this.iLength,
-				jLength = this.jLength,
-				sliceAccess = this.sliceAccess,
-				volume = this.volume,
-				canvas = this.canvasBuffer,
-				ctx = this.ctxBuffer; // get the imageData and pixel array from the canvas
+			var iLength = this.iLength;
+				var jLength = this.jLength;
+				var sliceAccess = this.sliceAccess;
+				var volume = this.volume;
+				var canvas = this.canvasBuffer;
+				var ctx = this.ctxBuffer; // get the imageData and pixel array from the canvas
 
 			var imgData = ctx.getImageData( 0, 0, iLength, jLength );
 			var data = imgData.data;
@@ -132,7 +132,7 @@
 
 			if ( volume.dataType === 'label' ) {
 
-				//this part is currently useless but will be used when colortables will be handled
+				// this part is currently useless but will be used when colortables will be handled
 				for ( var j = 0; j < jLength; j ++ ) {
 
 					for ( var i = 0; i < iLength; i ++ ) {
@@ -157,9 +157,9 @@
 					for ( var i = 0; i < iLength; i ++ ) {
 
 						var value = volumeData[ sliceAccess( i, j ) ];
-						var alpha = 0xff; //apply threshold
+						var alpha = 0xff; // apply threshold
 
-						alpha = upperThreshold >= value ? lowerThreshold <= value ? alpha : 0 : 0; //apply window level
+						alpha = upperThreshold >= value ? lowerThreshold <= value ? alpha : 0 : 0; // apply window level
 
 						value = Math.floor( 255 * ( value - windowLow ) / ( windowHigh - windowLow ) );
 						value = value > 255 ? 255 : value < 0 ? 0 : value | 0;
@@ -205,7 +205,7 @@
 
 			if ( this.mesh ) {
 
-				this.mesh.geometry = this.geometry; //reset mesh matrix
+				this.mesh.geometry = this.geometry; // reset mesh matrix
 
 				this.mesh.matrix.identity();
 				this.mesh.applyMatrix4( this.matrix );

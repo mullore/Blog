@@ -21,7 +21,7 @@ class PositionNode extends Node {
 
 	}
 
-	getHash( /*builder*/ ) {
+	getHash( /* builder */ ) {
 
 		return `position-${this.scope}`;
 

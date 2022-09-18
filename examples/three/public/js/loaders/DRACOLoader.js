@@ -358,7 +358,7 @@
 				case 'init':
 					decoderConfig = message.decoderConfig;
 					decoderPending = new Promise( function ( resolve
-						/*, reject*/
+						/*, reject */
 					) {
 
 						decoderConfig.onModuleLoaded = function ( draco ) {

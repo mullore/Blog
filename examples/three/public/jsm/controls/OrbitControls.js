@@ -310,7 +310,7 @@ class OrbitControls extends EventDispatcher {
 
 			}
 
-			//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+			// scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
 		};
 

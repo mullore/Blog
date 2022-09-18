@@ -19,7 +19,7 @@
 			if ( THREE.CopyShader === undefined ) console.error( 'THREE.BloomPass relies on THREE.CopyShader' );
 			const copyShader = THREE.CopyShader;
 			this.copyUniforms = THREE.UniformsUtils.clone( copyShader.uniforms );
-			this.copyUniforms[ 'opacity' ].value = strength;
+			this.copyUniforms.opacity.value = strength;
 			this.materialCopy = new THREE.ShaderMaterial( {
 				uniforms: this.copyUniforms,
 				vertexShader: copyShader.vertexShader,
@@ -31,8 +31,8 @@
 			if ( THREE.ConvolutionShader === undefined ) console.error( 'THREE.BloomPass relies on THREE.ConvolutionShader' );
 			const convolutionShader = THREE.ConvolutionShader;
 			this.convolutionUniforms = THREE.UniformsUtils.clone( convolutionShader.uniforms );
-			this.convolutionUniforms[ 'uImageIncrement' ].value = BloomPass.blurX;
-			this.convolutionUniforms[ 'cKernel' ].value = THREE.ConvolutionShader.buildKernel( sigma );
+			this.convolutionUniforms.uImageIncrement.value = BloomPass.blurX;
+			this.convolutionUniforms.cKernel.value = THREE.ConvolutionShader.buildKernel( sigma );
 			this.materialConvolution = new THREE.ShaderMaterial( {
 				uniforms: this.convolutionUniforms,
 				vertexShader: convolutionShader.vertexShader,
@@ -52,20 +52,20 @@
 			if ( maskActive ) renderer.state.buffers.stencil.setTest( false ); // Render quad with blured scene into texture (convolution pass 1)
 
 			this.fsQuad.material = this.materialConvolution;
-			this.convolutionUniforms[ 'tDiffuse' ].value = readBuffer.texture;
-			this.convolutionUniforms[ 'uImageIncrement' ].value = BloomPass.blurX;
+			this.convolutionUniforms.tDiffuse.value = readBuffer.texture;
+			this.convolutionUniforms.uImageIncrement.value = BloomPass.blurX;
 			renderer.setRenderTarget( this.renderTargetX );
 			renderer.clear();
 			this.fsQuad.render( renderer ); // Render quad with blured scene into texture (convolution pass 2)
 
-			this.convolutionUniforms[ 'tDiffuse' ].value = this.renderTargetX.texture;
-			this.convolutionUniforms[ 'uImageIncrement' ].value = BloomPass.blurY;
+			this.convolutionUniforms.tDiffuse.value = this.renderTargetX.texture;
+			this.convolutionUniforms.uImageIncrement.value = BloomPass.blurY;
 			renderer.setRenderTarget( this.renderTargetY );
 			renderer.clear();
 			this.fsQuad.render( renderer ); // Render original scene with superimposed blur to texture
 
 			this.fsQuad.material = this.materialCopy;
-			this.copyUniforms[ 'tDiffuse' ].value = this.renderTargetY.texture;
+			this.copyUniforms.tDiffuse.value = this.renderTargetY.texture;
 			if ( maskActive ) renderer.state.buffers.stencil.setTest( true );
 			renderer.setRenderTarget( readBuffer );
 			if ( this.clear ) renderer.clear();

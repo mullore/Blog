@@ -51,17 +51,17 @@ class CondNode extends TempNode {
 
 	generate( builder, output ) {
 
-		const type = this.getType( builder ),
-			condType = this.getCondType( builder ),
-			a = this.a.build( builder, condType ),
-			b = this.b.build( builder, condType );
+		const type = this.getType( builder );
+			const condType = this.getCondType( builder );
+			const a = this.a.build( builder, condType );
+			const b = this.b.build( builder, condType );
 
 		let code;
 
 		if ( this.ifNode ) {
 
-			const ifCode = this.ifNode.build( builder, type ),
-				elseCode = this.elseNode.build( builder, type );
+			const ifCode = this.ifNode.build( builder, type );
+				const elseCode = this.elseNode.build( builder, type );
 
 			code = '( ' + [ a, this.op, b, '?', ifCode, ':', elseCode ].join( ' ' ) + ' )';
 

@@ -17,7 +17,7 @@ class VelocityNode extends Vector3Node {
 
 	}
 
-	getReadonly( /*builder*/ ) {
+	getReadonly( /* builder */ ) {
 
 		return false;
 
@@ -79,7 +79,7 @@ class VelocityNode extends Vector3Node {
 
 	}
 
-	updateFrameVelocity( /*frame*/ ) {
+	updateFrameVelocity( /* frame */ ) {
 
 		if ( this.target ) {
 
@@ -102,8 +102,8 @@ class VelocityNode extends Vector3Node {
 				// convert to real scale: 0 at 1 values
 				const deltaFps = frame.delta * ( this.params.fps || 60 );
 
-				const spring = Math.pow( this.params.spring, deltaFps ),
-					damping = Math.pow( this.params.damping, deltaFps );
+				const spring = Math.pow( this.params.spring, deltaFps );
+					const damping = Math.pow( this.params.damping, deltaFps );
 
 				// fix relative frame-rate
 				this.velocity.multiplyScalar( Math.exp( - this.params.damping * deltaFps ) );

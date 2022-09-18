@@ -30,8 +30,8 @@ class TextureNode extends InputNode {
 
 		}
 
-		const tex = this.getTexture( builder, output ),
-			uv = this.uv.build( builder, this.project ? 'v4' : 'v2' );
+		const tex = this.getTexture( builder, output );
+			const uv = this.uv.build( builder, this.project ? 'v4' : 'v2' );
 
 		let bias = this.bias ? this.bias.build( builder, 'f' ) : undefined;
 

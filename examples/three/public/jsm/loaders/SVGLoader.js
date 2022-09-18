@@ -1066,7 +1066,7 @@ class SVGLoader extends Loader {
 
 			let state = SEP;
 			let seenComma = true;
-			let number = '', exponent = '';
+			let number = ''; let exponent = '';
 			const result = [];
 
 			function throwSyntaxError( current, i, partial ) {
@@ -1357,13 +1357,13 @@ class SVGLoader extends Loader {
 
 			}
 
-			let scale = undefined;
+			let scale;
 
 			if ( theUnit === 'px' && scope.defaultUnit !== 'px' ) {
 
 				// Conversion scale from  pixels to inches, then to default units
 
-				scale = unitConversion[ 'in' ][ scope.defaultUnit ] / scope.defaultDPI;
+				scale = unitConversion.in[ scope.defaultUnit ] / scope.defaultDPI;
 
 			} else {
 
@@ -1373,7 +1373,7 @@ class SVGLoader extends Loader {
 
 					// Conversion scale to pixels
 
-					scale = unitConversion[ theUnit ][ 'in' ] * scope.defaultDPI;
+					scale = unitConversion[ theUnit ].in * scope.defaultDPI;
 
 				}
 
@@ -1729,19 +1729,19 @@ class SVGLoader extends Loader {
 
 			if ( ( ( denom === 0 ) && ( nom1 !== 0 ) ) || ( t1 <= 0 ) || ( t1 >= 1 ) || ( t2 < 0 ) || ( t2 > 1 ) ) {
 
-				//1. lines are parallel or edges don't intersect
+				// 1. lines are parallel or edges don't intersect
 
 				return null;
 
 			} else if ( ( nom1 === 0 ) && ( denom === 0 ) ) {
 
-				//2. lines are colinear
+				// 2. lines are colinear
 
-				//check if endpoints of edge2 (b0-b1) lies on edge1 (a0-a1)
+				// check if endpoints of edge2 (b0-b1) lies on edge1 (a0-a1)
 				for ( let i = 0; i < 2; i ++ ) {
 
 					classifyPoint( i === 0 ? b0 : b1, a0, a1 );
-					//find position of this endpoints relatively to edge1
+					// find position of this endpoints relatively to edge1
 					if ( classifyResult.loc == IntersectionLocationType.ORIGIN ) {
 
 						const point = ( i === 0 ? b0 : b1 );
@@ -1761,7 +1761,7 @@ class SVGLoader extends Loader {
 
 			} else {
 
-				//3. edges intersect
+				// 3. edges intersect
 
 				for ( let i = 0; i < 2; i ++ ) {
 
@@ -1986,7 +1986,7 @@ class SVGLoader extends Loader {
 
 			if ( _fillRule === 'evenodd' ) {
 
-				const isHole = stack.length % 2 === 0 ? true : false;
+				const isHole = stack.length % 2 === 0;
 				const isHoleFor = stack[ stack.length - 2 ];
 
 				return { identifier: simplePath.identifier, isHole: isHole, for: isHoleFor };
@@ -2046,7 +2046,7 @@ class SVGLoader extends Loader {
 			let maxX = - BIGNUMBER;
 			let minX = BIGNUMBER;
 
-	      	//points.forEach(p => p.y *= -1);
+	      	// points.forEach(p => p.y *= -1);
 
 			for ( let i = 0; i < points.length; i ++ ) {
 
@@ -2230,7 +2230,7 @@ class SVGLoader extends Loader {
 		const strokeWidth2 = style.strokeWidth / 2;
 
 		const deltaU = 1 / ( numPoints - 1 );
-		let u0 = 0, u1;
+		let u0 = 0; let u1;
 
 		let innerSideModified;
 		let joinIsOnLeftSide;

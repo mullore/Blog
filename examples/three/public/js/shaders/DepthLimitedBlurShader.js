@@ -160,9 +160,9 @@
 		},
 		configure: function ( material, kernelRadius, stdDev, uvIncrement ) {
 
-			material.defines[ 'KERNEL_RADIUS' ] = kernelRadius;
-			material.uniforms[ 'sampleUvOffsets' ].value = BlurShaderUtils.createSampleOffsets( kernelRadius, uvIncrement );
-			material.uniforms[ 'sampleWeights' ].value = BlurShaderUtils.createSampleWeights( kernelRadius, stdDev );
+			material.defines.KERNEL_RADIUS = kernelRadius;
+			material.uniforms.sampleUvOffsets.value = BlurShaderUtils.createSampleOffsets( kernelRadius, uvIncrement );
+			material.uniforms.sampleWeights.value = BlurShaderUtils.createSampleWeights( kernelRadius, stdDev );
 			material.needsUpdate = true;
 
 		}

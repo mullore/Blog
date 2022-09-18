@@ -1119,21 +1119,21 @@ class TransformControlsGizmo extends Object3D {
 		this.picker = {};
 		this.helper = {};
 
-		this.add( this.gizmo[ 'translate' ] = setupGizmo( gizmoTranslate ) );
-		this.add( this.gizmo[ 'rotate' ] = setupGizmo( gizmoRotate ) );
-		this.add( this.gizmo[ 'scale' ] = setupGizmo( gizmoScale ) );
-		this.add( this.picker[ 'translate' ] = setupGizmo( pickerTranslate ) );
-		this.add( this.picker[ 'rotate' ] = setupGizmo( pickerRotate ) );
-		this.add( this.picker[ 'scale' ] = setupGizmo( pickerScale ) );
-		this.add( this.helper[ 'translate' ] = setupGizmo( helperTranslate ) );
-		this.add( this.helper[ 'rotate' ] = setupGizmo( helperRotate ) );
-		this.add( this.helper[ 'scale' ] = setupGizmo( helperScale ) );
+		this.add( this.gizmo.translate = setupGizmo( gizmoTranslate ) );
+		this.add( this.gizmo.rotate = setupGizmo( gizmoRotate ) );
+		this.add( this.gizmo.scale = setupGizmo( gizmoScale ) );
+		this.add( this.picker.translate = setupGizmo( pickerTranslate ) );
+		this.add( this.picker.rotate = setupGizmo( pickerRotate ) );
+		this.add( this.picker.scale = setupGizmo( pickerScale ) );
+		this.add( this.helper.translate = setupGizmo( helperTranslate ) );
+		this.add( this.helper.rotate = setupGizmo( helperRotate ) );
+		this.add( this.helper.scale = setupGizmo( helperScale ) );
 
 		// Pickers should be hidden always
 
-		this.picker[ 'translate' ].visible = false;
-		this.picker[ 'rotate' ].visible = false;
-		this.picker[ 'scale' ].visible = false;
+		this.picker.translate.visible = false;
+		this.picker.rotate.visible = false;
+		this.picker.scale.visible = false;
 
 	}
 
@@ -1147,13 +1147,13 @@ class TransformControlsGizmo extends Object3D {
 
 		// Show only gizmos for current transform mode
 
-		this.gizmo[ 'translate' ].visible = this.mode === 'translate';
-		this.gizmo[ 'rotate' ].visible = this.mode === 'rotate';
-		this.gizmo[ 'scale' ].visible = this.mode === 'scale';
+		this.gizmo.translate.visible = this.mode === 'translate';
+		this.gizmo.rotate.visible = this.mode === 'rotate';
+		this.gizmo.scale.visible = this.mode === 'scale';
 
-		this.helper[ 'translate' ].visible = this.mode === 'translate';
-		this.helper[ 'rotate' ].visible = this.mode === 'rotate';
-		this.helper[ 'scale' ].visible = this.mode === 'scale';
+		this.helper.translate.visible = this.mode === 'translate';
+		this.helper.rotate.visible = this.mode === 'rotate';
+		this.helper.scale.visible = this.mode === 'scale';
 
 
 		let handles = [];

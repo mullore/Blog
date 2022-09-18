@@ -54,8 +54,8 @@ class InputNode extends TempNode {
 		uuid = builder.getUuid( uuid || this.getUuid() );
 		type = type || this.getType( builder );
 
-		const data = builder.getNodeData( uuid ),
-			readonly = this.getReadonly( builder ) && this.generateReadonly !== undefined;
+		const data = builder.getNodeData( uuid );
+			const readonly = this.getReadonly( builder ) && this.generateReadonly !== undefined;
 
 		if ( readonly ) {
 

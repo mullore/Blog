@@ -52,9 +52,9 @@ const NodeUtils = {
 
 			for ( let i = 0; i < list.length; ++ i ) {
 
-				const data = list[ i ].split( '.' ),
-					property = data[ 0 ],
-					subProperty = data[ 1 ];
+				const data = list[ i ].split( '.' );
+					const property = data[ 0 ];
+					const subProperty = data[ 1 ];
 
 				shortcuts[ property ] = applyShortcut( proxy, property, subProperty );
 

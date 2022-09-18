@@ -7,7 +7,7 @@
 			super();
 			this.camera = camera;
 			this.needsSwap = false;
-			this.cubeShader = THREE.ShaderLib[ 'cube' ];
+			this.cubeShader = THREE.ShaderLib.cube;
 			this.cubeMesh = new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10 ), new THREE.ShaderMaterial( {
 				uniforms: THREE.UniformsUtils.clone( this.cubeShader.uniforms ),
 				vertexShader: this.cubeShader.vertexShader,
@@ -32,7 +32,7 @@
 		}
 
 		render( renderer, writeBuffer, readBuffer
-			/*, deltaTime, maskActive*/
+			/*, deltaTime, maskActive */
 		) {
 
 			const oldAutoClear = renderer.autoClear;

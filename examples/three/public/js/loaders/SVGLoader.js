@@ -906,8 +906,8 @@
 				const EXP = 3;
 				let state = SEP;
 				let seenComma = true;
-				let number = '',
-					exponent = '';
+				let number = '';
+					let exponent = '';
 				const result = [];
 
 				function throwSyntaxError( current, i, partial ) {
@@ -1188,12 +1188,12 @@
 
 				}
 
-				let scale = undefined;
+				let scale;
 
 				if ( theUnit === 'px' && scope.defaultUnit !== 'px' ) {
 
 					// Conversion scale from  pixels to inches, then to default units
-					scale = unitConversion[ 'in' ][ scope.defaultUnit ] / scope.defaultDPI;
+					scale = unitConversion.in[ scope.defaultUnit ] / scope.defaultDPI;
 
 				} else {
 
@@ -1202,7 +1202,7 @@
 					if ( scale < 0 ) {
 
 						// Conversion scale to pixels
-						scale = unitConversion[ theUnit ][ 'in' ] * scope.defaultDPI;
+						scale = unitConversion[ theUnit ].in * scope.defaultDPI;
 
 					}
 
@@ -1522,16 +1522,16 @@
 
 				if ( denom === 0 && nom1 !== 0 || t1 <= 0 || t1 >= 1 || t2 < 0 || t2 > 1 ) {
 
-					//1. lines are parallel or edges don't intersect
+					// 1. lines are parallel or edges don't intersect
 					return null;
 
 				} else if ( nom1 === 0 && denom === 0 ) {
 
-					//2. lines are colinear
-					//check if endpoints of edge2 (b0-b1) lies on edge1 (a0-a1)
+					// 2. lines are colinear
+					// check if endpoints of edge2 (b0-b1) lies on edge1 (a0-a1)
 					for ( let i = 0; i < 2; i ++ ) {
 
-						classifyPoint( i === 0 ? b0 : b1, a0, a1 ); //find position of this endpoints relatively to edge1
+						classifyPoint( i === 0 ? b0 : b1, a0, a1 ); // find position of this endpoints relatively to edge1
 
 						if ( classifyResult.loc == IntersectionLocationType.ORIGIN ) {
 
@@ -1560,7 +1560,7 @@
 
 				} else {
 
-					//3. edges intersect
+					// 3. edges intersect
 					for ( let i = 0; i < 2; i ++ ) {
 
 						classifyPoint( i === 0 ? b0 : b1, a0, a1 );
@@ -1782,7 +1782,7 @@
 
 				if ( _fillRule === 'evenodd' ) {
 
-					const isHole = stack.length % 2 === 0 ? true : false;
+					const isHole = stack.length % 2 === 0;
 					const isHoleFor = stack[ stack.length - 2 ];
 					return {
 						identifier: simplePath.identifier,
@@ -1844,7 +1844,7 @@
 				let maxY = - BIGNUMBER;
 				let minY = BIGNUMBER;
 				let maxX = - BIGNUMBER;
-				let minX = BIGNUMBER; //points.forEach(p => p.y *= -1);
+				let minX = BIGNUMBER; // points.forEach(p => p.y *= -1);
 
 				for ( let i = 0; i < points.length; i ++ ) {
 
@@ -2016,8 +2016,8 @@
 			let nextPoint;
 			const strokeWidth2 = style.strokeWidth / 2;
 			const deltaU = 1 / ( numPoints - 1 );
-			let u0 = 0,
-				u1;
+			let u0 = 0;
+				let u1;
 			let innerSideModified;
 			let joinIsOnLeftSide;
 			let isMiter;

@@ -24,8 +24,8 @@
 	function grad( hash, x, y, z ) {
 
 		const h = hash & 15;
-		const u = h < 8 ? x : y,
-			v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+		const u = h < 8 ? x : y;
+			const v = h < 4 ? y : h == 12 || h == 14 ? x : z;
 		return ( ( h & 1 ) == 0 ? u : - u ) + ( ( h & 2 ) == 0 ? v : - v );
 
 	}
@@ -34,27 +34,27 @@
 
 		noise( x, y, z ) {
 
-			const floorX = Math.floor( x ),
-				floorY = Math.floor( y ),
-				floorZ = Math.floor( z );
-			const X = floorX & 255,
-				Y = floorY & 255,
-				Z = floorZ & 255;
+			const floorX = Math.floor( x );
+				const floorY = Math.floor( y );
+				const floorZ = Math.floor( z );
+			const X = floorX & 255;
+				const Y = floorY & 255;
+				const Z = floorZ & 255;
 			x -= floorX;
 			y -= floorY;
 			z -= floorZ;
-			const xMinus1 = x - 1,
-				yMinus1 = y - 1,
-				zMinus1 = z - 1;
-			const u = fade( x ),
-				v = fade( y ),
-				w = fade( z );
-			const A = _p[ X ] + Y,
-				AA = _p[ A ] + Z,
-				AB = _p[ A + 1 ] + Z,
-				B = _p[ X + 1 ] + Y,
-				BA = _p[ B ] + Z,
-				BB = _p[ B + 1 ] + Z;
+			const xMinus1 = x - 1;
+				const yMinus1 = y - 1;
+				const zMinus1 = z - 1;
+			const u = fade( x );
+				const v = fade( y );
+				const w = fade( z );
+			const A = _p[ X ] + Y;
+				const AA = _p[ A ] + Z;
+				const AB = _p[ A + 1 ] + Z;
+				const B = _p[ X + 1 ] + Y;
+				const BA = _p[ B ] + Z;
+				const BB = _p[ B + 1 ] + Z;
 			return lerp( w, lerp( v, lerp( u, grad( _p[ AA ], x, y, z ), grad( _p[ BA ], xMinus1, y, z ) ), lerp( u, grad( _p[ AB ], x, yMinus1, z ), grad( _p[ BB ], xMinus1, yMinus1, z ) ) ), lerp( v, lerp( u, grad( _p[ AA + 1 ], x, y, zMinus1 ), grad( _p[ BA + 1 ], xMinus1, y, zMinus1 ) ), lerp( u, grad( _p[ AB + 1 ], x, yMinus1, zMinus1 ), grad( _p[ BB + 1 ], xMinus1, yMinus1, zMinus1 ) ) ) );
 
 		}

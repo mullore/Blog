@@ -7,10 +7,7 @@ import {
 	Object3D,
 	Vector3
 } from 'three';
-import { Projector } from '../renderers/Projector.js';
-import { RenderableFace } from '../renderers/Projector.js';
-import { RenderableLine } from '../renderers/Projector.js';
-import { RenderableSprite } from '../renderers/Projector.js';
+import { Projector , RenderableFace , RenderableLine , RenderableSprite } from '../renderers/Projector.js';
 
 class SVGObject extends Object3D {
 
@@ -30,42 +27,42 @@ class SVGRenderer {
 
 	constructor() {
 
-		let _renderData, _elements, _lights,
-			_svgWidth, _svgHeight, _svgWidthHalf, _svgHeightHalf,
+		let _renderData; let _elements; let _lights;
+			let _svgWidth; let _svgHeight; let _svgWidthHalf; let _svgHeightHalf;
 
-			_v1, _v2, _v3,
+			let _v1; let _v2; let _v3;
 
-			_svgNode,
-			_pathCount = 0,
+			let _svgNode;
+			let _pathCount = 0;
 
-			_precision = null,
-			_quality = 1,
+			let _precision = null;
+			let _quality = 1;
 
-			_currentPath, _currentStyle;
+			let _currentPath; let _currentStyle;
 
-		const _this = this,
-			_clipBox = new Box2(),
-			_elemBox = new Box2(),
+		const _this = this;
+			const _clipBox = new Box2();
+			const _elemBox = new Box2();
 
-			_color = new Color(),
-			_diffuseColor = new Color(),
-			_ambientLight = new Color(),
-			_directionalLights = new Color(),
-			_pointLights = new Color(),
-			_clearColor = new Color(),
+			const _color = new Color();
+			const _diffuseColor = new Color();
+			const _ambientLight = new Color();
+			const _directionalLights = new Color();
+			const _pointLights = new Color();
+			const _clearColor = new Color();
 
-			_vector3 = new Vector3(), // Needed for PointLight
-			_centroid = new Vector3(),
-			_normal = new Vector3(),
-			_normalViewMatrix = new Matrix3(),
+			const _vector3 = new Vector3(); // Needed for PointLight
+			const _centroid = new Vector3();
+			const _normal = new Vector3();
+			const _normalViewMatrix = new Matrix3();
 
-			_viewMatrix = new Matrix4(),
-			_viewProjectionMatrix = new Matrix4(),
+			const _viewMatrix = new Matrix4();
+			const _viewProjectionMatrix = new Matrix4();
 
-			_svgPathPool = [],
+			const _svgPathPool = [];
 
-			_projector = new Projector(),
-			_svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
+			const _projector = new Projector();
+			const _svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
 
 		this.domElement = _svg;
 
@@ -479,7 +476,7 @@ class SVGRenderer {
 
 		function expand( v1, v2, pixels ) {
 
-			let x = v2.x - v1.x, y = v2.y - v1.y;
+			let x = v2.x - v1.x; let y = v2.y - v1.y;
 			const det = x * x + y * y;
 
 			if ( det === 0 ) return;
@@ -534,7 +531,7 @@ class SVGRenderer {
 
 				if ( _quality == 0 ) {
 
-					_svgPathPool[ id ].setAttribute( 'shape-rendering', 'crispEdges' ); //optimizeSpeed
+					_svgPathPool[ id ].setAttribute( 'shape-rendering', 'crispEdges' ); // optimizeSpeed
 
 				}
 

@@ -190,7 +190,7 @@ class NodeBuilder {
 
 	}
 
-	getPropertyName( node/*, shaderStage*/ ) {
+	getPropertyName( node/*, shaderStage */ ) {
 
 		return node.name;
 
@@ -471,7 +471,7 @@ class NodeBuilder {
 
 	}
 
-	getVarys( /*shaderStage*/ ) {
+	getVarys( /* shaderStage */ ) {
 
 		console.warn( 'Abstract function.' );
 
@@ -495,7 +495,7 @@ class NodeBuilder {
 
 	}
 
-	getUniforms( /*shaderStage*/ ) {
+	getUniforms( /* shaderStage */ ) {
 
 		console.warn( 'Abstract function.' );
 

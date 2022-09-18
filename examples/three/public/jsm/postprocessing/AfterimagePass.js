@@ -22,7 +22,7 @@ class AfterimagePass extends Pass {
 
 		this.uniforms = UniformsUtils.clone( this.shader.uniforms );
 
-		this.uniforms[ 'damp' ].value = damp;
+		this.uniforms.damp.value = damp;
 
 		this.textureComp = new WebGLRenderTarget( window.innerWidth, window.innerHeight, {
 
@@ -55,10 +55,10 @@ class AfterimagePass extends Pass {
 
 	}
 
-	render( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive*/ ) {
+	render( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive */ ) {
 
-		this.uniforms[ 'tOld' ].value = this.textureOld.texture;
-		this.uniforms[ 'tNew' ].value = readBuffer.texture;
+		this.uniforms.tOld.value = this.textureOld.texture;
+		this.uniforms.tNew.value = readBuffer.texture;
 
 		renderer.setRenderTarget( this.textureComp );
 		this.compFsQuad.render( renderer );

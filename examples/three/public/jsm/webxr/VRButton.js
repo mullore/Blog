@@ -10,7 +10,7 @@ class VRButton {
 
 		const button = document.createElement( 'button' );
 
-		function showEnterVR( /*device*/ ) {
+		function showEnterVR( /* device */ ) {
 
 			let currentSession = null;
 
@@ -25,7 +25,7 @@ class VRButton {
 
 			}
 
-			function onSessionEnded( /*event*/ ) {
+			function onSessionEnded( /* event */ ) {
 
 				currentSession.removeEventListener( 'end', onSessionEnded );
 

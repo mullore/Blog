@@ -20,7 +20,7 @@ class CubeTexturePass extends Pass {
 
 		this.needsSwap = false;
 
-		this.cubeShader = ShaderLib[ 'cube' ];
+		this.cubeShader = ShaderLib.cube;
 		this.cubeMesh = new Mesh(
 			new BoxGeometry( 10, 10, 10 ),
 			new ShaderMaterial( {
@@ -52,7 +52,7 @@ class CubeTexturePass extends Pass {
 
 	}
 
-	render( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive*/ ) {
+	render( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive */ ) {
 
 		const oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;

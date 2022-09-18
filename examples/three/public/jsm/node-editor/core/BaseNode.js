@@ -4,7 +4,7 @@ export class BaseNode extends ObjectNode {
 
 	constructor( name, inputLength, value = null, width = 300 ) {
 
-		const getObjectCallback = ( /*output = null*/ ) => {
+		const getObjectCallback = ( /* output = null */ ) => {
 
 			return this.value;
 

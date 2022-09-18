@@ -113,7 +113,7 @@ export const RE_Direct_Physical = new ShaderNode( ( inputs ) => {
 
 } );
 
-export const PhysicalLightingModel = new ShaderNode( ( inputs/*, builder*/ ) => {
+export const PhysicalLightingModel = new ShaderNode( ( inputs/*, builder */ ) => {
 
 	// PHYSICALLY_CORRECT_LIGHTS <-> builder.renderer.physicallyCorrectLights === true
 

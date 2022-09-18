@@ -398,7 +398,7 @@ function DRACOWorker() {
 
 			case 'init':
 				decoderConfig = message.decoderConfig;
-				decoderPending = new Promise( function ( resolve/*, reject*/ ) {
+				decoderPending = new Promise( function ( resolve/*, reject */ ) {
 
 					decoderConfig.onModuleLoaded = function ( draco ) {
 

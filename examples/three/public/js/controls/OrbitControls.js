@@ -271,7 +271,7 @@
 
 					scope._domElementKeyEvents.removeEventListener( 'keydown', onKeyDown );
 
-				} //scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+				} // scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
 			}; //
 			// internals

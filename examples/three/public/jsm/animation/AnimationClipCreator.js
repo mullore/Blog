@@ -11,7 +11,7 @@ class AnimationClipCreator {
 
 	static CreateRotationAnimation( period, axis = 'x' ) {
 
-		const times = [ 0, period ], values = [ 0, 360 ];
+		const times = [ 0, period ]; const values = [ 0, 360 ];
 
 		const trackName = '.rotation[' + axis + ']';
 
@@ -23,7 +23,7 @@ class AnimationClipCreator {
 
 	static CreateScaleAxisAnimation( period, axis = 'x' ) {
 
-		const times = [ 0, period ], values = [ 0, 1 ];
+		const times = [ 0, period ]; const values = [ 0, 1 ];
 
 		const trackName = '.scale[' + axis + ']';
 
@@ -35,7 +35,7 @@ class AnimationClipCreator {
 
 	static CreateShakeAnimation( duration, shakeScale ) {
 
-		const times = [], values = [], tmp = new Vector3();
+		const times = []; const values = []; const tmp = new Vector3();
 
 		for ( let i = 0; i < duration * 10; i ++ ) {
 
@@ -57,7 +57,7 @@ class AnimationClipCreator {
 
 	static CreatePulsationAnimation( duration, pulseScale ) {
 
-		const times = [], values = [], tmp = new Vector3();
+		const times = []; const values = []; const tmp = new Vector3();
 
 		for ( let i = 0; i < duration * 10; i ++ ) {
 
@@ -79,7 +79,7 @@ class AnimationClipCreator {
 
 	static CreateVisibilityAnimation( duration ) {
 
-		const times = [ 0, duration / 2, duration ], values = [ true, false, true ];
+		const times = [ 0, duration / 2, duration ]; const values = [ true, false, true ];
 
 		const trackName = '.visible';
 
@@ -91,8 +91,8 @@ class AnimationClipCreator {
 
 	static CreateMaterialColorAnimation( duration, colors ) {
 
-		const times = [], values = [],
-			timeStep = duration / colors.length;
+		const times = []; const values = [];
+			const timeStep = duration / colors.length;
 
 		for ( let i = 0; i <= colors.length; i ++ ) {
 

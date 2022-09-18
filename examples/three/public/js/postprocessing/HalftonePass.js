@@ -41,10 +41,10 @@
 		}
 
 		render( renderer, writeBuffer, readBuffer
-			/*, deltaTime, maskActive*/
+			/*, deltaTime, maskActive */
 		) {
 
-			this.material.uniforms[ 'tDiffuse' ].value = readBuffer.texture;
+			this.material.uniforms.tDiffuse.value = readBuffer.texture;
 
 			if ( this.renderToScreen ) {
 

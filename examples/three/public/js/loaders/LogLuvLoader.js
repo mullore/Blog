@@ -44,8 +44,8 @@
 			debug: false
 		}; // read MakerNote, debug
 
-		var data = new Uint8Array( buff ),
-			offset = 0;
+		var data = new Uint8Array( buff );
+			var offset = 0;
 
 		var id = UTIF._binBE.readASCII( data, offset, 2 );
 
@@ -59,9 +59,9 @@
 
 		while ( true ) {
 
-			var cnt = bin.readUshort( data, ifdo ),
-				typ = bin.readUshort( data, ifdo + 4 );
-			if ( cnt != 0 ) if ( typ < 1 || 13 < typ ) {
+			var cnt = bin.readUshort( data, ifdo );
+				var typ = bin.readUshort( data, ifdo + 4 );
+			if ( cnt != 0 ) if ( typ < 1 || typ > 13 ) {
 
 				console.log( 'error in TIFF' );
 				break;
@@ -86,43 +86,43 @@
 
 		var id = UTIF._binBE.readASCII( data, 0, 2 );
 
-		if ( img[ 't256' ] == null ) return; // No width => probably not an image
+		if ( img.t256 == null ) return; // No width => probably not an image
 
 		img.isLE = id == 'II';
-		img.width = img[ 't256' ][ 0 ]; //delete img["t256"];
+		img.width = img.t256[ 0 ]; // delete img["t256"];
 
-		img.height = img[ 't257' ][ 0 ]; //delete img["t257"];
+		img.height = img.t257[ 0 ]; // delete img["t257"];
 
-		var cmpr = img[ 't259' ] ? img[ 't259' ][ 0 ] : 1; //delete img["t259"];
+		var cmpr = img.t259 ? img.t259[ 0 ] : 1; // delete img["t259"];
 
-		var fo = img[ 't266' ] ? img[ 't266' ][ 0 ] : 1; //delete img["t266"];
+		var fo = img.t266 ? img.t266[ 0 ] : 1; // delete img["t266"];
 
-		if ( img[ 't284' ] && img[ 't284' ][ 0 ] == 2 ) console.log( 'PlanarConfiguration 2 should not be used!' );
-		if ( cmpr == 7 && img[ 't258' ] && img[ 't258' ].length > 3 ) img[ 't258' ] = img[ 't258' ].slice( 0, 3 );
+		if ( img.t284 && img.t284[ 0 ] == 2 ) console.log( 'PlanarConfiguration 2 should not be used!' );
+		if ( cmpr == 7 && img.t258 && img.t258.length > 3 ) img.t258 = img.t258.slice( 0, 3 );
 		var bipp; // bits per pixel
 
-		if ( img[ 't258' ] ) bipp = Math.min( 32, img[ 't258' ][ 0 ] ) * img[ 't258' ].length; else bipp = img[ 't277' ] ? img[ 't277' ][ 0 ] : 1; // Some .NEF files have t258==14, even though they use 16 bits per pixel
+		if ( img.t258 ) bipp = Math.min( 32, img.t258[ 0 ] ) * img.t258.length; else bipp = img.t277 ? img.t277[ 0 ] : 1; // Some .NEF files have t258==14, even though they use 16 bits per pixel
 
-		if ( cmpr == 1 && img[ 't279' ] != null && img[ 't278' ] && img[ 't262' ][ 0 ] == 32803 ) {
+		if ( cmpr == 1 && img.t279 != null && img.t278 && img.t262[ 0 ] == 32803 ) {
 
-			bipp = Math.round( img[ 't279' ][ 0 ] * 8 / ( img.width * img[ 't278' ][ 0 ] ) );
+			bipp = Math.round( img.t279[ 0 ] * 8 / ( img.width * img.t278[ 0 ] ) );
 
 		}
 
 		var bipl = Math.ceil( img.width * bipp / 8 ) * 8;
-		var soff = img[ 't273' ];
-		if ( soff == null ) soff = img[ 't324' ];
-		var bcnt = img[ 't279' ];
+		var soff = img.t273;
+		if ( soff == null ) soff = img.t324;
+		var bcnt = img.t279;
 		if ( cmpr == 1 && soff.length == 1 ) bcnt = [ img.height * ( bipl >>> 3 ) ];
-		if ( bcnt == null ) bcnt = img[ 't325' ]; //bcnt[0] = Math.min(bcnt[0], data.length);  // Hasselblad, "RAW_HASSELBLAD_H3D39II.3FR"
+		if ( bcnt == null ) bcnt = img.t325; // bcnt[0] = Math.min(bcnt[0], data.length);  // Hasselblad, "RAW_HASSELBLAD_H3D39II.3FR"
 
-		var bytes = new Uint8Array( img.height * ( bipl >>> 3 ) ),
-			bilen = 0;
+		var bytes = new Uint8Array( img.height * ( bipl >>> 3 ) );
+			var bilen = 0;
 
-		if ( img[ 't322' ] != null ) {
+		if ( img.t322 != null ) {
 
-			var tw = img[ 't322' ][ 0 ],
-				th = img[ 't323' ][ 0 ];
+			var tw = img.t322[ 0 ];
+				var th = img.t323[ 0 ];
 			var tx = Math.floor( ( img.width + tw - 1 ) / tw );
 			var ty = Math.floor( ( img.height + th - 1 ) / th );
 			var tbuff = new Uint8Array( Math.ceil( tw * th * bipp / 8 ) | 0 );
@@ -144,7 +144,7 @@
 
 		} else {
 
-			var rps = img[ 't278' ] ? img[ 't278' ][ 0 ] : img.height;
+			var rps = img.t278 ? img.t278[ 0 ] : img.height;
 			rps = Math.min( rps, img.height );
 
 			for ( var i = 0; i < soff.length; i ++ ) {
@@ -165,20 +165,20 @@
 
 	UTIF.decode._decompress = function ( img, ifds, data, off, len, cmpr, tgt, toff ) {
 
-		//console.log("compression", cmpr);
-		//var time = Date.now();
-		if ( cmpr == 34676 ) UTIF.decode._decodeLogLuv32( img, data, off, len, tgt, toff ); else console.log( 'Unsupported compression', cmpr ); //console.log(Date.now()-time);
+		// console.log("compression", cmpr);
+		// var time = Date.now();
+		if ( cmpr == 34676 ) UTIF.decode._decodeLogLuv32( img, data, off, len, tgt, toff ); else console.log( 'Unsupported compression', cmpr ); // console.log(Date.now()-time);
 
-		var bps = img[ 't258' ] ? Math.min( 32, img[ 't258' ][ 0 ] ) : 1;
-		var noc = img[ 't277' ] ? img[ 't277' ][ 0 ] : 1,
-			bpp = bps * noc >>> 3,
-			h = img[ 't278' ] ? img[ 't278' ][ 0 ] : img.height,
-			bpl = Math.ceil( bps * noc * img.width / 8 ); // convert to Little Endian  /*
+		var bps = img.t258 ? Math.min( 32, img.t258[ 0 ] ) : 1;
+		var noc = img.t277 ? img.t277[ 0 ] : 1;
+			var bpp = bps * noc >>> 3;
+			var h = img.t278 ? img.t278[ 0 ] : img.height;
+			var bpl = Math.ceil( bps * noc * img.width / 8 ); // convert to Little Endian  /*
 
-		if ( bps == 16 && ! img.isLE && img[ 't33422' ] == null ) // not DNG
+		if ( bps == 16 && ! img.isLE && img.t33422 == null ) // not DNG
 			for ( var y = 0; y < h; y ++ ) {
 
-				//console.log("fixing endianity");
+				// console.log("fixing endianity");
 				var roff = toff + y * bpl;
 
 				for ( var x = 1; x < bpl; x += 2 ) {
@@ -189,9 +189,9 @@
 
 				}
 
-			} //*/
+			} //* /
 
-		if ( img[ 't317' ] && img[ 't317' ][ 0 ] == 2 ) {
+		if ( img.t317 && img.t317[ 0 ] == 2 ) {
 
 			for ( var y = 0; y < h; y ++ ) {
 
@@ -218,10 +218,10 @@
 
 	UTIF.decode._decodeLogLuv32 = function ( img, data, off, len, tgt, toff ) {
 
-		var w = img.width,
-			qw = w * 4;
-		var io = 0,
-			out = new Uint8Array( qw );
+		var w = img.width;
+			var qw = w * 4;
+		var io = 0;
+			var out = new Uint8Array( qw );
 
 		while ( io < len ) {
 
@@ -266,7 +266,7 @@
 
 	};
 
-	UTIF.tags = {}; //UTIF.ttypes = {  256:3,257:3,258:3,   259:3, 262:3,  273:4,  274:3, 277:3,278:4,279:4, 282:5, 283:5, 284:3, 286:5,287:5, 296:3, 305:2, 306:2, 338:3, 513:4, 514:4, 34665:4  };
+	UTIF.tags = {}; // UTIF.ttypes = {  256:3,257:3,258:3,   259:3, 262:3,  273:4,  274:3, 277:3,278:4,279:4, 282:5, 283:5, 284:3, 286:5,287:5, 296:3, 305:2, 306:2, 338:3, 513:4, 514:4, 34665:4  };
 	// start at tag 250
 
 	UTIF._types = function () {
@@ -358,7 +358,7 @@
 			offset += 4;
 			var voff = bin.readUint( data, offset );
 			offset += 4;
-			var arr = []; //ifd["t"+tag+"-"+UTIF.tags[tag]] = arr;
+			var arr = []; // ifd["t"+tag+"-"+UTIF.tags[tag]] = arr;
 
 			if ( type == 1 || type == 7 ) {
 
@@ -368,9 +368,9 @@
 
 			if ( type == 2 ) {
 
-				var o0 = num < 5 ? offset - 4 : voff,
-					c = data[ o0 ],
-					len = Math.max( 0, Math.min( num - 1, data.length - o0 ) );
+				var o0 = num < 5 ? offset - 4 : voff;
+					var c = data[ o0 ];
+					var len = Math.max( 0, Math.min( num - 1, data.length - o0 ) );
 				if ( c < 128 || len == 0 ) arr.push( bin.readASCII( data, o0, len ) ); else arr = new Uint8Array( data.buffer, o0, len );
 
 			}
@@ -430,7 +430,7 @@
 			if ( prm.debug ) console.log( '   '.repeat( depth ), tag, type, UTIF.tags[ tag ], arr );
 			ifd[ 't' + tag ] = arr;
 
-			if ( tag == 330 && ifd[ 't272' ] && ifd[ 't272' ][ 0 ] == 'DSLR-A100' ) {} else if ( tag == 330 || tag == 34665 || tag == 34853 || tag == 50740 && bin.readUshort( data, bin.readUint( arr, 0 ) ) < 300 || tag == 61440 ) {
+			if ( tag == 330 && ifd.t272 && ifd.t272[ 0 ] == 'DSLR-A100' ) {} else if ( tag == 330 || tag == 34665 || tag == 34853 || tag == 50740 && bin.readUshort( data, bin.readUint( arr, 0 ) ) < 300 || tag == 61440 ) {
 
 				var oarr = tag == 50740 ? [ bin.readUint( arr, 0 ) ] : arr;
 				var subfd = [];
@@ -439,7 +439,7 @@
 
 				if ( tag == 330 ) ifd.subIFD = subfd;
 				if ( tag == 34665 ) ifd.exifIFD = subfd[ 0 ];
-				if ( tag == 34853 ) ifd.gpsiIFD = subfd[ 0 ]; //console.log("gps", subfd[0]);  }
+				if ( tag == 34853 ) ifd.gpsiIFD = subfd[ 0 ]; // console.log("gps", subfd[0]);  }
 
 				if ( tag == 50740 ) ifd.dngPrvt = subfd[ 0 ];
 				if ( tag == 61440 ) ifd.fujiIFD = subfd[ 0 ];
@@ -448,9 +448,9 @@
 
 			if ( tag == 37500 && prm.parseMN ) {
 
-				var mn = arr; //console.log(bin.readASCII(mn,0,mn.length), mn);
+				var mn = arr; // console.log(bin.readASCII(mn,0,mn.length), mn);
 
-				if ( bin.readASCII( mn, 0, 5 ) == 'Nikon' ) ifd.makerNote = UTIF[ 'decode' ]( mn.slice( 10 ).buffer )[ 0 ]; else if ( bin.readUshort( data, voff ) < 300 && bin.readUshort( data, voff + 4 ) <= 12 ) {
+				if ( bin.readASCII( mn, 0, 5 ) == 'Nikon' ) ifd.makerNote = UTIF.decode( mn.slice( 10 ).buffer )[ 0 ]; else if ( bin.readUshort( data, voff ) < 300 && bin.readUshort( data, voff + 4 ) <= 12 ) {
 
 					var subsub = [];
 
@@ -472,10 +472,10 @@
 
 	UTIF.toRGBA = function ( out, type ) {
 
-		const w = out.width,
-			h = out.height,
-			area = w * h,
-			data = out.data;
+		const w = out.width;
+			const h = out.height;
+			const area = w * h;
+			const data = out.data;
 		let img;
 
 		switch ( type ) {
@@ -493,9 +493,9 @@
 
 		}
 
-		let intp = out[ 't262' ] ? out[ 't262' ][ 0 ] : 2;
-		const bps = out[ 't258' ] ? Math.min( 32, out[ 't258' ][ 0 ] ) : 1;
-		if ( out[ 't262' ] == null && bps == 1 ) intp = 0;
+		let intp = out.t262 ? out.t262[ 0 ] : 2;
+		const bps = out.t258 ? Math.min( 32, out.t258[ 0 ] ) : 1;
+		if ( out.t262 == null && bps == 1 ) intp = 0;
 
 		if ( intp == 32845 ) {
 
@@ -503,8 +503,8 @@
 
 				for ( let x = 0; x < w; x ++ ) {
 
-					const si = ( y * w + x ) * 6,
-						qi = ( y * w + x ) * 4;
+					const si = ( y * w + x ) * 6;
+						const qi = ( y * w + x ) * 4;
 					let L = data[ si + 1 ] << 8 | data[ si ];
 					L = Math.pow( 2, ( L + 0.5 ) / 256 - 64 );
 					const u = ( data[ si + 3 ] + 0.5 ) / 410;
@@ -514,9 +514,9 @@
 					const sY = 4 * v / ( 6 * u - 16 * v + 12 );
 					const bY = L; // xyY to XYZ
 
-					const X = sX * bY / sY,
-						Y = bY,
-						Z = ( 1 - sX - sY ) * bY / sY; // XYZ to linear RGB
+					const X = sX * bY / sY;
+						const Y = bY;
+						const Z = ( 1 - sX - sY ) * bY / sY; // XYZ to linear RGB
 
 					const r = 2.690 * X - 1.276 * Y - 0.414 * Z;
 					const g = - 1.022 * X + 1.978 * Y + 0.044 * Z;
@@ -746,7 +746,7 @@
 
 	UTIF._copyTile = function ( tb, tw, th, b, w, h, xoff, yoff ) {
 
-		//log("copyTile", tw, th,  w, h, xoff, yoff);
+		// log("copyTile", tw, th,  w, h, xoff, yoff);
 		var xlim = Math.min( tw, w - xoff );
 		var ylim = Math.min( th, h - yoff );
 

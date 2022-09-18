@@ -187,7 +187,7 @@ export const NodeList = [
 			}
 		]
 	},
-	/*{
+	/* {
 		name: 'Scene',
 		icon: '3d-cube-sphere',
 		children: [
@@ -197,7 +197,7 @@ export const NodeList = [
 				nodeClass: MeshEditor
 			}
 		]
-	},*/
+	}, */
 	{
 		name: 'Material',
 		icon: 'circles',
@@ -434,9 +434,9 @@ export class NodeEditor extends EventDispatcher {
 
 		const context = new ContextMenu();
 
-		//**************//
+		//* *************//
 		// MAIN
-		//**************//
+		//* *************//
 
 		const onClickExample = async ( button ) => {
 
@@ -463,9 +463,9 @@ export class NodeEditor extends EventDispatcher {
 
 		};
 
-		//**************//
+		//* *************//
 		// EXAMPLES
-		//**************//
+		//* *************//
 
 		const basicContext = new ContextMenu();
 		const advancedContext = new ContextMenu();
@@ -476,9 +476,9 @@ export class NodeEditor extends EventDispatcher {
 
 		addExample( advancedContext, 'Rim' );
 
-		//**************//
+		//* *************//
 		// MAIN
-		//**************//
+		//* *************//
 
 		context.add( new ButtonInput( 'Basic' ), basicContext );
 		context.add( new ButtonInput( 'Advanced' ), advancedContext );
@@ -653,9 +653,9 @@ export class NodeEditor extends EventDispatcher {
 
 		} );
 
-		//**************//
+		//* *************//
 		// INPUTS
-		//**************//
+		//* *************//
 
 		const createButtonMenu = ( item ) => {
 

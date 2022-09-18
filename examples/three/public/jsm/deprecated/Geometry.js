@@ -350,7 +350,7 @@ class Geometry extends EventDispatcher {
 
 	computeFaceNormals() {
 
-		const cb = new Vector3(), ab = new Vector3();
+		const cb = new Vector3(); const ab = new Vector3();
 
 		for ( let f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -387,7 +387,7 @@ class Geometry extends EventDispatcher {
 			// vertex normals weighted by triangle areas
 			// http://www.iquilezles.org/www/articles/normals/normals.htm
 
-			const cb = new Vector3(), ab = new Vector3();
+			const cb = new Vector3(); const ab = new Vector3();
 
 			for ( let f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -638,13 +638,13 @@ class Geometry extends EventDispatcher {
 		}
 
 		let normalMatrix;
-		const vertexOffset = this.vertices.length,
-			vertices1 = this.vertices,
-			vertices2 = geometry.vertices,
-			faces1 = this.faces,
-			faces2 = geometry.faces,
-			colors1 = this.colors,
-			colors2 = geometry.colors;
+		const vertexOffset = this.vertices.length;
+			const vertices1 = this.vertices;
+			const vertices2 = geometry.vertices;
+			const faces1 = this.faces;
+			const faces2 = geometry.faces;
+			const colors1 = this.colors;
+			const colors2 = geometry.colors;
 
 		if ( matrix !== undefined ) {
 
@@ -680,8 +680,8 @@ class Geometry extends EventDispatcher {
 
 			const face = faces2[ i ];
 			let normal, color;
-			const faceVertexNormals = face.vertexNormals,
-				faceVertexColors = face.vertexColors;
+			const faceVertexNormals = face.vertexNormals;
+				const faceVertexColors = face.vertexColors;
 
 			const faceCopy = new Face3( face.a + vertexOffset, face.b + vertexOffset, face.c + vertexOffset );
 			faceCopy.normal.copy( face.normal );
@@ -731,7 +731,7 @@ class Geometry extends EventDispatcher {
 
 			for ( let j = 0, jl = faceVertexUvs2.length; j < jl; j ++ ) {
 
-				const uvs2 = faceVertexUvs2[ j ], uvsCopy = [];
+				const uvs2 = faceVertexUvs2[ j ]; const uvsCopy = [];
 
 				for ( let k = 0, kl = uvs2.length; k < kl; k ++ ) {
 
@@ -771,7 +771,7 @@ class Geometry extends EventDispatcher {
 	mergeVertices( precisionPoints = 4 ) {
 
 		const verticesMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
-		const unique = [], changes = [];
+		const unique = []; const changes = [];
 
 		const precision = Math.pow( 10, precisionPoints );
 
@@ -788,7 +788,7 @@ class Geometry extends EventDispatcher {
 
 			} else {
 
-				//console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
+				// console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
 				changes[ i ] = changes[ verticesMap[ key ] ];
 
 			}
@@ -1196,7 +1196,7 @@ class Geometry extends EventDispatcher {
 
 			for ( let j = 0, jl = faceVertexUvs.length; j < jl; j ++ ) {
 
-				const uvs = faceVertexUvs[ j ], uvsCopy = [];
+				const uvs = faceVertexUvs[ j ]; const uvsCopy = [];
 
 				for ( let k = 0, kl = uvs.length; k < kl; k ++ ) {
 
@@ -1571,7 +1571,7 @@ class DirectGeometry {
 		const groups = [];
 
 		let group, i;
-		let materialIndex = undefined;
+		let materialIndex;
 
 		const faces = geometry.faces;
 

@@ -61,7 +61,7 @@
 			refractor.matrixAutoUpdate = false; // material
 
 			this.material = new THREE.ShaderMaterial( {
-				uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib[ 'fog' ], shader.uniforms ] ),
+				uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib.fog, shader.uniforms ] ),
 				vertexShader: shader.vertexShader,
 				fragmentShader: shader.fragmentShader,
 				transparent: true,
@@ -71,14 +71,14 @@
 			if ( flowMap !== undefined ) {
 
 				this.material.defines.USE_FLOWMAP = '';
-				this.material.uniforms[ 'tFlowMap' ] = {
+				this.material.uniforms.tFlowMap = {
 					type: 't',
 					value: flowMap
 				};
 
 			} else {
 
-				this.material.uniforms[ 'flowDirection' ] = {
+				this.material.uniforms.flowDirection = {
 					type: 'v2',
 					value: flowDirection
 				};
@@ -88,22 +88,22 @@
 
 			normalMap0.wrapS = normalMap0.wrapT = THREE.RepeatWrapping;
 			normalMap1.wrapS = normalMap1.wrapT = THREE.RepeatWrapping;
-			this.material.uniforms[ 'tReflectionMap' ].value = reflector.getRenderTarget().texture;
-			this.material.uniforms[ 'tRefractionMap' ].value = refractor.getRenderTarget().texture;
-			this.material.uniforms[ 'tNormalMap0' ].value = normalMap0;
-			this.material.uniforms[ 'tNormalMap1' ].value = normalMap1; // water
+			this.material.uniforms.tReflectionMap.value = reflector.getRenderTarget().texture;
+			this.material.uniforms.tRefractionMap.value = refractor.getRenderTarget().texture;
+			this.material.uniforms.tNormalMap0.value = normalMap0;
+			this.material.uniforms.tNormalMap1.value = normalMap1; // water
 
-			this.material.uniforms[ 'color' ].value = color;
-			this.material.uniforms[ 'reflectivity' ].value = reflectivity;
-			this.material.uniforms[ 'textureMatrix' ].value = textureMatrix; // inital values
+			this.material.uniforms.color.value = color;
+			this.material.uniforms.reflectivity.value = reflectivity;
+			this.material.uniforms.textureMatrix.value = textureMatrix; // inital values
 
-			this.material.uniforms[ 'config' ].value.x = 0; // flowMapOffset0
+			this.material.uniforms.config.value.x = 0; // flowMapOffset0
 
-			this.material.uniforms[ 'config' ].value.y = halfCycle; // flowMapOffset1
+			this.material.uniforms.config.value.y = halfCycle; // flowMapOffset1
 
-			this.material.uniforms[ 'config' ].value.z = halfCycle; // halfCycle
+			this.material.uniforms.config.value.z = halfCycle; // halfCycle
 
-			this.material.uniforms[ 'config' ].value.w = scale; // scale
+			this.material.uniforms.config.value.w = scale; // scale
 			// functions
 
 			function updateTextureMatrix( camera ) {
@@ -118,7 +118,7 @@
 			function updateFlow() {
 
 				const delta = clock.getDelta();
-				const config = scope.material.uniforms[ 'config' ];
+				const config = scope.material.uniforms.config;
 				config.value.x += flowSpeed * delta; // flowMapOffset0
 
 				config.value.y = config.value.x + halfCycle; // flowMapOffset1

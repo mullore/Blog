@@ -36,7 +36,7 @@ function hilbert2D( center = new Vector3( 0, 0, 0 ), size = 10, iterations = 1, 
 	];
 
 	// Recurse iterations
-	if ( 0 <= -- iterations ) {
+	if ( -- iterations >= 0 ) {
 
 		const tmp = [];
 
@@ -138,7 +138,7 @@ function gosper( size = 1 ) {
 		let output;
 		let input = config.axiom;
 
-		for ( let i = 0, il = config.steps; 0 <= il ? i < il : i > il; 0 <= il ? i ++ : i -- ) {
+		for ( let i = 0, il = config.steps; il >= 0 ? i < il : i > il; il >= 0 ? i ++ : i -- ) {
 
 			output = '';
 
@@ -168,7 +168,7 @@ function gosper( size = 1 ) {
 
 	function toPoints( config ) {
 
-		let currX = 0, currY = 0;
+		let currX = 0; let currY = 0;
 		let angle = 0;
 		const path = [ 0, 0, 0 ];
 		const fractal = config.fractal;

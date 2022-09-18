@@ -31,16 +31,16 @@ class FunctionCallNode extends TempNode {
 
 	generate( builder, output ) {
 
-		const type = this.getType( builder ),
-			func = this.value;
+		const type = this.getType( builder );
+			const func = this.value;
 
 		let code = func.build( builder, output ) + '( ';
 		const params = [];
 
 		for ( let i = 0; i < func.inputs.length; i ++ ) {
 
-			const inpt = func.inputs[ i ],
-				param = this.inputs[ i ] || this.inputs[ inpt.name ];
+			const inpt = func.inputs[ i ];
+				const param = this.inputs[ i ] || this.inputs[ inpt.name ];
 
 			params.push( param.build( builder, builder.getTypeByFormat( inpt.type ) ) );
 
@@ -86,8 +86,8 @@ class FunctionCallNode extends TempNode {
 
 				for ( let i = 0; i < func.inputs.length; i ++ ) {
 
-					const inpt = func.inputs[ i ],
-						node = this.inputs[ i ] || this.inputs[ inpt.name ];
+					const inpt = func.inputs[ i ];
+						const node = this.inputs[ i ] || this.inputs[ inpt.name ];
 
 					data.inputs[ inpt.name ] = node.toJSON( meta ).uuid;
 

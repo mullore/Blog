@@ -651,11 +651,11 @@ class WebGPURenderer {
 
 			} else if ( object.isLight ) {
 
-				//currentRenderState.pushLight( object );
+				// currentRenderState.pushLight( object );
 
 				if ( object.castShadow ) {
 
-					//currentRenderState.pushShadow( object );
+					// currentRenderState.pushShadow( object );
 
 				}
 

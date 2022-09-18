@@ -10779,9 +10779,9 @@ Parser.prototype.parsePmx = function ( buffer, leftToRight ) {
 				//       I'd rename to more appropriate name from Grant later.
 				var grant = {};
 
-				grant.isLocal = ( p.flag & 0x80 ) !== 0 ? true : false;
-				grant.affectRotation = ( p.flag & 0x100 ) !== 0 ? true : false;
-				grant.affectPosition = ( p.flag & 0x200 ) !== 0 ? true : false;
+				grant.isLocal = ( p.flag & 0x80 ) !== 0;
+				grant.affectRotation = ( p.flag & 0x100 ) !== 0;
+				grant.affectPosition = ( p.flag & 0x200 ) !== 0;
 				grant.parentIndex = dv.getIndex( pmx.metadata.boneIndexSize );
 				grant.ratio = dv.getFloat32();
 

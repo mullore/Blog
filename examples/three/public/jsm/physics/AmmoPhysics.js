@@ -255,11 +255,11 @@ async function AmmoPhysics() {
 
 function compose( position, quaternion, array, index ) {
 
-	const x = quaternion.x(), y = quaternion.y(), z = quaternion.z(), w = quaternion.w();
-	const x2 = x + x, y2 = y + y, z2 = z + z;
-	const xx = x * x2, xy = x * y2, xz = x * z2;
-	const yy = y * y2, yz = y * z2, zz = z * z2;
-	const wx = w * x2, wy = w * y2, wz = w * z2;
+	const x = quaternion.x(); const y = quaternion.y(); const z = quaternion.z(); const w = quaternion.w();
+	const x2 = x + x; const y2 = y + y; const z2 = z + z;
+	const xx = x * x2; const xy = x * y2; const xz = x * z2;
+	const yy = y * y2; const yz = y * z2; const zz = z * z2;
+	const wx = w * x2; const wy = w * y2; const wz = w * z2;
 
 	array[ index + 0 ] = ( 1 - ( yy + zz ) );
 	array[ index + 1 ] = ( xy + wz );

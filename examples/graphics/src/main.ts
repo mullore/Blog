@@ -15,21 +15,25 @@ function render(props: any) {
   root.mount(c);
 }
 
-qiankunWindow.customxxx = 'ssss'
+qiankunWindow.customxxx = 'ssss';
 
 if (qiankunWindow.__POWERED_BY_QIANKUN__) {
-  console.log('我正在作为子应用运行')
+  console.log('我正在作为子应用运行');
 }
 
 renderWithQiankun({
   mount(props) {
     render(props);
   },
-  bootstrap() {},
+  bootstrap() {
+    console.log('bootstrap');
+  },
   unmount(props: any) {
     root.unmount();
   },
-  update(props: any) {},
+  update(props: any) {
+    console.log(props);
+  },
 });
 
 if (!qiankunWindow.__POWERED_BY_QIANKUN__) {

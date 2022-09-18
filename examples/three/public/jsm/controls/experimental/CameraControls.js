@@ -305,7 +305,7 @@ var CameraControls = function ( object, domElement ) {
 
 		scope.domElement.removeEventListener( 'keydown', onKeyDown, false );
 
-		//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+		// scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
 	};
 
@@ -577,7 +577,7 @@ var CameraControls = function ( object, domElement ) {
 
 	}
 
-	function handleMouseUp( /*event*/ ) {
+	function handleMouseUp( /* event */ ) {
 
 		// no-op
 
@@ -783,7 +783,7 @@ var CameraControls = function ( object, domElement ) {
 
 	}
 
-	function handleTouchEnd( /*event*/ ) {
+	function handleTouchEnd( /* event */ ) {
 
 		// no-op
 

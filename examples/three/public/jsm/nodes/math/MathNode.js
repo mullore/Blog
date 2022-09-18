@@ -14,7 +14,7 @@ class MathNode extends TempNode {
 
 	}
 
-	getNumInputs( /*builder*/ ) {
+	getNumInputs( /* builder */ ) {
 
 		switch ( this.method ) {
 
@@ -101,11 +101,11 @@ class MathNode extends TempNode {
 	generate( builder, output ) {
 
 		let a, b, c;
-		const al = this.a ? builder.getTypeLength( this.a.getType( builder ) ) : 0,
-			bl = this.b ? builder.getTypeLength( this.b.getType( builder ) ) : 0,
-			cl = this.c ? builder.getTypeLength( this.c.getType( builder ) ) : 0,
-			inputType = this.getInputType( builder ),
-			nodeType = this.getType( builder );
+		const al = this.a ? builder.getTypeLength( this.a.getType( builder ) ) : 0;
+			const bl = this.b ? builder.getTypeLength( this.b.getType( builder ) ) : 0;
+			const cl = this.c ? builder.getTypeLength( this.c.getType( builder ) ) : 0;
+			const inputType = this.getInputType( builder );
+			const nodeType = this.getType( builder );
 
 		switch ( this.method ) {
 

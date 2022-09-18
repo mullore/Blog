@@ -76,7 +76,7 @@
 					if ( geometry.isGeometry ) {
 
 						console.error( 'THREE.ConvexHull no longer supports Geometry. Use THREE.BufferGeometry instead.' );
-						return;
+						
 
 					} else if ( geometry.isBufferGeometry ) {
 
@@ -605,8 +605,8 @@
 			// if the 'assigned' list of vertices is empty, no vertices are left. return with 'undefined'
 			if ( this.assigned.isEmpty() === false ) {
 
-				let eyeVertex,
-					maxDistance = 0; // grap the first available face and start with the first visible vertex of that face
+				let eyeVertex;
+					let maxDistance = 0; // grap the first available face and start with the first visible vertex of that face
 
 				const eyeFace = this.assigned.first().face;
 				let vertex = eyeFace.outside; // now calculate the farthest vertex that face can see

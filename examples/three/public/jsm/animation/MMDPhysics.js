@@ -1005,7 +1005,7 @@ class RigidBody {
 		const form = this._getBoneTransform();
 
 		// TODO: check the most appropriate way to set
-		//this.body.setWorldTransform( form );
+		// this.body.setWorldTransform( form );
 		this.body.setCenterOfMassTransform( form );
 		this.body.getMotionState().setWorldTransform( form );
 
@@ -1023,7 +1023,7 @@ class RigidBody {
 		manager.copyOrigin( tr, form );
 
 		// TODO: check the most appropriate way to set
-		//this.body.setWorldTransform( tr );
+		// this.body.setWorldTransform( tr );
 		this.body.setCenterOfMassTransform( tr );
 		this.body.getMotionState().setWorldTransform( tr );
 
@@ -1048,7 +1048,7 @@ class RigidBody {
 		thQ2.conjugate();
 		thQ2.multiply( thQ );
 
-		//this.bone.quaternion.multiply( thQ2 );
+		// this.bone.quaternion.multiply( thQ2 );
 
 		thQ3.setFromRotationMatrix( this.bone.matrix );
 

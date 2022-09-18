@@ -354,7 +354,7 @@ class MaterialParser {
 
 	}
 
-	parseMaterialLwo2( materialData, name/*, textures*/ ) {
+	parseMaterialLwo2( materialData, name/*, textures */ ) {
 
 		let params = {
 			name: name,
@@ -601,7 +601,7 @@ class MaterialParser {
 
 	}
 
-	parsePhysicalAttributes( params, attributes/*, maps*/ ) {
+	parsePhysicalAttributes( params, attributes/*, maps */ ) {
 
 		if ( attributes.Clearcoat && attributes.Clearcoat.value > 0 ) {
 

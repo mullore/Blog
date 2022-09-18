@@ -19,9 +19,9 @@ function isBigEndianPlatform() {
 
 	if ( bigEndianPlatform === null ) {
 
-		const buffer = new ArrayBuffer( 2 ),
-			uint8Array = new Uint8Array( buffer ),
-			uint16Array = new Uint16Array( buffer );
+		const buffer = new ArrayBuffer( 2 );
+			const uint8Array = new Uint8Array( buffer );
+			const uint16Array = new Uint16Array( buffer );
 
 		uint8Array[ 0 ] = 0xAA; // set first byte
 		uint8Array[ 1 ] = 0xBB; // set second byte
@@ -70,9 +70,9 @@ function copyFromBuffer( sourceArrayBuffer, viewType, position, length, fromBigE
 
 	} else {
 
-		const readView = new DataView( sourceArrayBuffer, position, length * bytesPerElement ),
-			getMethod = getMethods[ viewType.name ],
-			littleEndian = ! fromBigEndian;
+		const readView = new DataView( sourceArrayBuffer, position, length * bytesPerElement );
+			const getMethod = getMethods[ viewType.name ];
+			const littleEndian = ! fromBigEndian;
 
 		result = new viewType( length );
 
@@ -91,18 +91,18 @@ function copyFromBuffer( sourceArrayBuffer, viewType, position, length, fromBigE
 
 function decodePrwm( buffer ) {
 
-	const array = new Uint8Array( buffer ),
-		version = array[ 0 ];
+	const array = new Uint8Array( buffer );
+		const version = array[ 0 ];
 
 	let flags = array[ 1 ];
 
-	const indexedGeometry = !! ( flags >> 7 & 0x01 ),
-		indicesType = flags >> 6 & 0x01,
-		bigEndian = ( flags >> 5 & 0x01 ) === 1,
-		attributesNumber = flags & 0x1F;
+	const indexedGeometry = !! ( flags >> 7 & 0x01 );
+		const indicesType = flags >> 6 & 0x01;
+		const bigEndian = ( flags >> 5 & 0x01 ) === 1;
+		const attributesNumber = flags & 0x1F;
 
-	let valuesNumber = 0,
-		indicesNumber = 0;
+	let valuesNumber = 0;
+		let indicesNumber = 0;
 
 	if ( bigEndian ) {
 
@@ -267,9 +267,9 @@ class PRWMLoader extends Loader {
 
 	parse( arrayBuffer ) {
 
-		const data = decodePrwm( arrayBuffer ),
-			attributesKey = Object.keys( data.attributes ),
-			bufferGeometry = new BufferGeometry();
+		const data = decodePrwm( arrayBuffer );
+			const attributesKey = Object.keys( data.attributes );
+			const bufferGeometry = new BufferGeometry();
 
 		for ( let i = 0; i < attributesKey.length; i ++ ) {
 

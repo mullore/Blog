@@ -13,7 +13,7 @@ class Vector4Node extends InputNode {
 
 	}
 
-	generateReadonly( builder, output, uuid, type/*, ns, needsUpdate*/ ) {
+	generateReadonly( builder, output, uuid, type/*, ns, needsUpdate */ ) {
 
 		return builder.format( 'vec4( ' + this.x + ', ' + this.y + ', ' + this.z + ', ' + this.w + ' )', type, output );
 

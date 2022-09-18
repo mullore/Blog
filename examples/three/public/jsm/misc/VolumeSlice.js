@@ -113,12 +113,12 @@ VolumeSlice.prototype = {
 
 		}
 
-		var iLength = this.iLength,
-			jLength = this.jLength,
-			sliceAccess = this.sliceAccess,
-			volume = this.volume,
-			canvas = this.canvasBuffer,
-			ctx = this.ctxBuffer;
+		var iLength = this.iLength;
+			var jLength = this.jLength;
+			var sliceAccess = this.sliceAccess;
+			var volume = this.volume;
+			var canvas = this.canvasBuffer;
+			var ctx = this.ctxBuffer;
 
 
 		// get the imageData and pixel array from the canvas
@@ -135,7 +135,7 @@ VolumeSlice.prototype = {
 
 		if ( volume.dataType === 'label' ) {
 
-			//this part is currently useless but will be used when colortables will be handled
+			// this part is currently useless but will be used when colortables will be handled
 			for ( var j = 0; j < jLength; j ++ ) {
 
 				for ( var i = 0; i < iLength; i ++ ) {
@@ -161,9 +161,9 @@ VolumeSlice.prototype = {
 
 					var value = volumeData[ sliceAccess( i, j ) ];
 					var alpha = 0xff;
-					//apply threshold
+					// apply threshold
 					alpha = upperThreshold >= value ? ( lowerThreshold <= value ? alpha : 0 ) : 0;
-					//apply window level
+					// apply window level
 					value = Math.floor( 255 * ( value - windowLow ) / ( windowHigh - windowLow ) );
 					value = value > 255 ? 255 : ( value < 0 ? 0 : value | 0 );
 
@@ -214,7 +214,7 @@ VolumeSlice.prototype = {
 		if ( this.mesh ) {
 
 			this.mesh.geometry = this.geometry;
-			//reset mesh matrix
+			// reset mesh matrix
 			this.mesh.matrix.identity();
 			this.mesh.applyMatrix4( this.matrix );
 

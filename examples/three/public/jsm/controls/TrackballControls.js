@@ -46,7 +46,7 @@ class TrackballControls extends EventDispatcher {
 		this.minDistance = 0;
 		this.maxDistance = Infinity;
 
-		this.keys = [ 'KeyA' /*A*/, 'KeyS' /*S*/, 'KeyD' /*D*/ ];
+		this.keys = [ 'KeyA' /* A */, 'KeyS' /* S */, 'KeyD' /* D */ ];
 
 		this.mouseButtons = { LEFT: MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.PAN };
 
@@ -59,29 +59,29 @@ class TrackballControls extends EventDispatcher {
 		const lastPosition = new Vector3();
 		let lastZoom = 1;
 
-		let _state = STATE.NONE,
-			_keyState = STATE.NONE,
+		let _state = STATE.NONE;
+			let _keyState = STATE.NONE;
 
-			_touchZoomDistanceStart = 0,
-			_touchZoomDistanceEnd = 0,
+			let _touchZoomDistanceStart = 0;
+			let _touchZoomDistanceEnd = 0;
 
-			_lastAngle = 0;
+			let _lastAngle = 0;
 
-		const _eye = new Vector3(),
+		const _eye = new Vector3();
 
-			_movePrev = new Vector2(),
-			_moveCurr = new Vector2(),
+			const _movePrev = new Vector2();
+			const _moveCurr = new Vector2();
 
-			_lastAxis = new Vector3(),
+			const _lastAxis = new Vector3();
 
-			_zoomStart = new Vector2(),
-			_zoomEnd = new Vector2(),
+			const _zoomStart = new Vector2();
+			const _zoomEnd = new Vector2();
 
-			_panStart = new Vector2(),
-			_panEnd = new Vector2(),
+			const _panStart = new Vector2();
+			const _panEnd = new Vector2();
 
-			_pointers = [],
-			_pointerPositions = {};
+			const _pointers = [];
+			const _pointerPositions = {};
 
 		// for reset
 
@@ -140,12 +140,12 @@ class TrackballControls extends EventDispatcher {
 
 		this.rotateCamera = ( function () {
 
-			const axis = new Vector3(),
-				quaternion = new Quaternion(),
-				eyeDirection = new Vector3(),
-				objectUpDirection = new Vector3(),
-				objectSidewaysDirection = new Vector3(),
-				moveDirection = new Vector3();
+			const axis = new Vector3();
+				const quaternion = new Quaternion();
+				const eyeDirection = new Vector3();
+				const objectUpDirection = new Vector3();
+				const objectSidewaysDirection = new Vector3();
+				const moveDirection = new Vector3();
 
 			return function rotateCamera() {
 
@@ -256,9 +256,9 @@ class TrackballControls extends EventDispatcher {
 
 		this.panCamera = ( function () {
 
-			const mouseChange = new Vector2(),
-				objectUp = new Vector3(),
-				pan = new Vector3();
+			const mouseChange = new Vector2();
+				const objectUp = new Vector3();
+				const pan = new Vector3();
 
 			return function panCamera() {
 
@@ -495,7 +495,7 @@ class TrackballControls extends EventDispatcher {
 
 			if ( _keyState !== STATE.NONE ) {
 
-				return;
+				
 
 			} else if ( event.code === scope.keys[ STATE.ROTATE ] && ! scope.noRotate ) {
 

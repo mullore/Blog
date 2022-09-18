@@ -110,7 +110,7 @@
 		}
 
 		render( renderer, writeBuffer, readBuffer, deltaTime
-			/*, maskActive*/
+			/*, maskActive */
 		) {
 
 			if ( this.needsInit ) {
@@ -125,19 +125,19 @@
 
 			if ( this.adaptive ) {
 
-				//Render the luminance of the current scene into a render target with mipmapping enabled
+				// Render the luminance of the current scene into a render target with mipmapping enabled
 				this.fsQuad.material = this.materialLuminance;
 				this.materialLuminance.uniforms.tDiffuse.value = readBuffer.texture;
 				renderer.setRenderTarget( this.currentLuminanceRT );
-				this.fsQuad.render( renderer ); //Use the new luminance values, the previous luminance and the frame delta to
-				//adapt the luminance over time.
+				this.fsQuad.render( renderer ); // Use the new luminance values, the previous luminance and the frame delta to
+				// adapt the luminance over time.
 
 				this.fsQuad.material = this.materialAdaptiveLum;
 				this.materialAdaptiveLum.uniforms.delta.value = deltaTime;
 				this.materialAdaptiveLum.uniforms.lastLum.value = this.previousLuminanceRT.texture;
 				this.materialAdaptiveLum.uniforms.currentLum.value = this.currentLuminanceRT.texture;
 				renderer.setRenderTarget( this.luminanceRT );
-				this.fsQuad.render( renderer ); //Copy the new adapted luminance value so that it can be used by the next frame.
+				this.fsQuad.render( renderer ); // Copy the new adapted luminance value so that it can be used by the next frame.
 
 				this.fsQuad.material = this.materialCopy;
 				this.copyUniforms.tDiffuse.value = this.luminanceRT.texture;
@@ -205,10 +205,10 @@
 
 			if ( this.adaptive ) {
 
-				this.materialToneMap.defines[ 'ADAPTED_LUMINANCE' ] = '';
+				this.materialToneMap.defines.ADAPTED_LUMINANCE = '';
 				this.materialToneMap.uniforms.luminanceMap.value = this.luminanceRT.texture;
 
-			} //Put something in the adaptive luminance texture so that the scene can render initially
+			} // Put something in the adaptive luminance texture so that the scene can render initially
 
 
 			this.fsQuad.material = new THREE.MeshBasicMaterial( {
@@ -227,13 +227,13 @@
 			if ( adaptive ) {
 
 				this.adaptive = true;
-				this.materialToneMap.defines[ 'ADAPTED_LUMINANCE' ] = '';
+				this.materialToneMap.defines.ADAPTED_LUMINANCE = '';
 				this.materialToneMap.uniforms.luminanceMap.value = this.luminanceRT.texture;
 
 			} else {
 
 				this.adaptive = false;
-				delete this.materialToneMap.defines[ 'ADAPTED_LUMINANCE' ];
+				delete this.materialToneMap.defines.ADAPTED_LUMINANCE;
 				this.materialToneMap.uniforms.luminanceMap.value = null;
 
 			}

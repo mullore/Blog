@@ -136,10 +136,10 @@
 
 				throw new Error( 'DRACOExporter: Unsupported object type.' );
 
-			} //Compress using draco encoder
+			} // Compress using draco encoder
 
 
-			const encodedData = new dracoEncoder.DracoInt8Array(); //Sets the desired encoding and decoding speed for the given options from 0 (slowest speed, but the best compression) to 10 (fastest, but the worst compression).
+			const encodedData = new dracoEncoder.DracoInt8Array(); // Sets the desired encoding and decoding speed for the given options from 0 (slowest speed, but the best compression) to 10 (fastest, but the worst compression).
 
 			const encodeSpeed = options.encodeSpeed !== undefined ? options.encodeSpeed : 5;
 			const decodeSpeed = options.decodeSpeed !== undefined ? options.decodeSpeed : 5;
@@ -185,7 +185,7 @@
 
 				throw new Error( 'THREE.DRACOExporter: Draco encoding failed.' );
 
-			} //Copy encoded data to buffer.
+			} // Copy encoded data to buffer.
 
 
 			const outputData = new Int8Array( new ArrayBuffer( length ) );

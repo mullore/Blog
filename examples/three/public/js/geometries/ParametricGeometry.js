@@ -23,10 +23,10 @@
 			const uvs = [];
 			const EPS = 0.00001;
 			const normal = new THREE.Vector3();
-			const p0 = new THREE.Vector3(),
-				p1 = new THREE.Vector3();
-			const pu = new THREE.Vector3(),
-				pv = new THREE.Vector3();
+			const p0 = new THREE.Vector3();
+				const p1 = new THREE.Vector3();
+			const pu = new THREE.Vector3();
+				const pv = new THREE.Vector3();
 
 			if ( func.length < 3 ) {
 

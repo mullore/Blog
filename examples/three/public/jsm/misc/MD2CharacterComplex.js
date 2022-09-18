@@ -378,13 +378,13 @@ class MD2CharacterComplex {
 
 		if ( controls.crouch ) {
 
-			moveAnimation = animations[ 'crouchMove' ];
-			idleAnimation = animations[ 'crouchIdle' ];
+			moveAnimation = animations.crouchMove;
+			idleAnimation = animations.crouchIdle;
 
 		} else {
 
-			moveAnimation = animations[ 'move' ];
-			idleAnimation = animations[ 'idle' ];
+			moveAnimation = animations.move;
+			idleAnimation = animations.idle;
 
 		}
 
@@ -392,8 +392,8 @@ class MD2CharacterComplex {
 
 		if ( controls.jump ) {
 
-			moveAnimation = animations[ 'jump' ];
-			idleAnimation = animations[ 'jump' ];
+			moveAnimation = animations.jump;
+			idleAnimation = animations.jump;
 
 		}
 
@@ -401,13 +401,13 @@ class MD2CharacterComplex {
 
 			if ( controls.crouch ) {
 
-				moveAnimation = animations[ 'crouchAttack' ];
-				idleAnimation = animations[ 'crouchAttack' ];
+				moveAnimation = animations.crouchAttack;
+				idleAnimation = animations.crouchAttack;
 
 			} else {
 
-				moveAnimation = animations[ 'attack' ];
-				idleAnimation = animations[ 'attack' ];
+				moveAnimation = animations.attack;
+				idleAnimation = animations.attack;
 
 			}
 

@@ -1,8 +1,4 @@
 // Original src: https://github.com/zz85/threejs-path-flow
-const CHANNELS = 4;
-const TEXTURE_WIDTH = 1024;
-const TEXTURE_HEIGHT = 4;
-
 import {
 	DataTexture,
 	RGBAFormat,
@@ -14,6 +10,10 @@ import {
 	DynamicDrawUsage,
 	Matrix4
 } from 'three';
+
+const CHANNELS = 4;
+const TEXTURE_WIDTH = 1024;
+const TEXTURE_HEIGHT = 4;
 
 /**
  * Make a new DataTexture to store the descriptions of the curves.

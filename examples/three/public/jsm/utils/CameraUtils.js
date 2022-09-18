@@ -4,14 +4,14 @@ import {
 	Vector3
 } from 'three';
 
-const _va = /*@__PURE__*/ new Vector3(), // from pe to pa
-	_vb = /*@__PURE__*/ new Vector3(), // from pe to pb
-	_vc = /*@__PURE__*/ new Vector3(), // from pe to pc
-	_vr = /*@__PURE__*/ new Vector3(), // right axis of screen
-	_vu = /*@__PURE__*/ new Vector3(), // up axis of screen
-	_vn = /*@__PURE__*/ new Vector3(), // normal vector of screen
-	_vec = /*@__PURE__*/ new Vector3(), // temporary vector
-	_quat = /*@__PURE__*/ new Quaternion(); // temporary quaternion
+const _va = /* @__PURE__ */ new Vector3(); // from pe to pa
+	const _vb = /* @__PURE__ */ new Vector3(); // from pe to pb
+	const _vc = /* @__PURE__ */ new Vector3(); // from pe to pc
+	const _vr = /* @__PURE__ */ new Vector3(); // right axis of screen
+	const _vu = /* @__PURE__ */ new Vector3(); // up axis of screen
+	const _vn = /* @__PURE__ */ new Vector3(); // normal vector of screen
+	const _vec = /* @__PURE__ */ new Vector3(); // temporary vector
+	const _quat = /* @__PURE__ */ new Quaternion(); // temporary quaternion
 
 
 /** Set a PerspectiveCamera's projectionMatrix and quaternion
@@ -24,10 +24,10 @@ const _va = /*@__PURE__*/ new Vector3(), // from pe to pa
  * @param {boolean} estimateViewFrustum */
 function frameCorners( camera, bottomLeftCorner, bottomRightCorner, topLeftCorner, estimateViewFrustum = false ) {
 
-	const pa = bottomLeftCorner, pb = bottomRightCorner, pc = topLeftCorner;
+	const pa = bottomLeftCorner; const pb = bottomRightCorner; const pc = topLeftCorner;
 	const pe = camera.position; // eye position
 	const n = camera.near; // distance of near clipping plane
-	const f = camera.far; //distance of far clipping plane
+	const f = camera.far; // distance of far clipping plane
 
 	_vr.copy( pb ).sub( pa ).normalize();
 	_vu.copy( pc ).sub( pa ).normalize();

@@ -35,7 +35,7 @@ var wk = (function (c, id, msg, transfer, cb) {
 });
 
 // aliases for shorter compressed code (most minifers don't do this)
-var u8 = Uint8Array, u16 = Uint16Array, u32 = Uint32Array;
+var u8 = Uint8Array; var u16 = Uint16Array; var u32 = Uint32Array;
 // fixed length extra bits
 var fleb = new u8([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, /* unused */ 0, 0, /* impossible */ 0]);
 // fixed distance extra bits
@@ -58,10 +58,10 @@ var freb = function (eb, start) {
     }
     return [b, r];
 };
-var _a = freb(fleb, 2), fl = _a[0], revfl = _a[1];
+var _a = freb(fleb, 2); var fl = _a[0]; var revfl = _a[1];
 // we can ignore the fact that the other numbers are wrong; they never happen anyway
 fl[28] = 258, revfl[258] = 28;
-var _b = freb(fdeb, 0), fd = _b[0], revfd = _b[1];
+var _b = freb(fdeb, 0); var fd = _b[0]; var revfd = _b[1];
 // map of value to reverse (assuming 16 bits)
 var rev = new u16(32768);
 for (var i = 0; i < 32768; ++i) {
@@ -136,9 +136,9 @@ var fdt = new u8(32);
 for (var i = 0; i < 32; ++i)
     fdt[i] = 5;
 // fixed length map
-var flm = /*#__PURE__*/ hMap(flt, 9, 0), flrm = /*#__PURE__*/ hMap(flt, 9, 1);
+var flm = /* #__PURE__ */ hMap(flt, 9, 0); var flrm = /* #__PURE__ */ hMap(flt, 9, 1);
 // fixed distance map
-var fdm = /*#__PURE__*/ hMap(fdt, 5, 0), fdrm = /*#__PURE__*/ hMap(fdt, 5, 1);
+var fdm = /* #__PURE__ */ hMap(fdt, 5, 0); var fdrm = /* #__PURE__ */ hMap(fdt, 5, 1);
 // find max of array
 var max = function (a) {
     var m = a[0];
@@ -199,7 +199,7 @@ var inflt = function (dat, buf, st) {
         }
     };
     //  last chunk         bitpos           bytes
-    var final = st.f || 0, pos = st.p || 0, bt = st.b || 0, lm = st.l, dm = st.d, lbt = st.m, dbt = st.n;
+    var final = st.f || 0; var pos = st.p || 0; var bt = st.b || 0; var lm = st.l; var dm = st.d; var lbt = st.m; var dbt = st.n;
     // total bits
     var tbts = sl * 8;
     do {
@@ -211,7 +211,7 @@ var inflt = function (dat, buf, st) {
             pos += 3;
             if (!type) {
                 // go to end of byte boundary
-                var s = shft(pos) + 4, l = dat[s - 4] | (dat[s - 3] << 8), t = s + l;
+                var s = shft(pos) + 4; var l = dat[s - 4] | (dat[s - 3] << 8); var t = s + l;
                 if (t > sl) {
                     if (noSt)
                         throw 'unexpected EOF';
@@ -230,7 +230,7 @@ var inflt = function (dat, buf, st) {
                 lm = flrm, dm = fdrm, lbt = 9, dbt = 5;
             else if (type == 2) {
                 //  literal                            lengths
-                var hLit = bits(dat, pos, 31) + 257, hcLen = bits(dat, pos + 10, 15) + 4;
+                var hLit = bits(dat, pos, 31) + 257; var hcLen = bits(dat, pos + 10, 15) + 4;
                 var tl = hLit + bits(dat, pos + 5, 31) + 1;
                 pos += 14;
                 // length+distance tree
@@ -243,7 +243,7 @@ var inflt = function (dat, buf, st) {
                 }
                 pos += hcLen * 3;
                 // code lengths bits
-                var clb = max(clt), clbmsk = (1 << clb) - 1;
+                var clb = max(clt); var clbmsk = (1 << clb) - 1;
                 // code lengths map
                 var clm = hMap(clt, clb, 1);
                 for (var i = 0; i < tl;) {
@@ -258,7 +258,7 @@ var inflt = function (dat, buf, st) {
                     }
                     else {
                         //  copy   count
-                        var c = 0, n = 0;
+                        var c = 0; var n = 0;
                         if (s == 16)
                             n = 3 + bits(dat, pos, 3), pos += 2, c = ldt[i - 1];
                         else if (s == 17)
@@ -270,7 +270,7 @@ var inflt = function (dat, buf, st) {
                     }
                 }
                 //    length tree                 distance tree
-                var lt = ldt.subarray(0, hLit), dt = ldt.subarray(hLit);
+                var lt = ldt.subarray(0, hLit); var dt = ldt.subarray(hLit);
                 // max length bits
                 lbt = max(lt);
                 // max dist bits
@@ -290,11 +290,11 @@ var inflt = function (dat, buf, st) {
         // Maximum chunk size (practically, theoretically infinite) is 2^17;
         if (noBuf)
             cbuf(bt + 131072);
-        var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
+        var lms = (1 << lbt) - 1; var dms = (1 << dbt) - 1;
         var lpos = pos;
         for (;; lpos = pos) {
             // bits read, code
-            var c = lm[bits16(dat, pos) & lms], sym = c >>> 4;
+            var c = lm[bits16(dat, pos) & lms]; var sym = c >>> 4;
             pos += c & 15;
             if (pos > tbts) {
                 if (noSt)
@@ -314,12 +314,12 @@ var inflt = function (dat, buf, st) {
                 // no extra bits needed if less
                 if (sym > 264) {
                     // index
-                    var i = sym - 257, b = fleb[i];
+                    var i = sym - 257; var b = fleb[i];
                     add = bits(dat, pos, (1 << b) - 1) + fl[i];
                     pos += b;
                 }
                 // dist
-                var d = dm[bits16(dat, pos) & dms], dsym = d >>> 4;
+                var d = dm[bits16(dat, pos) & dms]; var dsym = d >>> 4;
                 if (!d)
                     throw 'invalid distance';
                 pos += d & 15;
@@ -387,7 +387,7 @@ var hTree = function (d, mb) {
     // after i2 reaches last ind, will be stopped
     // freq must be greater than largest possible number of symbols
     t.push({ s: -1, f: 25001 });
-    var l = t[0], r = t[1], i0 = 0, i1 = 1, i2 = 2;
+    var l = t[0]; var r = t[1]; var i0 = 0; var i1 = 1; var i2 = 2;
     t[0] = { s: -1, f: l.f + r.f, l: l, r: r };
     // efficient algorithm from UZIP.js
     // i0 is lookbehind, i2 is lookahead - after processing two low-freq
@@ -412,9 +412,9 @@ var hTree = function (d, mb) {
         // more algorithms from UZIP.js
         // TODO: find out how this code works (debt)
         //  ind    debt
-        var i = 0, dt = 0;
+        var i = 0; var dt = 0;
         //    left            cost
-        var lft = mbt - mb, cst = 1 << lft;
+        var lft = mbt - mb; var cst = 1 << lft;
         t2.sort(function (a, b) { return tr[b.s] - tr[a.s] || a.f - b.f; });
         for (; i < s; ++i) {
             var i2_1 = t2[i].s;
@@ -458,7 +458,7 @@ var lc = function (c) {
         ;
     var cl = new u16(++s);
     //  ind      num         streak
-    var cli = 0, cln = c[0], cls = 1;
+    var cli = 0; var cln = c[0]; var cls = 1;
     var w = function (v) { cl[cli++] = v; };
     for (var i = 1; i <= s; ++i) {
         if (c[i] == cln && i != s)
@@ -512,16 +512,16 @@ var wfblk = function (out, pos, dat) {
 var wblk = function (dat, out, final, syms, lf, df, eb, li, bs, bl, p) {
     wbits(out, p++, final);
     ++lf[256];
-    var _a = hTree(lf, 15), dlt = _a[0], mlb = _a[1];
-    var _b = hTree(df, 15), ddt = _b[0], mdb = _b[1];
-    var _c = lc(dlt), lclt = _c[0], nlc = _c[1];
-    var _d = lc(ddt), lcdt = _d[0], ndc = _d[1];
+    var _a = hTree(lf, 15); var dlt = _a[0]; var mlb = _a[1];
+    var _b = hTree(df, 15); var ddt = _b[0]; var mdb = _b[1];
+    var _c = lc(dlt); var lclt = _c[0]; var nlc = _c[1];
+    var _d = lc(ddt); var lcdt = _d[0]; var ndc = _d[1];
     var lcfreq = new u16(19);
     for (var i = 0; i < lclt.length; ++i)
         lcfreq[lclt[i] & 31]++;
     for (var i = 0; i < lcdt.length; ++i)
         lcfreq[lcdt[i] & 31]++;
-    var _e = hTree(lcfreq, 7), lct = _e[0], mlcb = _e[1];
+    var _e = hTree(lcfreq, 7); var lct = _e[0]; var mlcb = _e[1];
     var nlcc = 19;
     for (; nlcc > 4 && !lct[clim[nlcc - 1]]; --nlcc)
         ;
@@ -575,9 +575,9 @@ var wblk = function (dat, out, final, syms, lf, df, eb, li, bs, bl, p) {
     return p + ll[256];
 };
 // deflate options (nice << 13) | chain
-var deo = /*#__PURE__*/ new u32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
+var deo = /* #__PURE__ */ new u32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
 // empty
-var et = /*#__PURE__*/ new u8(0);
+var et = /* #__PURE__ */ new u8(0);
 // compresses data into a raw DEFLATE buffer
 var dflt = function (dat, lvl, plvl, pre, post, lst) {
     var s = dat.length;
@@ -602,25 +602,25 @@ var dflt = function (dat, lvl, plvl, pre, post, lst) {
     }
     else {
         var opt = deo[lvl - 1];
-        var n = opt >>> 13, c = opt & 8191;
+        var n = opt >>> 13; var c = opt & 8191;
         var msk_1 = (1 << plvl) - 1;
         //    prev 2-byte val map    curr 2-byte val map
-        var prev = new u16(32768), head = new u16(msk_1 + 1);
-        var bs1_1 = Math.ceil(plvl / 3), bs2_1 = 2 * bs1_1;
+        var prev = new u16(32768); var head = new u16(msk_1 + 1);
+        var bs1_1 = Math.ceil(plvl / 3); var bs2_1 = 2 * bs1_1;
         var hsh = function (i) { return (dat[i] ^ (dat[i + 1] << bs1_1) ^ (dat[i + 2] << bs2_1)) & msk_1; };
         // 24576 is an arbitrary number of maximum symbols per block
         // 424 buffer for last block
         var syms = new u32(25000);
         // length/literal freq   distance freq
-        var lf = new u16(288), df = new u16(32);
+        var lf = new u16(288); var df = new u16(32);
         //  l/lcnt  exbits  index  l/lind  waitdx  bitpos
-        var lc_1 = 0, eb = 0, i = 0, li = 0, wi = 0, bs = 0;
+        var lc_1 = 0; var eb = 0; var i = 0; var li = 0; var wi = 0; var bs = 0;
         for (; i < s; ++i) {
             // hash value
             // deopt when i > s - 3 - at end, deopt acceptable
             var hv = hsh(i);
             // index mod 32768    previous index mod
-            var imod = i & 32767, pimod = head[hv];
+            var imod = i & 32767; var pimod = head[hv];
             prev[imod] = pimod;
             head[hv] = imod;
             // We always should modify head and prev, but only add symbols if
@@ -637,7 +637,7 @@ var dflt = function (dat, lvl, plvl, pre, post, lst) {
                         df[j] = 0;
                 }
                 //  len    dist   chain
-                var l = 2, d = 0, ch_1 = c, dif = (imod - pimod) & 32767;
+                var l = 2; var d = 0; var ch_1 = c; var dif = (imod - pimod) & 32767;
                 if (rem > 2 && hv == hsh(i - dif)) {
                     var maxn = Math.min(n, rem) - 1;
                     var maxd = Math.min(32767, i);
@@ -678,7 +678,7 @@ var dflt = function (dat, lvl, plvl, pre, post, lst) {
                     // store both dist and len data in one Uint32
                     // Make sure this is recognized as a len/dist with 28th bit (2^28)
                     syms[li++] = 268435456 | (revfl[l] << 18) | revfd[d];
-                    var lin = revfl[l] & 31, din = revfd[d] & 31;
+                    var lin = revfl[l] & 31; var din = revfd[d] & 31;
                     eb += fleb[lin] + fdeb[din];
                     ++lf[257 + lin];
                     ++df[din];
@@ -699,10 +699,10 @@ var dflt = function (dat, lvl, plvl, pre, post, lst) {
     return slc(o, 0, pre + shft(pos) + post);
 };
 // CRC32 table
-var crct = /*#__PURE__*/ (function () {
+var crct = /* #__PURE__ */ (function () {
     var t = new u32(256);
     for (var i = 0; i < 256; ++i) {
-        var c = i, k = 9;
+        var c = i; var k = 9;
         while (--k)
             c = ((c & 1) && 0xEDB88320) ^ (c >>> 1);
         t[i] = c;
@@ -725,11 +725,11 @@ var crc = function () {
 };
 // Alder32
 var adler = function () {
-    var a = 1, b = 0;
+    var a = 1; var b = 0;
     return {
         p: function (d) {
             // closures have awful performance
-            var n = a, m = b;
+            var n = a; var m = b;
             var l = d.length;
             for (var i = 0; i != l;) {
                 var e = Math.min(i + 2655, l);
@@ -745,7 +745,7 @@ var adler = function () {
         }
     };
 };
-;
+
 // deflate with opts
 var dopt = function (dat, opt, pre, post, st) {
     return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : (12 + opt.mem), pre, post, !st);
@@ -771,8 +771,8 @@ var wcln = function (fn, fnStr, td) {
     var st = fn.toString();
     var ks = st.slice(st.indexOf('[') + 1, st.lastIndexOf(']')).replace(/ /g, '').split(',');
     for (var i = 0; i < dt.length; ++i) {
-        var v = dt[i], k = ks[i];
-        if (typeof v == 'function') {
+        var v = dt[i]; var k = ks[i];
+        if (typeof v === 'function') {
             fnStr += ';' + k + '=';
             var st_1 = v.toString();
             if (v.prototype) {
@@ -809,7 +809,7 @@ var cbfs = function (v) {
 var wrkr = function (fns, init, id, cb) {
     var _a;
     if (!ch[id]) {
-        var fnStr = '', td_1 = {}, m = fns.length - 1;
+        var fnStr = ''; var td_1 = {}; var m = fns.length - 1;
         for (var i = 0; i < m; ++i)
             _a = wcln(fns[i], fnStr, td_1), fnStr = _a[0], td_1 = _a[1];
         ch[id] = wcln(fns[m], fnStr, td_1);
@@ -912,7 +912,7 @@ var gzl = function (d) {
 var gzhl = function (o) { return 10 + ((o.filename && (o.filename.length + 1)) || 0); };
 // zlib header
 var zlh = function (c, o) {
-    var lv = o.level, fl = lv == 0 ? 0 : lv < 6 ? 1 : lv == 9 ? 3 : 2;
+    var lv = o.level; var fl = lv == 0 ? 0 : lv < 6 ? 1 : lv == 9 ? 3 : 2;
     c[0] = 120, c[1] = (fl << 6) | (fl ? (32 - 2 * fl) : 1);
 };
 // zlib valid
@@ -923,7 +923,7 @@ var zlv = function (d) {
         throw 'invalid zlib data: preset dictionaries not supported';
 };
 function AsyncCmpStrm(opts, cb) {
-    if (!cb && typeof opts == 'function')
+    if (!cb && typeof opts === 'function')
         cb = opts, opts = {};
     this.ondata = cb;
     return opts;
@@ -932,9 +932,9 @@ function AsyncCmpStrm(opts, cb) {
 /**
  * Streaming DEFLATE compression
  */
-var Deflate = /*#__PURE__*/ (function () {
+var Deflate = /* #__PURE__ */ (function () {
     function Deflate(opts, cb) {
-        if (!cb && typeof opts == 'function')
+        if (!cb && typeof opts === 'function')
             cb = opts, opts = {};
         this.ondata = cb;
         this.o = opts || {};
@@ -961,7 +961,7 @@ export { Deflate };
 /**
  * Asynchronous streaming DEFLATE compression
  */
-var AsyncDeflate = /*#__PURE__*/ (function () {
+var AsyncDeflate = /* #__PURE__ */ (function () {
     function AsyncDeflate(opts, cb) {
         astrmify([
             bDflt,
@@ -977,7 +977,7 @@ export { AsyncDeflate };
 export function deflate(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return cbify(data, opts, [
         bDflt,
@@ -995,7 +995,7 @@ export function deflateSync(data, opts) {
 /**
  * Streaming DEFLATE decompression
  */
-var Inflate = /*#__PURE__*/ (function () {
+var Inflate = /* #__PURE__ */ (function () {
     /**
      * Creates an inflation stream
      * @param cb The callback to call whenever data is inflated
@@ -1036,7 +1036,7 @@ export { Inflate };
 /**
  * Asynchronous streaming DEFLATE decompression
  */
-var AsyncInflate = /*#__PURE__*/ (function () {
+var AsyncInflate = /* #__PURE__ */ (function () {
     /**
      * Creates an asynchronous inflation stream
      * @param cb The callback to call whenever data is deflated
@@ -1057,7 +1057,7 @@ export { AsyncInflate };
 export function inflate(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return cbify(data, opts, [
         bInflt
@@ -1076,7 +1076,7 @@ export function inflateSync(data, out) {
 /**
  * Streaming GZIP compression
  */
-var Gzip = /*#__PURE__*/ (function () {
+var Gzip = /* #__PURE__ */ (function () {
     function Gzip(opts, cb) {
         this.c = crc();
         this.l = 0;
@@ -1107,7 +1107,7 @@ export { Gzip };
 /**
  * Asynchronous streaming GZIP compression
  */
-var AsyncGzip = /*#__PURE__*/ (function () {
+var AsyncGzip = /* #__PURE__ */ (function () {
     function AsyncGzip(opts, cb) {
         astrmify([
             bDflt,
@@ -1124,7 +1124,7 @@ export { AsyncGzip };
 export function gzip(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return cbify(data, opts, [
         bDflt,
@@ -1141,15 +1141,15 @@ export function gzip(data, opts, cb) {
 export function gzipSync(data, opts) {
     if (!opts)
         opts = {};
-    var c = crc(), l = data.length;
+    var c = crc(); var l = data.length;
     c.p(data);
-    var d = dopt(data, opts, gzhl(opts), 8), s = d.length;
+    var d = dopt(data, opts, gzhl(opts), 8); var s = d.length;
     return gzh(d, opts), wbytes(d, s - 8, c.d()), wbytes(d, s - 4, l), d;
 }
 /**
  * Streaming GZIP decompression
  */
-var Gunzip = /*#__PURE__*/ (function () {
+var Gunzip = /* #__PURE__ */ (function () {
     /**
      * Creates a GUNZIP stream
      * @param cb The callback to call whenever data is inflated
@@ -1186,7 +1186,7 @@ export { Gunzip };
 /**
  * Asynchronous streaming GZIP decompression
  */
-var AsyncGunzip = /*#__PURE__*/ (function () {
+var AsyncGunzip = /* #__PURE__ */ (function () {
     /**
      * Creates an asynchronous GUNZIP stream
      * @param cb The callback to call whenever data is deflated
@@ -1208,7 +1208,7 @@ export { AsyncGunzip };
 export function gunzip(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return cbify(data, opts, [
         bInflt,
@@ -1228,7 +1228,7 @@ export function gunzipSync(data, out) {
 /**
  * Streaming Zlib compression
  */
-var Zlib = /*#__PURE__*/ (function () {
+var Zlib = /* #__PURE__ */ (function () {
     function Zlib(opts, cb) {
         this.c = adler();
         this.v = 1;
@@ -1257,7 +1257,7 @@ export { Zlib };
 /**
  * Asynchronous streaming Zlib compression
  */
-var AsyncZlib = /*#__PURE__*/ (function () {
+var AsyncZlib = /* #__PURE__ */ (function () {
     function AsyncZlib(opts, cb) {
         astrmify([
             bDflt,
@@ -1274,7 +1274,7 @@ export { AsyncZlib };
 export function zlib(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return cbify(data, opts, [
         bDflt,
@@ -1299,7 +1299,7 @@ export function zlibSync(data, opts) {
 /**
  * Streaming Zlib decompression
  */
-var Unzlib = /*#__PURE__*/ (function () {
+var Unzlib = /* #__PURE__ */ (function () {
     /**
      * Creates a Zlib decompression stream
      * @param cb The callback to call whenever data is inflated
@@ -1335,7 +1335,7 @@ export { Unzlib };
 /**
  * Asynchronous streaming Zlib decompression
  */
-var AsyncUnzlib = /*#__PURE__*/ (function () {
+var AsyncUnzlib = /* #__PURE__ */ (function () {
     /**
      * Creates an asynchronous Zlib decompression stream
      * @param cb The callback to call whenever data is deflated
@@ -1357,7 +1357,7 @@ export { AsyncUnzlib };
 export function unzlib(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return cbify(data, opts, [
         bInflt,
@@ -1381,7 +1381,7 @@ export { gzipSync as compressSync, Gzip as Compress };
 /**
  * Streaming GZIP, Zlib, or raw DEFLATE decompression
  */
-var Decompress = /*#__PURE__*/ (function () {
+var Decompress = /* #__PURE__ */ (function () {
     /**
      * Creates a decompression stream
      * @param cb The callback to call whenever data is decompressed
@@ -1428,7 +1428,7 @@ export { Decompress };
 /**
  * Asynchronous streaming GZIP, Zlib, or raw DEFLATE decompression
  */
-var AsyncDecompress = /*#__PURE__*/ (function () {
+var AsyncDecompress = /* #__PURE__ */ (function () {
     /**
    * Creates an asynchronous decompression stream
    * @param cb The callback to call whenever data is decompressed
@@ -1453,7 +1453,7 @@ export { AsyncDecompress };
 export function decompress(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     return (data[0] == 31 && data[1] == 139 && data[2] == 8)
         ? gunzip(data, opts, cb)
@@ -1477,7 +1477,7 @@ export function decompressSync(data, out) {
 // flatten a directory structure
 var fltn = function (d, p, t, o) {
     for (var k in d) {
-        var val = d[k], n = p + k;
+        var val = d[k]; var n = p + k;
         if (val instanceof u8)
             t[n] = [val, o];
         else if (Array.isArray(val))
@@ -1487,9 +1487,9 @@ var fltn = function (d, p, t, o) {
     }
 };
 // text encoder
-var te = typeof TextEncoder != 'undefined' && /*#__PURE__*/ new TextEncoder();
+var te = typeof TextEncoder !== 'undefined' && /* #__PURE__ */ new TextEncoder();
 // text decoder
-var td = typeof TextDecoder != 'undefined' && /*#__PURE__*/ new TextDecoder();
+var td = typeof TextDecoder !== 'undefined' && /* #__PURE__ */ new TextDecoder();
 // text decoder stream
 var tds = 0;
 try {
@@ -1519,7 +1519,7 @@ var dutf8 = function (d) {
 /**
  * Streaming UTF-8 decoding
  */
-var DecodeUTF8 = /*#__PURE__*/ (function () {
+var DecodeUTF8 = /* #__PURE__ */ (function () {
     /**
      * Creates a UTF-8 decoding stream
      * @param cb The callback to call whenever data is decoded
@@ -1554,7 +1554,7 @@ var DecodeUTF8 = /*#__PURE__*/ (function () {
         var dat = new u8(this.p.length + chunk.length);
         dat.set(this.p);
         dat.set(chunk, this.p.length);
-        var _a = dutf8(dat), ch = _a[0], np = _a[1];
+        var _a = dutf8(dat); var ch = _a[0]; var np = _a[1];
         if (final) {
             if (np.length)
                 throw 'invalid utf-8 data';
@@ -1570,7 +1570,7 @@ export { DecodeUTF8 };
 /**
  * Streaming UTF-8 encoding
  */
-var EncodeUTF8 = /*#__PURE__*/ (function () {
+var EncodeUTF8 = /* #__PURE__ */ (function () {
     /**
      * Creates a UTF-8 decoding stream
      * @param cb The callback to call whenever data is encoded
@@ -1649,21 +1649,21 @@ export function strFromU8(dat, latin1) {
     else if (td)
         return td.decode(dat);
     else {
-        var _a = dutf8(dat), out = _a[0], ext = _a[1];
+        var _a = dutf8(dat); var out = _a[0]; var ext = _a[1];
         if (ext.length)
             throw 'invalid utf-8 data';
         return out;
     }
 }
-;
+
 // deflate bit flag
 var dbf = function (l) { return l == 1 ? 3 : l < 6 ? 2 : l == 9 ? 1 : 0; };
 // skip local zip header
 var slzh = function (d, b) { return b + 30 + b2(d, b + 26) + b2(d, b + 28); };
 // read zip header
 var zh = function (d, b, z) {
-    var fnl = b2(d, b + 28), fn = strFromU8(d.subarray(b + 46, b + 46 + fnl), !(b2(d, b + 8) & 2048)), es = b + 46 + fnl, bs = b4(d, b + 20);
-    var _a = z && bs == 4294967295 ? z64e(d, es) : [bs, b4(d, b + 24), b4(d, b + 42)], sc = _a[0], su = _a[1], off = _a[2];
+    var fnl = b2(d, b + 28); var fn = strFromU8(d.subarray(b + 46, b + 46 + fnl), !(b2(d, b + 8) & 2048)); var es = b + 46 + fnl; var bs = b4(d, b + 20);
+    var _a = z && bs == 4294967295 ? z64e(d, es) : [bs, b4(d, b + 24), b4(d, b + 42)]; var sc = _a[0]; var su = _a[1]; var off = _a[2];
     return [b2(d, b + 10), sc, su, fn, es + b2(d, b + 30) + b2(d, b + 32), off];
 };
 // read zip64 extra field
@@ -1687,7 +1687,7 @@ var exfl = function (ex) {
 };
 // write zip header
 var wzh = function (d, b, f, fn, u, c, ce, co) {
-    var fl = fn.length, ex = f.extra, col = co && co.length;
+    var fl = fn.length; var ex = f.extra; var col = co && co.length;
     var exl = exfl(ex);
     wbytes(d, b, ce != null ? 0x2014B50 : 0x4034B50), b += 4;
     if (ce != null)
@@ -1695,7 +1695,7 @@ var wzh = function (d, b, f, fn, u, c, ce, co) {
     d[b] = 20, b += 2; // spec compliance? what's that?
     d[b++] = (f.flag << 1) | (c == null && 8), d[b++] = u && 8;
     d[b++] = f.compression & 255, d[b++] = f.compression >> 8;
-    var dt = new Date(f.mtime == null ? Date.now() : f.mtime), y = dt.getFullYear() - 1980;
+    var dt = new Date(f.mtime == null ? Date.now() : f.mtime); var y = dt.getFullYear() - 1980;
     if (y < 0 || y > 119)
         throw 'date not in range 1980-2099';
     wbytes(d, b, (y << 25) | ((dt.getMonth() + 1) << 21) | (dt.getDate() << 16) | (dt.getHours() << 11) | (dt.getMinutes() << 5) | (dt.getSeconds() >>> 1)), b += 4;
@@ -1715,7 +1715,7 @@ var wzh = function (d, b, f, fn, u, c, ce, co) {
     b += fl;
     if (exl) {
         for (var k in ex) {
-            var exf = ex[k], l = exf.length;
+            var exf = ex[k]; var l = exf.length;
             wbytes(d, b, +k);
             wbytes(d, b + 2, l);
             d.set(exf, b + 4), b += 4 + l;
@@ -1736,7 +1736,7 @@ var wzf = function (o, b, c, d, e) {
 /**
  * A pass-through stream to keep data uncompressed in a ZIP archive.
  */
-var ZipPassThrough = /*#__PURE__*/ (function () {
+var ZipPassThrough = /* #__PURE__ */ (function () {
     /**
      * Creates a pass-through stream that can be added to ZIP archives
      * @param filename The filename to associate with this data stream
@@ -1782,7 +1782,7 @@ export { ZipPassThrough };
  * Streaming DEFLATE compression for ZIP archives. Prefer using AsyncZipDeflate
  * for better performance
  */
-var ZipDeflate = /*#__PURE__*/ (function () {
+var ZipDeflate = /* #__PURE__ */ (function () {
     /**
      * Creates a DEFLATE stream that can be added to ZIP archives
      * @param filename The filename to associate with this data stream
@@ -1821,7 +1821,7 @@ export { ZipDeflate };
 /**
  * Asynchronous streaming DEFLATE compression for ZIP archives
  */
-var AsyncZipDeflate = /*#__PURE__*/ (function () {
+var AsyncZipDeflate = /* #__PURE__ */ (function () {
     /**
      * Creates a DEFLATE stream that can be added to ZIP archives
      * @param filename The filename to associate with this data stream
@@ -1857,7 +1857,7 @@ export { AsyncZipDeflate };
 /**
  * A zippable archive to which files can incrementally be added
  */
-var Zip = /*#__PURE__*/ (function () {
+var Zip = /* #__PURE__ */ (function () {
     /**
      * Creates an empty ZIP archive to which files can be added
      * @param cb The callback to call whenever data for the generated ZIP archive
@@ -1876,8 +1876,8 @@ var Zip = /*#__PURE__*/ (function () {
         var _this_1 = this;
         if (this.d & 2)
             throw 'stream finished';
-        var f = strToU8(file.filename), fl = f.length;
-        var com = file.comment, o = com && strToU8(com);
+        var f = strToU8(file.filename); var fl = f.length;
+        var com = file.comment; var o = com && strToU8(com);
         var u = fl != file.filename.length || (o && (com.length != o.length));
         var hl = fl + exfl(file.extra) + 30;
         if (fl > 65535)
@@ -1969,7 +1969,7 @@ var Zip = /*#__PURE__*/ (function () {
         this.d = 3;
     };
     Zip.prototype.e = function () {
-        var bt = 0, l = 0, tl = 0;
+        var bt = 0; var l = 0; var tl = 0;
         for (var _i = 0, _a = this.u; _i < _a.length; _i++) {
             var f = _a[_i];
             tl += 46 + f.f.length + exfl(f.extra) + (f.o ? f.o.length : 0);
@@ -2001,20 +2001,20 @@ export { Zip };
 export function zip(data, opts, cb) {
     if (!cb)
         cb = opts, opts = {};
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     var r = {};
     fltn(data, '', r, opts);
     var k = Object.keys(r);
-    var lft = k.length, o = 0, tot = 0;
-    var slft = lft, files = new Array(lft);
+    var lft = k.length; var o = 0; var tot = 0;
+    var slft = lft; var files = new Array(lft);
     var term = [];
     var tAll = function () {
         for (var i = 0; i < term.length; ++i)
             term[i]();
     };
     var cbf = function () {
-        var out = new u8(tot + 22), oe = o, cdl = tot - o;
+        var out = new u8(tot + 22); var oe = o; var cdl = tot - o;
         tot = 0;
         for (var i = 0; i < slft; ++i) {
             var f = files[i];
@@ -2037,11 +2037,11 @@ export function zip(data, opts, cb) {
         cbf();
     var _loop_1 = function (i) {
         var fn = k[i];
-        var _a = r[fn], file = _a[0], p = _a[1];
-        var c = crc(), size = file.length;
+        var _a = r[fn]; var file = _a[0]; var p = _a[1];
+        var c = crc(); var size = file.length;
         c.p(file);
-        var f = strToU8(fn), s = f.length;
-        var com = p.comment, m = com && strToU8(com), ms = m && m.length;
+        var f = strToU8(fn); var s = f.length;
+        var com = p.comment; var m = com && strToU8(com); var ms = m && m.length;
         var exl = exfl(p.extra);
         var compression = p.level == 0 ? 0 : 8;
         var cbl = function (e, d) {
@@ -2103,14 +2103,14 @@ export function zipSync(data, opts) {
     var o = 0;
     var tot = 0;
     for (var fn in r) {
-        var _a = r[fn], file = _a[0], p = _a[1];
+        var _a = r[fn]; var file = _a[0]; var p = _a[1];
         var compression = p.level == 0 ? 0 : 8;
-        var f = strToU8(fn), s = f.length;
-        var com = p.comment, m = com && strToU8(com), ms = m && m.length;
+        var f = strToU8(fn); var s = f.length;
+        var com = p.comment; var m = com && strToU8(com); var ms = m && m.length;
         var exl = exfl(p.extra);
         if (s > 65535)
             throw 'filename too long';
-        var d = compression ? deflateSync(file, p) : file, l = d.length;
+        var d = compression ? deflateSync(file, p) : file; var l = d.length;
         var c = crc();
         c.p(file);
         files.push(mrg(p, {
@@ -2126,7 +2126,7 @@ export function zipSync(data, opts) {
         o += 30 + s + exl + l;
         tot += 76 + 2 * (s + exl) + (ms || 0) + l;
     }
-    var out = new u8(tot + 22), oe = o, cdl = tot - o;
+    var out = new u8(tot + 22); var oe = o; var cdl = tot - o;
     for (var i = 0; i < files.length; ++i) {
         var f = files[i];
         wzh(out, f.o, f, f.f, f.u, f.c.length);
@@ -2140,7 +2140,7 @@ export function zipSync(data, opts) {
 /**
  * Streaming pass-through decompression for ZIP archives
  */
-var UnzipPassThrough = /*#__PURE__*/ (function () {
+var UnzipPassThrough = /* #__PURE__ */ (function () {
     function UnzipPassThrough() {
     }
     UnzipPassThrough.prototype.push = function (data, final) {
@@ -2154,7 +2154,7 @@ export { UnzipPassThrough };
  * Streaming DEFLATE decompression for ZIP archives. Prefer AsyncZipInflate for
  * better performance.
  */
-var UnzipInflate = /*#__PURE__*/ (function () {
+var UnzipInflate = /* #__PURE__ */ (function () {
     /**
      * Creates a DEFLATE decompression that can be used in ZIP archives
      */
@@ -2179,7 +2179,7 @@ export { UnzipInflate };
 /**
  * Asynchronous streaming DEFLATE decompression for ZIP archives
  */
-var AsyncUnzipInflate = /*#__PURE__*/ (function () {
+var AsyncUnzipInflate = /* #__PURE__ */ (function () {
     /**
      * Creates a DEFLATE decompression that can be used in ZIP archives
      */
@@ -2209,7 +2209,7 @@ export { AsyncUnzipInflate };
 /**
  * A ZIP archive decompression stream that emits files as they are discovered
  */
-var Unzip = /*#__PURE__*/ (function () {
+var Unzip = /* #__PURE__ */ (function () {
     /**
      * Creates a ZIP decompression stream
      * @param cb The callback to call whenever a file in the ZIP archive is found
@@ -2246,7 +2246,7 @@ var Unzip = /*#__PURE__*/ (function () {
                 return this.push(chunk, final);
         }
         else {
-            var f = 0, i = 0, is = void 0, buf = void 0;
+            var f = 0; var i = 0; var is = void 0; var buf = void 0;
             if (!this.p.length)
                 buf = chunk;
             else if (!chunk.length)
@@ -2255,7 +2255,7 @@ var Unzip = /*#__PURE__*/ (function () {
                 buf = new u8(this.p.length + chunk.length);
                 buf.set(this.p), buf.set(chunk, this.p.length);
             }
-            var l = buf.length, oc = this.c, add = oc && this.d;
+            var l = buf.length; var oc = this.c; var add = oc && this.d;
             var _loop_2 = function () {
                 var _a;
                 var sig = b4(buf, i);
@@ -2263,12 +2263,12 @@ var Unzip = /*#__PURE__*/ (function () {
                     f = 1, is = i;
                     this_1.d = null;
                     this_1.c = 0;
-                    var bf = b2(buf, i + 6), cmp_1 = b2(buf, i + 8), u = bf & 2048, dd = bf & 8, fnl = b2(buf, i + 26), es = b2(buf, i + 28);
+                    var bf = b2(buf, i + 6); var cmp_1 = b2(buf, i + 8); var u = bf & 2048; var dd = bf & 8; var fnl = b2(buf, i + 26); var es = b2(buf, i + 28);
                     if (l > i + 30 + fnl + es) {
                         var chks_2 = [];
                         this_1.k.unshift(chks_2);
                         f = 2;
-                        var sc_1 = b4(buf, i + 18), su_1 = b4(buf, i + 22);
+                        var sc_1 = b4(buf, i + 18); var su_1 = b4(buf, i + 22);
                         var fn_1 = strFromU8(buf.subarray(i + 30, i += 30 + fnl), !u);
                         if (sc_1 == 4294967295) {
                             _a = dd ? [-2] : z64e(buf, i), sc_1 = _a[0], su_1 = _a[1];
@@ -2311,23 +2311,23 @@ var Unzip = /*#__PURE__*/ (function () {
                             file_1.size = sc_1, file_1.originalSize = su_1;
                         this_1.onfile(file_1);
                     }
-                    return "break";
+                    return 'break';
                 }
                 else if (oc) {
                     if (sig == 0x8074B50) {
                         is = i += 12 + (oc == -2 && 8), f = 3, this_1.c = 0;
-                        return "break";
+                        return 'break';
                     }
                     else if (sig == 0x2014B50) {
                         is = i -= 4, f = 3, this_1.c = 0;
-                        return "break";
+                        return 'break';
                     }
                 }
             };
             var this_1 = this;
             for (; i < l - 4; ++i) {
                 var state_1 = _loop_2();
-                if (state_1 === "break")
+                if (state_1 === 'break')
                     break;
             }
             this.p = et;
@@ -2366,7 +2366,7 @@ export { Unzip };
  * @returns A function that can be used to immediately terminate the unzipping
  */
 export function unzip(data, cb) {
-    if (typeof cb != 'function')
+    if (typeof cb !== 'function')
         throw 'no callback';
     var term = [];
     var tAll = function () {
@@ -2381,7 +2381,7 @@ export function unzip(data, cb) {
             return;
         }
     }
-    ;
+    
     var lft = b2(data, e + 8);
     if (!lft)
         cb(null, {});
@@ -2398,7 +2398,7 @@ export function unzip(data, cb) {
         o = b4(data, e + 48);
     }
     var _loop_3 = function (i) {
-        var _a = zh(data, o, z), c_1 = _a[0], sc = _a[1], su = _a[2], fn = _a[3], no = _a[4], off = _a[5], b = slzh(data, off);
+        var _a = zh(data, o, z); var c_1 = _a[0]; var sc = _a[1]; var su = _a[2]; var fn = _a[3]; var no = _a[4]; var off = _a[5]; var b = slzh(data, off);
         o = no;
         var cbl = function (e, d) {
             if (e) {
@@ -2447,7 +2447,7 @@ export function unzipSync(data) {
         if (!e || data.length - e > 65558)
             throw 'invalid zip file';
     }
-    ;
+    
     var c = b2(data, e + 8);
     if (!c)
         return {};
@@ -2461,7 +2461,7 @@ export function unzipSync(data) {
         o = b4(data, e + 48);
     }
     for (var i = 0; i < c; ++i) {
-        var _a = zh(data, o, z), c_2 = _a[0], sc = _a[1], su = _a[2], fn = _a[3], no = _a[4], off = _a[5], b = slzh(data, off);
+        var _a = zh(data, o, z); var c_2 = _a[0]; var sc = _a[1]; var su = _a[2]; var fn = _a[3]; var no = _a[4]; var off = _a[5]; var b = slzh(data, off);
         o = no;
         if (!c_2)
             files[fn] = slc(data, b, b + sc);

@@ -32,7 +32,7 @@ UniformsLib.line = {
 
 };
 
-ShaderLib[ 'line' ] = {
+ShaderLib.line = {
 
 	uniforms: UniformsUtils.merge( [
 		UniformsLib.common,
@@ -442,10 +442,10 @@ class LineMaterial extends ShaderMaterial {
 
 			type: 'LineMaterial',
 
-			uniforms: UniformsUtils.clone( ShaderLib[ 'line' ].uniforms ),
+			uniforms: UniformsUtils.clone( ShaderLib.line.uniforms ),
 
-			vertexShader: ShaderLib[ 'line' ].vertexShader,
-			fragmentShader: ShaderLib[ 'line' ].fragmentShader,
+			vertexShader: ShaderLib.line.vertexShader,
+			fragmentShader: ShaderLib.line.fragmentShader,
 
 			clipping: true // required for clipping support
 

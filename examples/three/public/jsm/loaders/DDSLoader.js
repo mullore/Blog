@@ -91,10 +91,10 @@ class DDSLoader extends CompressedTextureLoader {
 					const g = srcBuffer[ src ]; src ++;
 					const r = srcBuffer[ src ]; src ++;
 					const a = srcBuffer[ src ]; src ++;
-					byteArray[ dst ] = r; dst ++;	//r
-					byteArray[ dst ] = g; dst ++;	//g
-					byteArray[ dst ] = b; dst ++;	//b
-					byteArray[ dst ] = a; dst ++;	//a
+					byteArray[ dst ] = r; dst ++;	// r
+					byteArray[ dst ] = g; dst ++;	// g
+					byteArray[ dst ] = b; dst ++;	// b
+					byteArray[ dst ] = a; dst ++;	// a
 
 				}
 
@@ -215,7 +215,7 @@ class DDSLoader extends CompressedTextureLoader {
 		}
 
 		const caps2 = header[ off_caps2 ];
-		dds.isCubemap = caps2 & DDSCAPS2_CUBEMAP ? true : false;
+		dds.isCubemap = !!(caps2 & DDSCAPS2_CUBEMAP);
 		if ( dds.isCubemap && (
 			! ( caps2 & DDSCAPS2_CUBEMAP_POSITIVEX ) ||
 			! ( caps2 & DDSCAPS2_CUBEMAP_NEGATIVEX ) ||

@@ -63,7 +63,7 @@
 				relative: false
 			};
 			const layers = [];
-			let currentLayer = undefined;
+			let currentLayer;
 			const pathMaterial = new THREE.LineBasicMaterial( {
 				color: 0xFF0000
 			} );
@@ -82,7 +82,7 @@
 				};
 				layers.push( currentLayer );
 
-			} //Create lie segment between p1 and p2
+			} // Create lie segment between p1 and p2
 
 
 			function addSegment( p1, p2 ) {
@@ -124,7 +124,7 @@
 			for ( let i = 0; i < lines.length; i ++ ) {
 
 				const tokens = lines[ i ].split( ' ' );
-				const cmd = tokens[ 0 ].toUpperCase(); //Argumments
+				const cmd = tokens[ 0 ].toUpperCase(); // Argumments
 
 				const args = {};
 				tokens.splice( 1 ).forEach( function ( token ) {
@@ -137,8 +137,8 @@
 
 					}
 
-				} ); //Process commands
-				//G0/G1 – Linear Movement
+				} ); // Process commands
+				// G0/G1 – Linear Movement
 
 				if ( cmd === 'G0' || cmd === 'G1' ) {
 
@@ -148,7 +148,7 @@
 						z: args.z !== undefined ? absolute( state.z, args.z ) : state.z,
 						e: args.e !== undefined ? absolute( state.e, args.e ) : state.e,
 						f: args.f !== undefined ? absolute( state.f, args.f ) : state.f
-					}; //Layer change detection is or made by watching Z, it's made by watching when we extrude at a new Z position
+					}; // Layer change detection is or made by watching Z, it's made by watching when we extrude at a new Z position
 
 					if ( delta( state.e, line.e ) > 0 ) {
 
@@ -165,21 +165,21 @@
 					addSegment( state, line );
 					state = line;
 
-				} else if ( cmd === 'G2' || cmd === 'G3' ) { //G2/G3 - Arc Movement ( G2 clock wise and G3 counter clock wise )
-					//console.warn( 'THREE.GCodeLoader: Arc command not supported' );
+				} else if ( cmd === 'G2' || cmd === 'G3' ) { // G2/G3 - Arc Movement ( G2 clock wise and G3 counter clock wise )
+					// console.warn( 'THREE.GCodeLoader: Arc command not supported' );
 				} else if ( cmd === 'G90' ) {
 
-					//G90: Set to Absolute Positioning
+					// G90: Set to Absolute Positioning
 					state.relative = false;
 
 				} else if ( cmd === 'G91' ) {
 
-					//G91: Set to state.relative Positioning
+					// G91: Set to state.relative Positioning
 					state.relative = true;
 
 				} else if ( cmd === 'G92' ) {
 
-					//G92: Set Position
+					// G92: Set Position
 					const line = state;
 					line.x = args.x !== undefined ? args.x : line.x;
 					line.y = args.y !== undefined ? args.y : line.y;
@@ -187,7 +187,7 @@
 					line.e = args.e !== undefined ? args.e : line.e;
 					state = line;
 
-				} else { //console.warn( 'THREE.GCodeLoader: Command not supported:' + cmd );
+				} else { // console.warn( 'THREE.GCodeLoader: Command not supported:' + cmd );
 				}
 
 			}
@@ -217,8 +217,8 @@
 
 			} else {
 
-				const vertex = [],
-					pathVertex = [];
+				const vertex = [];
+					const pathVertex = [];
 
 				for ( let i = 0; i < layers.length; i ++ ) {
 

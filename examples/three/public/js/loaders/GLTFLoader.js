@@ -340,7 +340,7 @@
 	}
 	/*********************************/
 
-	/********** EXTENSIONS ***********/
+	/** ******** EXTENSIONS ***********/
 
 	/*********************************/
 
@@ -1325,7 +1325,7 @@
 		constructor( params ) {
 
 			super();
-			this.isGLTFSpecularGlossinessMaterial = true; //various chunks that need replacing
+			this.isGLTFSpecularGlossinessMaterial = true; // various chunks that need replacing
 
 			const specularMapParsFragmentChunk = [ '#ifdef USE_SPECULARMAP', '	uniform sampler2D specularMap;', '#endif' ].join( '\n' );
 			const glossinessMapParsFragmentChunk = [ '#ifdef USE_GLOSSINESSMAP', '	uniform sampler2D glossinessMap;', '#endif' ].join( '\n' );
@@ -1567,7 +1567,7 @@
 	}
 	/*********************************/
 
-	/********** INTERPOLATION ********/
+	/** ******** INTERPOLATION ********/
 
 	/*********************************/
 	// Spline Interpolation
@@ -1586,10 +1586,10 @@
 
 			// Copies a sample value to the result buffer. See description of glTF
 			// CUBICSPLINE values layout in interpolate_() function below.
-			const result = this.resultBuffer,
-				values = this.sampleValues,
-				valueSize = this.valueSize,
-				offset = index * valueSize * 3 + valueSize;
+			const result = this.resultBuffer;
+				const values = this.sampleValues;
+				const valueSize = this.valueSize;
+				const offset = index * valueSize * 3 + valueSize;
 
 			for ( let i = 0; i !== valueSize; i ++ ) {
 
@@ -1660,7 +1660,7 @@
 	}
 	/*********************************/
 
-	/********** INTERNALS ************/
+	/** ******** INTERNALS ************/
 
 	/*********************************/
 
@@ -1669,7 +1669,7 @@
 
 	const WEBGL_CONSTANTS = {
 		FLOAT: 5126,
-		//FLOAT_MAT2: 35674,
+		// FLOAT_MAT2: 35674,
 		FLOAT_MAT3: 35675,
 		FLOAT_MAT4: 35676,
 		FLOAT_VEC2: 35664,
@@ -1752,9 +1752,9 @@
 
 	function createDefaultMaterial( cache ) {
 
-		if ( cache[ 'DefaultMaterial' ] === undefined ) {
+		if ( cache.DefaultMaterial === undefined ) {
 
-			cache[ 'DefaultMaterial' ] = new THREE.MeshStandardMaterial( {
+			cache.DefaultMaterial = new THREE.MeshStandardMaterial( {
 				color: 0xFFFFFF,
 				emissive: 0x000000,
 				metalness: 1,
@@ -1766,7 +1766,7 @@
 
 		}
 
-		return cache[ 'DefaultMaterial' ];
+		return cache.DefaultMaterial;
 
 	}
 

@@ -37,9 +37,9 @@ class CondNode extends Node {
 		const context = { temp: false };
 		const nodeProperty = new PropertyNode( null, type ).build( builder );
 
-		const nodeSnippet = new ContextNode( this.node/*, context*/ ).build( builder, 'bool' ),
-			ifSnippet = new ContextNode( this.ifNode, context ).build( builder, type ),
-			elseSnippet = new ContextNode( this.elseNode, context ).build( builder, type );
+		const nodeSnippet = new ContextNode( this.node/*, context */ ).build( builder, 'bool' );
+			const ifSnippet = new ContextNode( this.ifNode, context ).build( builder, type );
+			const elseSnippet = new ContextNode( this.elseNode, context ).build( builder, type );
 
 		builder.addFlowCode( `if ( ${nodeSnippet} ) {
 

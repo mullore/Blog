@@ -1,7 +1,7 @@
 import { TempNode } from './TempNode.js';
 
-const declarationRegexp = /^struct\s*([a-z_0-9]+)\s*{\s*((.|\n)*?)}/img,
-	propertiesRegexp = /\s*(\w*?)\s*(\w*?)(\=|\;)/img;
+const declarationRegexp = /^struct\s*([a-z_0-9]+)\s*{\s*((.|\n)*?)}/img;
+	const propertiesRegexp = /\s*(\w*?)\s*(\w*?)(\=|\;)/img;
 
 class StructNode extends TempNode {
 

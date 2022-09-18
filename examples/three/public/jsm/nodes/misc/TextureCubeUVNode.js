@@ -58,11 +58,11 @@ class TextureCubeUVNode extends TempNode {
 		// --
 
 		const output = new ExpressionNode( 'mix( mix( cubeUV_TL, cubeUV_TR, cubeUV.f.x ), mix( cubeUV_BL, cubeUV_BR, cubeUV.f.x ), cubeUV.f.y )', 'v4' );
-		output.keywords[ 'cubeUV_TL' ] = this.colorSpaceTLExp;
-		output.keywords[ 'cubeUV_TR' ] = this.colorSpaceTRExp;
-		output.keywords[ 'cubeUV_BL' ] = this.colorSpaceBLExp;
-		output.keywords[ 'cubeUV_BR' ] = this.colorSpaceBRExp;
-		output.keywords[ 'cubeUV' ] = bilinearCubeUV;
+		output.keywords.cubeUV_TL = this.colorSpaceTLExp;
+		output.keywords.cubeUV_TR = this.colorSpaceTRExp;
+		output.keywords.cubeUV_BL = this.colorSpaceBLExp;
+		output.keywords.cubeUV_BR = this.colorSpaceBRExp;
+		output.keywords.cubeUV = bilinearCubeUV;
 
 		return output;
 

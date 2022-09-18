@@ -17,8 +17,8 @@ class ColorAdjustmentNode extends TempNode {
 
 	generate( builder, output ) {
 
-		const rgb = this.rgb.build( builder, 'v3' ),
-			adjustment = this.adjustment.build( builder, 'f' );
+		const rgb = this.rgb.build( builder, 'v3' );
+			const adjustment = this.adjustment.build( builder, 'f' );
 
 		switch ( this.method ) {
 

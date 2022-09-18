@@ -21,9 +21,9 @@ import { CubeTextureNode } from '../inputs/CubeTextureNode.js';
 import { TextureCubeNode } from '../misc/TextureCubeNode.js';
 
 
-const elements = NodeUtils.elements,
-	constructors = [ 'float', 'vec2', 'vec3', 'vec4' ],
-	convertFormatToType = {
+const elements = NodeUtils.elements;
+	const constructors = [ 'float', 'vec2', 'vec3', 'vec4' ];
+	const convertFormatToType = {
 		float: 'f',
 		vec2: 'v2',
 		vec3: 'v3',
@@ -31,8 +31,8 @@ const elements = NodeUtils.elements,
 		mat4: 'v4',
 		int: 'i',
 		bool: 'b'
-	},
-	convertTypeToFormat = {
+	};
+	const convertTypeToFormat = {
 		t: 'sampler2D',
 		tc: 'samplerCube',
 		b: 'bool',
@@ -460,8 +460,8 @@ class NodeBuilder {
 
 		if ( ! data ) {
 
-			const index = vars.length,
-				name = ns ? ns : 'node' + prefix + index + ( label ? '_' + label : '' );
+			const index = vars.length;
+				const name = ns || 'node' + prefix + index + ( label ? '_' + label : '' );
 
 			data = { name: name, type: type };
 
@@ -523,9 +523,9 @@ class NodeBuilder {
 
 		for ( let i = 0, l = vars.length; i < l; ++ i ) {
 
-			const nVar = vars[ i ],
-				type = nVar.type,
-				name = nVar.name;
+			const nVar = vars[ i ];
+				const type = nVar.type;
+				const name = nVar.name;
 
 			const formatType = this.getFormatByType( type );
 
@@ -559,12 +559,12 @@ class NodeBuilder {
 
 	createUniform( shader, type, node, ns, needsUpdate, label ) {
 
-		const uniforms = this.inputs.uniforms,
-			index = uniforms.list.length;
+		const uniforms = this.inputs.uniforms;
+			const index = uniforms.list.length;
 
 		const uniform = new NodeUniform( {
 			type: type,
-			name: ns ? ns : 'nodeU' + index + ( label ? '_' + label : '' ),
+			name: ns || 'nodeU' + index + ( label ? '_' + label : '' ),
 			node: node,
 			needsUpdate: needsUpdate
 		} );

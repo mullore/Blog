@@ -1,6 +1,6 @@
 class NodeParser {
 
-	parseFunction( /*source*/ ) {
+	parseFunction( /* source */ ) {
 
 		console.warn( 'Abstract function.' );
 

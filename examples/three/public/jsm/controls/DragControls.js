@@ -24,7 +24,7 @@ class DragControls extends EventDispatcher {
 
 		_domElement.style.touchAction = 'none'; // disable touch scroll
 
-		let _selected = null, _hovered = null;
+		let _selected = null; let _hovered = null;
 
 		const _intersections = [];
 

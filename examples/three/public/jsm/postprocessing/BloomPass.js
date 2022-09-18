@@ -34,7 +34,7 @@ class BloomPass extends Pass {
 
 		this.copyUniforms = UniformsUtils.clone( copyShader.uniforms );
 
-		this.copyUniforms[ 'opacity' ].value = strength;
+		this.copyUniforms.opacity.value = strength;
 
 		this.materialCopy = new ShaderMaterial( {
 
@@ -54,8 +54,8 @@ class BloomPass extends Pass {
 
 		this.convolutionUniforms = UniformsUtils.clone( convolutionShader.uniforms );
 
-		this.convolutionUniforms[ 'uImageIncrement' ].value = BloomPass.blurX;
-		this.convolutionUniforms[ 'cKernel' ].value = ConvolutionShader.buildKernel( sigma );
+		this.convolutionUniforms.uImageIncrement.value = BloomPass.blurX;
+		this.convolutionUniforms.cKernel.value = ConvolutionShader.buildKernel( sigma );
 
 		this.materialConvolution = new ShaderMaterial( {
 
@@ -83,8 +83,8 @@ class BloomPass extends Pass {
 
 		this.fsQuad.material = this.materialConvolution;
 
-		this.convolutionUniforms[ 'tDiffuse' ].value = readBuffer.texture;
-		this.convolutionUniforms[ 'uImageIncrement' ].value = BloomPass.blurX;
+		this.convolutionUniforms.tDiffuse.value = readBuffer.texture;
+		this.convolutionUniforms.uImageIncrement.value = BloomPass.blurX;
 
 		renderer.setRenderTarget( this.renderTargetX );
 		renderer.clear();
@@ -93,8 +93,8 @@ class BloomPass extends Pass {
 
 		// Render quad with blured scene into texture (convolution pass 2)
 
-		this.convolutionUniforms[ 'tDiffuse' ].value = this.renderTargetX.texture;
-		this.convolutionUniforms[ 'uImageIncrement' ].value = BloomPass.blurY;
+		this.convolutionUniforms.tDiffuse.value = this.renderTargetX.texture;
+		this.convolutionUniforms.uImageIncrement.value = BloomPass.blurY;
 
 		renderer.setRenderTarget( this.renderTargetY );
 		renderer.clear();
@@ -104,7 +104,7 @@ class BloomPass extends Pass {
 
 		this.fsQuad.material = this.materialCopy;
 
-		this.copyUniforms[ 'tDiffuse' ].value = this.renderTargetY.texture;
+		this.copyUniforms.tDiffuse.value = this.renderTargetY.texture;
 
 		if ( maskActive ) renderer.state.buffers.stencil.setTest( true );
 

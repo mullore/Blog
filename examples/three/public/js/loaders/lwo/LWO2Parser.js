@@ -316,7 +316,7 @@
 
 				case 'SMAN':
 					var maxSmoothingAngle = this.IFF.reader.getFloat32();
-					this.IFF.currentSurface.attributes.smooth = maxSmoothingAngle < 0 ? false : true;
+					this.IFF.currentSurface.attributes.smooth = !(maxSmoothingAngle < 0);
 					break;
 					// LWO2: Basic Surface Parameters
 

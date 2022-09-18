@@ -21,7 +21,7 @@ class NormalNode extends Node {
 
 	}
 
-	getHash( /*builder*/ ) {
+	getHash( /* builder */ ) {
 
 		return `normal-${this.scope}`;
 

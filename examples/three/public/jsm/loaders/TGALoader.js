@@ -169,7 +169,7 @@ class TGALoader extends DataTextureLoader {
 		function tgaGetImageData8bits( imageData, y_start, y_step, y_end, x_start, x_step, x_end, image, palettes ) {
 
 			const colormap = palettes;
-			let color, i = 0, x, y;
+			let color; let i = 0; let x; let y;
 			const width = header.width;
 
 			for ( y = y_start; y !== y_end; y += y_step ) {
@@ -192,7 +192,7 @@ class TGALoader extends DataTextureLoader {
 
 		function tgaGetImageData16bits( imageData, y_start, y_step, y_end, x_start, x_step, x_end, image ) {
 
-			let color, i = 0, x, y;
+			let color; let i = 0; let x; let y;
 			const width = header.width;
 
 			for ( y = y_start; y !== y_end; y += y_step ) {
@@ -215,7 +215,7 @@ class TGALoader extends DataTextureLoader {
 
 		function tgaGetImageData24bits( imageData, y_start, y_step, y_end, x_start, x_step, x_end, image ) {
 
-			let i = 0, x, y;
+			let i = 0; let x; let y;
 			const width = header.width;
 
 			for ( y = y_start; y !== y_end; y += y_step ) {
@@ -237,7 +237,7 @@ class TGALoader extends DataTextureLoader {
 
 		function tgaGetImageData32bits( imageData, y_start, y_step, y_end, x_start, x_step, x_end, image ) {
 
-			let i = 0, x, y;
+			let i = 0; let x; let y;
 			const width = header.width;
 
 			for ( y = y_start; y !== y_end; y += y_step ) {
@@ -259,7 +259,7 @@ class TGALoader extends DataTextureLoader {
 
 		function tgaGetImageDataGrey8bits( imageData, y_start, y_step, y_end, x_start, x_step, x_end, image ) {
 
-			let color, i = 0, x, y;
+			let color; let i = 0; let x; let y;
 			const width = header.width;
 
 			for ( y = y_start; y !== y_end; y += y_step ) {
@@ -282,7 +282,7 @@ class TGALoader extends DataTextureLoader {
 
 		function tgaGetImageDataGrey16bits( imageData, y_start, y_step, y_end, x_start, x_step, x_end, image ) {
 
-			let i = 0, x, y;
+			let i = 0; let x; let y;
 			const width = header.width;
 
 			for ( y = y_start; y !== y_end; y += y_step ) {
@@ -407,27 +407,27 @@ class TGALoader extends DataTextureLoader {
 
 		// TGA constants
 
-		const TGA_TYPE_NO_DATA = 0,
-			TGA_TYPE_INDEXED = 1,
-			TGA_TYPE_RGB = 2,
-			TGA_TYPE_GREY = 3,
-			TGA_TYPE_RLE_INDEXED = 9,
-			TGA_TYPE_RLE_RGB = 10,
-			TGA_TYPE_RLE_GREY = 11,
+		const TGA_TYPE_NO_DATA = 0;
+			const TGA_TYPE_INDEXED = 1;
+			const TGA_TYPE_RGB = 2;
+			const TGA_TYPE_GREY = 3;
+			const TGA_TYPE_RLE_INDEXED = 9;
+			const TGA_TYPE_RLE_RGB = 10;
+			const TGA_TYPE_RLE_GREY = 11;
 
-			TGA_ORIGIN_MASK = 0x30,
-			TGA_ORIGIN_SHIFT = 0x04,
-			TGA_ORIGIN_BL = 0x00,
-			TGA_ORIGIN_BR = 0x01,
-			TGA_ORIGIN_UL = 0x02,
-			TGA_ORIGIN_UR = 0x03;
+			const TGA_ORIGIN_MASK = 0x30;
+			const TGA_ORIGIN_SHIFT = 0x04;
+			const TGA_ORIGIN_BL = 0x00;
+			const TGA_ORIGIN_BR = 0x01;
+			const TGA_ORIGIN_UL = 0x02;
+			const TGA_ORIGIN_UR = 0x03;
 
 		if ( buffer.length < 19 ) console.error( 'THREE.TGALoader: Not enough data to contain header.' );
 
 		let offset = 0;
 
-		const content = new Uint8Array( buffer ),
-			header = {
+		const content = new Uint8Array( buffer );
+			const header = {
 				id_length: content[ offset ++ ],
 				colormap_type: content[ offset ++ ],
 				image_type: content[ offset ++ ],
@@ -460,9 +460,9 @@ class TGALoader extends DataTextureLoader {
 
 		// get targa information about RLE compression and palette
 
-		let use_rle = false,
-			use_pal = false,
-			use_grey = false;
+		let use_rle = false;
+			let use_pal = false;
+			let use_grey = false;
 
 		switch ( header.image_type ) {
 

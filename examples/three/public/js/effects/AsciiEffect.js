@@ -13,16 +13,16 @@
 			// darker bolder character set from https://github.com/saw/Canvas-ASCII-Art/
 			// ' .\'`^",:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$'.split('');
 			// Some ASCII settings
-			const bResolution = ! options[ 'resolution' ] ? 0.15 : options[ 'resolution' ]; // Higher for more details
+			const bResolution = ! options.resolution ? 0.15 : options.resolution; // Higher for more details
 
-			const iScale = ! options[ 'scale' ] ? 1 : options[ 'scale' ];
-			const bColor = ! options[ 'color' ] ? false : options[ 'color' ]; // nice but slows down rendering!
+			const iScale = ! options.scale ? 1 : options.scale;
+			const bColor = ! options.color ? false : options.color; // nice but slows down rendering!
 
-			const bAlpha = ! options[ 'alpha' ] ? false : options[ 'alpha' ]; // Transparency
+			const bAlpha = ! options.alpha ? false : options.alpha; // Transparency
 
-			const bBlock = ! options[ 'block' ] ? false : options[ 'block' ]; // blocked characters. like good O dos
+			const bBlock = ! options.block ? false : options.block; // blocked characters. like good O dos
 
-			const bInvert = ! options[ 'invert' ] ? false : options[ 'invert' ]; // black is white, white is black
+			const bInvert = ! options.invert ? false : options.invert; // black is white, white is black
 
 			const strResolution = 'low';
 			let width, height;
@@ -229,7 +229,7 @@
 						if ( iAlpha == 0 ) {
 
 							// should calculate alpha instead, but quick hack :)
-							//fBrightness *= (iAlpha / 255);
+							// fBrightness *= (iAlpha / 255);
 							fBrightness = 1;
 
 						}
@@ -241,8 +241,8 @@
 							iCharIdx = aCharList.length - iCharIdx - 1;
 
 						} // good for debugging
-						//fBrightness = Math.floor(fBrightness * 10);
-						//strThisChar = fBrightness;
+						// fBrightness = Math.floor(fBrightness * 10);
+						// strThisChar = fBrightness;
 
 
 						let strThisChar = aCharList[ iCharIdx ];

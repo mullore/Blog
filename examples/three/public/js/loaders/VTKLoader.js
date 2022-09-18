@@ -512,8 +512,8 @@
 
 			function Float32Concat( first, second ) {
 
-				const firstLength = first.length,
-					result = new Float32Array( firstLength + second.length );
+				const firstLength = first.length;
+					const result = new Float32Array( firstLength + second.length );
 				result.set( first );
 				result.set( second, firstLength );
 				return result;
@@ -522,8 +522,8 @@
 
 			function Int32Concat( first, second ) {
 
-				var firstLength = first.length,
-					result = new Int32Array( firstLength + second.length );
+				var firstLength = first.length;
+					var result = new Int32Array( firstLength + second.length );
 				result.set( first );
 				result.set( second, firstLength );
 				return result;
@@ -546,12 +546,12 @@
 
 							if ( xml.attributes.length > 0 ) {
 
-								obj[ 'attributes' ] = {};
+								obj.attributes = {};
 
 								for ( var j = 0; j < xml.attributes.length; j ++ ) {
 
 									var attribute = xml.attributes.item( j );
-									obj[ 'attributes' ][ attribute.nodeName ] = attribute.nodeValue.trim();
+									obj.attributes[ attribute.nodeName ] = attribute.nodeValue.trim();
 
 								}
 
@@ -896,8 +896,8 @@
 
 					var sections = [ 'PointData', 'Points', 'Strips', 'Polys' ]; // +['CellData', 'Verts', 'Lines'];
 
-					var sectionIndex = 0,
-						numberOfSections = sections.length;
+					var sectionIndex = 0;
+						var numberOfSections = sections.length;
 
 					while ( sectionIndex < numberOfSections ) {
 
@@ -916,8 +916,8 @@
 
 							}
 
-							var dataArrayIndex = 0,
-								numberOfDataArrays = arr.length;
+							var dataArrayIndex = 0;
+								var numberOfDataArrays = arr.length;
 
 							while ( dataArrayIndex < numberOfDataArrays ) {
 
@@ -1034,17 +1034,17 @@
 										offset.set( section.DataArray[ 1 ].text, 0 );
 										var size = numberOfPolys + connectivity.length;
 										indices = new Uint32Array( 3 * size - 9 * numberOfPolys );
-										var indicesIndex = 0,
-											connectivityIndex = 0;
-										var i = 0,
-											len = numberOfPolys,
-											len0 = 0;
+										var indicesIndex = 0;
+											var connectivityIndex = 0;
+										var i = 0;
+											var len = numberOfPolys;
+											var len0 = 0;
 
 										while ( i < len ) {
 
 											var poly = [];
-											var s = 0,
-												len1 = offset[ i ];
+											var s = 0;
+												var len1 = offset[ i ];
 
 											while ( s < len1 - len0 ) {
 

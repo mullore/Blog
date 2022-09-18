@@ -135,9 +135,9 @@ class GLTFExporter {
 
 }
 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 // Constants
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 
 const WEBGL_CONSTANTS = {
 	POINTS: 0x0000,
@@ -198,9 +198,9 @@ const GLB_CHUNK_PREFIX_BYTES = 8;
 const GLB_CHUNK_TYPE_JSON = 0x4E4F534A;
 const GLB_CHUNK_TYPE_BIN = 0x004E4942;
 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 // Utility functions
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 
 /**
  * Compare two arrays
@@ -682,8 +682,8 @@ class GLTFWriter {
 		if ( didTransform ) {
 
 			mapDef.extensions = mapDef.extensions || {};
-			mapDef.extensions[ 'KHR_texture_transform' ] = transformDef;
-			this.extensionsUsed[ 'KHR_texture_transform' ] = true;
+			mapDef.extensions.KHR_texture_transform = transformDef;
+			this.extensionsUsed.KHR_texture_transform = true;
 
 		}
 

@@ -13,7 +13,7 @@ class Vector2Node extends InputNode {
 
 	}
 
-	generateReadonly( builder, output, uuid, type/*, ns, needsUpdate*/ ) {
+	generateReadonly( builder, output, uuid, type/*, ns, needsUpdate */ ) {
 
 		return builder.format( 'vec2( ' + this.x + ', ' + this.y + ' )', type, output );
 

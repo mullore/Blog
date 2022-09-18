@@ -36,8 +36,8 @@ class FilmPass extends Pass {
 
 	render( renderer, writeBuffer, readBuffer, deltaTime /*, maskActive */ ) {
 
-		this.uniforms[ 'tDiffuse' ].value = readBuffer.texture;
-		this.uniforms[ 'time' ].value += deltaTime;
+		this.uniforms.tDiffuse.value = readBuffer.texture;
+		this.uniforms.time.value += deltaTime;
 
 		if ( this.renderToScreen ) {
 

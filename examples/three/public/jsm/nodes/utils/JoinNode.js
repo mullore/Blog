@@ -44,9 +44,9 @@ class JoinNode extends TempNode {
 
 	generate( builder, output ) {
 
-		const type = this.getType( builder ),
-			length = this.getNumElements(),
-			outputs = [];
+		const type = this.getType( builder );
+			const length = this.getNumElements();
+			const outputs = [];
 
 		for ( let i = 0; i < length; i ++ ) {
 

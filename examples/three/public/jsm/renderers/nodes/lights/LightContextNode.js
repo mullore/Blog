@@ -12,7 +12,7 @@ class LightContextNode extends ContextNode {
 
 	}
 
-	getNodeType( /*builder*/ ) {
+	getNodeType( /* builder */ ) {
 
 		return 'vec3';
 

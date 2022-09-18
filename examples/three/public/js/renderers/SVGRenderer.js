@@ -17,42 +17,42 @@
 
 		constructor() {
 
-			let _renderData,
-				_elements,
-				_lights,
-				_svgWidth,
-				_svgHeight,
-				_svgWidthHalf,
-				_svgHeightHalf,
-				_v1,
-				_v2,
-				_v3,
-				_svgNode,
-				_pathCount = 0,
-				_precision = null,
-				_quality = 1,
-				_currentPath,
-				_currentStyle;
+			let _renderData;
+				let _elements;
+				let _lights;
+				let _svgWidth;
+				let _svgHeight;
+				let _svgWidthHalf;
+				let _svgHeightHalf;
+				let _v1;
+				let _v2;
+				let _v3;
+				let _svgNode;
+				let _pathCount = 0;
+				let _precision = null;
+				let _quality = 1;
+				let _currentPath;
+				let _currentStyle;
 
-			const _this = this,
-				_clipBox = new THREE.Box2(),
-				_elemBox = new THREE.Box2(),
-				_color = new THREE.Color(),
-				_diffuseColor = new THREE.Color(),
-				_ambientLight = new THREE.Color(),
-				_directionalLights = new THREE.Color(),
-				_pointLights = new THREE.Color(),
-				_clearColor = new THREE.Color(),
-				_vector3 = new THREE.Vector3(),
+			const _this = this;
+				const _clipBox = new THREE.Box2();
+				const _elemBox = new THREE.Box2();
+				const _color = new THREE.Color();
+				const _diffuseColor = new THREE.Color();
+				const _ambientLight = new THREE.Color();
+				const _directionalLights = new THREE.Color();
+				const _pointLights = new THREE.Color();
+				const _clearColor = new THREE.Color();
+				const _vector3 = new THREE.Vector3();
 				// Needed for PointLight
-				_centroid = new THREE.Vector3(),
-				_normal = new THREE.Vector3(),
-				_normalViewMatrix = new THREE.Matrix3(),
-				_viewMatrix = new THREE.Matrix4(),
-				_viewProjectionMatrix = new THREE.Matrix4(),
-				_svgPathPool = [],
-				_projector = new THREE.Projector(),
-				_svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
+				const _centroid = new THREE.Vector3();
+				const _normal = new THREE.Vector3();
+				const _normalViewMatrix = new THREE.Matrix3();
+				const _viewMatrix = new THREE.Matrix4();
+				const _viewProjectionMatrix = new THREE.Matrix4();
+				const _svgPathPool = [];
+				const _projector = new THREE.Projector();
+				const _svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
 
 			this.domElement = _svg;
 			this.autoClear = true;
@@ -459,8 +459,8 @@
 
 			function expand( v1, v2, pixels ) {
 
-				let x = v2.x - v1.x,
-					y = v2.y - v1.y;
+				let x = v2.x - v1.x;
+					let y = v2.y - v1.y;
 				const det = x * x + y * y;
 				if ( det === 0 ) return;
 				const idet = pixels / Math.sqrt( det );
@@ -516,7 +516,7 @@
 
 					if ( _quality == 0 ) {
 
-						_svgPathPool[ id ].setAttribute( 'shape-rendering', 'crispEdges' ); //optimizeSpeed
+						_svgPathPool[ id ].setAttribute( 'shape-rendering', 'crispEdges' ); // optimizeSpeed
 
 					}
 

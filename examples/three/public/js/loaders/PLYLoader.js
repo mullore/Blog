@@ -463,8 +463,8 @@
 			function binaryReadElement( dataview, at, properties, little_endian ) {
 
 				const element = {};
-				let result,
-					read = 0;
+				let result;
+					let read = 0;
 
 				for ( let i = 0; i < properties.length; i ++ ) {
 
@@ -511,8 +511,8 @@
 				};
 				const little_endian = header.format === 'binary_little_endian';
 				const body = new DataView( data, header.headerLength );
-				let result,
-					loc = 0;
+				let result;
+					let loc = 0;
 
 				for ( let currentElement = 0; currentElement < header.elements.length; currentElement ++ ) {
 

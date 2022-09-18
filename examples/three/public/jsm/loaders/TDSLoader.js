@@ -297,7 +297,7 @@ class TDSLoader extends Loader {
 				const transparency = this.readPercentage( next );
 				material.opacity = 1 - transparency;
 				this.debugMessage( '  Transparency : ' + transparency );
-				material.transparent = material.opacity < 1 ? true : false;
+				material.transparent = material.opacity < 1;
 
 			} else if ( next.id === MAT_TEXMAP ) {
 
@@ -358,7 +358,7 @@ class TDSLoader extends Loader {
 
 				this.debugMessage( '   Vertex: ' + points );
 
-				//BufferGeometry
+				// BufferGeometry
 
 				const vertices = [];
 
@@ -382,7 +382,7 @@ class TDSLoader extends Loader {
 
 				this.debugMessage( '   UV: ' + texels );
 
-				//BufferGeometry
+				// BufferGeometry
 
 				const uvs = [];
 
@@ -409,25 +409,25 @@ class TDSLoader extends Loader {
 
 				const matrix = new Matrix4();
 
-				//X Line
+				// X Line
 				matrix.elements[ 0 ] = values[ 0 ];
 				matrix.elements[ 1 ] = values[ 6 ];
 				matrix.elements[ 2 ] = values[ 3 ];
 				matrix.elements[ 3 ] = values[ 9 ];
 
-				//Y Line
+				// Y Line
 				matrix.elements[ 4 ] = values[ 2 ];
 				matrix.elements[ 5 ] = values[ 8 ];
 				matrix.elements[ 6 ] = values[ 5 ];
 				matrix.elements[ 7 ] = values[ 11 ];
 
-				//Z Line
+				// Z Line
 				matrix.elements[ 8 ] = values[ 1 ];
 				matrix.elements[ 9 ] = values[ 7 ];
 				matrix.elements[ 10 ] = values[ 4 ];
 				matrix.elements[ 11 ] = values[ 10 ];
 
-				//W Line
+				// W Line
 				matrix.elements[ 12 ] = 0;
 				matrix.elements[ 13 ] = 0;
 				matrix.elements[ 14 ] = 0;
@@ -482,7 +482,7 @@ class TDSLoader extends Loader {
 
 		mesh.geometry.setIndex( index );
 
-		//The rest of the FACE_ARRAY chunk is subchunks
+		// The rest of the FACE_ARRAY chunk is subchunks
 
 		let materialIndex = 0;
 		let start = 0;

@@ -196,8 +196,8 @@ class Lensflare extends Mesh {
 				// render pink quad
 
 				let uniforms = material1a.uniforms;
-				uniforms[ 'scale' ].value = scale;
-				uniforms[ 'screenPosition' ].value = positionScreen;
+				uniforms.scale.value = scale;
+				uniforms.screenPosition.value = positionScreen;
 
 				renderer.renderBufferDirect( camera, null, geometry, material1a, mesh1, null );
 
@@ -208,8 +208,8 @@ class Lensflare extends Mesh {
 				// restore graphics
 
 				uniforms = material1b.uniforms;
-				uniforms[ 'scale' ].value = scale;
-				uniforms[ 'screenPosition' ].value = positionScreen;
+				uniforms.scale.value = scale;
+				uniforms.screenPosition.value = positionScreen;
 
 				renderer.renderBufferDirect( camera, null, geometry, material1b, mesh1, null );
 
@@ -224,15 +224,15 @@ class Lensflare extends Mesh {
 
 					const uniforms = material2.uniforms;
 
-					uniforms[ 'color' ].value.copy( element.color );
-					uniforms[ 'map' ].value = element.texture;
-					uniforms[ 'screenPosition' ].value.x = positionScreen.x + vecX * element.distance;
-					uniforms[ 'screenPosition' ].value.y = positionScreen.y + vecY * element.distance;
+					uniforms.color.value.copy( element.color );
+					uniforms.map.value = element.texture;
+					uniforms.screenPosition.value.x = positionScreen.x + vecX * element.distance;
+					uniforms.screenPosition.value.y = positionScreen.y + vecY * element.distance;
 
 					size = element.size / viewport.w;
 					const invAspect = viewport.w / viewport.z;
 
-					uniforms[ 'scale' ].value.set( size * invAspect, size );
+					uniforms.scale.value.set( size * invAspect, size );
 
 					material2.uniformsNeedUpdate = true;
 

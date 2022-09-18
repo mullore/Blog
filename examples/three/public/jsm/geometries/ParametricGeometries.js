@@ -76,7 +76,7 @@ const ParametricGeometries = {
 
 		u = u * 2;
 		const phi = u / 2;
-		const major = 2.25, a = 0.125, b = 0.65;
+		const major = 2.25; const a = 0.125; const b = 0.65;
 
 		let x = a * Math.cos( t ) * Math.cos( phi ) - b * Math.sin( t ) * Math.sin( phi );
 		const z = a * Math.cos( t ) * Math.sin( phi ) + b * Math.sin( t ) * Math.cos( phi );
@@ -102,10 +102,10 @@ ParametricGeometries.TubeGeometry = class TubeGeometry extends ParametricGeometr
 
 		const numpoints = segments + 1;
 
-		const frames = path.computeFrenetFrames( segments, closed ),
-			tangents = frames.tangents,
-			normals = frames.normals,
-			binormals = frames.binormals;
+		const frames = path.computeFrenetFrames( segments, closed );
+			const tangents = frames.tangents;
+			const normals = frames.normals;
+			const binormals = frames.binormals;
 
 		const position = new Vector3();
 

@@ -34,8 +34,8 @@ class ParametricGeometry extends BufferGeometry {
 
 		const normal = new Vector3();
 
-		const p0 = new Vector3(), p1 = new Vector3();
-		const pu = new Vector3(), pv = new Vector3();
+		const p0 = new Vector3(); const p1 = new Vector3();
+		const pu = new Vector3(); const pv = new Vector3();
 
 		if ( func.length < 3 ) {
 

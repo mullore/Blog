@@ -140,7 +140,7 @@ class NRRDLoader extends Loader {
 
 		}
 
-		//Flips typed array endianness in-place. Based on https://github.com/kig/DataStream.js/blob/master/DataStream.js.
+		// Flips typed array endianness in-place. Based on https://github.com/kig/DataStream.js/blob/master/DataStream.js.
 
 		function flipEndianness( array, chunkSize ) {
 
@@ -161,7 +161,7 @@ class NRRDLoader extends Loader {
 
 		}
 
-		//parse the header
+		// parse the header
 		function parseHeader( header ) {
 
 			let data, field, fn, i, l, m, _i, _len;
@@ -207,13 +207,13 @@ class NRRDLoader extends Loader {
 
 			if ( ! headerObject.vectors ) {
 
-				//if no space direction is set, let's use the identity
+				// if no space direction is set, let's use the identity
 				headerObject.vectors = [ ];
 				headerObject.vectors.push( [ 1, 0, 0 ] );
 				headerObject.vectors.push( [ 0, 1, 0 ] );
 				headerObject.vectors.push( [ 0, 0, 1 ] );
 
-				//apply spacing if defined
+				// apply spacing if defined
 				if ( headerObject.spacings ) {
 
 					for ( i = 0; i <= 2; i ++ ) {
@@ -236,14 +236,14 @@ class NRRDLoader extends Loader {
 
 		}
 
-		//parse the data when registred as one of this type : 'text', 'ascii', 'txt'
+		// parse the data when registred as one of this type : 'text', 'ascii', 'txt'
 		function parseDataAsText( data, start, end ) {
 
 			let number = '';
 			start = start || 0;
 			end = end || data.length;
 			let value;
-			//length of the result is the product of the sizes
+			// length of the result is the product of the sizes
 			const lengthOfTheResult = headerObject.sizes.reduce( function ( previous, current ) {
 
 				return previous * current;
@@ -269,7 +269,7 @@ class NRRDLoader extends Loader {
 			for ( let i = start; i < end; i ++ ) {
 
 				value = data[ i ];
-				//if value is not a space
+				// if value is not a space
 				if ( ( value < 9 || value > 13 ) && value !== 32 ) {
 
 					number += String.fromCharCode( value );
@@ -336,7 +336,7 @@ class NRRDLoader extends Loader {
 
 		} else if ( headerObject.encoding === 'raw' ) {
 
-			//we need to copy the array to create a new array buffer, else we retrieve the original arraybuffer with the header
+			// we need to copy the array to create a new array buffer, else we retrieve the original arraybuffer with the header
 			const _copy = new Uint8Array( _data.length );
 
 			for ( let i = 0; i < _data.length; i ++ ) {

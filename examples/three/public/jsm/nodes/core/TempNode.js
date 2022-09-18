@@ -28,8 +28,8 @@ class TempNode extends Node {
 
 			uuid = builder.getUuid( uuid || this.getUuid(), ! isUnique );
 
-			const data = builder.getNodeData( uuid ),
-				type = data.output || this.getType( builder );
+			const data = builder.getNodeData( uuid );
+				const type = data.output || this.getType( builder );
 
 			if ( builder.analyzing ) {
 

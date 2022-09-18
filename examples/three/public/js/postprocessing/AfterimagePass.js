@@ -8,7 +8,7 @@
 			if ( THREE.AfterimageShader === undefined ) console.error( 'THREE.AfterimagePass relies on THREE.AfterimageShader' );
 			this.shader = THREE.AfterimageShader;
 			this.uniforms = THREE.UniformsUtils.clone( this.shader.uniforms );
-			this.uniforms[ 'damp' ].value = damp;
+			this.uniforms.damp.value = damp;
 			this.textureComp = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {
 				minFilter: THREE.LinearFilter,
 				magFilter: THREE.NearestFilter,
@@ -31,11 +31,11 @@
 		}
 
 		render( renderer, writeBuffer, readBuffer
-			/*, deltaTime, maskActive*/
+			/*, deltaTime, maskActive */
 		) {
 
-			this.uniforms[ 'tOld' ].value = this.textureOld.texture;
-			this.uniforms[ 'tNew' ].value = readBuffer.texture;
+			this.uniforms.tOld.value = this.textureOld.texture;
+			this.uniforms.tNew.value = readBuffer.texture;
 			renderer.setRenderTarget( this.textureComp );
 			this.compFsQuad.render( renderer );
 			this.copyFsQuad.material.map = this.textureComp.texture;

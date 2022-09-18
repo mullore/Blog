@@ -2391,7 +2391,7 @@ class IFCLoader extends Loader {
 
 			try {
 
-				if ( typeof buffer == 'string' ) {
+				if ( typeof buffer === 'string' ) {
 
 					throw new Error( 'IFC files must be given as a buffer!' );
 
@@ -2428,4 +2428,4 @@ class IFCLoader extends Loader {
 }
 
 export { IFCLoader };
-//# sourceMappingURL=IFCLoader.js.map
+// # sourceMappingURL=IFCLoader.js.map

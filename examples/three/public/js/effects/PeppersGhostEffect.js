@@ -14,16 +14,16 @@
 
 			let _halfWidth, _width, _height;
 
-			const _cameraF = new THREE.PerspectiveCamera(); //front
+			const _cameraF = new THREE.PerspectiveCamera(); // front
 
 
-			const _cameraB = new THREE.PerspectiveCamera(); //back
+			const _cameraB = new THREE.PerspectiveCamera(); // back
 
 
-			const _cameraL = new THREE.PerspectiveCamera(); //left
+			const _cameraL = new THREE.PerspectiveCamera(); // left
 
 
-			const _cameraR = new THREE.PerspectiveCamera(); //right
+			const _cameraR = new THREE.PerspectiveCamera(); // right
 
 
 			const _position = new THREE.Vector3();

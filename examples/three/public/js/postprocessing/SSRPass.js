@@ -72,11 +72,11 @@
 
 					if ( val ) {
 
-						this.ssrMaterial.uniforms[ 'tDiffuse' ].value = this.prevRenderTarget.texture;
+						this.ssrMaterial.uniforms.tDiffuse.value = this.prevRenderTarget.texture;
 
 					} else {
 
-						this.ssrMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
+						this.ssrMaterial.uniforms.tDiffuse.value = this.beautyRenderTarget.texture;
 
 					}
 
@@ -149,7 +149,7 @@
 				format: THREE.RGBAFormat,
 				depthTexture: depthTexture,
 				depthBuffer: true
-			} ); //for bouncing
+			} ); // for bouncing
 
 			this.prevRenderTarget = new THREE.WebGLRenderTarget( this.width, this.height, {
 				minFilter: THREE.NearestFilter,
@@ -194,18 +194,18 @@
 				fragmentShader: THREE.SSRShader.fragmentShader,
 				blending: THREE.NoBlending
 			} );
-			this.ssrMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
-			this.ssrMaterial.uniforms[ 'tNormal' ].value = this.normalRenderTarget.texture;
+			this.ssrMaterial.uniforms.tDiffuse.value = this.beautyRenderTarget.texture;
+			this.ssrMaterial.uniforms.tNormal.value = this.normalRenderTarget.texture;
 			this.ssrMaterial.defines.SELECTIVE = this.selective;
 			this.ssrMaterial.needsUpdate = true;
-			this.ssrMaterial.uniforms[ 'tMetalness' ].value = this.metalnessRenderTarget.texture;
-			this.ssrMaterial.uniforms[ 'tDepth' ].value = this.beautyRenderTarget.depthTexture;
-			this.ssrMaterial.uniforms[ 'cameraNear' ].value = this.camera.near;
-			this.ssrMaterial.uniforms[ 'cameraFar' ].value = this.camera.far;
-			this.ssrMaterial.uniforms[ 'thickness' ].value = this.thickness;
-			this.ssrMaterial.uniforms[ 'resolution' ].value.set( this.width, this.height );
-			this.ssrMaterial.uniforms[ 'cameraProjectionMatrix' ].value.copy( this.camera.projectionMatrix );
-			this.ssrMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.copy( this.camera.projectionMatrixInverse ); // normal material
+			this.ssrMaterial.uniforms.tMetalness.value = this.metalnessRenderTarget.texture;
+			this.ssrMaterial.uniforms.tDepth.value = this.beautyRenderTarget.depthTexture;
+			this.ssrMaterial.uniforms.cameraNear.value = this.camera.near;
+			this.ssrMaterial.uniforms.cameraFar.value = this.camera.far;
+			this.ssrMaterial.uniforms.thickness.value = this.thickness;
+			this.ssrMaterial.uniforms.resolution.value.set( this.width, this.height );
+			this.ssrMaterial.uniforms.cameraProjectionMatrix.value.copy( this.camera.projectionMatrix );
+			this.ssrMaterial.uniforms.cameraInverseProjectionMatrix.value.copy( this.camera.projectionMatrixInverse ); // normal material
 
 			this.normalMaterial = new THREE.MeshNormalMaterial();
 			this.normalMaterial.blending = THREE.NoBlending; // metalnessOn material
@@ -224,8 +224,8 @@
 				vertexShader: THREE.SSRBlurShader.vertexShader,
 				fragmentShader: THREE.SSRBlurShader.fragmentShader
 			} );
-			this.blurMaterial.uniforms[ 'tDiffuse' ].value = this.ssrRenderTarget.texture;
-			this.blurMaterial.uniforms[ 'resolution' ].value.set( this.width, this.height ); // blur material 2
+			this.blurMaterial.uniforms.tDiffuse.value = this.ssrRenderTarget.texture;
+			this.blurMaterial.uniforms.resolution.value.set( this.width, this.height ); // blur material 2
 
 			this.blurMaterial2 = new THREE.ShaderMaterial( {
 				defines: Object.assign( {}, THREE.SSRBlurShader.defines ),
@@ -233,8 +233,8 @@
 				vertexShader: THREE.SSRBlurShader.vertexShader,
 				fragmentShader: THREE.SSRBlurShader.fragmentShader
 			} );
-			this.blurMaterial2.uniforms[ 'tDiffuse' ].value = this.blurRenderTarget.texture;
-			this.blurMaterial2.uniforms[ 'resolution' ].value.set( this.width, this.height ); // // blur material 3
+			this.blurMaterial2.uniforms.tDiffuse.value = this.blurRenderTarget.texture;
+			this.blurMaterial2.uniforms.resolution.value.set( this.width, this.height ); // // blur material 3
 			// this.blurMaterial3 = new THREE.ShaderMaterial({
 			//   defines: Object.assign({}, THREE.SSRBlurShader.defines),
 			//   uniforms: THREE.UniformsUtils.clone(THREE.SSRBlurShader.uniforms),
@@ -252,9 +252,9 @@
 				fragmentShader: THREE.SSRDepthShader.fragmentShader,
 				blending: THREE.NoBlending
 			} );
-			this.depthRenderMaterial.uniforms[ 'tDepth' ].value = this.beautyRenderTarget.depthTexture;
-			this.depthRenderMaterial.uniforms[ 'cameraNear' ].value = this.camera.near;
-			this.depthRenderMaterial.uniforms[ 'cameraFar' ].value = this.camera.far; // material for rendering the content of a render target
+			this.depthRenderMaterial.uniforms.tDepth.value = this.beautyRenderTarget.depthTexture;
+			this.depthRenderMaterial.uniforms.cameraNear.value = this.camera.near;
+			this.depthRenderMaterial.uniforms.cameraFar.value = this.camera.far; // material for rendering the content of a render target
 
 			this.copyMaterial = new THREE.ShaderMaterial( {
 				uniforms: THREE.UniformsUtils.clone( THREE.CopyShader.uniforms ),
@@ -328,9 +328,9 @@
 			} // render SSR
 
 
-			this.ssrMaterial.uniforms[ 'opacity' ].value = this.opacity;
-			this.ssrMaterial.uniforms[ 'maxDistance' ].value = this.maxDistance;
-			this.ssrMaterial.uniforms[ 'thickness' ].value = this.thickness;
+			this.ssrMaterial.uniforms.opacity.value = this.opacity;
+			this.ssrMaterial.uniforms.maxDistance.value = this.maxDistance;
+			this.ssrMaterial.uniforms.thickness.value = this.thickness;
 			this.renderPass( renderer, this.ssrMaterial, this.ssrRenderTarget ); // render blur
 
 			if ( this.blur ) {
@@ -346,22 +346,22 @@
 				case SSRPass.OUTPUT.Default:
 					if ( this.bouncing ) {
 
-						this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
+						this.copyMaterial.uniforms.tDiffuse.value = this.beautyRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NoBlending;
 						this.renderPass( renderer, this.copyMaterial, this.prevRenderTarget );
-						if ( this.blur ) this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.ssrRenderTarget.texture;
+						if ( this.blur ) this.copyMaterial.uniforms.tDiffuse.value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms.tDiffuse.value = this.ssrRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NormalBlending;
 						this.renderPass( renderer, this.copyMaterial, this.prevRenderTarget );
-						this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.prevRenderTarget.texture;
+						this.copyMaterial.uniforms.tDiffuse.value = this.prevRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NoBlending;
 						this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
 
 					} else {
 
-						this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
+						this.copyMaterial.uniforms.tDiffuse.value = this.beautyRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NoBlending;
 						this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
-						if ( this.blur ) this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.ssrRenderTarget.texture;
+						if ( this.blur ) this.copyMaterial.uniforms.tDiffuse.value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms.tDiffuse.value = this.ssrRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NormalBlending;
 						this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
 
@@ -370,16 +370,16 @@
 					break;
 
 				case SSRPass.OUTPUT.SSR:
-					if ( this.blur ) this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.ssrRenderTarget.texture;
+					if ( this.blur ) this.copyMaterial.uniforms.tDiffuse.value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms.tDiffuse.value = this.ssrRenderTarget.texture;
 					this.copyMaterial.blending = THREE.NoBlending;
 					this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
 
 					if ( this.bouncing ) {
 
-						if ( this.blur ) this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
+						if ( this.blur ) this.copyMaterial.uniforms.tDiffuse.value = this.blurRenderTarget2.texture; else this.copyMaterial.uniforms.tDiffuse.value = this.beautyRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NoBlending;
 						this.renderPass( renderer, this.copyMaterial, this.prevRenderTarget );
-						this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.ssrRenderTarget.texture;
+						this.copyMaterial.uniforms.tDiffuse.value = this.ssrRenderTarget.texture;
 						this.copyMaterial.blending = THREE.NormalBlending;
 						this.renderPass( renderer, this.copyMaterial, this.prevRenderTarget );
 
@@ -388,7 +388,7 @@
 					break;
 
 				case SSRPass.OUTPUT.Beauty:
-					this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.beautyRenderTarget.texture;
+					this.copyMaterial.uniforms.tDiffuse.value = this.beautyRenderTarget.texture;
 					this.copyMaterial.blending = THREE.NoBlending;
 					this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
 					break;
@@ -398,13 +398,13 @@
 					break;
 
 				case SSRPass.OUTPUT.Normal:
-					this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.normalRenderTarget.texture;
+					this.copyMaterial.uniforms.tDiffuse.value = this.normalRenderTarget.texture;
 					this.copyMaterial.blending = THREE.NoBlending;
 					this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
 					break;
 
 				case SSRPass.OUTPUT.Metalness:
-					this.copyMaterial.uniforms[ 'tDiffuse' ].value = this.metalnessRenderTarget.texture;
+					this.copyMaterial.uniforms.tDiffuse.value = this.metalnessRenderTarget.texture;
 					this.copyMaterial.blending = THREE.NoBlending;
 					this.renderPass( renderer, this.copyMaterial, this.renderToScreen ? null : writeBuffer );
 					break;
@@ -531,11 +531,11 @@
 			this.blurRenderTarget.setSize( width, height );
 			this.blurRenderTarget2.setSize( width, height ); // this.blurRenderTarget3.setSize(width, height);
 
-			this.ssrMaterial.uniforms[ 'resolution' ].value.set( width, height );
-			this.ssrMaterial.uniforms[ 'cameraProjectionMatrix' ].value.copy( this.camera.projectionMatrix );
-			this.ssrMaterial.uniforms[ 'cameraInverseProjectionMatrix' ].value.copy( this.camera.projectionMatrixInverse );
-			this.blurMaterial.uniforms[ 'resolution' ].value.set( width, height );
-			this.blurMaterial2.uniforms[ 'resolution' ].value.set( width, height );
+			this.ssrMaterial.uniforms.resolution.value.set( width, height );
+			this.ssrMaterial.uniforms.cameraProjectionMatrix.value.copy( this.camera.projectionMatrix );
+			this.ssrMaterial.uniforms.cameraInverseProjectionMatrix.value.copy( this.camera.projectionMatrixInverse );
+			this.blurMaterial.uniforms.resolution.value.set( width, height );
+			this.blurMaterial2.uniforms.resolution.value.set( width, height );
 
 		}
 

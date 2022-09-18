@@ -260,7 +260,7 @@
 			scope.domElement.removeEventListener( 'touchmove', onTouchMove, false );
 			document.removeEventListener( 'mousemove', onMouseMove, false );
 			document.removeEventListener( 'mouseup', onMouseUp, false );
-			scope.domElement.removeEventListener( 'keydown', onKeyDown, false ); //scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+			scope.domElement.removeEventListener( 'keydown', onKeyDown, false ); // scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
 		}; //
 		// internals
@@ -511,7 +511,7 @@
 		}
 
 		function
-		/*event*/
+		/* event */
 		handleMouseUp() { // no-op
 		}
 
@@ -694,7 +694,7 @@
 		}
 
 		function
-		/*event*/
+		/* event */
 		handleTouchEnd() { // no-op
 		} //
 		// event handlers - FSM: listen for events and reset state

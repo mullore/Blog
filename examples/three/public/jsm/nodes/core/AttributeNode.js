@@ -28,8 +28,8 @@ class AttributeNode extends Node {
 
 		const type = this.getAttributeType( builder );
 
-		const attribute = builder.getAttribute( this.name, type ),
-			name = builder.isShader( 'vertex' ) ? this.name : attribute.varying.name;
+		const attribute = builder.getAttribute( this.name, type );
+			const name = builder.isShader( 'vertex' ) ? this.name : attribute.varying.name;
 
 		return builder.format( name, this.getType( builder ), output );
 

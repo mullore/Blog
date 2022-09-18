@@ -84,11 +84,11 @@ class Object3DNode extends Node {
 
 		if ( scope === Object3DNode.WORLD_MATRIX || scope === Object3DNode.VIEW_MATRIX ) {
 
-			this._inputNode = new Matrix4Node( /*null*/ );
+			this._inputNode = new Matrix4Node( /* null */ );
 
 		} else if ( scope === Object3DNode.NORMAL_MATRIX ) {
 
-			this._inputNode = new Matrix3Node( /*null*/ );
+			this._inputNode = new Matrix3Node( /* null */ );
 
 		} else if ( scope === Object3DNode.POSITION || scope === Object3DNode.VIEW_POSITION ) {
 

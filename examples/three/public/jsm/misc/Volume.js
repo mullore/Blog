@@ -279,21 +279,21 @@ Volume.prototype = {
 	 */
 	extractPerpendicularPlane: function ( axis, RASIndex ) {
 
-		var iLength,
-			jLength,
-			sliceAccess,
-			planeMatrix = ( new Matrix4() ).identity(),
-			volume = this,
-			planeWidth,
-			planeHeight,
-			firstSpacing,
-			secondSpacing,
-			positionOffset,
-			IJKIndex;
+		var iLength;
+			var jLength;
+			var sliceAccess;
+			var planeMatrix = ( new Matrix4() ).identity();
+			var volume = this;
+			var planeWidth;
+			var planeHeight;
+			var firstSpacing;
+			var secondSpacing;
+			var positionOffset;
+			var IJKIndex;
 
-		var axisInIJK = new Vector3(),
-			firstDirection = new Vector3(),
-			secondDirection = new Vector3();
+		var axisInIJK = new Vector3();
+			var firstDirection = new Vector3();
+			var secondDirection = new Vector3();
 
 		var dimensions = new Vector3( this.xLength, this.yLength, this.zLength );
 

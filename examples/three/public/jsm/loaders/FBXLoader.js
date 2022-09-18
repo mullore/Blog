@@ -2406,19 +2406,19 @@ class AnimationParser {
 
 				if ( animationCurveRelationship.match( /X/ ) ) {
 
-					curveNodesMap.get( animationCurveID ).curves[ 'x' ] = animationCurve;
+					curveNodesMap.get( animationCurveID ).curves.x = animationCurve;
 
 				} else if ( animationCurveRelationship.match( /Y/ ) ) {
 
-					curveNodesMap.get( animationCurveID ).curves[ 'y' ] = animationCurve;
+					curveNodesMap.get( animationCurveID ).curves.y = animationCurve;
 
 				} else if ( animationCurveRelationship.match( /Z/ ) ) {
 
-					curveNodesMap.get( animationCurveID ).curves[ 'z' ] = animationCurve;
+					curveNodesMap.get( animationCurveID ).curves.z = animationCurve;
 
 				} else if ( animationCurveRelationship.match( /d|DeformPercent/ ) && curveNodesMap.has( animationCurveID ) ) {
 
-					curveNodesMap.get( animationCurveID ).curves[ 'morph' ] = animationCurve;
+					curveNodesMap.get( animationCurveID ).curves.morph = animationCurve;
 
 				}
 
@@ -3070,7 +3070,7 @@ class TextParser {
 
 		}
 
-		let name = '', type = '';
+		let name = ''; let type = '';
 
 		if ( attrs.length > 1 ) {
 
@@ -3319,7 +3319,7 @@ class BinaryParser {
 
 		// check if this node represents just a single property
 		// like (name, 0) set or (name2, [0, 1, 2]) set of {name: 0, name2: [0, 1, 2]}
-		node.singleProperty = ( numProperties === 1 && reader.getOffset() === endOffset ) ? true : false;
+		node.singleProperty = !!(( numProperties === 1 && reader.getOffset() === endOffset ));
 
 		while ( endOffset > reader.getOffset() ) {
 
@@ -4050,7 +4050,7 @@ function getEulerOrder( order ) {
 		'ZXY', // -> YXZ extrinsic
 		'YXZ', // -> ZXY extrinsic
 		'XYZ', // -> ZYX extrinsic
-		//'SphericXYZ', // not possible to support
+		// 'SphericXYZ', // not possible to support
 	];
 
 	if ( order === 6 ) {

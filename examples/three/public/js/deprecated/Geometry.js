@@ -282,8 +282,8 @@
 
 		computeFaceNormals() {
 
-			const cb = new THREE.Vector3(),
-				ab = new THREE.Vector3();
+			const cb = new THREE.Vector3();
+				const ab = new THREE.Vector3();
 
 			for ( let f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -315,8 +315,8 @@
 
 				// vertex normals weighted by triangle areas
 				// http://www.iquilezles.org/www/articles/normals/normals.htm
-				const cb = new THREE.Vector3(),
-					ab = new THREE.Vector3();
+				const cb = new THREE.Vector3();
+					const ab = new THREE.Vector3();
 
 				for ( let f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -549,13 +549,13 @@
 			}
 
 			let normalMatrix;
-			const vertexOffset = this.vertices.length,
-				vertices1 = this.vertices,
-				vertices2 = geometry.vertices,
-				faces1 = this.faces,
-				faces2 = geometry.faces,
-				colors1 = this.colors,
-				colors2 = geometry.colors;
+			const vertexOffset = this.vertices.length;
+				const vertices1 = this.vertices;
+				const vertices2 = geometry.vertices;
+				const faces1 = this.faces;
+				const faces2 = geometry.faces;
+				const colors1 = this.colors;
+				const colors2 = geometry.colors;
 
 			if ( matrix !== undefined ) {
 
@@ -585,8 +585,8 @@
 
 				const face = faces2[ i ];
 				let normal, color;
-				const faceVertexNormals = face.vertexNormals,
-					faceVertexColors = face.vertexColors;
+				const faceVertexNormals = face.vertexNormals;
+					const faceVertexColors = face.vertexColors;
 				const faceCopy = new Face3( face.a + vertexOffset, face.b + vertexOffset, face.c + vertexOffset );
 				faceCopy.normal.copy( face.normal );
 
@@ -632,8 +632,8 @@
 
 				for ( let j = 0, jl = faceVertexUvs2.length; j < jl; j ++ ) {
 
-					const uvs2 = faceVertexUvs2[ j ],
-						uvsCopy = [];
+					const uvs2 = faceVertexUvs2[ j ];
+						const uvsCopy = [];
 
 					for ( let k = 0, kl = uvs2.length; k < kl; k ++ ) {
 
@@ -673,8 +673,8 @@
 
 			const verticesMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
 
-			const unique = [],
-				changes = [];
+			const unique = [];
+				const changes = [];
 			const precision = Math.pow( 10, precisionPoints );
 
 			for ( let i = 0, il = this.vertices.length; i < il; i ++ ) {
@@ -690,7 +690,7 @@
 
 				} else {
 
-					//console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
+					// console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
 					changes[ i ] = changes[ verticesMap[ key ] ];
 
 				}
@@ -1043,8 +1043,8 @@
 
 				for ( let j = 0, jl = faceVertexUvs.length; j < jl; j ++ ) {
 
-					const uvs = faceVertexUvs[ j ],
-						uvsCopy = [];
+					const uvs = faceVertexUvs[ j ];
+						const uvsCopy = [];
 
 					for ( let k = 0, kl = uvs.length; k < kl; k ++ ) {
 
@@ -1383,7 +1383,7 @@
 
 			const groups = [];
 			let group, i;
-			let materialIndex = undefined;
+			let materialIndex;
 			const faces = geometry.faces;
 
 			for ( i = 0; i < faces.length; i ++ ) {

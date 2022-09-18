@@ -2,20 +2,20 @@
 
 	function retarget( target, source, options = {} ) {
 
-		const pos = new THREE.Vector3(),
-			quat = new THREE.Quaternion(),
-			scale = new THREE.Vector3(),
-			bindBoneMatrix = new THREE.Matrix4(),
-			relativeMatrix = new THREE.Matrix4(),
-			globalMatrix = new THREE.Matrix4();
+		const pos = new THREE.Vector3();
+			const quat = new THREE.Quaternion();
+			const scale = new THREE.Vector3();
+			const bindBoneMatrix = new THREE.Matrix4();
+			const relativeMatrix = new THREE.Matrix4();
+			const globalMatrix = new THREE.Matrix4();
 		options.preserveMatrix = options.preserveMatrix !== undefined ? options.preserveMatrix : true;
 		options.preservePosition = options.preservePosition !== undefined ? options.preservePosition : true;
 		options.preserveHipPosition = options.preserveHipPosition !== undefined ? options.preserveHipPosition : false;
 		options.useTargetMatrix = options.useTargetMatrix !== undefined ? options.useTargetMatrix : false;
 		options.hip = options.hip !== undefined ? options.hip : 'hip';
 		options.names = options.names || {};
-		const sourceBones = source.isObject3D ? source.skeleton.bones : getBones( source ),
-			bones = target.isObject3D ? target.skeleton.bones : getBones( target );
+		const sourceBones = source.isObject3D ? source.skeleton.bones : getBones( source );
+			const bones = target.isObject3D ? target.skeleton.bones : getBones( target );
 		let bindBones, bone, name, boneTo, bonesPosition; // reset bones
 
 		if ( target.isObject3D ) {
@@ -108,8 +108,8 @@
 
 				if ( target.isObject3D ) {
 
-					const boneIndex = bones.indexOf( bone ),
-						wBindMatrix = bindBones ? bindBones[ boneIndex ] : bindBoneMatrix.copy( target.skeleton.boneInverses[ boneIndex ] ).invert();
+					const boneIndex = bones.indexOf( bone );
+						const wBindMatrix = bindBones ? bindBones[ boneIndex ] : bindBoneMatrix.copy( target.skeleton.boneInverses[ boneIndex ] ).invert();
 					globalMatrix.multiply( wBindMatrix );
 
 				}
@@ -178,12 +178,12 @@
 
 		}
 
-		const numFrames = Math.round( clip.duration * ( options.fps / 1000 ) * 1000 ),
-			delta = 1 / options.fps,
-			convertedTracks = [],
-			mixer = new THREE.AnimationMixer( source ),
-			bones = getBones( target.skeleton ),
-			boneDatas = [];
+		const numFrames = Math.round( clip.duration * ( options.fps / 1000 ) * 1000 );
+			const delta = 1 / options.fps;
+			const convertedTracks = [];
+			const mixer = new THREE.AnimationMixer( source );
+			const bones = getBones( target.skeleton );
+			const boneDatas = [];
 		let positionOffset, bone, boneTo, boneData, name;
 		mixer.clipAction( clip ).play();
 		mixer.update( 0 );
@@ -288,12 +288,12 @@
 
 	function getSkeletonOffsets( target, source, options = {} ) {
 
-		const targetParentPos = new THREE.Vector3(),
-			targetPos = new THREE.Vector3(),
-			sourceParentPos = new THREE.Vector3(),
-			sourcePos = new THREE.Vector3(),
-			targetDir = new THREE.Vector2(),
-			sourceDir = new THREE.Vector2();
+		const targetParentPos = new THREE.Vector3();
+			const targetPos = new THREE.Vector3();
+			const sourceParentPos = new THREE.Vector3();
+			const sourcePos = new THREE.Vector3();
+			const targetDir = new THREE.Vector2();
+			const sourceDir = new THREE.Vector2();
 		options.hip = options.hip !== undefined ? options.hip : 'hip';
 		options.names = options.names || {};
 
@@ -303,11 +303,11 @@
 
 		}
 
-		const nameKeys = Object.keys( options.names ),
-			nameValues = Object.values( options.names ),
-			sourceBones = source.isObject3D ? source.skeleton.bones : getBones( source ),
-			bones = target.isObject3D ? target.skeleton.bones : getBones( target ),
-			offsets = [];
+		const nameKeys = Object.keys( options.names );
+			const nameValues = Object.values( options.names );
+			const sourceBones = source.isObject3D ? source.skeleton.bones : getBones( source );
+			const bones = target.isObject3D ? target.skeleton.bones : getBones( target );
+			const offsets = [];
 		let bone, boneTo, name, i;
 		target.skeleton.pose();
 
@@ -319,8 +319,8 @@
 
 			if ( boneTo && name !== options.hip ) {
 
-				const boneParent = getNearestBone( bone.parent, nameKeys ),
-					boneToParent = getNearestBone( boneTo.parent, nameValues );
+				const boneParent = getNearestBone( bone.parent, nameKeys );
+					const boneToParent = getNearestBone( boneTo.parent, nameValues );
 				boneParent.updateMatrixWorld();
 				boneToParent.updateMatrixWorld();
 				targetParentPos.setFromMatrixPosition( boneParent.matrixWorld );
@@ -398,8 +398,8 @@
 
 	function findBoneTrackData( name, tracks ) {
 
-		const regexp = /\[(.*)\]\.(.*)/,
-			result = {
+		const regexp = /\[(.*)\]\.(.*)/;
+			const result = {
 				name: name
 			};
 
@@ -423,9 +423,9 @@
 
 	function getEqualsBonesNames( skeleton, targetSkeleton ) {
 
-		const sourceBones = getBones( skeleton ),
-			targetBones = getBones( targetSkeleton ),
-			bones = [];
+		const sourceBones = getBones( skeleton );
+			const targetBones = getBones( targetSkeleton );
+			const bones = [];
 
 		search: for ( let i = 0; i < sourceBones.length; i ++ ) {
 

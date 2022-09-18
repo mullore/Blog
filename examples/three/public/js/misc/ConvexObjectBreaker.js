@@ -424,9 +424,9 @@
 			// input:
 			// vector interpreted as a free vector
 			// THREE.Matrix4 orthogonal matrix (matrix without scale)
-			const x = v.x,
-				y = v.y,
-				z = v.z;
+			const x = v.x;
+				const y = v.y;
+				const z = v.z;
 			const e = m.elements;
 			v.x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z;
 			v.y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z;
@@ -440,9 +440,9 @@
 			// input:
 			// vector interpreted as a free vector
 			// THREE.Matrix4 orthogonal matrix (matrix without scale)
-			const x = v.x,
-				y = v.y,
-				z = v.z;
+			const x = v.x;
+				const y = v.y;
+				const z = v.z;
 			const e = m.elements;
 			v.x = e[ 0 ] * x + e[ 1 ] * y + e[ 2 ] * z;
 			v.y = e[ 4 ] * x + e[ 5 ] * y + e[ 6 ] * z;
@@ -456,9 +456,9 @@
 			// input:
 			// vector interpreted as a tied (ordinary) vector
 			// THREE.Matrix4 orthogonal matrix (matrix without scale)
-			const x = v.x,
-				y = v.y,
-				z = v.z;
+			const x = v.x;
+				const y = v.y;
+				const z = v.z;
 			const e = m.elements;
 			v.x = e[ 0 ] * x + e[ 1 ] * y + e[ 2 ] * z - e[ 12 ];
 			v.y = e[ 4 ] * x + e[ 5 ] * y + e[ 6 ] * z - e[ 13 ];

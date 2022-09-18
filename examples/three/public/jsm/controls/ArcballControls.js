@@ -16,7 +16,7 @@ import {
 	EventDispatcher
 } from 'three';
 
-//trackball state
+// trackball state
 const STATE = {
 
 	IDLE: Symbol(),
@@ -43,7 +43,7 @@ const INPUT = {
 
 };
 
-//cursor center coordinates
+// cursor center coordinates
 const _center = {
 
 	x: 0,
@@ -51,7 +51,7 @@ const _center = {
 
 };
 
-//transformation matrices for gizmos and camera
+// transformation matrices for gizmos and camera
 const _transformation = {
 
 	camera: new Matrix4(),
@@ -59,7 +59,7 @@ const _transformation = {
 
 };
 
-//events
+// events
 const _changeEvent = { type: 'change' };
 const _startEvent = { type: 'start' };
 const _endEvent = { type: 'end' };
@@ -92,7 +92,7 @@ class ArcballControls extends EventDispatcher {
 		this._mouseOp = null;
 
 
-		//global vectors and matrices that are used in some operations to avoid creating new objects every time (e.g. every time cursor moves)
+		// global vectors and matrices that are used in some operations to avoid creating new objects every time (e.g. every time cursor moves)
 		this._v2_1 = new Vector2();
 		this._v3_1 = new Vector3();
 		this._v3_2 = new Vector3();
@@ -102,15 +102,15 @@ class ArcballControls extends EventDispatcher {
 
 		this._quat = new Quaternion();
 
-		//transformation matrices
-		this._translationMatrix = new Matrix4(); //matrix for translation operation
-		this._rotationMatrix = new Matrix4(); //matrix for rotation operation
-		this._scaleMatrix = new Matrix4(); //matrix for scaling operation
+		// transformation matrices
+		this._translationMatrix = new Matrix4(); // matrix for translation operation
+		this._rotationMatrix = new Matrix4(); // matrix for rotation operation
+		this._scaleMatrix = new Matrix4(); // matrix for scaling operation
 
-		this._rotationAxis = new Vector3(); //axis for rotate operation
+		this._rotationAxis = new Vector3(); // axis for rotate operation
 
 
-		//camera state
+		// camera state
 		this._cameraMatrixState = new Matrix4();
 		this._cameraProjectionState = new Matrix4();
 
@@ -122,7 +122,7 @@ class ArcballControls extends EventDispatcher {
 
 		this._gizmoMatrixState = new Matrix4();
 
-		//initial values
+		// initial values
 		this._up0 = new Vector3();
 		this._zoom0 = 1;
 		this._fov0 = 0;
@@ -133,70 +133,70 @@ class ArcballControls extends EventDispatcher {
 		this._cameraMatrixState0 = new Matrix4();
 		this._gizmoMatrixState0 = new Matrix4();
 
-		//pointers array
+		// pointers array
 		this._button = - 1;
 		this._touchStart = [];
 		this._touchCurrent = [];
 		this._input = INPUT.NONE;
 
-		//two fingers touch interaction
-		this._switchSensibility = 32;	//minimum movement to be performed to fire single pan start after the second finger has been released
-		this._startFingerDistance = 0; //distance between two fingers
+		// two fingers touch interaction
+		this._switchSensibility = 32;	// minimum movement to be performed to fire single pan start after the second finger has been released
+		this._startFingerDistance = 0; // distance between two fingers
 		this._currentFingerDistance = 0;
-		this._startFingerRotation = 0; //amount of rotation performed with two fingers
+		this._startFingerRotation = 0; // amount of rotation performed with two fingers
 		this._currentFingerRotation = 0;
 
-		//double tap
+		// double tap
 		this._devPxRatio = 0;
 		this._downValid = true;
 		this._nclicks = 0;
 		this._downEvents = [];
-		this._downStart = 0;	//pointerDown time
-		this._clickStart = 0;	//first click time
+		this._downStart = 0;	// pointerDown time
+		this._clickStart = 0;	// first click time
 		this._maxDownTime = 250;
 		this._maxInterval = 300;
 		this._posThreshold = 24;
 		this._movementThreshold = 24;
 
-		//cursor positions
+		// cursor positions
 		this._currentCursorPosition = new Vector3();
 		this._startCursorPosition = new Vector3();
 
-		//grid
-		this._grid = null; //grid to be visualized during pan operation
+		// grid
+		this._grid = null; // grid to be visualized during pan operation
 		this._gridPosition = new Vector3();
 
-		//gizmos
+		// gizmos
 		this._gizmos = new Group();
 		this._curvePts = 128;
 
 
-		//animations
-		this._timeStart = - 1; //initial time
+		// animations
+		this._timeStart = - 1; // initial time
 		this._animationId = - 1;
 
-		//focus animation
-		this.focusAnimationTime = 500; //duration of focus animation in ms
+		// focus animation
+		this.focusAnimationTime = 500; // duration of focus animation in ms
 
-		//rotate animation
-		this._timePrev = 0; //time at which previous rotate operation has been detected
-		this._timeCurrent = 0; //time at which current rotate operation has been detected
-		this._anglePrev = 0; //angle of previous rotation
-		this._angleCurrent = 0; //angle of current rotation
-		this._cursorPosPrev = new Vector3();	//cursor position when previous rotate operation has been detected
-		this._cursorPosCurr = new Vector3();//cursor position when current rotate operation has been detected
-		this._wPrev = 0; //angular velocity of the previous rotate operation
-		this._wCurr = 0; //angular velocity of the current rotate operation
+		// rotate animation
+		this._timePrev = 0; // time at which previous rotate operation has been detected
+		this._timeCurrent = 0; // time at which current rotate operation has been detected
+		this._anglePrev = 0; // angle of previous rotation
+		this._angleCurrent = 0; // angle of current rotation
+		this._cursorPosPrev = new Vector3();	// cursor position when previous rotate operation has been detected
+		this._cursorPosCurr = new Vector3();// cursor position when current rotate operation has been detected
+		this._wPrev = 0; // angular velocity of the previous rotate operation
+		this._wCurr = 0; // angular velocity of the current rotate operation
 
 
-		//parameters
+		// parameters
 		this.adjustNearFar = false;
-		this.scaleFactor = 1.1;	//zoom/distance multiplier
+		this.scaleFactor = 1.1;	// zoom/distance multiplier
 		this.dampingFactor = 25;
-		this.wMax = 20;	//maximum angular velocity allowed
-		this.enableAnimations = true; //if animations should be performed
-		this.enableGrid = false; //if grid should be showed during pan operation
-		this.cursorZoom = false;	//if wheel zoom should be cursor centered
+		this.wMax = 20;	// maximum angular velocity allowed
+		this.enableAnimations = true; // if animations should be performed
+		this.enableGrid = false; // if grid should be showed during pan operation
+		this.cursorZoom = false;	// if wheel zoom should be cursor centered
 		this.minFov = 5;
 		this.maxFov = 90;
 
@@ -211,10 +211,10 @@ class ArcballControls extends EventDispatcher {
 		this.minZoom = 0;
 		this.maxZoom = Infinity;
 
-		//trackball parameters
+		// trackball parameters
 		this._tbRadius = 1;
 
-		//FSA
+		// FSA
 		this._state = STATE.IDLE;
 
 		this.setCamera( camera );
@@ -239,7 +239,7 @@ class ArcballControls extends EventDispatcher {
 
 	}
 
-	//listeners
+	// listeners
 
 	onWindowResize = () => {
 
@@ -274,7 +274,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( this.mouseActions[ i ].mouse == 2 ) {
 
-				//prevent only if button 2 is actually used
+				// prevent only if button 2 is actually used
 				event.preventDefault();
 				break;
 
@@ -315,7 +315,7 @@ class ArcballControls extends EventDispatcher {
 
 				case INPUT.NONE:
 
-					//singleStart
+					// singleStart
 					this._input = INPUT.ONE_FINGER;
 					this.onSinglePanStart( event, 'ROTATE' );
 
@@ -327,7 +327,7 @@ class ArcballControls extends EventDispatcher {
 				case INPUT.ONE_FINGER:
 				case INPUT.ONE_FINGER_SWITCHED:
 
-					//doubleStart
+					// doubleStart
 					this._input = INPUT.TWO_FINGER;
 
 					this.onRotateStart();
@@ -338,7 +338,7 @@ class ArcballControls extends EventDispatcher {
 
 				case INPUT.TWO_FINGER:
 
-					//multipleStart
+					// multipleStart
 					this._input = INPUT.MULT_FINGER;
 					this.onTriplePanStart( event );
 					break;
@@ -365,7 +365,7 @@ class ArcballControls extends EventDispatcher {
 				window.addEventListener( 'pointermove', this.onPointerMove );
 				window.addEventListener( 'pointerup', this.onPointerUp );
 
-				//singleStart
+				// singleStart
 				this._input = INPUT.CURSOR;
 				this._button = event.button;
 				this.onSinglePanStart( event, this._mouseOp );
@@ -384,7 +384,7 @@ class ArcballControls extends EventDispatcher {
 
 				case INPUT.ONE_FINGER:
 
-					//singleMove
+					// singleMove
 					this.updateTouchEvent( event );
 
 					this.onSinglePanMove( event, STATE.ROTATE );
@@ -396,7 +396,7 @@ class ArcballControls extends EventDispatcher {
 
 					if ( movement >= this._switchSensibility ) {
 
-						//singleMove
+						// singleMove
 						this._input = INPUT.ONE_FINGER;
 						this.updateTouchEvent( event );
 
@@ -409,7 +409,7 @@ class ArcballControls extends EventDispatcher {
 
 				case INPUT.TWO_FINGER:
 
-					//rotate/pan/pinchMove
+					// rotate/pan/pinchMove
 					this.updateTouchEvent( event );
 
 					this.onRotateMove();
@@ -420,7 +420,7 @@ class ArcballControls extends EventDispatcher {
 
 				case INPUT.MULT_FINGER:
 
-					//multMove
+					// multMove
 					this.updateTouchEvent( event );
 
 					this.onTriplePanMove( event );
@@ -452,7 +452,7 @@ class ArcballControls extends EventDispatcher {
 
 		}
 
-		//checkDistance
+		// checkDistance
 		if ( this._downValid ) {
 
 			const movement = this.calculatePointersDistance( this._downEvents[ this._downEvents.length - 1 ], event ) * this._devPxRatio;
@@ -489,7 +489,7 @@ class ArcballControls extends EventDispatcher {
 				case INPUT.ONE_FINGER:
 				case INPUT.ONE_FINGER_SWITCHED:
 
-					//singleEnd
+					// singleEnd
 					window.removeEventListener( 'pointermove', this.onPointerMove );
 					window.removeEventListener( 'pointerup', this.onPointerUp );
 
@@ -500,12 +500,12 @@ class ArcballControls extends EventDispatcher {
 
 				case INPUT.TWO_FINGER:
 
-					//doubleEnd
+					// doubleEnd
 					this.onDoublePanEnd( event );
 					this.onPinchEnd( event );
 					this.onRotateEnd( event );
 
-					//switching to singleStart
+					// switching to singleStart
 					this._input = INPUT.ONE_FINGER_SWITCHED;
 
 					break;
@@ -517,7 +517,7 @@ class ArcballControls extends EventDispatcher {
 						window.removeEventListener( 'pointermove', this.onPointerMove );
 						window.removeEventListener( 'pointerup', this.onPointerUp );
 
-						//multCancel
+						// multCancel
 						this._input = INPUT.NONE;
 						this.onTriplePanEnd();
 
@@ -548,7 +548,7 @@ class ArcballControls extends EventDispatcher {
 
 					if ( this._nclicks == 0 ) {
 
-						//first valid click detected
+						// first valid click detected
 						this._nclicks = 1;
 						this._clickStart = performance.now();
 
@@ -559,15 +559,15 @@ class ArcballControls extends EventDispatcher {
 
 						if ( clickInterval <= this._maxInterval && movement <= this._posThreshold ) {
 
-							//second valid click detected
-							//fire double tap and reset values
+							// second valid click detected
+							// fire double tap and reset values
 							this._nclicks = 0;
 							this._downEvents.splice( 0, this._downEvents.length );
 							this.onDoubleTap( event );
 
 						} else {
 
-							//new 'first click'
+							// new 'first click'
 							this._nclicks = 1;
 							this._downEvents.shift();
 							this._clickStart = performance.now();
@@ -618,7 +618,7 @@ class ArcballControls extends EventDispatcher {
 				event.preventDefault();
 				this.dispatchEvent( _startEvent );
 
-				const notchDeltaY = 125; //distance of one notch of mouse wheel
+				const notchDeltaY = 125; // distance of one notch of mouse wheel
 				let sgn = event.deltaY / notchDeltaY;
 
 				let size = 1;
@@ -692,7 +692,7 @@ class ArcballControls extends EventDispatcher {
 							this.updateTbState( STATE.FOV, true );
 
 
-							//Vertigo effect
+							// Vertigo effect
 
 							//	  fov / 2
 							//		|\
@@ -704,7 +704,7 @@ class ArcballControls extends EventDispatcher {
 							//		| _ _ _\
 							//			y
 
-							//check for iOs shift shortcut
+							// check for iOs shift shortcut
 							if ( event.deltaX != 0 ) {
 
 								sgn = event.deltaX / notchDeltaY;
@@ -725,17 +725,17 @@ class ArcballControls extends EventDispatcher {
 
 							this._v3_1.setFromMatrixPosition( this._cameraMatrixState );
 							const x = this._v3_1.distanceTo( this._gizmos.position );
-							let xNew = x / size;	//distance between camera and gizmos if scale(size, scalepoint) would be performed
+							let xNew = x / size;	// distance between camera and gizmos if scale(size, scalepoint) would be performed
 
-							//check min and max distance
+							// check min and max distance
 							xNew = MathUtils.clamp( xNew, this.minDistance, this.maxDistance );
 
 							const y = x * Math.tan( MathUtils.DEG2RAD * this.camera.fov * 0.5 );
 
-							//calculate new fov
+							// calculate new fov
 							let newFov = MathUtils.RAD2DEG * ( Math.atan( y / xNew ) * 2 );
 
-							//check min and max fov
+							// check min and max fov
 							if ( newFov > this.maxFov ) {
 
 								newFov = this.maxFov;
@@ -918,7 +918,7 @@ class ArcballControls extends EventDispatcher {
 
 						if ( restart ) {
 
-							//switch to pan operation
+							// switch to pan operation
 
 							this.dispatchEvent( _endEvent );
 							this.dispatchEvent( _startEvent );
@@ -935,7 +935,7 @@ class ArcballControls extends EventDispatcher {
 
 						} else {
 
-							//continue with pan operation
+							// continue with pan operation
 							this._currentCursorPosition.copy( this.unprojectOnTbPlane( this.camera, _center.x, _center.y, this.domElement ) );
 							this.applyTransformMatrix( this.pan( this._startCursorPosition, this._currentCursorPosition ) );
 
@@ -951,7 +951,7 @@ class ArcballControls extends EventDispatcher {
 
 						if ( restart ) {
 
-							//switch to rotate operation
+							// switch to rotate operation
 
 							this.dispatchEvent( _endEvent );
 							this.dispatchEvent( _startEvent );
@@ -969,12 +969,12 @@ class ArcballControls extends EventDispatcher {
 
 						} else {
 
-							//continue with rotate operation
+							// continue with rotate operation
 							this._currentCursorPosition.copy( this.unprojectOnTbSurface( this.camera, _center.x, _center.y, this.domElement, this._tbRadius ) );
 
 							const distance = this._startCursorPosition.distanceTo( this._currentCursorPosition );
 							const angle = this._startCursorPosition.angleTo( this._currentCursorPosition );
-							const amount = Math.max( distance / this._tbRadius, angle ); //effective rotation angle
+							const amount = Math.max( distance / this._tbRadius, angle ); // effective rotation angle
 
 							this.applyTransformMatrix( this.rotate( this.calculateRotationAxis( this._startCursorPosition, this._currentCursorPosition ), amount ) );
 
@@ -1003,7 +1003,7 @@ class ArcballControls extends EventDispatcher {
 
 						if ( restart ) {
 
-							//switch to zoom operation
+							// switch to zoom operation
 
 							this.dispatchEvent( _endEvent );
 							this.dispatchEvent( _startEvent );
@@ -1022,8 +1022,8 @@ class ArcballControls extends EventDispatcher {
 
 						} else {
 
-							//continue with zoom operation
-							const screenNotches = 8;	//how many wheel notches corresponds to a full screen pan
+							// continue with zoom operation
+							const screenNotches = 8;	// how many wheel notches corresponds to a full screen pan
 							this._currentCursorPosition.setY( this.getCursorNDC( _center.x, _center.y, this.domElement ).y * 0.5 );
 
 							const movement = this._currentCursorPosition.y - this._startCursorPosition.y;
@@ -1054,7 +1054,7 @@ class ArcballControls extends EventDispatcher {
 
 						if ( restart ) {
 
-							//switch to fov operation
+							// switch to fov operation
 
 							this.dispatchEvent( _endEvent );
 							this.dispatchEvent( _startEvent );
@@ -1073,8 +1073,8 @@ class ArcballControls extends EventDispatcher {
 
 						} else {
 
-							//continue with fov operation
-							const screenNotches = 8;	//how many wheel notches corresponds to a full screen pan
+							// continue with fov operation
+							const screenNotches = 8;	// how many wheel notches corresponds to a full screen pan
 							this._currentCursorPosition.setY( this.getCursorNDC( _center.x, _center.y, this.domElement ).y * 0.5 );
 
 							const movement = this._currentCursorPosition.y - this._startCursorPosition.y;
@@ -1093,17 +1093,17 @@ class ArcballControls extends EventDispatcher {
 
 							this._v3_1.setFromMatrixPosition( this._cameraMatrixState );
 							const x = this._v3_1.distanceTo( this._gizmos.position );
-							let xNew = x / size; //distance between camera and gizmos if scale(size, scalepoint) would be performed
+							let xNew = x / size; // distance between camera and gizmos if scale(size, scalepoint) would be performed
 
-							//check min and max distance
+							// check min and max distance
 							xNew = MathUtils.clamp( xNew, this.minDistance, this.maxDistance );
 
 							const y = x * Math.tan( MathUtils.DEG2RAD * this._fovState * 0.5 );
 
-							//calculate new fov
+							// calculate new fov
 							let newFov = MathUtils.RAD2DEG * ( Math.atan( y / xNew ) * 2 );
 
-							//check min and max fov
+							// check min and max fov
 							newFov = MathUtils.clamp( newFov, this.minFov, this.maxFov );
 
 							const newDistance = y / Math.tan( MathUtils.DEG2RAD * ( newFov / 2 ) );
@@ -1113,7 +1113,7 @@ class ArcballControls extends EventDispatcher {
 							this.setFov( newFov );
 							this.applyTransformMatrix( this.scale( size, this._v3_2, false ) );
 
-							//adjusting distance
+							// adjusting distance
 							_offset.copy( this._gizmos.position ).sub( this.camera.position ).normalize().multiplyScalar( newDistance / x );
 							this._m4_1.makeTranslation( _offset.x, _offset.y, _offset.z );
 
@@ -1144,7 +1144,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( this.enableAnimations ) {
 
-				//perform rotation animation
+				// perform rotation animation
 				const deltaTime = ( performance.now() - this._timeCurrent );
 				if ( deltaTime < 120 ) {
 
@@ -1162,7 +1162,7 @@ class ArcballControls extends EventDispatcher {
 
 				} else {
 
-					//cursor has been standing still for over 120 ms since last movement
+					// cursor has been standing still for over 120 ms since last movement
 					this.updateTbState( STATE.IDLE, false );
 					this.activateGizmos( false );
 					this.dispatchEvent( _changeEvent );
@@ -1293,12 +1293,12 @@ class ArcballControls extends EventDispatcher {
 
 			this.updateTbState( STATE.ZROTATE, true );
 
-			//this._startFingerRotation = event.rotation;
+			// this._startFingerRotation = event.rotation;
 
 			this._startFingerRotation = this.getAngle( this._touchCurrent[ 1 ], this._touchCurrent[ 0 ] ) + this.getAngle( this._touchStart[ 1 ], this._touchStart[ 0 ] );
 			this._currentFingerRotation = this._startFingerRotation;
 
-			this.camera.getWorldDirection( this._rotationAxis ); //rotation axis
+			this.camera.getWorldDirection( this._rotationAxis ); // rotation axis
 
 			if ( ! this.enablePan && ! this.enableZoom ) {
 
@@ -1324,7 +1324,7 @@ class ArcballControls extends EventDispatcher {
 
 			}
 
-			//this._currentFingerRotation = event.rotation;
+			// this._currentFingerRotation = event.rotation;
 			this._currentFingerRotation = this.getAngle( this._touchCurrent[ 1 ], this._touchCurrent[ 0 ] ) + this.getAngle( this._touchStart[ 1 ], this._touchStart[ 0 ] );
 
 			if ( ! this.enablePan ) {
@@ -1376,7 +1376,7 @@ class ArcballControls extends EventDispatcher {
 		if ( this.enabled && this.enableZoom ) {
 
 			this.setCenter( ( this._touchCurrent[ 0 ].clientX + this._touchCurrent[ 1 ].clientX ) / 2, ( this._touchCurrent[ 0 ].clientY + this._touchCurrent[ 1 ].clientY ) / 2 );
-			const minDistance = 12; //minimum distance between fingers (in css pixels)
+			const minDistance = 12; // minimum distance between fingers (in css pixels)
 
 			if ( this._state != STATE.SCALE ) {
 
@@ -1435,7 +1435,7 @@ class ArcballControls extends EventDispatcher {
 
 			this.updateTbState( STATE.SCALE, true );
 
-			//const center = event.center;
+			// const center = event.center;
 			let clientX = 0;
 			let clientY = 0;
 			const nFingers = this._touchCurrent.length;
@@ -1470,7 +1470,7 @@ class ArcballControls extends EventDispatcher {
 			//		| _ _ _\
 			//			y
 
-			//const center = event.center;
+			// const center = event.center;
 			let clientX = 0;
 			let clientY = 0;
 			const nFingers = this._touchCurrent.length;
@@ -1484,7 +1484,7 @@ class ArcballControls extends EventDispatcher {
 
 			this.setCenter( clientX / nFingers, clientY / nFingers );
 
-			const screenNotches = 8;	//how many wheel notches corresponds to a full screen pan
+			const screenNotches = 8;	// how many wheel notches corresponds to a full screen pan
 			this._currentCursorPosition.setY( this.getCursorNDC( _center.x, _center.y, this.domElement ).y * 0.5 );
 
 			const movement = this._currentCursorPosition.y - this._startCursorPosition.y;
@@ -1503,17 +1503,17 @@ class ArcballControls extends EventDispatcher {
 
 			this._v3_1.setFromMatrixPosition( this._cameraMatrixState );
 			const x = this._v3_1.distanceTo( this._gizmos.position );
-			let xNew = x / size; //distance between camera and gizmos if scale(size, scalepoint) would be performed
+			let xNew = x / size; // distance between camera and gizmos if scale(size, scalepoint) would be performed
 
-			//check min and max distance
+			// check min and max distance
 			xNew = MathUtils.clamp( xNew, this.minDistance, this.maxDistance );
 
 			const y = x * Math.tan( MathUtils.DEG2RAD * this._fovState * 0.5 );
 
-			//calculate new fov
+			// calculate new fov
 			let newFov = MathUtils.RAD2DEG * ( Math.atan( y / xNew ) * 2 );
 
-			//check min and max fov
+			// check min and max fov
 			newFov = MathUtils.clamp( newFov, this.minFov, this.maxFov );
 
 			const newDistance = y / Math.tan( MathUtils.DEG2RAD * ( newFov / 2 ) );
@@ -1523,7 +1523,7 @@ class ArcballControls extends EventDispatcher {
 			this.setFov( newFov );
 			this.applyTransformMatrix( this.scale( size, this._v3_2, false ) );
 
-			//adjusting distance
+			// adjusting distance
 			_offset.copy( this._gizmos.position ).sub( this.camera.position ).normalize().multiplyScalar( newDistance / x );
 			this._m4_1.makeTranslation( _offset.x, _offset.y, _offset.z );
 
@@ -1537,7 +1537,7 @@ class ArcballControls extends EventDispatcher {
 
 		this.updateTbState( STATE.IDLE, false );
 		this.dispatchEvent( _endEvent );
-		//this.dispatchEvent( _changeEvent );
+		// this.dispatchEvent( _changeEvent );
 
 	};
 
@@ -1616,7 +1616,7 @@ class ArcballControls extends EventDispatcher {
 
 		if ( ! operationInput.includes( operation ) || ! mouseInput.includes( mouse ) || ! keyInput.includes( key ) ) {
 
-			//invalid parameters
+			// invalid parameters
 			return false;
 
 		}
@@ -1625,7 +1625,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( operation != 'ZOOM' && operation != 'FOV' ) {
 
-				//cannot associate 2D operation to 1D input
+				// cannot associate 2D operation to 1D input
 				return false;
 
 			}
@@ -1827,7 +1827,7 @@ class ArcballControls extends EventDispatcher {
 			this._m4_1.decompose( this.camera.position, this.camera.quaternion, this.camera.scale );
 			this.camera.updateMatrix();
 
-			//update camera up vector
+			// update camera up vector
 			if ( this._state == STATE.ROTATE || this._state == STATE.ZROTATE || this._state == STATE.ANIMATION_ROTATE ) {
 
 				this.camera.up.copy( this._upState ).applyQuaternion( this.camera.quaternion );
@@ -1962,8 +1962,8 @@ class ArcballControls extends EventDispatcher {
 
 		if ( camera.type == 'PerspectiveCamera' ) {
 
-			const halfFovV = MathUtils.DEG2RAD * camera.fov * 0.5; //vertical fov/2 in radians
-			const halfFovH = Math.atan( ( camera.aspect ) * Math.tan( halfFovV ) ); //horizontal fov/2 in radians
+			const halfFovV = MathUtils.DEG2RAD * camera.fov * 0.5; // vertical fov/2 in radians
+			const halfFovH = Math.atan( ( camera.aspect ) * Math.tan( halfFovV ) ); // horizontal fov/2 in radians
 			return Math.tan( Math.min( halfFovV, halfFovH ) ) * distance * this.radiusFactor;
 
 		} else if ( camera.type == 'OrthographicCamera' ) {
@@ -1982,7 +1982,7 @@ class ArcballControls extends EventDispatcher {
 	 */
 	focus = ( point, size, amount = 1 ) => {
 
-		//move center of camera (along with gizmos) towards point of interest
+		// move center of camera (along with gizmos) towards point of interest
 		_offset.copy( point ).sub( this._gizmos.position ).multiplyScalar( amount );
 		this._translationMatrix.makeTranslation( _offset.x, _offset.y, _offset.z );
 
@@ -1994,7 +1994,7 @@ class ArcballControls extends EventDispatcher {
 		this._cameraMatrixState.premultiply( this._translationMatrix );
 		this._cameraMatrixState.decompose( this.camera.position, this.camera.quaternion, this.camera.scale );
 
-		//apply zoom
+		// apply zoom
 		if ( this.enableZoom ) {
 
 			this.applyTransformMatrix( this.scale( size, this._gizmos.position ) );
@@ -2176,7 +2176,7 @@ class ArcballControls extends EventDispatcher {
 		camera.lookAt( this.target );
 		camera.updateMatrix();
 
-		//setting state
+		// setting state
 		if ( camera.type == 'PerspectiveCamera' ) {
 
 			this._fov0 = camera.fov;
@@ -2204,7 +2204,7 @@ class ArcballControls extends EventDispatcher {
 		this.camera = camera;
 		this.camera.updateProjectionMatrix();
 
-		//making gizmos
+		// making gizmos
 		this._tbRadius = this.calculateTbRadius( camera );
 		this.makeGizmos( this.target, this._tbRadius );
 
@@ -2255,15 +2255,15 @@ class ArcballControls extends EventDispatcher {
 		const curve = new EllipseCurve( 0, 0, tbRadius, tbRadius );
 		const points = curve.getPoints( this._curvePts );
 
-		//geometry
+		// geometry
 		const curveGeometry = new BufferGeometry().setFromPoints( points );
 
-		//material
+		// material
 		const curveMaterialX = new LineBasicMaterial( { color: 0xff8080, fog: false, transparent: true, opacity: 0.6 } );
 		const curveMaterialY = new LineBasicMaterial( { color: 0x80ff80, fog: false, transparent: true, opacity: 0.6 } );
 		const curveMaterialZ = new LineBasicMaterial( { color: 0x8080ff, fog: false, transparent: true, opacity: 0.6 } );
 
-		//line
+		// line
 		const gizmoX = new Line( curveGeometry, curveMaterialX );
 		const gizmoY = new Line( curveGeometry, curveMaterialY );
 		const gizmoZ = new Line( curveGeometry, curveMaterialZ );
@@ -2273,13 +2273,13 @@ class ArcballControls extends EventDispatcher {
 		gizmoY.rotation.y = rotation;
 
 
-		//setting state
+		// setting state
 		this._gizmoMatrixState0.identity().setPosition( tbCenter );
 		this._gizmoMatrixState.copy( this._gizmoMatrixState0 );
 
 		if ( this.camera.zoom != 1 ) {
 
-			//adapt gizmos size to camera zoom
+			// adapt gizmos size to camera zoom
 			const size = 1 / this.camera.zoom;
 			this._scaleMatrix.makeScale( size, size, size );
 			this._translationMatrix.makeTranslation( - tbCenter.x, - tbCenter.y, - tbCenter.z );
@@ -2311,7 +2311,7 @@ class ArcballControls extends EventDispatcher {
 
 		if ( this._timeStart == - 1 ) {
 
-			//animation start
+			// animation start
 			this._timeStart = time;
 
 		}
@@ -2325,7 +2325,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( animTime >= 1 ) {
 
-				//animation end
+				// animation end
 
 				this._gizmoMatrixState.decompose( this._gizmos.position, this._gizmos.quaternion, this._gizmos.scale );
 
@@ -2357,7 +2357,7 @@ class ArcballControls extends EventDispatcher {
 
 		} else {
 
-			//interrupt animation
+			// interrupt animation
 
 			this._animationId = - 1;
 			this._timeStart = - 1;
@@ -2376,7 +2376,7 @@ class ArcballControls extends EventDispatcher {
 
 		if ( this._timeStart == - 1 ) {
 
-			//animation start
+			// animation start
 			this._anglePrev = 0;
 			this._angleCurrent = 0;
 			this._timeStart = time;
@@ -2385,13 +2385,13 @@ class ArcballControls extends EventDispatcher {
 
 		if ( this._state == STATE.ANIMATION_ROTATE ) {
 
-			//w = w0 + alpha * t
+			// w = w0 + alpha * t
 			const deltaTime = ( time - this._timeStart ) / 1000;
 			const w = w0 + ( ( - this.dampingFactor ) * deltaTime );
 
 			if ( w > 0 ) {
 
-				//tetha = 0.5 * alpha * t^2 + w0 * t + tetha0
+				// tetha = 0.5 * alpha * t^2 + w0 * t + tetha0
 				this._angleCurrent = 0.5 * ( - this.dampingFactor ) * Math.pow( deltaTime, 2 ) + w0 * deltaTime + 0;
 				this.applyTransformMatrix( this.rotate( rotationAxis, this._angleCurrent ) );
 				this.dispatchEvent( _changeEvent );
@@ -2416,7 +2416,7 @@ class ArcballControls extends EventDispatcher {
 
 		} else {
 
-			//interrupt animation
+			// interrupt animation
 
 			this._animationId = - 1;
 			this._timeStart = - 1;
@@ -2445,14 +2445,14 @@ class ArcballControls extends EventDispatcher {
 
 		if ( this.camera.isOrthographicCamera ) {
 
-			//adjust movement amount
+			// adjust movement amount
 			movement.multiplyScalar( 1 / this.camera.zoom );
 
 		} else if ( this.camera.isPerspectiveCamera && adjust ) {
 
-			//adjust movement amount
-			this._v3_1.setFromMatrixPosition( this._cameraMatrixState0 );	//camera's initial position
-			this._v3_2.setFromMatrixPosition( this._gizmoMatrixState0 );	//gizmo's initial position
+			// adjust movement amount
+			this._v3_1.setFromMatrixPosition( this._cameraMatrixState0 );	// camera's initial position
+			this._v3_2.setFromMatrixPosition( this._gizmoMatrixState0 );	// gizmo's initial position
 			const distanceFactor = this._v3_1.distanceTo( this._v3_2 ) / this.camera.position.distanceTo( this._gizmos.position );
 			movement.multiplyScalar( 1 / distanceFactor );
 
@@ -2512,11 +2512,11 @@ class ArcballControls extends EventDispatcher {
 	 */
 	rotate = ( axis, angle ) => {
 
-		const point = this._gizmos.position; //rotation center
+		const point = this._gizmos.position; // rotation center
 		this._translationMatrix.makeTranslation( - point.x, - point.y, - point.z );
 		this._rotationMatrix.makeRotationAxis( axis, - angle );
 
-		//rotate camera
+		// rotate camera
 		this._m4_1.makeTranslation( point.x, point.y, point.z );
 		this._m4_1.multiply( this._rotationMatrix );
 		this._m4_1.multiply( this._translationMatrix );
@@ -2607,11 +2607,11 @@ class ArcballControls extends EventDispatcher {
 
 		if ( this.camera.isOrthographicCamera ) {
 
-			//camera zoom
+			// camera zoom
 			this.camera.zoom = this._zoomState;
 			this.camera.zoom *= size;
 
-			//check min and max zoom
+			// check min and max zoom
 			if ( this.camera.zoom > this.maxZoom ) {
 
 				this.camera.zoom = this.maxZoom;
@@ -2626,9 +2626,9 @@ class ArcballControls extends EventDispatcher {
 
 			this.camera.updateProjectionMatrix();
 
-			this._v3_1.setFromMatrixPosition( this._gizmoMatrixState );	//gizmos position
+			this._v3_1.setFromMatrixPosition( this._gizmoMatrixState );	// gizmos position
 
-			//scale gizmos so they appear in the same spot having the same dimension
+			// scale gizmos so they appear in the same spot having the same dimension
 			this._scaleMatrix.makeScale( sizeInverse, sizeInverse, sizeInverse );
 			this._translationMatrix.makeTranslation( - this._v3_1.x, - this._v3_1.y, - this._v3_1.z );
 
@@ -2636,7 +2636,7 @@ class ArcballControls extends EventDispatcher {
 			this._m4_2.multiply( this._translationMatrix );
 
 
-			//move camera and gizmos to obtain pinch effect
+			// move camera and gizmos to obtain pinch effect
 			_scalePointTemp.sub( this._v3_1 );
 
 			const amount = _scalePointTemp.clone().multiplyScalar( sizeInverse );
@@ -2653,11 +2653,11 @@ class ArcballControls extends EventDispatcher {
 			this._v3_1.setFromMatrixPosition( this._cameraMatrixState );
 			this._v3_2.setFromMatrixPosition( this._gizmoMatrixState );
 
-			//move camera
+			// move camera
 			let distance = this._v3_1.distanceTo( _scalePointTemp );
 			let amount = distance - ( distance * sizeInverse );
 
-			//check min and max distance
+			// check min and max distance
 			const newDistance = distance - amount;
 			if ( newDistance < this.minDistance ) {
 
@@ -2678,7 +2678,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( scaleGizmos ) {
 
-				//scale gizmos so they appear in the same spot having the same dimension
+				// scale gizmos so they appear in the same spot having the same dimension
 				const pos = this._v3_2;
 
 				distance = pos.distanceTo( _scalePointTemp );
@@ -2784,8 +2784,8 @@ class ArcballControls extends EventDispatcher {
 		this._m4_1.multiply( this._rotationMatrix );
 		this._m4_1.multiply( this._translationMatrix );
 
-		this._v3_1.setFromMatrixPosition( this._gizmoMatrixState ).sub( point );	//vector from rotation center to gizmos position
-		this._v3_2.copy( this._v3_1 ).applyAxisAngle( this._rotationAxis, angle );	//apply rotation
+		this._v3_1.setFromMatrixPosition( this._gizmoMatrixState ).sub( point );	// vector from rotation center to gizmos position
+		this._v3_2.copy( this._v3_1 ).applyAxisAngle( this._rotationAxis, angle );	// apply rotation
 		this._v3_2.sub( this._v3_1 );
 
 		this._m4_2.makeTranslation( this._v3_2.x, this._v3_2.y, this._v3_2.z );
@@ -2854,12 +2854,12 @@ class ArcballControls extends EventDispatcher {
 
 			if ( x2 + y2 <= r2 * 0.5 ) {
 
-				//intersection with sphere
+				// intersection with sphere
 				this._v3_1.setZ( Math.sqrt( r2 - ( x2 + y2 ) ) );
 
 			} else {
 
-				//intersection with hyperboloid
+				// intersection with hyperboloid
 				this._v3_1.setZ( ( r2 * 0.5 ) / ( Math.sqrt( x2 + y2 ) ) );
 
 			}
@@ -2868,13 +2868,13 @@ class ArcballControls extends EventDispatcher {
 
 		} else if ( camera.type == 'PerspectiveCamera' ) {
 
-			//unproject cursor on the near plane
+			// unproject cursor on the near plane
 			this._v2_1.copy( this.getCursorNDC( cursorX, cursorY, canvas ) );
 
 			this._v3_1.set( this._v2_1.x, this._v2_1.y, - 1 );
 			this._v3_1.applyMatrix4( camera.projectionMatrixInverse );
 
-			const rayDir = this._v3_1.clone().normalize(); //unprojected ray direction
+			const rayDir = this._v3_1.clone().normalize(); // unprojected ray direction
 			const cameraGizmoDistance = camera.position.distanceTo( this._gizmos.position );
 			const radius2 = Math.pow( tbRadius, 2 );
 
@@ -2893,7 +2893,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( l == 0 ) {
 
-				//ray aligned with camera
+				// ray aligned with camera
 				rayDir.set( this._v3_1.x, this._v3_1.y, tbRadius );
 				return rayDir;
 
@@ -2916,7 +2916,7 @@ class ArcballControls extends EventDispatcher {
 
 			if ( delta >= 0 ) {
 
-				//intersection with sphere
+				// intersection with sphere
 				this._v2_1.setX( ( - b - Math.sqrt( delta ) ) / ( 2 * a ) );
 				this._v2_1.setY( m * this._v2_1.x + q );
 
@@ -2924,8 +2924,8 @@ class ArcballControls extends EventDispatcher {
 
 				if ( angle >= 45 ) {
 
-					//if angle between intersection point and X' axis is >= 45°, return that point
-					//otherwise, calculate intersection point with hyperboloid
+					// if angle between intersection point and X' axis is >= 45°, return that point
+					// otherwise, calculate intersection point with hyperboloid
 
 					const rayLength = Math.sqrt( Math.pow( this._v2_1.x, 2 ) + Math.pow( ( cameraGizmoDistance - this._v2_1.y ), 2 ) );
 					rayDir.multiplyScalar( rayLength );
@@ -2936,7 +2936,7 @@ class ArcballControls extends EventDispatcher {
 
 			}
 
-			//intersection with hyperboloid
+			// intersection with hyperboloid
 			/*
 			 *|y = m * x + q
 			 *|y = (1 / x) * (r^2 / 2)
@@ -2984,11 +2984,11 @@ class ArcballControls extends EventDispatcher {
 
 			this._v2_1.copy( this.getCursorNDC( cursorX, cursorY, canvas ) );
 
-			//unproject cursor on the near plane
+			// unproject cursor on the near plane
 			this._v3_1.set( this._v2_1.x, this._v2_1.y, - 1 );
 			this._v3_1.applyMatrix4( camera.projectionMatrixInverse );
 
-			const rayDir = this._v3_1.clone().normalize(); //unprojected ray direction
+			const rayDir = this._v3_1.clone().normalize(); // unprojected ray direction
 
 			//	  camera
 			//		|\
@@ -3023,7 +3023,7 @@ class ArcballControls extends EventDispatcher {
 			*/
 			if ( l == 0 ) {
 
-				//ray aligned with camera
+				// ray aligned with camera
 				rayDir.set( 0, 0, 0 );
 				return rayDir;
 
@@ -3047,7 +3047,7 @@ class ArcballControls extends EventDispatcher {
 	 */
 	updateMatrixState = () => {
 
-		//update camera and gizmos state
+		// update camera and gizmos state
 		this._cameraMatrixState.copy( this.camera.matrix );
 		this._gizmoMatrixState.copy( this._gizmos.matrix );
 
@@ -3087,17 +3087,17 @@ class ArcballControls extends EventDispatcher {
 
 		if ( this.target.equals( this._currentTarget ) === false ) {
 
-			this._gizmos.position.copy( this.target );	//for correct radius calculation
+			this._gizmos.position.copy( this.target );	// for correct radius calculation
 			this._tbRadius = this.calculateTbRadius( this.camera );
 			this.makeGizmos( this.target, this._tbRadius );
 			this._currentTarget.copy( this.target );
 
 		}
 
-		//check min/max parameters
+		// check min/max parameters
 		if ( this.camera.isOrthographicCamera ) {
 
-			//check zoom
+			// check zoom
 			if ( this.camera.zoom > this.maxZoom || this.camera.zoom < this.minZoom ) {
 
 				const newZoom = MathUtils.clamp( this.camera.zoom, this.minZoom, this.maxZoom );
@@ -3107,7 +3107,7 @@ class ArcballControls extends EventDispatcher {
 
 		} else if ( this.camera.isPerspectiveCamera ) {
 
-			//check distance
+			// check distance
 			const distance = this.camera.position.distanceTo( this._gizmos.position );
 
 			if ( distance > this.maxDistance + EPS || distance < this.minDistance - EPS ) {
@@ -3118,7 +3118,7 @@ class ArcballControls extends EventDispatcher {
 
 			 }
 
-			//check fov
+			// check fov
 			if ( this.camera.fov < this.minFov || this.camera.fov > this.maxFov ) {
 
 				this.camera.fov = MathUtils.clamp( this.camera.fov, this.minFov, this.maxFov );

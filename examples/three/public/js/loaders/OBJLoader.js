@@ -436,8 +436,8 @@
 			}
 
 			const lines = text.split( '\n' );
-			let line = '',
-				lineFirstChar = '';
+			let line = '';
+				let lineFirstChar = '';
 			let lineLength = 0;
 			let result = []; // Faster to just trim left side of the line. Use if available.
 
@@ -710,7 +710,7 @@
 							}
 
 							material.name = sourceMaterial.name;
-							material.flatShading = sourceMaterial.smooth ? false : true;
+							material.flatShading = !sourceMaterial.smooth;
 							material.vertexColors = hasVertexColors;
 							state.materials[ materialHash ] = material;
 

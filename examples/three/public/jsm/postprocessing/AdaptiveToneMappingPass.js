@@ -136,7 +136,7 @@ class AdaptiveToneMappingPass extends Pass {
 
 	}
 
-	render( renderer, writeBuffer, readBuffer, deltaTime/*, maskActive*/ ) {
+	render( renderer, writeBuffer, readBuffer, deltaTime/*, maskActive */ ) {
 
 		if ( this.needsInit ) {
 
@@ -151,14 +151,14 @@ class AdaptiveToneMappingPass extends Pass {
 
 		if ( this.adaptive ) {
 
-			//Render the luminance of the current scene into a render target with mipmapping enabled
+			// Render the luminance of the current scene into a render target with mipmapping enabled
 			this.fsQuad.material = this.materialLuminance;
 			this.materialLuminance.uniforms.tDiffuse.value = readBuffer.texture;
 			renderer.setRenderTarget( this.currentLuminanceRT );
 			this.fsQuad.render( renderer );
 
-			//Use the new luminance values, the previous luminance and the frame delta to
-			//adapt the luminance over time.
+			// Use the new luminance values, the previous luminance and the frame delta to
+			// adapt the luminance over time.
 			this.fsQuad.material = this.materialAdaptiveLum;
 			this.materialAdaptiveLum.uniforms.delta.value = deltaTime;
 			this.materialAdaptiveLum.uniforms.lastLum.value = this.previousLuminanceRT.texture;
@@ -166,7 +166,7 @@ class AdaptiveToneMappingPass extends Pass {
 			renderer.setRenderTarget( this.luminanceRT );
 			this.fsQuad.render( renderer );
 
-			//Copy the new adapted luminance value so that it can be used by the next frame.
+			// Copy the new adapted luminance value so that it can be used by the next frame.
 			this.fsQuad.material = this.materialCopy;
 			this.copyUniforms.tDiffuse.value = this.luminanceRT.texture;
 			renderer.setRenderTarget( this.previousLuminanceRT );
@@ -233,12 +233,12 @@ class AdaptiveToneMappingPass extends Pass {
 
 		if ( this.adaptive ) {
 
-			this.materialToneMap.defines[ 'ADAPTED_LUMINANCE' ] = '';
+			this.materialToneMap.defines.ADAPTED_LUMINANCE = '';
 			this.materialToneMap.uniforms.luminanceMap.value = this.luminanceRT.texture;
 
 		}
 
-		//Put something in the adaptive luminance texture so that the scene can render initially
+		// Put something in the adaptive luminance texture so that the scene can render initially
 		this.fsQuad.material = new MeshBasicMaterial( { color: 0x777777 } );
 		this.materialLuminance.needsUpdate = true;
 		this.materialAdaptiveLum.needsUpdate = true;
@@ -254,13 +254,13 @@ class AdaptiveToneMappingPass extends Pass {
 		if ( adaptive ) {
 
 			this.adaptive = true;
-			this.materialToneMap.defines[ 'ADAPTED_LUMINANCE' ] = '';
+			this.materialToneMap.defines.ADAPTED_LUMINANCE = '';
 			this.materialToneMap.uniforms.luminanceMap.value = this.luminanceRT.texture;
 
 		} else {
 
 			this.adaptive = false;
-			delete this.materialToneMap.defines[ 'ADAPTED_LUMINANCE' ];
+			delete this.materialToneMap.defines.ADAPTED_LUMINANCE;
 			this.materialToneMap.uniforms.luminanceMap.value = null;
 
 		}

@@ -21,7 +21,7 @@
 		const vec_s = [ new THREE.Vector3( center.x - half, center.y, center.z - half ), new THREE.Vector3( center.x - half, center.y, center.z + half ), new THREE.Vector3( center.x + half, center.y, center.z + half ), new THREE.Vector3( center.x + half, center.y, center.z - half ) ];
 		const vec = [ vec_s[ v0 ], vec_s[ v1 ], vec_s[ v2 ], vec_s[ v3 ] ]; // Recurse iterations
 
-		if ( 0 <= -- iterations ) {
+		if ( -- iterations >= 0 ) {
 
 			const tmp = [];
 			Array.prototype.push.apply( tmp, hilbert2D( vec[ 0 ], half, iterations, v0, v3, v2, v1 ) );
@@ -100,7 +100,7 @@
 			let output;
 			let input = config.axiom;
 
-			for ( let i = 0, il = config.steps; 0 <= il ? i < il : i > il; 0 <= il ? i ++ : i -- ) {
+			for ( let i = 0, il = config.steps; il >= 0 ? i < il : i > il; il >= 0 ? i ++ : i -- ) {
 
 				output = '';
 
@@ -130,8 +130,8 @@
 
 		function toPoints( config ) {
 
-			let currX = 0,
-				currY = 0;
+			let currX = 0;
+				let currY = 0;
 			let angle = 0;
 			const path = [ 0, 0, 0 ];
 			const fractal = config.fractal;

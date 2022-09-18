@@ -20,10 +20,10 @@ class PeppersGhostEffect {
 		// Internals
 		let _halfWidth, _width, _height;
 
-		const _cameraF = new PerspectiveCamera(); //front
-		const _cameraB = new PerspectiveCamera(); //back
-		const _cameraL = new PerspectiveCamera(); //left
-		const _cameraR = new PerspectiveCamera(); //right
+		const _cameraF = new PerspectiveCamera(); // front
+		const _cameraB = new PerspectiveCamera(); // back
+		const _cameraL = new PerspectiveCamera(); // left
+		const _cameraR = new PerspectiveCamera(); // right
 
 		const _position = new Vector3();
 		const _quaternion = new Quaternion();

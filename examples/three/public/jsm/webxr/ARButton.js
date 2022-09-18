@@ -4,7 +4,7 @@ class ARButton {
 
 		const button = document.createElement( 'button' );
 
-		function showStartAR( /*device*/ ) {
+		function showStartAR( /* device */ ) {
 
 			if ( sessionInit.domOverlay === undefined ) {
 
@@ -61,7 +61,7 @@ class ARButton {
 
 			}
 
-			function onSessionEnded( /*event*/ ) {
+			function onSessionEnded( /* event */ ) {
 
 				currentSession.removeEventListener( 'end', onSessionEnded );
 

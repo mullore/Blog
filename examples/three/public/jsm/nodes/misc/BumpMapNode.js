@@ -31,8 +31,8 @@ class BumpMapNode extends TempNode {
 
 			} else {
 
-				const derivativeHeight = builder.include( BumpMapNode.Nodes.dHdxy_fwd ),
-					perturbNormalArb = builder.include( BumpMapNode.Nodes.perturbNormalArb );
+				const derivativeHeight = builder.include( BumpMapNode.Nodes.dHdxy_fwd );
+					const perturbNormalArb = builder.include( BumpMapNode.Nodes.perturbNormalArb );
 
 				this.normal = this.normal || new NormalNode();
 				this.position = this.position || new PositionNode( PositionNode.VIEW );

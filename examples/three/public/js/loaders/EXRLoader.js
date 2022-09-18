@@ -726,7 +726,7 @@
 			function decodeRunLength( source ) {
 
 				var size = source.byteLength;
-				var out = new Array();
+				var out = [];
 				var p = 0;
 				var reader = new DataView( source );
 
@@ -1183,11 +1183,11 @@
 				for ( var i = 0; i < info.channels; i ++ ) {
 
 					pizChannelData[ i ] = {};
-					pizChannelData[ i ][ 'start' ] = outBufferEnd;
-					pizChannelData[ i ][ 'end' ] = pizChannelData[ i ][ 'start' ];
-					pizChannelData[ i ][ 'nx' ] = info.width;
-					pizChannelData[ i ][ 'ny' ] = info.lines;
-					pizChannelData[ i ][ 'size' ] = info.type;
+					pizChannelData[ i ].start = outBufferEnd;
+					pizChannelData[ i ].end = pizChannelData[ i ].start;
+					pizChannelData[ i ].nx = info.width;
+					pizChannelData[ i ].ny = info.lines;
+					pizChannelData[ i ].size = info.type;
 					outBufferEnd += pizChannelData[ i ].nx * pizChannelData[ i ].ny * pizChannelData[ i ].size;
 
 				} // Read range compression data
@@ -1348,7 +1348,7 @@
 				};
 				if ( dwaHeader.version < 2 ) throw new Error( 'EXRLoader.parse: ' + EXRHeader.compression + ' version ' + dwaHeader.version + ' is unsupported' ); // Read channel ruleset information
 
-				var channelRules = new Array();
+				var channelRules = [];
 				var ruleSize = parseUint16( inDataView, inOffset ) - INT16_SIZE;
 
 				while ( ruleSize > 0 ) {
@@ -1469,7 +1469,7 @@
 
 				for ( var i = 0; i < rowOffsets.length; ++ i ) {
 
-					rowOffsets[ i ] = new Array();
+					rowOffsets[ i ] = [];
 
 				}
 
@@ -1642,8 +1642,8 @@
 
 			function decodeFloat16( binary ) {
 
-				var exponent = ( binary & 0x7C00 ) >> 10,
-					fraction = binary & 0x03FF;
+				var exponent = ( binary & 0x7C00 ) >> 10;
+					var fraction = binary & 0x03FF;
 				return ( binary >> 15 ? - 1 : 1 ) * ( exponent ? exponent === 0x1F ? fraction ? NaN : Infinity : Math.pow( 2, exponent - 15 ) * ( 1 + fraction / 0x400 ) : 6.103515625e-5 * ( fraction / 0x400 ) );
 
 			}

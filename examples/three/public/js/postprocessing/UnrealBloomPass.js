@@ -55,8 +55,8 @@
 			if ( THREE.LuminosityHighPassShader === undefined ) console.error( 'THREE.UnrealBloomPass relies on THREE.LuminosityHighPassShader' );
 			const highPassShader = THREE.LuminosityHighPassShader;
 			this.highPassUniforms = THREE.UniformsUtils.clone( highPassShader.uniforms );
-			this.highPassUniforms[ 'luminosityThreshold' ].value = threshold;
-			this.highPassUniforms[ 'smoothWidth' ].value = 0.01;
+			this.highPassUniforms.luminosityThreshold.value = threshold;
+			this.highPassUniforms.smoothWidth.value = 0.01;
 			this.materialHighPassFilter = new THREE.ShaderMaterial( {
 				uniforms: this.highPassUniforms,
 				vertexShader: highPassShader.vertexShader,
@@ -72,7 +72,7 @@
 			for ( let i = 0; i < this.nMips; i ++ ) {
 
 				this.separableBlurMaterials.push( this.getSeperableBlurMaterial( kernelSizeArray[ i ] ) );
-				this.separableBlurMaterials[ i ].uniforms[ 'texSize' ].value = new THREE.Vector2( resx, resy );
+				this.separableBlurMaterials[ i ].uniforms.texSize.value = new THREE.Vector2( resx, resy );
 				resx = Math.round( resx / 2 );
 				resy = Math.round( resy / 2 );
 
@@ -80,18 +80,18 @@
 
 
 			this.compositeMaterial = this.getCompositeMaterial( this.nMips );
-			this.compositeMaterial.uniforms[ 'blurTexture1' ].value = this.renderTargetsVertical[ 0 ].texture;
-			this.compositeMaterial.uniforms[ 'blurTexture2' ].value = this.renderTargetsVertical[ 1 ].texture;
-			this.compositeMaterial.uniforms[ 'blurTexture3' ].value = this.renderTargetsVertical[ 2 ].texture;
-			this.compositeMaterial.uniforms[ 'blurTexture4' ].value = this.renderTargetsVertical[ 3 ].texture;
-			this.compositeMaterial.uniforms[ 'blurTexture5' ].value = this.renderTargetsVertical[ 4 ].texture;
-			this.compositeMaterial.uniforms[ 'bloomStrength' ].value = strength;
-			this.compositeMaterial.uniforms[ 'bloomRadius' ].value = 0.1;
+			this.compositeMaterial.uniforms.blurTexture1.value = this.renderTargetsVertical[ 0 ].texture;
+			this.compositeMaterial.uniforms.blurTexture2.value = this.renderTargetsVertical[ 1 ].texture;
+			this.compositeMaterial.uniforms.blurTexture3.value = this.renderTargetsVertical[ 2 ].texture;
+			this.compositeMaterial.uniforms.blurTexture4.value = this.renderTargetsVertical[ 3 ].texture;
+			this.compositeMaterial.uniforms.blurTexture5.value = this.renderTargetsVertical[ 4 ].texture;
+			this.compositeMaterial.uniforms.bloomStrength.value = strength;
+			this.compositeMaterial.uniforms.bloomRadius.value = 0.1;
 			this.compositeMaterial.needsUpdate = true;
 			const bloomFactors = [ 1.0, 0.8, 0.6, 0.4, 0.2 ];
-			this.compositeMaterial.uniforms[ 'bloomFactors' ].value = bloomFactors;
+			this.compositeMaterial.uniforms.bloomFactors.value = bloomFactors;
 			this.bloomTintColors = [ new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 1, 1, 1 ) ];
-			this.compositeMaterial.uniforms[ 'bloomTintColors' ].value = this.bloomTintColors; // copy material
+			this.compositeMaterial.uniforms.bloomTintColors.value = this.bloomTintColors; // copy material
 
 			if ( THREE.CopyShader === undefined ) {
 
@@ -101,7 +101,7 @@
 
 			const copyShader = THREE.CopyShader;
 			this.copyUniforms = THREE.UniformsUtils.clone( copyShader.uniforms );
-			this.copyUniforms[ 'opacity' ].value = 1.0;
+			this.copyUniforms.opacity.value = 1.0;
 			this.materialCopy = new THREE.ShaderMaterial( {
 				uniforms: this.copyUniforms,
 				vertexShader: copyShader.vertexShader,
@@ -148,7 +148,7 @@
 
 				this.renderTargetsHorizontal[ i ].setSize( resx, resy );
 				this.renderTargetsVertical[ i ].setSize( resx, resy );
-				this.separableBlurMaterials[ i ].uniforms[ 'texSize' ].value = new THREE.Vector2( resx, resy );
+				this.separableBlurMaterials[ i ].uniforms.texSize.value = new THREE.Vector2( resx, resy );
 				resx = Math.round( resx / 2 );
 				resy = Math.round( resy / 2 );
 
@@ -176,8 +176,8 @@
 			} // 1. Extract Bright Areas
 
 
-			this.highPassUniforms[ 'tDiffuse' ].value = readBuffer.texture;
-			this.highPassUniforms[ 'luminosityThreshold' ].value = this.threshold;
+			this.highPassUniforms.tDiffuse.value = readBuffer.texture;
+			this.highPassUniforms.luminosityThreshold.value = this.threshold;
 			this.fsQuad.material = this.materialHighPassFilter;
 			renderer.setRenderTarget( this.renderTargetBright );
 			renderer.clear();
@@ -188,13 +188,13 @@
 			for ( let i = 0; i < this.nMips; i ++ ) {
 
 				this.fsQuad.material = this.separableBlurMaterials[ i ];
-				this.separableBlurMaterials[ i ].uniforms[ 'colorTexture' ].value = inputRenderTarget.texture;
-				this.separableBlurMaterials[ i ].uniforms[ 'direction' ].value = UnrealBloomPass.BlurDirectionX;
+				this.separableBlurMaterials[ i ].uniforms.colorTexture.value = inputRenderTarget.texture;
+				this.separableBlurMaterials[ i ].uniforms.direction.value = UnrealBloomPass.BlurDirectionX;
 				renderer.setRenderTarget( this.renderTargetsHorizontal[ i ] );
 				renderer.clear();
 				this.fsQuad.render( renderer );
-				this.separableBlurMaterials[ i ].uniforms[ 'colorTexture' ].value = this.renderTargetsHorizontal[ i ].texture;
-				this.separableBlurMaterials[ i ].uniforms[ 'direction' ].value = UnrealBloomPass.BlurDirectionY;
+				this.separableBlurMaterials[ i ].uniforms.colorTexture.value = this.renderTargetsHorizontal[ i ].texture;
+				this.separableBlurMaterials[ i ].uniforms.direction.value = UnrealBloomPass.BlurDirectionY;
 				renderer.setRenderTarget( this.renderTargetsVertical[ i ] );
 				renderer.clear();
 				this.fsQuad.render( renderer );
@@ -204,15 +204,15 @@
 
 
 			this.fsQuad.material = this.compositeMaterial;
-			this.compositeMaterial.uniforms[ 'bloomStrength' ].value = this.strength;
-			this.compositeMaterial.uniforms[ 'bloomRadius' ].value = this.radius;
-			this.compositeMaterial.uniforms[ 'bloomTintColors' ].value = this.bloomTintColors;
+			this.compositeMaterial.uniforms.bloomStrength.value = this.strength;
+			this.compositeMaterial.uniforms.bloomRadius.value = this.radius;
+			this.compositeMaterial.uniforms.bloomTintColors.value = this.bloomTintColors;
 			renderer.setRenderTarget( this.renderTargetsHorizontal[ 0 ] );
 			renderer.clear();
 			this.fsQuad.render( renderer ); // Blend it additively over the input texture
 
 			this.fsQuad.material = this.materialCopy;
-			this.copyUniforms[ 'tDiffuse' ].value = this.renderTargetsHorizontal[ 0 ].texture;
+			this.copyUniforms.tDiffuse.value = this.renderTargetsHorizontal[ 0 ].texture;
 			if ( maskActive ) renderer.state.buffers.stencil.setTest( true );
 
 			if ( this.renderToScreen ) {

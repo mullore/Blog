@@ -22,7 +22,7 @@ class ConstNode extends TempNode {
 
 		this.src = src || '';
 
-		let name, type, value = '';
+		let name; let type; let value = '';
 
 		const match = this.src.match( declarationRegexp );
 

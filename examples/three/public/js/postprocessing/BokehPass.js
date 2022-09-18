@@ -36,13 +36,13 @@
 
 			const bokehShader = THREE.BokehShader;
 			const bokehUniforms = THREE.UniformsUtils.clone( bokehShader.uniforms );
-			bokehUniforms[ 'tDepth' ].value = this.renderTargetDepth.texture;
-			bokehUniforms[ 'focus' ].value = focus;
-			bokehUniforms[ 'aspect' ].value = aspect;
-			bokehUniforms[ 'aperture' ].value = aperture;
-			bokehUniforms[ 'maxblur' ].value = maxblur;
-			bokehUniforms[ 'nearClip' ].value = camera.near;
-			bokehUniforms[ 'farClip' ].value = camera.far;
+			bokehUniforms.tDepth.value = this.renderTargetDepth.texture;
+			bokehUniforms.focus.value = focus;
+			bokehUniforms.aspect.value = aspect;
+			bokehUniforms.aperture.value = aperture;
+			bokehUniforms.maxblur.value = maxblur;
+			bokehUniforms.nearClip.value = camera.near;
+			bokehUniforms.farClip.value = camera.far;
 			this.materialBokeh = new THREE.ShaderMaterial( {
 				defines: Object.assign( {}, bokehShader.defines ),
 				uniforms: bokehUniforms,
@@ -57,7 +57,7 @@
 		}
 
 		render( renderer, writeBuffer, readBuffer
-			/*, deltaTime, maskActive*/
+			/*, deltaTime, maskActive */
 		) {
 
 			// Render depth into texture
@@ -72,9 +72,9 @@
 			renderer.clear();
 			renderer.render( this.scene, this.camera ); // Render bokeh composite
 
-			this.uniforms[ 'tColor' ].value = readBuffer.texture;
-			this.uniforms[ 'nearClip' ].value = this.camera.near;
-			this.uniforms[ 'farClip' ].value = this.camera.far;
+			this.uniforms.tColor.value = readBuffer.texture;
+			this.uniforms.nearClip.value = this.camera.near;
+			this.uniforms.farClip.value = this.camera.far;
 
 			if ( this.renderToScreen ) {
 

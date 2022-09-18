@@ -104,9 +104,9 @@
 
 		}
 
-	} //------------------------------------------------------------------------------
+	} // ------------------------------------------------------------------------------
 	// Constants
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 
 	const WEBGL_CONSTANTS = {
@@ -156,9 +156,9 @@
 	const GLB_VERSION = 2;
 	const GLB_CHUNK_PREFIX_BYTES = 8;
 	const GLB_CHUNK_TYPE_JSON = 0x4E4F534A;
-	const GLB_CHUNK_TYPE_BIN = 0x004E4942; //------------------------------------------------------------------------------
+	const GLB_CHUNK_TYPE_BIN = 0x004E4942; // ------------------------------------------------------------------------------
 	// Utility functions
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	/**
  * Compare two arrays
@@ -619,8 +619,8 @@
 			if ( didTransform ) {
 
 				mapDef.extensions = mapDef.extensions || {};
-				mapDef.extensions[ 'KHR_texture_transform' ] = transformDef;
-				this.extensionsUsed[ 'KHR_texture_transform' ] = true;
+				mapDef.extensions.KHR_texture_transform = transformDef;
+				this.extensionsUsed.KHR_texture_transform = true;
 
 			}
 

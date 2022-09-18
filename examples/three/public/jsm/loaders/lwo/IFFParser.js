@@ -119,7 +119,7 @@ IFFParser.prototype = {
 		this.debugger.nodeID = type;
 		this.debugger.log();
 
-		return;
+		
 
 	},
 
@@ -280,7 +280,7 @@ IFFParser.prototype = {
 				this.parseXVAL( 'amplitude', length );
 				break;
 
-				//Texture Mapping Form
+				// Texture Mapping Form
 
 			case 'TMAP':
 				this.setupForm( 'textureMap', length );
@@ -827,7 +827,7 @@ IFFParser.prototype = {
 
 			var numverts = this.reader.getUint16();
 
-			//var flags = numverts & 64512; // 6 high order bits are flags - ignoring for now
+			// var flags = numverts & 64512; // 6 high order bits are flags - ignoring for now
 			numverts = numverts & 1023; // remaining ten low order bits are vertex num
 			polygonDimensions.push( numverts );
 
@@ -865,7 +865,7 @@ IFFParser.prototype = {
 		var finalOffset = this.reader.offset + length;
 		var type = this.reader.getIDTag();
 		if ( type === 'SURF' ) this.parseMaterialIndices( finalOffset );
-		else { //PART, SMGP, COLR not supported
+		else { // PART, SMGP, COLR not supported
 
 			this.reader.skip( length - 4 );
 

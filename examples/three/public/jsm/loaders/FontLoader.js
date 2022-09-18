@@ -88,7 +88,7 @@ function createPaths( text, size, data ) {
 
 	const paths = [];
 
-	let offsetX = 0, offsetY = 0;
+	let offsetX = 0; let offsetY = 0;
 
 	for ( let i = 0; i < chars.length; i ++ ) {
 

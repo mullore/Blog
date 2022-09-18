@@ -79,7 +79,7 @@
 			const oldClearAlpha = renderer.getClearAlpha();
 			const baseSampleWeight = 1.0 / jitterOffsets.length;
 			const roundingRange = 1 / 32;
-			this.copyUniforms[ 'tDiffuse' ].value = this.sampleRenderTarget.texture;
+			this.copyUniforms.tDiffuse.value = this.sampleRenderTarget.texture;
 			const viewOffset = {
 				fullWidth: readBuffer.width,
 				fullHeight: readBuffer.height,
@@ -114,7 +114,7 @@
 
 				}
 
-				this.copyUniforms[ 'opacity' ].value = sampleWeight;
+				this.copyUniforms.opacity.value = sampleWeight;
 				renderer.setClearColor( this.clearColor, this.clearAlpha );
 				renderer.setRenderTarget( this.sampleRenderTarget );
 				renderer.clear();

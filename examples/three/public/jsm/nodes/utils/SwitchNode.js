@@ -19,8 +19,8 @@ class SwitchNode extends Node {
 
 	generate( builder, output ) {
 
-		const type = this.node.getType( builder ),
-			inputLength = builder.getTypeLength( type ) - 1;
+		const type = this.node.getType( builder );
+			const inputLength = builder.getTypeLength( type ) - 1;
 
 		let node = this.node.build( builder, type );
 

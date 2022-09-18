@@ -9,7 +9,7 @@ class NodeFunction {
 
 	}
 
-	getCode( /*name = this.name*/ ) {
+	getCode( /* name = this.name */ ) {
 
 		console.warn( 'Abstract function.' );
 

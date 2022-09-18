@@ -19,13 +19,17 @@ oimo.collision.broadphase.BroadPhase = class oimo_collision_broadphase_BroadPhas
 		this.zero = new oimo.common.Vec3();
 		this.rayCastHit = new oimo.collision.geometry.RayCastHit();
 	}
+
 	createProxy(userData,aabb) {
 		return null;
 	}
+
 	destroyProxy(proxy) {
 	}
+
 	moveProxy(proxy,aabb,displacement) {
 	}
+
 	isOverlapping(proxy1,proxy2) {
 		if(proxy1._aabbMinX < proxy2._aabbMaxX && proxy1._aabbMaxX > proxy2._aabbMinX && proxy1._aabbMinY < proxy2._aabbMaxY && proxy1._aabbMaxY > proxy2._aabbMinY && proxy1._aabbMinZ < proxy2._aabbMaxZ) {
 			return proxy1._aabbMaxZ > proxy2._aabbMinZ;
@@ -33,43 +37,56 @@ oimo.collision.broadphase.BroadPhase = class oimo_collision_broadphase_BroadPhas
 			return false;
 		}
 	}
+
 	collectPairs() {
 	}
+
 	getProxyPairList() {
 		return this._proxyPairList;
 	}
+
 	isIncremental() {
 		return this._incremental;
 	}
+
 	getTestCount() {
 		return this._testCount;
 	}
+
 	rayCast(begin,end,callback) {
 	}
+
 	convexCast(convex,begin,translation,callback) {
 	}
+
 	aabbTest(aabb,callback) {
 	}
-}
+};
 if(!oimo.collision.geometry) oimo.collision.geometry = {};
 oimo.collision.geometry.Geometry = class oimo_collision_geometry_Geometry {
 	constructor(type) {
 		this._type = type;
 		this._volume = 0;
 	}
+
 	_updateMass() {
 	}
+
 	_computeAabb(aabb,tf) {
 	}
+
 	_rayCastLocal(beginX,beginY,beginZ,endX,endY,endZ,hit) {
 		return false;
 	}
+
 	getType() {
 		return this._type;
 	}
+
 	getVolume() {
 		return this._volume;
 	}
+
 	rayCast(begin,end,transform,hit) {
 		let beginLocalX;
 		let beginLocalY;
@@ -114,11 +131,11 @@ oimo.collision.geometry.Geometry = class oimo_collision_geometry_Geometry {
 			let localNormalX;
 			let localNormalY;
 			let localNormalZ;
-			let v = hit.position;
+			const v = hit.position;
 			localPosX = v.x;
 			localPosY = v.y;
 			localPosZ = v.z;
-			let v1 = hit.normal;
+			const v1 = hit.normal;
 			localNormalX = v1.x;
 			localNormalY = v1.y;
 			localNormalZ = v1.z;
@@ -143,11 +160,11 @@ oimo.collision.geometry.Geometry = class oimo_collision_geometry_Geometry {
 			localPosX += transform._positionX;
 			localPosY += transform._positionY;
 			localPosZ += transform._positionZ;
-			let v2 = hit.position;
+			const v2 = hit.position;
 			v2.x = localPosX;
 			v2.y = localPosY;
 			v2.z = localPosZ;
-			let v3 = hit.normal;
+			const v3 = hit.normal;
 			v3.x = localNormalX;
 			v3.y = localNormalY;
 			v3.z = localNormalZ;
@@ -155,24 +172,28 @@ oimo.collision.geometry.Geometry = class oimo_collision_geometry_Geometry {
 		}
 		return false;
 	}
-}
+};
 oimo.collision.geometry.ConvexGeometry = class oimo_collision_geometry_ConvexGeometry extends oimo.collision.geometry.Geometry {
 	constructor(type) {
 		super(type);
 		this._gjkMargin = oimo.common.Setting.defaultGJKMargin;
 		this._useGjkRayCast = false;
 	}
+
 	getGjkMergin() {
 		return this._gjkMargin;
 	}
+
 	setGjkMergin(gjkMergin) {
 		if(gjkMergin < 0) {
 			gjkMergin = 0;
 		}
 		this._gjkMargin = gjkMergin;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
 	}
+
 	rayCast(begin,end,transform,hit) {
 		if(this._useGjkRayCast) {
 			return oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance.rayCast(this,transform,begin,end,hit);
@@ -180,12 +201,13 @@ oimo.collision.geometry.ConvexGeometry = class oimo_collision_geometry_ConvexGeo
 			return super.rayCast(begin,end,transform,hit);
 		}
 	}
-}
+};
 if(!oimo.collision.broadphase._BroadPhase) oimo.collision.broadphase._BroadPhase = {};
 oimo.collision.broadphase._BroadPhase.ConvexSweepGeometry = class oimo_collision_broadphase__$BroadPhase_ConvexSweepGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor() {
 		super(-1);
 	}
+
 	init(c,transform,translation) {
 		this.c = c;
 		let trX;
@@ -207,43 +229,46 @@ oimo.collision.broadphase._BroadPhase.ConvexSweepGeometry = class oimo_collision
 		localTrY = __tmp__Y;
 		localTrZ = __tmp__Z;
 		this.localTranslation = new oimo.common.Vec3();
-		let v = this.localTranslation;
+		const v = this.localTranslation;
 		v.x = localTrX;
 		v.y = localTrY;
 		v.z = localTrZ;
 		this._gjkMargin = c._gjkMargin;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
 		this.c.computeLocalSupportingVertex(dir,out);
-		let v = this.localTranslation;
+		const v = this.localTranslation;
 		if(dir.x * v.x + dir.y * v.y + dir.z * v.z > 0) {
-			let v = this.localTranslation;
+			const v = this.localTranslation;
 			out.x += v.x;
 			out.y += v.y;
 			out.z += v.z;
 		}
 	}
-}
+};
 oimo.collision.broadphase._BroadPhase.AabbGeometry = class oimo_collision_broadphase__$BroadPhase_AabbGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor() {
 		super(-1);
 		this.min = new oimo.common.Vec3();
 		this.max = new oimo.common.Vec3();
 	}
+
 	computeLocalSupportingVertex(dir,out) {
 		out.x = dir.x > 0 ? this.max.x : this.min.x;
 		out.y = dir.y > 0 ? this.max.y : this.min.y;
 		out.z = dir.z > 0 ? this.max.z : this.min.z;
 	}
-}
+};
 oimo.collision.broadphase.BroadPhaseProxyCallback = class oimo_collision_broadphase_BroadPhaseProxyCallback {
 	constructor() {
 	}
+
 	process(proxy) {
 	}
-}
+};
 oimo.collision.broadphase.BroadPhaseType = class oimo_collision_broadphase_BroadPhaseType {
-}
+};
 oimo.collision.broadphase.Proxy = class oimo_collision_broadphase_Proxy {
 	constructor(userData,id) {
 		this.userData = userData;
@@ -257,11 +282,13 @@ oimo.collision.broadphase.Proxy = class oimo_collision_broadphase_Proxy {
 		this._aabbMaxY = 0;
 		this._aabbMaxZ = 0;
 	}
+
 	getId() {
 		return this._id;
 	}
+
 	getFatAabb() {
-		let aabb = new oimo.collision.geometry.Aabb();
+		const aabb = new oimo.collision.geometry.Aabb();
 		aabb._minX = this._aabbMinX;
 		aabb._minY = this._aabbMinY;
 		aabb._minZ = this._aabbMinZ;
@@ -270,6 +297,7 @@ oimo.collision.broadphase.Proxy = class oimo_collision_broadphase_Proxy {
 		aabb._maxZ = this._aabbMaxZ;
 		return aabb;
 	}
+
 	getFatAabbTo(aabb) {
 		aabb._minX = this._aabbMinX;
 		aabb._minY = this._aabbMinY;
@@ -278,30 +306,34 @@ oimo.collision.broadphase.Proxy = class oimo_collision_broadphase_Proxy {
 		aabb._maxY = this._aabbMaxY;
 		aabb._maxZ = this._aabbMaxZ;
 	}
-}
+};
 oimo.collision.broadphase.ProxyPair = class oimo_collision_broadphase_ProxyPair {
 	constructor() {
 		this._p1 = null;
 		this._p2 = null;
 	}
+
 	getProxy1() {
 		return this._p1;
 	}
+
 	getProxy2() {
 		return this._p2;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 if(!oimo.collision.broadphase.bruteforce) oimo.collision.broadphase.bruteforce = {};
 oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision_broadphase_bruteforce_BruteForceBroadPhase extends oimo.collision.broadphase.BroadPhase {
 	constructor() {
 		super(1);
 		this._incremental = false;
 	}
+
 	createProxy(userData,aabb) {
-		let proxy = new oimo.collision.broadphase.Proxy(userData,this._idCount++);
+		const proxy = new oimo.collision.broadphase.Proxy(userData,this._idCount++);
 		this._numProxies++;
 		if(this._proxyList == null) {
 			this._proxyList = proxy;
@@ -319,10 +351,11 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 		proxy._aabbMaxZ = aabb._maxZ;
 		return proxy;
 	}
+
 	destroyProxy(proxy) {
 		this._numProxies--;
-		let prev = proxy._prev;
-		let next = proxy._next;
+		const prev = proxy._prev;
+		const next = proxy._next;
 		if(prev != null) {
 			prev._next = next;
 		}
@@ -339,6 +372,7 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 		proxy._prev = null;
 		proxy.userData = null;
 	}
+
 	moveProxy(proxy,aabb,dislacement) {
 		proxy._aabbMinX = aabb._minX;
 		proxy._aabbMinY = aabb._minY;
@@ -347,6 +381,7 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 		proxy._aabbMaxY = aabb._maxY;
 		proxy._aabbMaxZ = aabb._maxZ;
 	}
+
 	collectPairs() {
 		let p = this._proxyPairList;
 		if(p != null) {
@@ -365,10 +400,10 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 		this._testCount = 0;
 		let p1 = this._proxyList;
 		while(p1 != null) {
-			let n = p1._next;
+			const n = p1._next;
 			let p2 = p1._next;
 			while(p2 != null) {
-				let n = p2._next;
+				const n = p2._next;
 				this._testCount++;
 				if(p1._aabbMinX < p2._aabbMaxX && p1._aabbMaxX > p2._aabbMinX && p1._aabbMinY < p2._aabbMaxY && p1._aabbMaxY > p2._aabbMinY && p1._aabbMinZ < p2._aabbMaxZ && p1._aabbMaxZ > p2._aabbMinZ) {
 					let first = this._proxyPairPool;
@@ -378,7 +413,7 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 					} else {
 						first = new oimo.collision.broadphase.ProxyPair();
 					}
-					let pp = first;
+					const pp = first;
 					if(this._proxyPairList == null) {
 						this._proxyPairList = pp;
 					} else {
@@ -393,6 +428,7 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 			p1 = n;
 		}
 	}
+
 	rayCast(begin,end,callback) {
 		let p1X;
 		let p1Y;
@@ -408,51 +444,51 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 		p2Z = end.z;
 		let p = this._proxyList;
 		while(p != null) {
-			let n = p._next;
-			let x1 = p1X;
-			let y1 = p1Y;
-			let z1 = p1Z;
-			let x2 = p2X;
-			let y2 = p2Y;
-			let z2 = p2Z;
-			let pminx = p._aabbMinX;
-			let pminy = p._aabbMinY;
-			let pminz = p._aabbMinZ;
-			let pmaxx = p._aabbMaxX;
-			let pmaxy = p._aabbMaxY;
-			let pmaxz = p._aabbMaxZ;
+			const n = p._next;
+			const x1 = p1X;
+			const y1 = p1Y;
+			const z1 = p1Z;
+			const x2 = p2X;
+			const y2 = p2Y;
+			const z2 = p2Z;
+			const pminx = p._aabbMinX;
+			const pminy = p._aabbMinY;
+			const pminz = p._aabbMinZ;
+			const pmaxx = p._aabbMaxX;
+			const pmaxy = p._aabbMaxY;
+			const pmaxz = p._aabbMaxZ;
 			let tmp;
 			if(pminx > (x1 > x2 ? x1 : x2) || pmaxx < (x1 < x2 ? x1 : x2) || pminy > (y1 > y2 ? y1 : y2) || pmaxy < (y1 < y2 ? y1 : y2) || pminz > (z1 > z2 ? z1 : z2) || pmaxz < (z1 < z2 ? z1 : z2)) {
 				tmp = false;
 			} else {
-				let dx = x2 - x1;
-				let dy = y2 - y1;
-				let dz = z2 - z1;
-				let adx = dx < 0 ? -dx : dx;
-				let ady = dy < 0 ? -dy : dy;
-				let adz = dz < 0 ? -dz : dz;
-				let pextx = (pmaxx - pminx) * 0.5;
-				let pexty = (pmaxy - pminy) * 0.5;
-				let pextz = (pmaxz - pminz) * 0.5;
-				let cpx = x1 - (pmaxx + pminx) * 0.5;
-				let cpy = y1 - (pmaxy + pminy) * 0.5;
-				let cpz = z1 - (pmaxz + pminz) * 0.5;
+				const dx = x2 - x1;
+				const dy = y2 - y1;
+				const dz = z2 - z1;
+				const adx = dx < 0 ? -dx : dx;
+				const ady = dy < 0 ? -dy : dy;
+				const adz = dz < 0 ? -dz : dz;
+				const pextx = (pmaxx - pminx) * 0.5;
+				const pexty = (pmaxy - pminy) * 0.5;
+				const pextz = (pmaxz - pminz) * 0.5;
+				const cpx = x1 - (pmaxx + pminx) * 0.5;
+				const cpy = y1 - (pmaxy + pminy) * 0.5;
+				const cpz = z1 - (pmaxz + pminz) * 0.5;
 				let tmp1;
 				let tmp2;
-				let x = cpy * dz - cpz * dy;
+				const x = cpy * dz - cpz * dy;
 				if(!((x < 0 ? -x : x) - (pexty * adz + pextz * ady) > 0)) {
-					let x = cpz * dx - cpx * dz;
+					const x = cpz * dx - cpx * dz;
 					tmp2 = (x < 0 ? -x : x) - (pextz * adx + pextx * adz) > 0;
 				} else {
 					tmp2 = true;
 				}
 				if(!tmp2) {
-					let x = cpx * dy - cpy * dx;
+					const x = cpx * dy - cpy * dx;
 					tmp1 = (x < 0 ? -x : x) - (pextx * ady + pexty * adx) > 0;
 				} else {
 					tmp1 = true;
 				}
-				tmp = tmp1 ? false : true;
+				tmp = !tmp1;
 			}
 			if(tmp) {
 				callback.process(p);
@@ -460,37 +496,39 @@ oimo.collision.broadphase.bruteforce.BruteForceBroadPhase = class oimo_collision
 			p = n;
 		}
 	}
+
 	convexCast(convex,begin,translation,callback) {
 		let p = this._proxyList;
 		while(p != null) {
-			let n = p._next;
-			let v = this._aabb.min;
+			const n = p._next;
+			const v = this._aabb.min;
 			v.x = p._aabbMinX;
 			v.y = p._aabbMinY;
 			v.z = p._aabbMinZ;
-			let v1 = this._aabb.max;
+			const v1 = this._aabb.max;
 			v1.x = p._aabbMaxX;
 			v1.y = p._aabbMaxY;
 			v1.z = p._aabbMaxZ;
 			this._convexSweep.init(convex,begin,translation);
-			let gjkEpa = oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
+			const gjkEpa = oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
 			if(gjkEpa.computeClosestPointsImpl(this._convexSweep,this._aabb,begin,this.identity,null,false) == 0 && gjkEpa.distance <= 0) {
 				callback.process(p);
 			}
 			p = n;
 		}
 	}
+
 	aabbTest(aabb,callback) {
 		let p = this._proxyList;
 		while(p != null) {
-			let n = p._next;
+			const n = p._next;
 			if(aabb._minX < p._aabbMaxX && aabb._maxX > p._aabbMinX && aabb._minY < p._aabbMaxY && aabb._maxY > p._aabbMinY && aabb._minZ < p._aabbMaxZ && aabb._maxZ > p._aabbMinZ) {
 				callback.process(p);
 			}
 			p = n;
 		}
 	}
-}
+};
 if(!oimo.collision.broadphase.bvh) oimo.collision.broadphase.bvh = {};
 oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bvh_BvhBroadPhase extends oimo.collision.broadphase.BroadPhase {
 	constructor() {
@@ -500,10 +538,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		this.movedProxies = new Array(1024);
 		this.numMovedProxies = 0;
 	}
+
 	collide(n1,n2) {
 		this._testCount++;
-		let l1 = n1._height == 0;
-		let l2 = n2._height == 0;
+		const l1 = n1._height == 0;
+		const l2 = n2._height == 0;
 		if(n1 == n2) {
 			if(l1) {
 				return;
@@ -523,7 +562,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 			} else {
 				first = new oimo.collision.broadphase.ProxyPair();
 			}
-			let pp = first;
+			const pp = first;
 			if(this._proxyPairList == null) {
 				this._proxyPairList = pp;
 			} else {
@@ -542,51 +581,52 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 			this.collide(n2._children[1],n1);
 		}
 	}
+
 	rayCastRecursive(node,_p1X,_p1Y,_p1Z,_p2X,_p2Y,_p2Z,callback) {
-		let x1 = _p1X;
-		let y1 = _p1Y;
-		let z1 = _p1Z;
-		let x2 = _p2X;
-		let y2 = _p2Y;
-		let z2 = _p2Z;
-		let pminx = node._aabbMinX;
-		let pminy = node._aabbMinY;
-		let pminz = node._aabbMinZ;
-		let pmaxx = node._aabbMaxX;
-		let pmaxy = node._aabbMaxY;
-		let pmaxz = node._aabbMaxZ;
+		const x1 = _p1X;
+		const y1 = _p1Y;
+		const z1 = _p1Z;
+		const x2 = _p2X;
+		const y2 = _p2Y;
+		const z2 = _p2Z;
+		const pminx = node._aabbMinX;
+		const pminy = node._aabbMinY;
+		const pminz = node._aabbMinZ;
+		const pmaxx = node._aabbMaxX;
+		const pmaxy = node._aabbMaxY;
+		const pmaxz = node._aabbMaxZ;
 		let tmp;
 		if(pminx > (x1 > x2 ? x1 : x2) || pmaxx < (x1 < x2 ? x1 : x2) || pminy > (y1 > y2 ? y1 : y2) || pmaxy < (y1 < y2 ? y1 : y2) || pminz > (z1 > z2 ? z1 : z2) || pmaxz < (z1 < z2 ? z1 : z2)) {
 			tmp = false;
 		} else {
-			let dx = x2 - x1;
-			let dy = y2 - y1;
-			let dz = z2 - z1;
-			let adx = dx < 0 ? -dx : dx;
-			let ady = dy < 0 ? -dy : dy;
-			let adz = dz < 0 ? -dz : dz;
-			let pextx = (pmaxx - pminx) * 0.5;
-			let pexty = (pmaxy - pminy) * 0.5;
-			let pextz = (pmaxz - pminz) * 0.5;
-			let cpx = x1 - (pmaxx + pminx) * 0.5;
-			let cpy = y1 - (pmaxy + pminy) * 0.5;
-			let cpz = z1 - (pmaxz + pminz) * 0.5;
+			const dx = x2 - x1;
+			const dy = y2 - y1;
+			const dz = z2 - z1;
+			const adx = dx < 0 ? -dx : dx;
+			const ady = dy < 0 ? -dy : dy;
+			const adz = dz < 0 ? -dz : dz;
+			const pextx = (pmaxx - pminx) * 0.5;
+			const pexty = (pmaxy - pminy) * 0.5;
+			const pextz = (pmaxz - pminz) * 0.5;
+			const cpx = x1 - (pmaxx + pminx) * 0.5;
+			const cpy = y1 - (pmaxy + pminy) * 0.5;
+			const cpz = z1 - (pmaxz + pminz) * 0.5;
 			let tmp1;
 			let tmp2;
-			let x = cpy * dz - cpz * dy;
+			const x = cpy * dz - cpz * dy;
 			if(!((x < 0 ? -x : x) - (pexty * adz + pextz * ady) > 0)) {
-				let x = cpz * dx - cpx * dz;
+				const x = cpz * dx - cpx * dz;
 				tmp2 = (x < 0 ? -x : x) - (pextz * adx + pextx * adz) > 0;
 			} else {
 				tmp2 = true;
 			}
 			if(!tmp2) {
-				let x = cpx * dy - cpy * dx;
+				const x = cpx * dy - cpy * dx;
 				tmp1 = (x < 0 ? -x : x) - (pextx * ady + pexty * adx) > 0;
 			} else {
 				tmp1 = true;
 			}
-			tmp = tmp1 ? false : true;
+			tmp = !tmp1;
 		}
 		if(!tmp) {
 			return;
@@ -598,17 +638,18 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		this.rayCastRecursive(node._children[0],_p1X,_p1Y,_p1Z,_p2X,_p2Y,_p2Z,callback);
 		this.rayCastRecursive(node._children[1],_p1X,_p1Y,_p1Z,_p2X,_p2Y,_p2Z,callback);
 	}
+
 	convexCastRecursive(node,convex,begin,translation,callback) {
-		let v = this._aabb.min;
+		const v = this._aabb.min;
 		v.x = node._aabbMinX;
 		v.y = node._aabbMinY;
 		v.z = node._aabbMinZ;
-		let v1 = this._aabb.max;
+		const v1 = this._aabb.max;
 		v1.x = node._aabbMaxX;
 		v1.y = node._aabbMaxY;
 		v1.z = node._aabbMaxZ;
 		this._convexSweep.init(convex,begin,translation);
-		let gjkEpa = oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
+		const gjkEpa = oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
 		if(!(gjkEpa.computeClosestPointsImpl(this._convexSweep,this._aabb,begin,this.identity,null,false) == 0 && gjkEpa.distance <= 0)) {
 			return;
 		}
@@ -619,6 +660,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		this.convexCastRecursive(node._children[0],convex,begin,translation,callback);
 		this.convexCastRecursive(node._children[1],convex,begin,translation,callback);
 	}
+
 	aabbTestRecursive(node,aabb,callback) {
 		if(!(node._aabbMinX < aabb._maxX && node._aabbMaxX > aabb._minX && node._aabbMinY < aabb._maxY && node._aabbMaxY > aabb._minY && node._aabbMinZ < aabb._maxZ && node._aabbMaxZ > aabb._minZ)) {
 			return;
@@ -630,8 +672,9 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		this.aabbTestRecursive(node._children[0],aabb,callback);
 		this.aabbTestRecursive(node._children[1],aabb,callback);
 	}
+
 	createProxy(userData,aabb) {
-		let p = new oimo.collision.broadphase.bvh.BvhProxy(userData,this._idCount++);
+		const p = new oimo.collision.broadphase.bvh.BvhProxy(userData,this._idCount++);
 		this._numProxies++;
 		if(this._proxyList == null) {
 			this._proxyList = p;
@@ -647,14 +690,14 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		p._aabbMaxX = aabb._maxX;
 		p._aabbMaxY = aabb._maxY;
 		p._aabbMaxZ = aabb._maxZ;
-		let padding = oimo.common.Setting.bvhProxyPadding;
+		const padding = oimo.common.Setting.bvhProxyPadding;
 		p._aabbMinX -= padding;
 		p._aabbMinY -= padding;
 		p._aabbMinZ -= padding;
 		p._aabbMaxX += padding;
 		p._aabbMaxY += padding;
 		p._aabbMaxZ += padding;
-		let _this = this._tree;
+		const _this = this._tree;
 		let first = _this._nodePool;
 		if(first != null) {
 			_this._nodePool = first._next;
@@ -662,7 +705,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		} else {
 			first = new oimo.collision.broadphase.bvh.BvhNode();
 		}
-		let leaf = first;
+		const leaf = first;
 		leaf._proxy = p;
 		p._leaf = leaf;
 		leaf._aabbMinX = p._aabbMinX;
@@ -685,14 +728,14 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		} else {
 			let sibling = _this._root;
 			while(sibling._height > 0) {
-				let nextStep = _this._strategy._decideInsertion(sibling,leaf);
+				const nextStep = _this._strategy._decideInsertion(sibling,leaf);
 				if(nextStep == -1) {
 					break;
 				} else {
 					sibling = sibling._children[nextStep];
 				}
 			}
-			let parent = sibling._parent;
+			const parent = sibling._parent;
 			let first = _this._nodePool;
 			if(first != null) {
 				_this._nodePool = first._next;
@@ -704,30 +747,30 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 			if(parent == null) {
 				_this._root = node;
 			} else {
-				let index = sibling._childIndex;
+				const index = sibling._childIndex;
 				parent._children[index] = node;
 				node._parent = parent;
 				node._childIndex = index;
 			}
-			let index = sibling._childIndex;
+			const index = sibling._childIndex;
 			node._children[index] = sibling;
 			sibling._parent = node;
 			sibling._childIndex = index;
-			let index1 = sibling._childIndex ^ 1;
+			const index1 = sibling._childIndex ^ 1;
 			node._children[index1] = leaf;
 			leaf._parent = node;
 			leaf._childIndex = index1;
 			while(node != null) {
 				if(_this._strategy._balancingEnabled) {
 					if(node._height >= 2) {
-						let p = node._parent;
-						let l = node._children[0];
-						let r = node._children[1];
-						let balance = l._height - r._height;
-						let nodeIndex = node._childIndex;
+						const p = node._parent;
+						const l = node._children[0];
+						const r = node._children[1];
+						const balance = l._height - r._height;
+						const nodeIndex = node._childIndex;
 						if(balance > 1) {
-							let ll = l._children[0];
-							let lr = l._children[1];
+							const ll = l._children[0];
+							const lr = l._children[1];
 							if(ll._height > lr._height) {
 								l._children[1] = node;
 								node._parent = l;
@@ -735,27 +778,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 								node._children[0] = lr;
 								lr._parent = node;
 								lr._childIndex = 0;
-								let c1 = l._children[0];
-								let c2 = l._children[1];
+								const c1 = l._children[0];
+								const c2 = l._children[1];
 								l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 								l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 								l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 								l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 								l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 								l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-								let h1 = l._children[0]._height;
-								let h2 = l._children[1]._height;
+								const h1 = l._children[0]._height;
+								const h2 = l._children[1]._height;
 								l._height = (h1 > h2 ? h1 : h2) + 1;
-								let c11 = node._children[0];
-								let c21 = node._children[1];
+								const c11 = node._children[0];
+								const c21 = node._children[1];
 								node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 								node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 								node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 								node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 								node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 								node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-								let h11 = node._children[0]._height;
-								let h21 = node._children[1]._height;
+								const h11 = node._children[0]._height;
+								const h21 = node._children[1]._height;
 								node._height = (h11 > h21 ? h11 : h21) + 1;
 							} else {
 								l._children[0] = node;
@@ -764,27 +807,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 								node._children[0] = ll;
 								ll._parent = node;
 								ll._childIndex = 0;
-								let c1 = l._children[0];
-								let c2 = l._children[1];
+								const c1 = l._children[0];
+								const c2 = l._children[1];
 								l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 								l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 								l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 								l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 								l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 								l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-								let h1 = l._children[0]._height;
-								let h2 = l._children[1]._height;
+								const h1 = l._children[0]._height;
+								const h2 = l._children[1]._height;
 								l._height = (h1 > h2 ? h1 : h2) + 1;
-								let c11 = node._children[0];
-								let c21 = node._children[1];
+								const c11 = node._children[0];
+								const c21 = node._children[1];
 								node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 								node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 								node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 								node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 								node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 								node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-								let h11 = node._children[0]._height;
-								let h21 = node._children[1]._height;
+								const h11 = node._children[0]._height;
+								const h21 = node._children[1]._height;
 								node._height = (h11 > h21 ? h11 : h21) + 1;
 							}
 							if(p != null) {
@@ -797,8 +840,8 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 							}
 							node = l;
 						} else if(balance < -1) {
-							let rl = r._children[0];
-							let rr = r._children[1];
+							const rl = r._children[0];
+							const rr = r._children[1];
 							if(rl._height > rr._height) {
 								r._children[1] = node;
 								node._parent = r;
@@ -806,27 +849,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 								node._children[1] = rr;
 								rr._parent = node;
 								rr._childIndex = 1;
-								let c1 = r._children[0];
-								let c2 = r._children[1];
+								const c1 = r._children[0];
+								const c2 = r._children[1];
 								r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 								r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 								r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 								r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 								r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 								r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-								let h1 = r._children[0]._height;
-								let h2 = r._children[1]._height;
+								const h1 = r._children[0]._height;
+								const h2 = r._children[1]._height;
 								r._height = (h1 > h2 ? h1 : h2) + 1;
-								let c11 = node._children[0];
-								let c21 = node._children[1];
+								const c11 = node._children[0];
+								const c21 = node._children[1];
 								node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 								node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 								node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 								node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 								node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 								node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-								let h11 = node._children[0]._height;
-								let h21 = node._children[1]._height;
+								const h11 = node._children[0]._height;
+								const h21 = node._children[1]._height;
 								node._height = (h11 > h21 ? h11 : h21) + 1;
 							} else {
 								r._children[0] = node;
@@ -835,27 +878,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 								node._children[1] = rl;
 								rl._parent = node;
 								rl._childIndex = 1;
-								let c1 = r._children[0];
-								let c2 = r._children[1];
+								const c1 = r._children[0];
+								const c2 = r._children[1];
 								r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 								r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 								r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 								r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 								r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 								r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-								let h1 = r._children[0]._height;
-								let h2 = r._children[1]._height;
+								const h1 = r._children[0]._height;
+								const h2 = r._children[1]._height;
 								r._height = (h1 > h2 ? h1 : h2) + 1;
-								let c11 = node._children[0];
-								let c21 = node._children[1];
+								const c11 = node._children[0];
+								const c21 = node._children[1];
 								node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 								node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 								node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 								node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 								node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 								node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-								let h11 = node._children[0]._height;
-								let h21 = node._children[1]._height;
+								const h11 = node._children[0]._height;
+								const h21 = node._children[1]._height;
 								node._height = (h11 > h21 ? h11 : h21) + 1;
 							}
 							if(p != null) {
@@ -870,11 +913,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 						}
 					}
 				}
-				let h1 = node._children[0]._height;
-				let h2 = node._children[1]._height;
+				const h1 = node._children[0]._height;
+				const h2 = node._children[1]._height;
 				node._height = (h1 > h2 ? h1 : h2) + 1;
-				let c1 = node._children[0];
-				let c2 = node._children[1];
+				const c1 = node._children[0];
+				const c2 = node._children[1];
 				node._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 				node._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 				node._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
@@ -887,11 +930,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		if(!p._moved) {
 			p._moved = true;
 			if(this.movedProxies.length == this.numMovedProxies) {
-				let newArray = new Array(this.numMovedProxies << 1);
+				const newArray = new Array(this.numMovedProxies << 1);
 				let _g = 0;
-				let _g1 = this.numMovedProxies;
+				const _g1 = this.numMovedProxies;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.movedProxies[i];
 					this.movedProxies[i] = null;
 				}
@@ -901,10 +944,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		}
 		return p;
 	}
+
 	destroyProxy(proxy) {
 		this._numProxies--;
-		let prev = proxy._prev;
-		let next = proxy._next;
+		const prev = proxy._prev;
+		const next = proxy._next;
 		if(prev != null) {
 			prev._next = next;
 		}
@@ -919,12 +963,12 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		}
 		proxy._next = null;
 		proxy._prev = null;
-		let bvhProxy = proxy;
-		let _this = this._tree;
-		let leaf = bvhProxy._leaf;
+		const bvhProxy = proxy;
+		const _this = this._tree;
+		const leaf = bvhProxy._leaf;
 		_this._numLeaves--;
-		let prev1 = leaf._prevLeaf;
-		let next1 = leaf._nextLeaf;
+		const prev1 = leaf._prevLeaf;
+		const next1 = leaf._nextLeaf;
 		if(prev1 != null) {
 			prev1._nextLeaf = next1;
 		}
@@ -942,9 +986,9 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		if(_this._root == leaf) {
 			_this._root = null;
 		} else {
-			let parent = leaf._parent;
-			let sibling = parent._children[leaf._childIndex ^ 1];
-			let grandParent = parent._parent;
+			const parent = leaf._parent;
+			const sibling = parent._children[leaf._childIndex ^ 1];
+			const grandParent = parent._parent;
 			if(grandParent == null) {
 				sibling._parent = null;
 				sibling._childIndex = 0;
@@ -961,7 +1005,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 				_this._nodePool = parent;
 			} else {
 				sibling._parent = grandParent;
-				let index = parent._childIndex;
+				const index = parent._childIndex;
 				grandParent._children[index] = sibling;
 				sibling._parent = grandParent;
 				sibling._childIndex = index;
@@ -979,14 +1023,14 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 				while(node != null) {
 					if(_this._strategy._balancingEnabled) {
 						if(node._height >= 2) {
-							let p = node._parent;
-							let l = node._children[0];
-							let r = node._children[1];
-							let balance = l._height - r._height;
-							let nodeIndex = node._childIndex;
+							const p = node._parent;
+							const l = node._children[0];
+							const r = node._children[1];
+							const balance = l._height - r._height;
+							const nodeIndex = node._childIndex;
 							if(balance > 1) {
-								let ll = l._children[0];
-								let lr = l._children[1];
+								const ll = l._children[0];
+								const lr = l._children[1];
 								if(ll._height > lr._height) {
 									l._children[1] = node;
 									node._parent = l;
@@ -994,27 +1038,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 									node._children[0] = lr;
 									lr._parent = node;
 									lr._childIndex = 0;
-									let c1 = l._children[0];
-									let c2 = l._children[1];
+									const c1 = l._children[0];
+									const c2 = l._children[1];
 									l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 									l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 									l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 									l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 									l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 									l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-									let h1 = l._children[0]._height;
-									let h2 = l._children[1]._height;
+									const h1 = l._children[0]._height;
+									const h2 = l._children[1]._height;
 									l._height = (h1 > h2 ? h1 : h2) + 1;
-									let c11 = node._children[0];
-									let c21 = node._children[1];
+									const c11 = node._children[0];
+									const c21 = node._children[1];
 									node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 									node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 									node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 									node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 									node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 									node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-									let h11 = node._children[0]._height;
-									let h21 = node._children[1]._height;
+									const h11 = node._children[0]._height;
+									const h21 = node._children[1]._height;
 									node._height = (h11 > h21 ? h11 : h21) + 1;
 								} else {
 									l._children[0] = node;
@@ -1023,27 +1067,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 									node._children[0] = ll;
 									ll._parent = node;
 									ll._childIndex = 0;
-									let c1 = l._children[0];
-									let c2 = l._children[1];
+									const c1 = l._children[0];
+									const c2 = l._children[1];
 									l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 									l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 									l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 									l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 									l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 									l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-									let h1 = l._children[0]._height;
-									let h2 = l._children[1]._height;
+									const h1 = l._children[0]._height;
+									const h2 = l._children[1]._height;
 									l._height = (h1 > h2 ? h1 : h2) + 1;
-									let c11 = node._children[0];
-									let c21 = node._children[1];
+									const c11 = node._children[0];
+									const c21 = node._children[1];
 									node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 									node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 									node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 									node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 									node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 									node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-									let h11 = node._children[0]._height;
-									let h21 = node._children[1]._height;
+									const h11 = node._children[0]._height;
+									const h21 = node._children[1]._height;
 									node._height = (h11 > h21 ? h11 : h21) + 1;
 								}
 								if(p != null) {
@@ -1056,8 +1100,8 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 								}
 								node = l;
 							} else if(balance < -1) {
-								let rl = r._children[0];
-								let rr = r._children[1];
+								const rl = r._children[0];
+								const rr = r._children[1];
 								if(rl._height > rr._height) {
 									r._children[1] = node;
 									node._parent = r;
@@ -1065,27 +1109,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 									node._children[1] = rr;
 									rr._parent = node;
 									rr._childIndex = 1;
-									let c1 = r._children[0];
-									let c2 = r._children[1];
+									const c1 = r._children[0];
+									const c2 = r._children[1];
 									r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 									r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 									r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 									r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 									r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 									r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-									let h1 = r._children[0]._height;
-									let h2 = r._children[1]._height;
+									const h1 = r._children[0]._height;
+									const h2 = r._children[1]._height;
 									r._height = (h1 > h2 ? h1 : h2) + 1;
-									let c11 = node._children[0];
-									let c21 = node._children[1];
+									const c11 = node._children[0];
+									const c21 = node._children[1];
 									node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 									node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 									node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 									node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 									node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 									node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-									let h11 = node._children[0]._height;
-									let h21 = node._children[1]._height;
+									const h11 = node._children[0]._height;
+									const h21 = node._children[1]._height;
 									node._height = (h11 > h21 ? h11 : h21) + 1;
 								} else {
 									r._children[0] = node;
@@ -1094,27 +1138,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 									node._children[1] = rl;
 									rl._parent = node;
 									rl._childIndex = 1;
-									let c1 = r._children[0];
-									let c2 = r._children[1];
+									const c1 = r._children[0];
+									const c2 = r._children[1];
 									r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 									r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 									r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 									r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 									r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 									r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-									let h1 = r._children[0]._height;
-									let h2 = r._children[1]._height;
+									const h1 = r._children[0]._height;
+									const h2 = r._children[1]._height;
 									r._height = (h1 > h2 ? h1 : h2) + 1;
-									let c11 = node._children[0];
-									let c21 = node._children[1];
+									const c11 = node._children[0];
+									const c21 = node._children[1];
 									node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 									node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 									node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 									node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 									node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 									node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-									let h11 = node._children[0]._height;
-									let h21 = node._children[1]._height;
+									const h11 = node._children[0]._height;
+									const h21 = node._children[1]._height;
 									node._height = (h11 > h21 ? h11 : h21) + 1;
 								}
 								if(p != null) {
@@ -1129,11 +1173,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 							}
 						}
 					}
-					let h1 = node._children[0]._height;
-					let h2 = node._children[1]._height;
+					const h1 = node._children[0]._height;
+					const h2 = node._children[1]._height;
 					node._height = (h1 > h2 ? h1 : h2) + 1;
-					let c1 = node._children[0];
-					let c2 = node._children[1];
+					const c1 = node._children[0];
+					const c2 = node._children[1];
 					node._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 					node._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 					node._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
@@ -1162,8 +1206,9 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 			bvhProxy._moved = false;
 		}
 	}
+
 	moveProxy(proxy,aabb,displacement) {
-		let p = proxy;
+		const p = proxy;
 		if(p._aabbMinX <= aabb._minX && p._aabbMaxX >= aabb._maxX && p._aabbMinY <= aabb._minY && p._aabbMaxY >= aabb._maxY && p._aabbMinZ <= aabb._minZ && p._aabbMaxZ >= aabb._maxZ) {
 			return;
 		}
@@ -1173,7 +1218,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		p._aabbMaxX = aabb._maxX;
 		p._aabbMaxY = aabb._maxY;
 		p._aabbMaxZ = aabb._maxZ;
-		let padding = oimo.common.Setting.bvhProxyPadding;
+		const padding = oimo.common.Setting.bvhProxyPadding;
 		p._aabbMinX -= padding;
 		p._aabbMinY -= padding;
 		p._aabbMinZ -= padding;
@@ -1215,11 +1260,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		if(!p._moved) {
 			p._moved = true;
 			if(this.movedProxies.length == this.numMovedProxies) {
-				let newArray = new Array(this.numMovedProxies << 1);
+				const newArray = new Array(this.numMovedProxies << 1);
 				let _g = 0;
-				let _g1 = this.numMovedProxies;
+				const _g1 = this.numMovedProxies;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.movedProxies[i];
 					this.movedProxies[i] = null;
 				}
@@ -1228,6 +1273,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 			this.movedProxies[this.numMovedProxies++] = p;
 		}
 	}
+
 	collectPairs() {
 		let p = this._proxyPairList;
 		if(p != null) {
@@ -1247,18 +1293,18 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		if(this._numProxies < 2) {
 			return;
 		}
-		let incrementalCollision = this.numMovedProxies / this._numProxies < oimo.common.Setting.bvhIncrementalCollisionThreshold;
+		const incrementalCollision = this.numMovedProxies / this._numProxies < oimo.common.Setting.bvhIncrementalCollisionThreshold;
 		let _g = 0;
-		let _g1 = this.numMovedProxies;
+		const _g1 = this.numMovedProxies;
 		while(_g < _g1) {
-			let i = _g++;
-			let p = this.movedProxies[i];
+			const i = _g++;
+			const p = this.movedProxies[i];
 			if(p._moved) {
-				let _this = this._tree;
-				let leaf = p._leaf;
+				const _this = this._tree;
+				const leaf = p._leaf;
 				_this._numLeaves--;
-				let prev = leaf._prevLeaf;
-				let next = leaf._nextLeaf;
+				const prev = leaf._prevLeaf;
+				const next = leaf._nextLeaf;
 				if(prev != null) {
 					prev._nextLeaf = next;
 				}
@@ -1276,9 +1322,9 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 				if(_this._root == leaf) {
 					_this._root = null;
 				} else {
-					let parent = leaf._parent;
-					let sibling = parent._children[leaf._childIndex ^ 1];
-					let grandParent = parent._parent;
+					const parent = leaf._parent;
+					const sibling = parent._children[leaf._childIndex ^ 1];
+					const grandParent = parent._parent;
 					if(grandParent == null) {
 						sibling._parent = null;
 						sibling._childIndex = 0;
@@ -1295,7 +1341,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 						_this._nodePool = parent;
 					} else {
 						sibling._parent = grandParent;
-						let index = parent._childIndex;
+						const index = parent._childIndex;
 						grandParent._children[index] = sibling;
 						sibling._parent = grandParent;
 						sibling._childIndex = index;
@@ -1313,14 +1359,14 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 						while(node != null) {
 							if(_this._strategy._balancingEnabled) {
 								if(node._height >= 2) {
-									let p = node._parent;
-									let l = node._children[0];
-									let r = node._children[1];
-									let balance = l._height - r._height;
-									let nodeIndex = node._childIndex;
+									const p = node._parent;
+									const l = node._children[0];
+									const r = node._children[1];
+									const balance = l._height - r._height;
+									const nodeIndex = node._childIndex;
 									if(balance > 1) {
-										let ll = l._children[0];
-										let lr = l._children[1];
+										const ll = l._children[0];
+										const lr = l._children[1];
 										if(ll._height > lr._height) {
 											l._children[1] = node;
 											node._parent = l;
@@ -1328,27 +1374,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 											node._children[0] = lr;
 											lr._parent = node;
 											lr._childIndex = 0;
-											let c1 = l._children[0];
-											let c2 = l._children[1];
+											const c1 = l._children[0];
+											const c2 = l._children[1];
 											l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 											l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 											l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 											l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 											l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 											l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-											let h1 = l._children[0]._height;
-											let h2 = l._children[1]._height;
+											const h1 = l._children[0]._height;
+											const h2 = l._children[1]._height;
 											l._height = (h1 > h2 ? h1 : h2) + 1;
-											let c11 = node._children[0];
-											let c21 = node._children[1];
+											const c11 = node._children[0];
+											const c21 = node._children[1];
 											node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 											node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 											node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 											node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 											node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 											node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-											let h11 = node._children[0]._height;
-											let h21 = node._children[1]._height;
+											const h11 = node._children[0]._height;
+											const h21 = node._children[1]._height;
 											node._height = (h11 > h21 ? h11 : h21) + 1;
 										} else {
 											l._children[0] = node;
@@ -1357,27 +1403,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 											node._children[0] = ll;
 											ll._parent = node;
 											ll._childIndex = 0;
-											let c1 = l._children[0];
-											let c2 = l._children[1];
+											const c1 = l._children[0];
+											const c2 = l._children[1];
 											l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 											l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 											l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 											l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 											l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 											l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-											let h1 = l._children[0]._height;
-											let h2 = l._children[1]._height;
+											const h1 = l._children[0]._height;
+											const h2 = l._children[1]._height;
 											l._height = (h1 > h2 ? h1 : h2) + 1;
-											let c11 = node._children[0];
-											let c21 = node._children[1];
+											const c11 = node._children[0];
+											const c21 = node._children[1];
 											node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 											node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 											node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 											node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 											node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 											node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-											let h11 = node._children[0]._height;
-											let h21 = node._children[1]._height;
+											const h11 = node._children[0]._height;
+											const h21 = node._children[1]._height;
 											node._height = (h11 > h21 ? h11 : h21) + 1;
 										}
 										if(p != null) {
@@ -1390,8 +1436,8 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 										}
 										node = l;
 									} else if(balance < -1) {
-										let rl = r._children[0];
-										let rr = r._children[1];
+										const rl = r._children[0];
+										const rr = r._children[1];
 										if(rl._height > rr._height) {
 											r._children[1] = node;
 											node._parent = r;
@@ -1399,27 +1445,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 											node._children[1] = rr;
 											rr._parent = node;
 											rr._childIndex = 1;
-											let c1 = r._children[0];
-											let c2 = r._children[1];
+											const c1 = r._children[0];
+											const c2 = r._children[1];
 											r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 											r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 											r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 											r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 											r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 											r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-											let h1 = r._children[0]._height;
-											let h2 = r._children[1]._height;
+											const h1 = r._children[0]._height;
+											const h2 = r._children[1]._height;
 											r._height = (h1 > h2 ? h1 : h2) + 1;
-											let c11 = node._children[0];
-											let c21 = node._children[1];
+											const c11 = node._children[0];
+											const c21 = node._children[1];
 											node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 											node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 											node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 											node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 											node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 											node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-											let h11 = node._children[0]._height;
-											let h21 = node._children[1]._height;
+											const h11 = node._children[0]._height;
+											const h21 = node._children[1]._height;
 											node._height = (h11 > h21 ? h11 : h21) + 1;
 										} else {
 											r._children[0] = node;
@@ -1428,27 +1474,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 											node._children[1] = rl;
 											rl._parent = node;
 											rl._childIndex = 1;
-											let c1 = r._children[0];
-											let c2 = r._children[1];
+											const c1 = r._children[0];
+											const c2 = r._children[1];
 											r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 											r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 											r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 											r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 											r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 											r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-											let h1 = r._children[0]._height;
-											let h2 = r._children[1]._height;
+											const h1 = r._children[0]._height;
+											const h2 = r._children[1]._height;
 											r._height = (h1 > h2 ? h1 : h2) + 1;
-											let c11 = node._children[0];
-											let c21 = node._children[1];
+											const c11 = node._children[0];
+											const c21 = node._children[1];
 											node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 											node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 											node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 											node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 											node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 											node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-											let h11 = node._children[0]._height;
-											let h21 = node._children[1]._height;
+											const h11 = node._children[0]._height;
+											const h21 = node._children[1]._height;
 											node._height = (h11 > h21 ? h11 : h21) + 1;
 										}
 										if(p != null) {
@@ -1463,11 +1509,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 									}
 								}
 							}
-							let h1 = node._children[0]._height;
-							let h2 = node._children[1]._height;
+							const h1 = node._children[0]._height;
+							const h2 = node._children[1]._height;
 							node._height = (h1 > h2 ? h1 : h2) + 1;
-							let c1 = node._children[0];
-							let c2 = node._children[1];
+							const c1 = node._children[0];
+							const c2 = node._children[1];
 							node._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 							node._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 							node._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
@@ -1489,7 +1535,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 				leaf._proxy = null;
 				leaf._next = _this._nodePool;
 				_this._nodePool = leaf;
-				let _this1 = this._tree;
+				const _this1 = this._tree;
 				let first = _this1._nodePool;
 				if(first != null) {
 					_this1._nodePool = first._next;
@@ -1497,7 +1543,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 				} else {
 					first = new oimo.collision.broadphase.bvh.BvhNode();
 				}
-				let leaf1 = first;
+				const leaf1 = first;
 				leaf1._proxy = p;
 				p._leaf = leaf1;
 				leaf1._aabbMinX = p._aabbMinX;
@@ -1520,14 +1566,14 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 				} else {
 					let sibling = _this1._root;
 					while(sibling._height > 0) {
-						let nextStep = _this1._strategy._decideInsertion(sibling,leaf1);
+						const nextStep = _this1._strategy._decideInsertion(sibling,leaf1);
 						if(nextStep == -1) {
 							break;
 						} else {
 							sibling = sibling._children[nextStep];
 						}
 					}
-					let parent = sibling._parent;
+					const parent = sibling._parent;
 					let first = _this1._nodePool;
 					if(first != null) {
 						_this1._nodePool = first._next;
@@ -1539,30 +1585,30 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 					if(parent == null) {
 						_this1._root = node;
 					} else {
-						let index = sibling._childIndex;
+						const index = sibling._childIndex;
 						parent._children[index] = node;
 						node._parent = parent;
 						node._childIndex = index;
 					}
-					let index = sibling._childIndex;
+					const index = sibling._childIndex;
 					node._children[index] = sibling;
 					sibling._parent = node;
 					sibling._childIndex = index;
-					let index1 = sibling._childIndex ^ 1;
+					const index1 = sibling._childIndex ^ 1;
 					node._children[index1] = leaf1;
 					leaf1._parent = node;
 					leaf1._childIndex = index1;
 					while(node != null) {
 						if(_this1._strategy._balancingEnabled) {
 							if(node._height >= 2) {
-								let p = node._parent;
-								let l = node._children[0];
-								let r = node._children[1];
-								let balance = l._height - r._height;
-								let nodeIndex = node._childIndex;
+								const p = node._parent;
+								const l = node._children[0];
+								const r = node._children[1];
+								const balance = l._height - r._height;
+								const nodeIndex = node._childIndex;
 								if(balance > 1) {
-									let ll = l._children[0];
-									let lr = l._children[1];
+									const ll = l._children[0];
+									const lr = l._children[1];
 									if(ll._height > lr._height) {
 										l._children[1] = node;
 										node._parent = l;
@@ -1570,27 +1616,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 										node._children[0] = lr;
 										lr._parent = node;
 										lr._childIndex = 0;
-										let c1 = l._children[0];
-										let c2 = l._children[1];
+										const c1 = l._children[0];
+										const c2 = l._children[1];
 										l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 										l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 										l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 										l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 										l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 										l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-										let h1 = l._children[0]._height;
-										let h2 = l._children[1]._height;
+										const h1 = l._children[0]._height;
+										const h2 = l._children[1]._height;
 										l._height = (h1 > h2 ? h1 : h2) + 1;
-										let c11 = node._children[0];
-										let c21 = node._children[1];
+										const c11 = node._children[0];
+										const c21 = node._children[1];
 										node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 										node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 										node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 										node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 										node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 										node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-										let h11 = node._children[0]._height;
-										let h21 = node._children[1]._height;
+										const h11 = node._children[0]._height;
+										const h21 = node._children[1]._height;
 										node._height = (h11 > h21 ? h11 : h21) + 1;
 									} else {
 										l._children[0] = node;
@@ -1599,27 +1645,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 										node._children[0] = ll;
 										ll._parent = node;
 										ll._childIndex = 0;
-										let c1 = l._children[0];
-										let c2 = l._children[1];
+										const c1 = l._children[0];
+										const c2 = l._children[1];
 										l._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 										l._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 										l._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 										l._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 										l._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 										l._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-										let h1 = l._children[0]._height;
-										let h2 = l._children[1]._height;
+										const h1 = l._children[0]._height;
+										const h2 = l._children[1]._height;
 										l._height = (h1 > h2 ? h1 : h2) + 1;
-										let c11 = node._children[0];
-										let c21 = node._children[1];
+										const c11 = node._children[0];
+										const c21 = node._children[1];
 										node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 										node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 										node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 										node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 										node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 										node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-										let h11 = node._children[0]._height;
-										let h21 = node._children[1]._height;
+										const h11 = node._children[0]._height;
+										const h21 = node._children[1]._height;
 										node._height = (h11 > h21 ? h11 : h21) + 1;
 									}
 									if(p != null) {
@@ -1632,8 +1678,8 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 									}
 									node = l;
 								} else if(balance < -1) {
-									let rl = r._children[0];
-									let rr = r._children[1];
+									const rl = r._children[0];
+									const rr = r._children[1];
 									if(rl._height > rr._height) {
 										r._children[1] = node;
 										node._parent = r;
@@ -1641,27 +1687,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 										node._children[1] = rr;
 										rr._parent = node;
 										rr._childIndex = 1;
-										let c1 = r._children[0];
-										let c2 = r._children[1];
+										const c1 = r._children[0];
+										const c2 = r._children[1];
 										r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 										r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 										r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 										r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 										r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 										r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-										let h1 = r._children[0]._height;
-										let h2 = r._children[1]._height;
+										const h1 = r._children[0]._height;
+										const h2 = r._children[1]._height;
 										r._height = (h1 > h2 ? h1 : h2) + 1;
-										let c11 = node._children[0];
-										let c21 = node._children[1];
+										const c11 = node._children[0];
+										const c21 = node._children[1];
 										node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 										node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 										node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 										node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 										node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 										node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-										let h11 = node._children[0]._height;
-										let h21 = node._children[1]._height;
+										const h11 = node._children[0]._height;
+										const h21 = node._children[1]._height;
 										node._height = (h11 > h21 ? h11 : h21) + 1;
 									} else {
 										r._children[0] = node;
@@ -1670,27 +1716,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 										node._children[1] = rl;
 										rl._parent = node;
 										rl._childIndex = 1;
-										let c1 = r._children[0];
-										let c2 = r._children[1];
+										const c1 = r._children[0];
+										const c2 = r._children[1];
 										r._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 										r._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 										r._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 										r._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 										r._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 										r._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-										let h1 = r._children[0]._height;
-										let h2 = r._children[1]._height;
+										const h1 = r._children[0]._height;
+										const h2 = r._children[1]._height;
 										r._height = (h1 > h2 ? h1 : h2) + 1;
-										let c11 = node._children[0];
-										let c21 = node._children[1];
+										const c11 = node._children[0];
+										const c21 = node._children[1];
 										node._aabbMinX = c11._aabbMinX < c21._aabbMinX ? c11._aabbMinX : c21._aabbMinX;
 										node._aabbMinY = c11._aabbMinY < c21._aabbMinY ? c11._aabbMinY : c21._aabbMinY;
 										node._aabbMinZ = c11._aabbMinZ < c21._aabbMinZ ? c11._aabbMinZ : c21._aabbMinZ;
 										node._aabbMaxX = c11._aabbMaxX > c21._aabbMaxX ? c11._aabbMaxX : c21._aabbMaxX;
 										node._aabbMaxY = c11._aabbMaxY > c21._aabbMaxY ? c11._aabbMaxY : c21._aabbMaxY;
 										node._aabbMaxZ = c11._aabbMaxZ > c21._aabbMaxZ ? c11._aabbMaxZ : c21._aabbMaxZ;
-										let h11 = node._children[0]._height;
-										let h21 = node._children[1]._height;
+										const h11 = node._children[0]._height;
+										const h21 = node._children[1]._height;
 										node._height = (h11 > h21 ? h11 : h21) + 1;
 									}
 									if(p != null) {
@@ -1705,11 +1751,11 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 								}
 							}
 						}
-						let h1 = node._children[0]._height;
-						let h2 = node._children[1]._height;
+						const h1 = node._children[0]._height;
+						const h2 = node._children[1]._height;
 						node._height = (h1 > h2 ? h1 : h2) + 1;
-						let c1 = node._children[0];
-						let c2 = node._children[1];
+						const c1 = node._children[0];
+						const c2 = node._children[1];
 						node._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 						node._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 						node._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
@@ -1731,6 +1777,7 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		}
 		this.numMovedProxies = 0;
 	}
+
 	rayCast(begin,end,callback) {
 		if(this._tree._root == null) {
 			return;
@@ -1749,24 +1796,27 @@ oimo.collision.broadphase.bvh.BvhBroadPhase = class oimo_collision_broadphase_bv
 		p2Z = end.z;
 		this.rayCastRecursive(this._tree._root,p1X,p1Y,p1Z,p2X,p2Y,p2Z,callback);
 	}
+
 	convexCast(convex,begin,translation,callback) {
 		if(this._tree._root == null) {
 			return;
 		}
 		this.convexCastRecursive(this._tree._root,convex,begin,translation,callback);
 	}
+
 	aabbTest(aabb,callback) {
 		if(this._tree._root == null) {
 			return;
 		}
 		this.aabbTestRecursive(this._tree._root,aabb,callback);
 	}
+
 	getTreeBalance() {
 		return this._tree._getBalance();
 	}
-}
+};
 oimo.collision.broadphase.bvh.BvhInsertionStrategy = class oimo_collision_broadphase_bvh_BvhInsertionStrategy {
-}
+};
 oimo.collision.broadphase.bvh.BvhNode = class oimo_collision_broadphase_bvh_BvhNode {
 	constructor() {
 		this._next = null;
@@ -1784,19 +1834,20 @@ oimo.collision.broadphase.bvh.BvhNode = class oimo_collision_broadphase_bvh_BvhN
 		this._aabbMaxY = 0;
 		this._aabbMaxZ = 0;
 	}
-}
+};
 oimo.collision.broadphase.bvh.BvhProxy = class oimo_collision_broadphase_bvh_BvhProxy extends oimo.collision.broadphase.Proxy {
 	constructor(userData,id) {
 		super(userData,id);
 		this._leaf = null;
 		this._moved = false;
 	}
-}
+};
 oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_BvhStrategy {
 	constructor() {
 		this._insertionStrategy = 0;
 		this._balancingEnabled = false;
 	}
+
 	_decideInsertion(currentNode,leaf) {
 		switch(this._insertionStrategy) {
 		case 0:
@@ -1806,8 +1857,8 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			centerX = leaf._aabbMinX + leaf._aabbMaxX;
 			centerY = leaf._aabbMinY + leaf._aabbMaxY;
 			centerZ = leaf._aabbMinZ + leaf._aabbMaxZ;
-			let c1 = currentNode._children[0];
-			let c2 = currentNode._children[1];
+			const c1 = currentNode._children[0];
+			const c2 = currentNode._children[1];
 			let diff1X;
 			let diff1Y;
 			let diff1Z;
@@ -1833,10 +1884,10 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			}
 			break;
 		case 1:
-			let c11 = currentNode._children[0];
-			let c21 = currentNode._children[1];
-			let ey = currentNode._aabbMaxY - currentNode._aabbMinY;
-			let ez = currentNode._aabbMaxZ - currentNode._aabbMinZ;
+			const c11 = currentNode._children[0];
+			const c21 = currentNode._children[1];
+			const ey = currentNode._aabbMaxY - currentNode._aabbMinY;
+			const ez = currentNode._aabbMaxZ - currentNode._aabbMinZ;
 			let combinedMinX;
 			let combinedMinY;
 			let combinedMinZ;
@@ -1849,11 +1900,11 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			combinedMaxX = currentNode._aabbMaxX > leaf._aabbMaxX ? currentNode._aabbMaxX : leaf._aabbMaxX;
 			combinedMaxY = currentNode._aabbMaxY > leaf._aabbMaxY ? currentNode._aabbMaxY : leaf._aabbMaxY;
 			combinedMaxZ = currentNode._aabbMaxZ > leaf._aabbMaxZ ? currentNode._aabbMaxZ : leaf._aabbMaxZ;
-			let ey1 = combinedMaxY - combinedMinY;
-			let ez1 = combinedMaxZ - combinedMinZ;
-			let newArea = ((combinedMaxX - combinedMinX) * (ey1 + ez1) + ey1 * ez1) * 2;
-			let creatingCost = newArea * 2;
-			let incrementalCost = (newArea - ((currentNode._aabbMaxX - currentNode._aabbMinX) * (ey + ez) + ey * ez) * 2) * 2;
+			const ey1 = combinedMaxY - combinedMinY;
+			const ez1 = combinedMaxZ - combinedMinZ;
+			const newArea = ((combinedMaxX - combinedMinX) * (ey1 + ez1) + ey1 * ez1) * 2;
+			const creatingCost = newArea * 2;
+			const incrementalCost = (newArea - ((currentNode._aabbMaxX - currentNode._aabbMinX) * (ey + ez) + ey * ez) * 2) * 2;
 			let descendingCost1;
 			combinedMinX = c11._aabbMinX < leaf._aabbMinX ? c11._aabbMinX : leaf._aabbMinX;
 			combinedMinY = c11._aabbMinY < leaf._aabbMinY ? c11._aabbMinY : leaf._aabbMinY;
@@ -1862,14 +1913,14 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			combinedMaxY = c11._aabbMaxY > leaf._aabbMaxY ? c11._aabbMaxY : leaf._aabbMaxY;
 			combinedMaxZ = c11._aabbMaxZ > leaf._aabbMaxZ ? c11._aabbMaxZ : leaf._aabbMaxZ;
 			if(c11._height == 0) {
-				let ey = combinedMaxY - combinedMinY;
-				let ez = combinedMaxZ - combinedMinZ;
+				const ey = combinedMaxY - combinedMinY;
+				const ez = combinedMaxZ - combinedMinZ;
 				descendingCost1 = incrementalCost + ((combinedMaxX - combinedMinX) * (ey + ez) + ey * ez) * 2;
 			} else {
-				let ey = combinedMaxY - combinedMinY;
-				let ez = combinedMaxZ - combinedMinZ;
-				let ey1 = c11._aabbMaxY - c11._aabbMinY;
-				let ez1 = c11._aabbMaxZ - c11._aabbMinZ;
+				const ey = combinedMaxY - combinedMinY;
+				const ez = combinedMaxZ - combinedMinZ;
+				const ey1 = c11._aabbMaxY - c11._aabbMinY;
+				const ez1 = c11._aabbMaxZ - c11._aabbMinZ;
 				descendingCost1 = incrementalCost + (((combinedMaxX - combinedMinX) * (ey + ez) + ey * ez) * 2 - ((c11._aabbMaxX - c11._aabbMinX) * (ey1 + ez1) + ey1 * ez1) * 2);
 			}
 			let descendingCost2;
@@ -1880,14 +1931,14 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			combinedMaxY = c21._aabbMaxY > leaf._aabbMaxY ? c21._aabbMaxY : leaf._aabbMaxY;
 			combinedMaxZ = c21._aabbMaxZ > leaf._aabbMaxZ ? c21._aabbMaxZ : leaf._aabbMaxZ;
 			if(c21._height == 0) {
-				let ey = combinedMaxY - combinedMinY;
-				let ez = combinedMaxZ - combinedMinZ;
+				const ey = combinedMaxY - combinedMinY;
+				const ez = combinedMaxZ - combinedMinZ;
 				descendingCost2 = incrementalCost + ((combinedMaxX - combinedMinX) * (ey + ez) + ey * ez) * 2;
 			} else {
-				let ey = combinedMaxY - combinedMinY;
-				let ez = combinedMaxZ - combinedMinZ;
-				let ey1 = c21._aabbMaxY - c21._aabbMinY;
-				let ez1 = c21._aabbMaxZ - c21._aabbMinZ;
+				const ey = combinedMaxY - combinedMinY;
+				const ez = combinedMaxZ - combinedMinZ;
+				const ey1 = c21._aabbMaxY - c21._aabbMinY;
+				const ez1 = c21._aabbMaxZ - c21._aabbMinZ;
 				descendingCost2 = incrementalCost + (((combinedMaxX - combinedMinX) * (ey + ez) + ey * ez) * 2 - ((c21._aabbMaxX - c21._aabbMinX) * (ey1 + ez1) + ey1 * ez1) * 2);
 			}
 			if(creatingCost < descendingCost1) {
@@ -1903,12 +1954,13 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			}
 			break;
 		default:
-			console.log("src/oimo/collision/broadphase/bvh/BvhStrategy.hx:37:","invalid BVH insertion strategy: " + this._insertionStrategy);
+			console.log('src/oimo/collision/broadphase/bvh/BvhStrategy.hx:37:','invalid BVH insertion strategy: ' + this._insertionStrategy);
 			return -1;
 		}
 	}
+
 	_splitLeaves(leaves,from,until) {
-		let invN = 1.0 / (until - from);
+		const invN = 1.0 / (until - from);
 		let centerMeanX;
 		let centerMeanY;
 		let centerMeanZ;
@@ -1917,7 +1969,7 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 		centerMeanZ = 0;
 		let _g = from;
 		while(_g < until) {
-			let leaf = leaves[_g++];
+			const leaf = leaves[_g++];
 			leaf._tmpX = leaf._aabbMaxX + leaf._aabbMinX;
 			leaf._tmpY = leaf._aabbMaxY + leaf._aabbMinY;
 			leaf._tmpZ = leaf._aabbMaxZ + leaf._aabbMinZ;
@@ -1936,7 +1988,7 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 		varianceZ = 0;
 		let _g1 = from;
 		while(_g1 < until) {
-			let leaf = leaves[_g1++];
+			const leaf = leaves[_g1++];
 			let diffX;
 			let diffY;
 			let diffZ;
@@ -1950,35 +2002,35 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 			varianceY += diffY;
 			varianceZ += diffZ;
 		}
-		let varX = varianceX;
-		let varY = varianceY;
-		let varZ = varianceZ;
+		const varX = varianceX;
+		const varY = varianceY;
+		const varZ = varianceZ;
 		let l = from;
 		let r = until - 1;
 		if(varX > varY) {
 			if(varX > varZ) {
-				let mean = centerMeanX;
+				const mean = centerMeanX;
 				while(true) {
 					while(!(leaves[l]._tmpX <= mean)) ++l;
 					while(!(leaves[r]._tmpX >= mean)) --r;
 					if(l >= r) {
 						break;
 					}
-					let tmp = leaves[l];
+					const tmp = leaves[l];
 					leaves[l] = leaves[r];
 					leaves[r] = tmp;
 					++l;
 					--r;
 				}
 			} else {
-				let mean = centerMeanZ;
+				const mean = centerMeanZ;
 				while(true) {
 					while(!(leaves[l]._tmpZ <= mean)) ++l;
 					while(!(leaves[r]._tmpZ >= mean)) --r;
 					if(l >= r) {
 						break;
 					}
-					let tmp = leaves[l];
+					const tmp = leaves[l];
 					leaves[l] = leaves[r];
 					leaves[r] = tmp;
 					++l;
@@ -1986,28 +2038,28 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 				}
 			}
 		} else if(varY > varZ) {
-			let mean = centerMeanY;
+			const mean = centerMeanY;
 			while(true) {
 				while(!(leaves[l]._tmpY <= mean)) ++l;
 				while(!(leaves[r]._tmpY >= mean)) --r;
 				if(l >= r) {
 					break;
 				}
-				let tmp = leaves[l];
+				const tmp = leaves[l];
 				leaves[l] = leaves[r];
 				leaves[r] = tmp;
 				++l;
 				--r;
 			}
 		} else {
-			let mean = centerMeanZ;
+			const mean = centerMeanZ;
 			while(true) {
 				while(!(leaves[l]._tmpZ <= mean)) ++l;
 				while(!(leaves[r]._tmpZ >= mean)) --r;
 				if(l >= r) {
 					break;
 				}
-				let tmp = leaves[l];
+				const tmp = leaves[l];
 				leaves[l] = leaves[r];
 				leaves[r] = tmp;
 				++l;
@@ -2016,7 +2068,7 @@ oimo.collision.broadphase.bvh.BvhStrategy = class oimo_collision_broadphase_bvh_
 		}
 		return l;
 	}
-}
+};
 oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhTree {
 	constructor() {
 		this._root = null;
@@ -2027,17 +2079,18 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 		this.leafListLast = null;
 		this.tmp = new Array(1024);
 	}
+
 	_print(root,indent) {
 		if(indent == null) {
-			indent = "";
+			indent = '';
 		}
 		if(root == null) {
 			return;
 		}
 		if(root._height == 0) {
-			console.log("src/oimo/collision/broadphase/bvh/BvhTree.hx:39:",indent + root._proxy._id);
+			console.log('src/oimo/collision/broadphase/bvh/BvhTree.hx:39:',indent + root._proxy._id);
 		} else {
-			this._print(root._children[0],indent + "  ");
+			this._print(root._children[0],indent + '  ');
 			let tmp;
 			let sizeX;
 			let sizeY;
@@ -2045,8 +2098,8 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 			sizeX = root._aabbMaxX - root._aabbMinX;
 			sizeY = root._aabbMaxY - root._aabbMinY;
 			sizeZ = root._aabbMaxZ - root._aabbMinZ;
-			let y = sizeY;
-			let z = sizeZ;
+			const y = sizeY;
+			const z = sizeZ;
 			if(sizeX * (y + z) + y * z > 0) {
 				let sizeX;
 				let sizeY;
@@ -2054,8 +2107,8 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 				sizeX = root._aabbMaxX - root._aabbMinX;
 				sizeY = root._aabbMaxY - root._aabbMinY;
 				sizeZ = root._aabbMaxZ - root._aabbMinZ;
-				let y = sizeY;
-				let z = sizeZ;
+				const y = sizeY;
+				const z = sizeZ;
 				tmp = ((sizeX * (y + z) + y * z) * 1000 + 0.5 | 0) / 1000;
 			} else {
 				let sizeX;
@@ -2064,21 +2117,23 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 				sizeX = root._aabbMaxX - root._aabbMinX;
 				sizeY = root._aabbMaxY - root._aabbMinY;
 				sizeZ = root._aabbMaxZ - root._aabbMinZ;
-				let y = sizeY;
-				let z = sizeZ;
+				const y = sizeY;
+				const z = sizeZ;
 				tmp = ((sizeX * (y + z) + y * z) * 1000 - 0.5 | 0) / 1000;
 			}
-			console.log("src/oimo/collision/broadphase/bvh/BvhTree.hx:42:",indent + "#" + root._height + ", " + tmp);
-			this._print(root._children[1],indent + "  ");
+			console.log('src/oimo/collision/broadphase/bvh/BvhTree.hx:42:',indent + '#' + root._height + ', ' + tmp);
+			this._print(root._children[1],indent + '  ');
 		}
 	}
+
 	_getBalance() {
 		return this.getBalanceRecursive(this._root);
 	}
+
 	deleteRecursive(root) {
 		if(root._height == 0) {
-			let prev = root._prevLeaf;
-			let next = root._nextLeaf;
+			const prev = root._prevLeaf;
+			const next = root._nextLeaf;
 			if(prev != null) {
 				prev._nextLeaf = next;
 			}
@@ -2119,6 +2174,7 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 		root._next = this._nodePool;
 		this._nodePool = root;
 	}
+
 	decomposeRecursive(root) {
 		if(root._height == 0) {
 			root._childIndex = 0;
@@ -2138,10 +2194,11 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 		root._next = this._nodePool;
 		this._nodePool = root;
 	}
+
 	buildTopDownRecursive(leaves,from,until) {
 		if(until - from == 1) {
-			let leaf = leaves[from];
-			let proxy = leaf._proxy;
+			const leaf = leaves[from];
+			const proxy = leaf._proxy;
 			leaf._aabbMinX = proxy._aabbMinX;
 			leaf._aabbMinY = proxy._aabbMinY;
 			leaf._aabbMinZ = proxy._aabbMinZ;
@@ -2150,9 +2207,9 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 			leaf._aabbMaxZ = proxy._aabbMaxZ;
 			return leaf;
 		}
-		let splitAt = this._strategy._splitLeaves(leaves,from,until);
-		let child1 = this.buildTopDownRecursive(leaves,from,splitAt);
-		let child2 = this.buildTopDownRecursive(leaves,splitAt,until);
+		const splitAt = this._strategy._splitLeaves(leaves,from,until);
+		const child1 = this.buildTopDownRecursive(leaves,from,splitAt);
+		const child2 = this.buildTopDownRecursive(leaves,splitAt,until);
 		let first = this._nodePool;
 		if(first != null) {
 			this._nodePool = first._next;
@@ -2160,26 +2217,27 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 		} else {
 			first = new oimo.collision.broadphase.bvh.BvhNode();
 		}
-		let parent = first;
+		const parent = first;
 		parent._children[0] = child1;
 		child1._parent = parent;
 		child1._childIndex = 0;
 		parent._children[1] = child2;
 		child2._parent = parent;
 		child2._childIndex = 1;
-		let c1 = parent._children[0];
-		let c2 = parent._children[1];
+		const c1 = parent._children[0];
+		const c2 = parent._children[1];
 		parent._aabbMinX = c1._aabbMinX < c2._aabbMinX ? c1._aabbMinX : c2._aabbMinX;
 		parent._aabbMinY = c1._aabbMinY < c2._aabbMinY ? c1._aabbMinY : c2._aabbMinY;
 		parent._aabbMinZ = c1._aabbMinZ < c2._aabbMinZ ? c1._aabbMinZ : c2._aabbMinZ;
 		parent._aabbMaxX = c1._aabbMaxX > c2._aabbMaxX ? c1._aabbMaxX : c2._aabbMaxX;
 		parent._aabbMaxY = c1._aabbMaxY > c2._aabbMaxY ? c1._aabbMaxY : c2._aabbMaxY;
 		parent._aabbMaxZ = c1._aabbMaxZ > c2._aabbMaxZ ? c1._aabbMaxZ : c2._aabbMaxZ;
-		let h1 = parent._children[0]._height;
-		let h2 = parent._children[1]._height;
+		const h1 = parent._children[0]._height;
+		const h2 = parent._children[1]._height;
 		parent._height = (h1 > h2 ? h1 : h2) + 1;
 		return parent;
 	}
+
 	getBalanceRecursive(root) {
 		if(root == null || root._height == 0) {
 			return 0;
@@ -2190,7 +2248,7 @@ oimo.collision.broadphase.bvh.BvhTree = class oimo_collision_broadphase_bvh_BvhT
 		}
 		return balance + this.getBalanceRecursive(root._children[0]) + this.getBalanceRecursive(root._children[1]);
 	}
-}
+};
 oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 	constructor() {
 		this._minX = 0;
@@ -2200,6 +2258,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		this._maxY = 0;
 		this._maxZ = 0;
 	}
+
 	init(min,max) {
 		this._minX = min.x;
 		this._minY = min.y;
@@ -2209,44 +2268,51 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		this._maxZ = max.z;
 		return this;
 	}
+
 	getMin() {
-		let min = new oimo.common.Vec3();
+		const min = new oimo.common.Vec3();
 		min.x = this._minX;
 		min.y = this._minY;
 		min.z = this._minZ;
 		return min;
 	}
+
 	getMinTo(min) {
 		min.x = this._minX;
 		min.y = this._minY;
 		min.z = this._minZ;
 	}
+
 	setMin(min) {
 		this._minX = min.x;
 		this._minY = min.y;
 		this._minZ = min.z;
 		return this;
 	}
+
 	getMax() {
-		let max = new oimo.common.Vec3();
+		const max = new oimo.common.Vec3();
 		max.x = this._maxX;
 		max.y = this._maxY;
 		max.z = this._maxZ;
 		return max;
 	}
+
 	getMaxTo(max) {
 		max.x = this._maxX;
 		max.y = this._maxY;
 		max.z = this._maxZ;
 	}
+
 	setMax(max) {
 		this._maxX = max.x;
 		this._maxY = max.y;
 		this._maxZ = max.z;
 		return this;
 	}
+
 	getCenter() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		let cX;
 		let cY;
 		let cZ;
@@ -2261,6 +2327,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		v.z = cZ;
 		return v;
 	}
+
 	getCenterTo(center) {
 		let cX;
 		let cY;
@@ -2275,8 +2342,9 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		center.y = cY;
 		center.z = cZ;
 	}
+
 	getExtents() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		let cX;
 		let cY;
 		let cZ;
@@ -2291,6 +2359,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		v.z = cZ;
 		return v;
 	}
+
 	getExtentsTo(halfExtents) {
 		let cX;
 		let cY;
@@ -2305,6 +2374,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		halfExtents.y = cY;
 		halfExtents.z = cZ;
 	}
+
 	combine(other) {
 		this._minX = this._minX < other._minX ? this._minX : other._minX;
 		this._minY = this._minY < other._minY ? this._minY : other._minY;
@@ -2314,8 +2384,9 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		this._maxZ = this._maxZ > other._maxZ ? this._maxZ : other._maxZ;
 		return this;
 	}
+
 	combined(other) {
-		let aabb = new oimo.collision.geometry.Aabb();
+		const aabb = new oimo.collision.geometry.Aabb();
 		aabb._minX = this._minX < other._minX ? this._minX : other._minX;
 		aabb._minY = this._minY < other._minY ? this._minY : other._minY;
 		aabb._minZ = this._minZ < other._minZ ? this._minZ : other._minZ;
@@ -2324,6 +2395,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		aabb._maxZ = this._maxZ > other._maxZ ? this._maxZ : other._maxZ;
 		return aabb;
 	}
+
 	overlap(other) {
 		if(this._minX < other._maxX && this._maxX > other._minX && this._minY < other._maxY && this._maxY > other._minY && this._minZ < other._maxZ) {
 			return this._maxZ > other._minZ;
@@ -2331,8 +2403,9 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 			return false;
 		}
 	}
+
 	getIntersection(other) {
-		let aabb = new oimo.collision.geometry.Aabb();
+		const aabb = new oimo.collision.geometry.Aabb();
 		aabb._minX = this._minX > other._minX ? this._minX : other._minX;
 		aabb._minY = this._minY > other._minY ? this._minY : other._minY;
 		aabb._minZ = this._minZ > other._minZ ? this._minZ : other._minZ;
@@ -2341,6 +2414,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		aabb._maxZ = this._maxZ < other._maxZ ? this._maxZ : other._maxZ;
 		return aabb;
 	}
+
 	getIntersectionTo(other,intersection) {
 		intersection._minX = this._minX > other._minX ? this._minX : other._minX;
 		intersection._minY = this._minY > other._minY ? this._minY : other._minY;
@@ -2349,6 +2423,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		intersection._maxY = this._maxY < other._maxY ? this._maxY : other._maxY;
 		intersection._maxZ = this._maxZ < other._maxZ ? this._maxZ : other._maxZ;
 	}
+
 	copyFrom(aabb) {
 		this._minX = aabb._minX;
 		this._minY = aabb._minY;
@@ -2358,8 +2433,9 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		this._maxZ = aabb._maxZ;
 		return this;
 	}
+
 	clone() {
-		let aabb = new oimo.collision.geometry.Aabb();
+		const aabb = new oimo.collision.geometry.Aabb();
 		aabb._minX = this._minX;
 		aabb._minY = this._minY;
 		aabb._minZ = this._minZ;
@@ -2368,7 +2444,7 @@ oimo.collision.geometry.Aabb = class oimo_collision_geometry_Aabb {
 		aabb._maxZ = this._maxZ;
 		return aabb;
 	}
-}
+};
 oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor(halfExtents) {
 		super(1);
@@ -2385,23 +2461,26 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 		this._halfAxisZY = 0;
 		this._halfAxisZZ = halfExtents.z;
 		this._updateMass();
-		let minHalfExtents = halfExtents.x < halfExtents.y ? halfExtents.z < halfExtents.x ? halfExtents.z : halfExtents.x : halfExtents.z < halfExtents.y ? halfExtents.z : halfExtents.y;
+		const minHalfExtents = halfExtents.x < halfExtents.y ? halfExtents.z < halfExtents.x ? halfExtents.z : halfExtents.x : halfExtents.z < halfExtents.y ? halfExtents.z : halfExtents.y;
 		if(this._gjkMargin > minHalfExtents * 0.2) {
 			this._gjkMargin = minHalfExtents * 0.2;
 		}
 	}
+
 	getHalfExtents() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._halfExtentsX;
 		v.y = this._halfExtentsY;
 		v.z = this._halfExtentsZ;
 		return v;
 	}
+
 	getHalfExtentsTo(halfExtents) {
 		halfExtents.x = this._halfExtentsX;
 		halfExtents.y = this._halfExtentsY;
 		halfExtents.z = this._halfExtentsZ;
 	}
+
 	_updateMass() {
 		this._volume = 8 * (this._halfExtentsX * this._halfExtentsY * this._halfExtentsZ);
 		let sqX;
@@ -2420,6 +2499,7 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 		this._inertiaCoeff21 = 0;
 		this._inertiaCoeff22 = 0.33333333333333331 * (sqX + sqY);
 	}
+
 	_computeAabb(aabb,tf) {
 		let tfxX;
 		let tfxY;
@@ -2500,6 +2580,7 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 		aabb._maxY = tf._positionY + tfsY;
 		aabb._maxZ = tf._positionZ + tfsZ;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
 		let gjkMarginsX;
 		let gjkMarginsY;
@@ -2526,13 +2607,14 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 		out.y = dir.y > 0 ? coreExtentsY : -coreExtentsY;
 		out.z = dir.z > 0 ? coreExtentsZ : -coreExtentsZ;
 	}
+
 	_rayCastLocal(beginX,beginY,beginZ,endX,endY,endZ,hit) {
-		let halfW = this._halfExtentsX;
-		let halfH = this._halfExtentsY;
-		let halfD = this._halfExtentsZ;
-		let dx = endX - beginX;
-		let dy = endY - beginY;
-		let dz = endZ - beginZ;
+		const halfW = this._halfExtentsX;
+		const halfH = this._halfExtentsY;
+		const halfD = this._halfExtentsZ;
+		const dx = endX - beginX;
+		const dy = endY - beginY;
+		const dz = endZ - beginZ;
 		let tminx = 0;
 		let tminy = 0;
 		let tminz = 0;
@@ -2544,11 +2626,11 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 				return false;
 			}
 		} else {
-			let invDx = 1 / dx;
+			const invDx = 1 / dx;
 			let t1 = (-halfW - beginX) * invDx;
 			let t2 = (halfW - beginX) * invDx;
 			if(t1 > t2) {
-				let tmp = t1;
+				const tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -2564,11 +2646,11 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 				return false;
 			}
 		} else {
-			let invDy = 1 / dy;
+			const invDy = 1 / dy;
 			let t1 = (-halfH - beginY) * invDy;
 			let t2 = (halfH - beginY) * invDy;
 			if(t1 > t2) {
-				let tmp = t1;
+				const tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -2584,11 +2666,11 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 				return false;
 			}
 		} else {
-			let invDz = 1 / dz;
+			const invDz = 1 / dz;
 			let t1 = (-halfD - beginZ) * invDz;
 			let t2 = (halfD - beginZ) * invDz;
 			if(t1 > t2) {
-				let tmp = t1;
+				const tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -2640,7 +2722,7 @@ oimo.collision.geometry.BoxGeometry = class oimo_collision_geometry_BoxGeometry 
 		hit.fraction = min;
 		return true;
 	}
-}
+};
 oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor(radius,halfHeight) {
 		super(4);
@@ -2649,20 +2731,23 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 		this._gjkMargin = this._radius;
 		this._updateMass();
 	}
+
 	getRadius() {
 		return this._radius;
 	}
+
 	getHalfHeight() {
 		return this._halfHeight;
 	}
+
 	_updateMass() {
-		let r2 = this._radius * this._radius;
-		let hh2 = this._halfHeight * this._halfHeight;
-		let cylinderVolume = 6.28318530717958 * r2 * this._halfHeight;
-		let sphereVolume = 3.14159265358979 * r2 * this._radius * 4 / 3;
+		const r2 = this._radius * this._radius;
+		const hh2 = this._halfHeight * this._halfHeight;
+		const cylinderVolume = 6.28318530717958 * r2 * this._halfHeight;
+		const sphereVolume = 3.14159265358979 * r2 * this._radius * 4 / 3;
 		this._volume = cylinderVolume + sphereVolume;
-		let invVolume = this._volume == 0 ? 0 : 1 / this._volume;
-		let inertiaXZ = invVolume * (cylinderVolume * (r2 * 0.25 + hh2 / 3) + sphereVolume * (r2 * 0.4 + this._halfHeight * this._radius * 0.75 + hh2));
+		const invVolume = this._volume == 0 ? 0 : 1 / this._volume;
+		const inertiaXZ = invVolume * (cylinderVolume * (r2 * 0.25 + hh2 / 3) + sphereVolume * (r2 * 0.4 + this._halfHeight * this._radius * 0.75 + hh2));
 		this._inertiaCoeff00 = inertiaXZ;
 		this._inertiaCoeff01 = 0;
 		this._inertiaCoeff02 = 0;
@@ -2673,6 +2758,7 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 		this._inertiaCoeff21 = 0;
 		this._inertiaCoeff22 = inertiaXZ;
 	}
+
 	_computeAabb(aabb,tf) {
 		let radVecX;
 		let radVecY;
@@ -2708,6 +2794,7 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 		aabb._maxY = tf._positionY + radVecY;
 		aabb._maxZ = tf._positionZ + radVecZ;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
 		if(dir.y > 0) {
 			out.init(0,this._halfHeight,0);
@@ -2715,10 +2802,11 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 			out.init(0,-this._halfHeight,0);
 		}
 	}
+
 	_rayCastLocal(beginX,beginY,beginZ,endX,endY,endZ,hit) {
-		let halfH = this._halfHeight;
-		let dx = endX - beginX;
-		let dz = endZ - beginZ;
+		const halfH = this._halfHeight;
+		const dx = endX - beginX;
+		const dz = endZ - beginZ;
 		let tminxz = 0;
 		let tmaxxz;
 		let a = dx * dx + dz * dz;
@@ -2729,7 +2817,7 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 			return false;
 		}
 		if(a > 0) {
-			let sqrtD = Math.sqrt(D);
+			const sqrtD = Math.sqrt(D);
 			tminxz = (-b - sqrtD) / a;
 			tmaxxz = (-b + sqrtD) / a;
 			if(tminxz >= 1 || tmaxxz <= 0) {
@@ -2741,12 +2829,12 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 			}
 			tminxz = 0;
 		}
-		let crossY = beginY + (endY - beginY) * tminxz;
+		const crossY = beginY + (endY - beginY) * tminxz;
 		let min;
 		if(crossY > -halfH && crossY < halfH) {
 			if(tminxz > 0) {
 				min = tminxz;
-				let _this = hit.normal.init(beginX + dx * min,0,beginZ + dz * min);
+				const _this = hit.normal.init(beginX + dx * min,0,beginZ + dz * min);
 				let invLen = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z);
 				if(invLen > 0) {
 					invLen = 1 / invLen;
@@ -2785,7 +2873,7 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 		if(D < 0) {
 			return false;
 		}
-		let t = (-b - Math.sqrt(D)) / a;
+		const t = (-b - Math.sqrt(D)) / a;
 		if(t < 0 || t > 1) {
 			return false;
 		}
@@ -2808,18 +2896,18 @@ oimo.collision.geometry.CapsuleGeometry = class oimo_collision_geometry_CapsuleG
 		hitPosX += spherePosX;
 		hitPosY += spherePosY;
 		hitPosZ += spherePosZ;
-		let v = hit.position;
+		const v = hit.position;
 		v.x = hitPosX;
 		v.y = hitPosY;
 		v.z = hitPosZ;
-		let v1 = hit.normal;
+		const v1 = hit.normal;
 		v1.x = hitNormalX;
 		v1.y = hitNormalY;
 		v1.z = hitNormalZ;
 		hit.fraction = t;
 		return true;
 	}
-}
+};
 oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor(radius,halfHeight) {
 		super(3);
@@ -2829,15 +2917,18 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 		this.cosTheta = 2 * halfHeight / Math.sqrt(radius * radius + 4 * halfHeight * halfHeight);
 		this._updateMass();
 	}
+
 	getRadius() {
 		return this._radius;
 	}
+
 	getHalfHeight() {
 		return this._halfHeight;
 	}
+
 	_updateMass() {
-		let r2 = this._radius * this._radius;
-		let h2 = this._halfHeight * this._halfHeight * 4;
+		const r2 = this._radius * this._radius;
+		const h2 = this._halfHeight * this._halfHeight * 4;
 		this._volume = 3.14159265358979 * r2 * this._halfHeight * 2 / 3;
 		this._inertiaCoeff00 = 0.05 * (3 * r2 + 2 * h2);
 		this._inertiaCoeff01 = 0;
@@ -2849,6 +2940,7 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 		this._inertiaCoeff21 = 0;
 		this._inertiaCoeff22 = 0.05 * (3 * r2 + 2 * h2);
 	}
+
 	_computeAabb(aabb,tf) {
 		let axisX;
 		let axisY;
@@ -2932,10 +3024,11 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 		aabb._maxY = tf._positionY + maxY;
 		aabb._maxZ = tf._positionZ + maxZ;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
-		let dx = dir.x;
-		let dy = dir.y;
-		let dz = dir.z;
+		const dx = dir.x;
+		const dy = dir.y;
+		const dz = dir.z;
 		if(dy > 0 && dy * dy > this.sinTheta * this.sinTheta * (dx * dx + dy * dy + dz * dz)) {
 			out.init(0,this._halfHeight - this._gjkMargin / this.sinTheta,0);
 			if(out.y < 0) {
@@ -2943,15 +3036,15 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 			}
 			return;
 		}
-		let rx = dir.x;
-		let rz = dir.z;
-		let len = rx * rx + rz * rz;
-		let height = 2 * this._halfHeight;
+		const rx = dir.x;
+		const rz = dir.z;
+		const len = rx * rx + rz * rz;
+		const height = 2 * this._halfHeight;
 		let coreRadius = (height - this._gjkMargin) / height * this._radius - this._gjkMargin / this.cosTheta;
 		if(coreRadius < 0) {
 			coreRadius = 0;
 		}
-		let invLen = len > 0 ? coreRadius / Math.sqrt(len) : 0;
+		const invLen = len > 0 ? coreRadius / Math.sqrt(len) : 0;
 		let coreHalfHeight = this._halfHeight - this._gjkMargin;
 		if(coreHalfHeight < 0) {
 			coreHalfHeight = 0;
@@ -2960,12 +3053,13 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 		out.y = -coreHalfHeight;
 		out.z = rz * invLen;
 	}
+
 	_rayCastLocal(beginX,beginY,beginZ,endX,endY,endZ,hit) {
 		let p1y;
-		let halfH = this._halfHeight;
-		let dx = endX - beginX;
-		let dy = endY - beginY;
-		let dz = endZ - beginZ;
+		const halfH = this._halfHeight;
+		const dx = endX - beginX;
+		const dy = endY - beginY;
+		const dz = endZ - beginZ;
 		let tminy = 0;
 		let tmaxy = 1;
 		if(dy > -1e-6 && dy < 1e-6) {
@@ -2973,11 +3067,11 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 				return false;
 			}
 		} else {
-			let invDy = 1 / dy;
+			const invDy = 1 / dy;
 			let t1 = (-halfH - beginY) * invDy;
 			let t2 = (halfH - beginY) * invDy;
 			if(t1 > t2) {
-				let tmp = t1;
+				const tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -2994,16 +3088,16 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 		let tminxz = 0;
 		let tmaxxz = 0;
 		p1y = beginY - halfH;
-		let cos2 = this.cosTheta * this.cosTheta;
-		let a = cos2 * (dx * dx + dy * dy + dz * dz) - dy * dy;
-		let b = cos2 * (beginX * dx + p1y * dy + beginZ * dz) - p1y * dy;
-		let c = cos2 * (beginX * beginX + p1y * p1y + beginZ * beginZ) - p1y * p1y;
-		let D = b * b - a * c;
+		const cos2 = this.cosTheta * this.cosTheta;
+		const a = cos2 * (dx * dx + dy * dy + dz * dz) - dy * dy;
+		const b = cos2 * (beginX * dx + p1y * dy + beginZ * dz) - p1y * dy;
+		const c = cos2 * (beginX * beginX + p1y * p1y + beginZ * beginZ) - p1y * p1y;
+		const D = b * b - a * c;
 		if(a != 0) {
 			if(D < 0) {
 				return false;
 			}
-			let sqrtD = Math.sqrt(D);
+			const sqrtD = Math.sqrt(D);
 			if(a < 0) {
 				if(dy > 0) {
 					tminxz = 0;
@@ -3026,7 +3120,7 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 				}
 			}
 		} else {
-			let t = -c / (2 * b);
+			const t = -c / (2 * b);
 			if(b > 0) {
 				tminxz = 0;
 				tmaxxz = t;
@@ -3057,7 +3151,7 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 			if(min == 0) {
 				return false;
 			}
-			let _this = hit.normal.init(beginX + dx * min,0,beginZ + dz * min);
+			const _this = hit.normal.init(beginX + dx * min,0,beginZ + dz * min);
 			let invLen = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z);
 			if(invLen > 0) {
 				invLen = 1 / invLen;
@@ -3065,7 +3159,7 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 			_this.x *= invLen;
 			_this.y *= invLen;
 			_this.z *= invLen;
-			let s = this.cosTheta;
+			const s = this.cosTheta;
 			_this.x *= s;
 			_this.y *= s;
 			_this.z *= s;
@@ -3075,7 +3169,7 @@ oimo.collision.geometry.ConeGeometry = class oimo_collision_geometry_ConeGeometr
 		hit.fraction = min;
 		return true;
 	}
-}
+};
 oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_ConvexHullGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor(vertices) {
 		super(5);
@@ -3083,18 +3177,20 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		this._vertices = new Array(this._numVertices);
 		this._tmpVertices = new Array(this._numVertices);
 		let _g = 0;
-		let _g1 = this._numVertices;
+		const _g1 = this._numVertices;
 		while(_g < _g1) {
-			let i = _g++;
+			const i = _g++;
 			this._vertices[i] = vertices[i];
 			this._tmpVertices[i] = new oimo.common.Vec3();
 		}
 		this._useGjkRayCast = true;
 		this._updateMass();
 	}
+
 	getVertices() {
 		return this._vertices;
 	}
+
 	_updateMass() {
 		this._volume = 1;
 		this._inertiaCoeff00 = 1;
@@ -3113,12 +3209,12 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		let maxy = this._vertices[0].y;
 		let maxz = this._vertices[0].z;
 		let _g = 1;
-		let _g1 = this._numVertices;
+		const _g1 = this._numVertices;
 		while(_g < _g1) {
-			let i = _g++;
-			let vx = this._vertices[i].x;
-			let vy = this._vertices[i].y;
-			let vz = this._vertices[i].z;
+			const i = _g++;
+			const vx = this._vertices[i].x;
+			const vy = this._vertices[i].y;
+			const vz = this._vertices[i].z;
 			if(vx < minx) {
 				minx = vx;
 			} else if(vx > maxx) {
@@ -3139,7 +3235,7 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		let sizey = maxy - miny;
 		let sizez = maxz - minz;
 		this._volume = sizex * sizey * sizez;
-		let diffCog = ((minx + maxx) * (minx + maxx) + (miny + maxy) * (miny + maxy) + (minz + maxz) * (minz + maxz)) * 0.25;
+		const diffCog = ((minx + maxx) * (minx + maxx) + (miny + maxy) * (miny + maxy) + (minz + maxz) * (minz + maxz)) * 0.25;
 		sizex = sizex * sizex * 0.25;
 		sizey = sizey * sizey * 0.25;
 		sizez = sizez * sizez * 0.25;
@@ -3153,6 +3249,7 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		this._inertiaCoeff21 = 0;
 		this._inertiaCoeff22 = 0.33333333333333331 * (sizex + sizey) + diffCog;
 	}
+
 	_computeAabb(aabb,tf) {
 		let minX;
 		let minY;
@@ -3169,7 +3266,7 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		let localVX;
 		let localVY;
 		let localVZ;
-		let v = this._vertices[0];
+		const v = this._vertices[0];
 		localVX = v.x;
 		localVY = v.y;
 		localVZ = v.z;
@@ -3195,9 +3292,9 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		maxY = worldVY;
 		maxZ = worldVZ;
 		let _g = 1;
-		let _g1 = this._numVertices;
+		const _g1 = this._numVertices;
 		while(_g < _g1) {
-			let v = this._vertices[_g++];
+			const v = this._vertices[_g++];
 			localVX = v.x;
 			localVY = v.y;
 			localVZ = v.z;
@@ -3239,27 +3336,28 @@ oimo.collision.geometry.ConvexHullGeometry = class oimo_collision_geometry_Conve
 		aabb._maxY = maxY + marginY;
 		aabb._maxZ = maxZ + marginZ;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
-		let _this = this._vertices[0];
+		const _this = this._vertices[0];
 		let maxDot = _this.x * dir.x + _this.y * dir.y + _this.z * dir.z;
 		let maxIndex = 0;
 		let _g = 1;
-		let _g1 = this._numVertices;
+		const _g1 = this._numVertices;
 		while(_g < _g1) {
-			let i = _g++;
-			let _this = this._vertices[i];
-			let dot = _this.x * dir.x + _this.y * dir.y + _this.z * dir.z;
+			const i = _g++;
+			const _this = this._vertices[i];
+			const dot = _this.x * dir.x + _this.y * dir.y + _this.z * dir.z;
 			if(dot > maxDot) {
 				maxDot = dot;
 				maxIndex = i;
 			}
 		}
-		let v = this._vertices[maxIndex];
+		const v = this._vertices[maxIndex];
 		out.x = v.x;
 		out.y = v.y;
 		out.z = v.z;
 	}
-}
+};
 oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_CylinderGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor(radius,halfHeight) {
 		super(2);
@@ -3267,15 +3365,18 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 		this._halfHeight = halfHeight;
 		this._updateMass();
 	}
+
 	getRadius() {
 		return this._radius;
 	}
+
 	getHalfHeight() {
 		return this._halfHeight;
 	}
+
 	_updateMass() {
-		let r2 = this._radius * this._radius;
-		let h2 = this._halfHeight * this._halfHeight * 4;
+		const r2 = this._radius * this._radius;
+		const h2 = this._halfHeight * this._halfHeight * 4;
 		this._volume = 3.14159265358979 * r2 * this._halfHeight * 2;
 		this._inertiaCoeff00 = 0.083333333333333329 * (3 * r2 + h2);
 		this._inertiaCoeff01 = 0;
@@ -3287,6 +3388,7 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 		this._inertiaCoeff21 = 0;
 		this._inertiaCoeff22 = 0.083333333333333329 * (3 * r2 + h2);
 	}
+
 	_computeAabb(aabb,tf) {
 		let axisX;
 		let axisY;
@@ -3337,15 +3439,16 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 		aabb._maxY = tf._positionY + maxY;
 		aabb._maxZ = tf._positionZ + maxZ;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
-		let rx = dir.x;
-		let rz = dir.z;
-		let len = rx * rx + rz * rz;
+		const rx = dir.x;
+		const rz = dir.z;
+		const len = rx * rx + rz * rz;
 		let coreRadius = this._radius - this._gjkMargin;
 		if(coreRadius < 0) {
 			coreRadius = 0;
 		}
-		let invLen = len > 0 ? coreRadius / Math.sqrt(len) : 0;
+		const invLen = len > 0 ? coreRadius / Math.sqrt(len) : 0;
 		let coreHeight = this._halfHeight - this._gjkMargin;
 		if(coreHeight < 0) {
 			coreHeight = 0;
@@ -3354,11 +3457,12 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 		out.y = dir.y > 0 ? coreHeight : -coreHeight;
 		out.z = rz * invLen;
 	}
+
 	_rayCastLocal(beginX,beginY,beginZ,endX,endY,endZ,hit) {
-		let halfH = this._halfHeight;
-		let dx = endX - beginX;
-		let dy = endY - beginY;
-		let dz = endZ - beginZ;
+		const halfH = this._halfHeight;
+		const dx = endX - beginX;
+		const dy = endY - beginY;
+		const dz = endZ - beginZ;
 		let tminy = 0;
 		let tmaxy = 1;
 		if(dy > -1e-6 && dy < 1e-6) {
@@ -3366,11 +3470,11 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 				return false;
 			}
 		} else {
-			let invDy = 1 / dy;
+			const invDy = 1 / dy;
 			let t1 = (-halfH - beginY) * invDy;
 			let t2 = (halfH - beginY) * invDy;
 			if(t1 > t2) {
-				let tmp = t1;
+				const tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -3386,15 +3490,15 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 		}
 		let tminxz = 0;
 		let tmaxxz;
-		let a = dx * dx + dz * dz;
-		let b = beginX * dx + beginZ * dz;
-		let c = beginX * beginX + beginZ * beginZ - this._radius * this._radius;
-		let D = b * b - a * c;
+		const a = dx * dx + dz * dz;
+		const b = beginX * dx + beginZ * dz;
+		const c = beginX * beginX + beginZ * beginZ - this._radius * this._radius;
+		const D = b * b - a * c;
 		if(D < 0) {
 			return false;
 		}
 		if(a > 0) {
-			let sqrtD = Math.sqrt(D);
+			const sqrtD = Math.sqrt(D);
 			tminxz = (-b - sqrtD) / a;
 			tmaxxz = (-b + sqrtD) / a;
 			if(tminxz >= 1 || tmaxxz <= 0) {
@@ -3422,7 +3526,7 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 			if(min == 0) {
 				return false;
 			}
-			let _this = hit.normal.init(beginX + dx * min,0,beginZ + dz * min);
+			const _this = hit.normal.init(beginX + dx * min,0,beginZ + dz * min);
 			let invLen = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z);
 			if(invLen > 0) {
 				invLen = 1 / invLen;
@@ -3435,16 +3539,16 @@ oimo.collision.geometry.CylinderGeometry = class oimo_collision_geometry_Cylinde
 		hit.fraction = min;
 		return true;
 	}
-}
+};
 oimo.collision.geometry.GeometryType = class oimo_collision_geometry_GeometryType {
-}
+};
 oimo.collision.geometry.RayCastHit = class oimo_collision_geometry_RayCastHit {
 	constructor() {
 		this.position = new oimo.common.Vec3();
 		this.normal = new oimo.common.Vec3();
 		this.fraction = 0;
 	}
-}
+};
 oimo.collision.geometry.SphereGeometry = class oimo_collision_geometry_SphereGeometry extends oimo.collision.geometry.ConvexGeometry {
 	constructor(radius) {
 		super(0);
@@ -3452,9 +3556,11 @@ oimo.collision.geometry.SphereGeometry = class oimo_collision_geometry_SphereGeo
 		this._gjkMargin = this._radius;
 		this._updateMass();
 	}
+
 	getRadius() {
 		return this._radius;
 	}
+
 	_updateMass() {
 		this._volume = 4.1887902047863861 * this._radius * this._radius * this._radius;
 		this._inertiaCoeff00 = 0.4 * this._radius * this._radius;
@@ -3467,6 +3573,7 @@ oimo.collision.geometry.SphereGeometry = class oimo_collision_geometry_SphereGeo
 		this._inertiaCoeff21 = 0;
 		this._inertiaCoeff22 = 0.4 * this._radius * this._radius;
 	}
+
 	_computeAabb(aabb,tf) {
 		let radVecX;
 		let radVecY;
@@ -3481,9 +3588,11 @@ oimo.collision.geometry.SphereGeometry = class oimo_collision_geometry_SphereGeo
 		aabb._maxY = tf._positionY + radVecY;
 		aabb._maxZ = tf._positionZ + radVecZ;
 	}
+
 	computeLocalSupportingVertex(dir,out) {
 		out.zero();
 	}
+
 	_rayCastLocal(beginX,beginY,beginZ,endX,endY,endZ,hit) {
 		let dX;
 		let dY;
@@ -3491,13 +3600,13 @@ oimo.collision.geometry.SphereGeometry = class oimo_collision_geometry_SphereGeo
 		dX = endX - beginX;
 		dY = endY - beginY;
 		dZ = endZ - beginZ;
-		let a = dX * dX + dY * dY + dZ * dZ;
-		let b = beginX * dX + beginY * dY + beginZ * dZ;
-		let D = b * b - a * (beginX * beginX + beginY * beginY + beginZ * beginZ - this._radius * this._radius);
+		const a = dX * dX + dY * dY + dZ * dZ;
+		const b = beginX * dX + beginY * dY + beginZ * dZ;
+		const D = b * b - a * (beginX * beginX + beginY * beginY + beginZ * beginZ - this._radius * this._radius);
 		if(D < 0) {
 			return false;
 		}
-		let t = (-b - Math.sqrt(D)) / a;
+		const t = (-b - Math.sqrt(D)) / a;
 		if(t < 0 || t > 1) {
 			return false;
 		}
@@ -3517,18 +3626,18 @@ oimo.collision.geometry.SphereGeometry = class oimo_collision_geometry_SphereGeo
 		hitNormalX = hitPosX * l;
 		hitNormalY = hitPosY * l;
 		hitNormalZ = hitPosZ * l;
-		let v = hit.position;
+		const v = hit.position;
 		v.x = hitPosX;
 		v.y = hitPosY;
 		v.z = hitPosZ;
-		let v1 = hit.normal;
+		const v1 = hit.normal;
 		v1.x = hitNormalX;
 		v1.y = hitNormalY;
 		v1.z = hitNormalZ;
 		hit.fraction = t;
 		return true;
 	}
-}
+};
 if(!oimo.collision.narrowphase) oimo.collision.narrowphase = {};
 oimo.collision.narrowphase.CollisionMatrix = class oimo_collision_narrowphase_CollisionMatrix {
 	constructor() {
@@ -3539,7 +3648,7 @@ oimo.collision.narrowphase.CollisionMatrix = class oimo_collision_narrowphase_Co
 		this.detectors[3] = new Array(8);
 		this.detectors[4] = new Array(8);
 		this.detectors[5] = new Array(8);
-		let gjkEpaDetector = new oimo.collision.narrowphase.detector.GjkEpaDetector();
+		const gjkEpaDetector = new oimo.collision.narrowphase.detector.GjkEpaDetector();
 		this.detectors[0][0] = new oimo.collision.narrowphase.detector.SphereSphereDetector();
 		this.detectors[0][1] = new oimo.collision.narrowphase.detector.SphereBoxDetector(false);
 		this.detectors[0][2] = gjkEpaDetector;
@@ -3577,10 +3686,11 @@ oimo.collision.narrowphase.CollisionMatrix = class oimo_collision_narrowphase_Co
 		this.detectors[5][4] = gjkEpaDetector;
 		this.detectors[5][5] = gjkEpaDetector;
 	}
+
 	getDetector(geomType1,geomType2) {
 		return this.detectors[geomType1][geomType2];
 	}
-}
+};
 oimo.collision.narrowphase.DetectorResult = class oimo_collision_narrowphase_DetectorResult {
 	constructor() {
 		this.numPoints = 0;
@@ -3588,27 +3698,29 @@ oimo.collision.narrowphase.DetectorResult = class oimo_collision_narrowphase_Det
 		this.points = new Array(oimo.common.Setting.maxManifoldPoints);
 		this.incremental = false;
 		let _g = 0;
-		let _g1 = oimo.common.Setting.maxManifoldPoints;
+		const _g1 = oimo.common.Setting.maxManifoldPoints;
 		while(_g < _g1) this.points[_g++] = new oimo.collision.narrowphase.DetectorResultPoint();
 	}
+
 	getMaxDepth() {
 		let max = 0;
 		let _g = 0;
-		let _g1 = this.numPoints;
+		const _g1 = this.numPoints;
 		while(_g < _g1) {
-			let i = _g++;
+			const i = _g++;
 			if(this.points[i].depth > max) {
 				max = this.points[i].depth;
 			}
 		}
 		return max;
 	}
+
 	clear() {
 		this.numPoints = 0;
 		let _g = 0;
-		let _g1 = this.points;
+		const _g1 = this.points;
 		while(_g < _g1.length) {
-			let p = _g1[_g];
+			const p = _g1[_g];
 			++_g;
 			p.position1.zero();
 			p.position2.zero();
@@ -3617,7 +3729,7 @@ oimo.collision.narrowphase.DetectorResult = class oimo_collision_narrowphase_Det
 		}
 		this.normal.zero();
 	}
-}
+};
 oimo.collision.narrowphase.DetectorResultPoint = class oimo_collision_narrowphase_DetectorResultPoint {
 	constructor() {
 		this.position1 = new oimo.common.Vec3();
@@ -3625,56 +3737,60 @@ oimo.collision.narrowphase.DetectorResultPoint = class oimo_collision_narrowphas
 		this.depth = 0;
 		this.id = 0;
 	}
-}
+};
 if(!oimo.collision.narrowphase.detector) oimo.collision.narrowphase.detector = {};
 oimo.collision.narrowphase.detector.Detector = class oimo_collision_narrowphase_detector_Detector {
 	constructor(swapped) {
 		this.swapped = swapped;
 	}
+
 	setNormal(result,nX,nY,nZ) {
-		let v = result.normal;
+		const v = result.normal;
 		v.x = nX;
 		v.y = nY;
 		v.z = nZ;
 		if(this.swapped) {
-			let _this = result.normal;
+			const _this = result.normal;
 			_this.x = -_this.x;
 			_this.y = -_this.y;
 			_this.z = -_this.z;
 		}
 	}
+
 	addPoint(result,pos1X,pos1Y,pos1Z,pos2X,pos2Y,pos2Z,depth,id) {
-		let p = result.points[result.numPoints++];
+		const p = result.points[result.numPoints++];
 		p.depth = depth;
 		p.id = id;
 		if(this.swapped) {
-			let v = p.position1;
+			const v = p.position1;
 			v.x = pos2X;
 			v.y = pos2Y;
 			v.z = pos2Z;
-			let v1 = p.position2;
+			const v1 = p.position2;
 			v1.x = pos1X;
 			v1.y = pos1Y;
 			v1.z = pos1Z;
 		} else {
-			let v = p.position1;
+			const v = p.position1;
 			v.x = pos1X;
 			v.y = pos1Y;
 			v.z = pos1Z;
-			let v1 = p.position2;
+			const v1 = p.position2;
 			v1.x = pos2X;
 			v1.y = pos2Y;
 			v1.z = pos2Z;
 		}
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
 	}
+
 	detect(result,geom1,geom2,transform1,transform2,cachedData) {
 		result.numPoints = 0;
 		let _g = 0;
-		let _g1 = result.points;
+		const _g1 = result.points;
 		while(_g < _g1.length) {
-			let p = _g1[_g];
+			const p = _g1[_g];
 			++_g;
 			p.position1.zero();
 			p.position2.zero();
@@ -3688,15 +3804,16 @@ oimo.collision.narrowphase.detector.Detector = class oimo_collision_narrowphase_
 			this.detectImpl(result,geom1,geom2,transform1,transform2,cachedData);
 		}
 	}
-}
+};
 oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrowphase_detector_BoxBoxDetector extends oimo.collision.narrowphase.detector.Detector {
 	constructor() {
 		super(false);
 		this.clipper = new oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper();
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
-		let b1 = geom1;
-		let b2 = geom2;
+		const b1 = geom1;
+		const b2 = geom2;
 		result.incremental = false;
 		let c1X;
 		let c1Y;
@@ -3755,9 +3872,9 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		let w1 = b1._halfExtentsX;
 		let h1 = b1._halfExtentsY;
 		let d1 = b1._halfExtentsZ;
-		let w2 = b2._halfExtentsX;
-		let h2 = b2._halfExtentsY;
-		let d2 = b2._halfExtentsZ;
+		const w2 = b2._halfExtentsX;
+		const h2 = b2._halfExtentsY;
+		const d2 = b2._halfExtentsZ;
 		let sx1X;
 		let sx1Y;
 		let sx1Z;
@@ -3818,11 +3935,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		}
 		let proj2 = dx + dy + dz;
 		let projC12 = x1X * c12X + x1Y * c12Y + x1Z * c12Z;
-		let sum = proj1 + proj2;
-		let neg = projC12 < 0;
-		let abs = neg ? -projC12 : projC12;
+		const sum = proj1 + proj2;
+		const neg = projC12 < 0;
+		const abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			let depth = sum - abs;
+			const depth = sum - abs;
 			if(depth < 1e65536) {
 				mDepth = depth;
 				mId = 0;
@@ -3849,11 +3966,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		}
 		proj2 = dx1 + dy1 + dz1;
 		projC12 = y1X * c12X + y1Y * c12Y + y1Z * c12Z;
-		let sum1 = proj1 + proj2;
-		let neg1 = projC12 < 0;
-		let abs1 = neg1 ? -projC12 : projC12;
+		const sum1 = proj1 + proj2;
+		const neg1 = projC12 < 0;
+		const abs1 = neg1 ? -projC12 : projC12;
 		if(abs1 < sum1) {
-			let depth = sum1 - abs1;
+			const depth = sum1 - abs1;
 			if(depth < mDepth) {
 				mDepth = depth;
 				mId = 1;
@@ -3880,11 +3997,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		}
 		proj2 = dx2 + dy2 + dz2;
 		projC12 = z1X * c12X + z1Y * c12Y + z1Z * c12Z;
-		let sum2 = proj1 + proj2;
-		let neg2 = projC12 < 0;
-		let abs2 = neg2 ? -projC12 : projC12;
+		const sum2 = proj1 + proj2;
+		const neg2 = projC12 < 0;
+		const abs2 = neg2 ? -projC12 : projC12;
 		if(abs2 < sum2) {
-			let depth = sum2 - abs2;
+			const depth = sum2 - abs2;
 			if(depth < mDepth) {
 				mDepth = depth;
 				mId = 2;
@@ -3916,11 +4033,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		proj1 = dx3 + dy3 + dz3;
 		proj2 = w2;
 		projC12 = x2X * c12X + x2Y * c12Y + x2Z * c12Z;
-		let sum3 = proj1 + proj2;
-		let neg3 = projC12 < 0;
-		let abs3 = neg3 ? -projC12 : projC12;
+		const sum3 = proj1 + proj2;
+		const neg3 = projC12 < 0;
+		const abs3 = neg3 ? -projC12 : projC12;
 		if(abs3 < sum3) {
-			let depth = sum3 - abs3;
+			const depth = sum3 - abs3;
 			if(depth < mDepth) {
 				mDepth = depth;
 				mId = 3;
@@ -3947,11 +4064,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		proj1 = dx4 + dy4 + dz4;
 		proj2 = h2;
 		projC12 = y2X * c12X + y2Y * c12Y + y2Z * c12Z;
-		let sum4 = proj1 + proj2;
-		let neg4 = projC12 < 0;
-		let abs4 = neg4 ? -projC12 : projC12;
+		const sum4 = proj1 + proj2;
+		const neg4 = projC12 < 0;
+		const abs4 = neg4 ? -projC12 : projC12;
 		if(abs4 < sum4) {
-			let depth = sum4 - abs4;
+			const depth = sum4 - abs4;
 			if(depth < mDepth) {
 				mDepth = depth;
 				mId = 4;
@@ -3978,11 +4095,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		proj1 = dx5 + dy5 + dz5;
 		proj2 = d2;
 		projC12 = z2X * c12X + z2Y * c12Y + z2Z * c12Z;
-		let sum5 = proj1 + proj2;
-		let neg5 = projC12 < 0;
-		let abs5 = neg5 ? -projC12 : projC12;
+		const sum5 = proj1 + proj2;
+		const neg5 = projC12 < 0;
+		const abs5 = neg5 ? -projC12 : projC12;
 		if(abs5 < sum5) {
-			let depth = sum5 - abs5;
+			const depth = sum5 - abs5;
 			if(depth < mDepth) {
 				mDepth = depth;
 				mId = 5;
@@ -4032,11 +4149,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 6;
@@ -4079,11 +4196,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 7;
@@ -4126,11 +4243,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 8;
@@ -4173,11 +4290,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 9;
@@ -4220,11 +4337,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 10;
@@ -4267,11 +4384,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 11;
@@ -4314,11 +4431,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 12;
@@ -4361,11 +4478,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 13;
@@ -4408,11 +4525,11 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 			proj2 = dx1 + dy1;
 			projC12 = edgeAxisX * c12X + edgeAxisY * c12Y + edgeAxisZ * c12Z;
-			let sum = proj1 + proj2;
-			let neg = projC12 < 0;
-			let abs = neg ? -projC12 : projC12;
+			const sum = proj1 + proj2;
+			const neg = projC12 < 0;
+			const abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				let depth = sum - abs;
+				const depth = sum - abs;
 				if(depth < mDepth) {
 					mDepth = depth;
 					mId = 14;
@@ -4429,8 +4546,8 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			mAxisX *= mSign;
 			mAxisY *= mSign;
 			mAxisZ *= mSign;
-			let id1 = (mId - 6) / 3 | 0;
-			let id2 = mId - 6 - id1 * 3;
+			const id1 = (mId - 6) / 3 | 0;
+			const id2 = mId - 6 - id1 * 3;
 			let p1X;
 			let p1Y;
 			let p1Z;
@@ -4448,7 +4565,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 				d1X = x1X;
 				d1Y = x1Y;
 				d1Z = x1Z;
-				let signY = sz1X * mAxisX + sz1Y * mAxisY + sz1Z * mAxisZ > 0;
+				const signY = sz1X * mAxisX + sz1Y * mAxisY + sz1Z * mAxisZ > 0;
 				if(sy1X * mAxisX + sy1Y * mAxisY + sy1Z * mAxisZ > 0) {
 					if(signY) {
 						p1X = sy1X + sz1X;
@@ -4476,7 +4593,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 				d1X = y1X;
 				d1Y = y1Y;
 				d1Z = y1Z;
-				let signY1 = sz1X * mAxisX + sz1Y * mAxisY + sz1Z * mAxisZ > 0;
+				const signY1 = sz1X * mAxisX + sz1Y * mAxisY + sz1Z * mAxisZ > 0;
 				if(sx1X * mAxisX + sx1Y * mAxisY + sx1Z * mAxisZ > 0) {
 					if(signY1) {
 						p1X = sx1X + sz1X;
@@ -4504,7 +4621,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 				d1X = z1X;
 				d1Y = z1Y;
 				d1Z = z1Z;
-				let signY2 = sy1X * mAxisX + sy1Y * mAxisY + sy1Z * mAxisZ > 0;
+				const signY2 = sy1X * mAxisX + sy1Y * mAxisY + sy1Z * mAxisZ > 0;
 				if(sx1X * mAxisX + sx1Y * mAxisY + sx1Z * mAxisZ > 0) {
 					if(signY2) {
 						p1X = sx1X + sy1X;
@@ -4536,7 +4653,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 				d2X = x2X;
 				d2Y = x2Y;
 				d2Z = x2Z;
-				let signY3 = sz2X * mAxisX + sz2Y * mAxisY + sz2Z * mAxisZ > 0;
+				const signY3 = sz2X * mAxisX + sz2Y * mAxisY + sz2Z * mAxisZ > 0;
 				if(sy2X * mAxisX + sy2Y * mAxisY + sy2Z * mAxisZ > 0) {
 					if(signY3) {
 						p2X = sy2X + sz2X;
@@ -4564,7 +4681,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 				d2X = y2X;
 				d2Y = y2Y;
 				d2Z = y2Z;
-				let signY4 = sz2X * mAxisX + sz2Y * mAxisY + sz2Z * mAxisZ > 0;
+				const signY4 = sz2X * mAxisX + sz2Y * mAxisY + sz2Z * mAxisZ > 0;
 				if(sx2X * mAxisX + sx2Y * mAxisY + sx2Z * mAxisZ > 0) {
 					if(signY4) {
 						p2X = sx2X + sz2X;
@@ -4592,7 +4709,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 				d2X = z2X;
 				d2Y = z2Y;
 				d2Z = z2Z;
-				let signY5 = sy2X * mAxisX + sy2Y * mAxisY + sy2Z * mAxisZ > 0;
+				const signY5 = sy2X * mAxisX + sy2Y * mAxisY + sy2Z * mAxisZ > 0;
 				if(sx2X * mAxisX + sx2Y * mAxisY + sx2Z * mAxisZ > 0) {
 					if(signY5) {
 						p2X = sx2X + sy2X;
@@ -4625,12 +4742,12 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			rX = p1X - p2X;
 			rY = p1Y - p2Y;
 			rZ = p1Z - p2Z;
-			let dot12 = d1X * d2X + d1Y * d2Y + d1Z * d2Z;
-			let dot1r = d1X * rX + d1Y * rY + d1Z * rZ;
-			let dot2r = d2X * rX + d2Y * rY + d2Z * rZ;
-			let invDet = 1 / (1 - dot12 * dot12);
-			let t1 = (dot12 * dot2r - dot1r) * invDet;
-			let t2 = (dot2r - dot12 * dot1r) * invDet;
+			const dot12 = d1X * d2X + d1Y * d2Y + d1Z * d2Z;
+			const dot1r = d1X * rX + d1Y * rY + d1Z * rZ;
+			const dot2r = d2X * rX + d2Y * rY + d2Z * rZ;
+			const invDet = 1 / (1 - dot12 * dot12);
+			const t1 = (dot12 * dot2r - dot1r) * invDet;
+			const t2 = (dot2r - dot12 * dot1r) * invDet;
 			let cp1X;
 			let cp1Y;
 			let cp1Z;
@@ -4821,7 +4938,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			refYX = tmpX;
 			refYY = tmpY;
 			refYZ = tmpZ;
-			let tmp = refW;
+			const tmp = refW;
 			refW = refH;
 			refH = tmp;
 		}
@@ -5056,34 +5173,34 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		incV4X += c12X;
 		incV4Y += c12Y;
 		incV4Z += c12Z;
-		let _this = this.clipper;
+		const _this = this.clipper;
 		_this.w = refW;
 		_this.h = refH;
 		_this.numVertices = 0;
 		_this.numTmpVertices = 0;
-		let _this1 = this.clipper;
-		let _this2 = _this1.vertices[_this1.numVertices++];
+		const _this1 = this.clipper;
+		const _this2 = _this1.vertices[_this1.numVertices++];
 		_this2.x = incV1X * refXX + incV1Y * refXY + incV1Z * refXZ;
 		_this2.y = incV1X * refYX + incV1Y * refYY + incV1Z * refYZ;
 		_this2.wx = incV1X;
 		_this2.wy = incV1Y;
 		_this2.wz = incV1Z;
-		let _this3 = this.clipper;
-		let _this4 = _this3.vertices[_this3.numVertices++];
+		const _this3 = this.clipper;
+		const _this4 = _this3.vertices[_this3.numVertices++];
 		_this4.x = incV2X * refXX + incV2Y * refXY + incV2Z * refXZ;
 		_this4.y = incV2X * refYX + incV2Y * refYY + incV2Z * refYZ;
 		_this4.wx = incV2X;
 		_this4.wy = incV2Y;
 		_this4.wz = incV2Z;
-		let _this5 = this.clipper;
-		let _this6 = _this5.vertices[_this5.numVertices++];
+		const _this5 = this.clipper;
+		const _this6 = _this5.vertices[_this5.numVertices++];
 		_this6.x = incV3X * refXX + incV3Y * refXY + incV3Z * refXZ;
 		_this6.y = incV3X * refYX + incV3Y * refYY + incV3Z * refYZ;
 		_this6.wx = incV3X;
 		_this6.wy = incV3Y;
 		_this6.wz = incV3Z;
-		let _this7 = this.clipper;
-		let _this8 = _this7.vertices[_this7.numVertices++];
+		const _this7 = this.clipper;
+		const _this8 = _this7.vertices[_this7.numVertices++];
 		_this8.x = incV4X * refXX + incV4Y * refXY + incV4Z * refXZ;
 		_this8.y = incV4X * refYX + incV4Y * refYY + incV4Z * refYZ;
 		_this8.wx = incV4X;
@@ -5105,10 +5222,10 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 		}
 		this.setNormal(result,normalX,normalY,normalZ);
 		let _g = 0;
-		let _g1 = this.clipper.numVertices;
+		const _g1 = this.clipper.numVertices;
 		while(_g < _g1) {
-			let i = _g++;
-			let v = this.clipper.vertices[i];
+			const i = _g++;
+			const v = this.clipper.vertices[i];
 			let clippedVertexX;
 			let clippedVertexY;
 			let clippedVertexZ;
@@ -5124,7 +5241,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			clippedVertexToRefCenterX = refCenterX - clippedVertexX;
 			clippedVertexToRefCenterY = refCenterY - clippedVertexY;
 			clippedVertexToRefCenterZ = refCenterZ - clippedVertexZ;
-			let depth = clippedVertexToRefCenterX * refNormalX + clippedVertexToRefCenterY * refNormalY + clippedVertexToRefCenterZ * refNormalZ;
+			const depth = clippedVertexToRefCenterX * refNormalX + clippedVertexToRefCenterY * refNormalY + clippedVertexToRefCenterZ * refNormalZ;
 			let clippedVertexOnRefFaceX;
 			let clippedVertexOnRefFaceY;
 			let clippedVertexOnRefFaceZ;
@@ -5140,7 +5257,7 @@ oimo.collision.narrowphase.detector.BoxBoxDetector = class oimo_collision_narrow
 			}
 		}
 	}
-}
+};
 if(!oimo.collision.narrowphase.detector._BoxBoxDetector) oimo.collision.narrowphase.detector._BoxBoxDetector = {};
 oimo.collision.narrowphase.detector._BoxBoxDetector.IncidentVertex = class oimo_collision_narrowphase_detector__$BoxBoxDetector_IncidentVertex {
 	constructor() {
@@ -5150,7 +5267,7 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.IncidentVertex = class oimo_
 		this.wy = 0;
 		this.wz = 0;
 	}
-}
+};
 oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_collision_narrowphase_detector__$BoxBoxDetector_FaceClipper {
 	constructor() {
 		this.w = 0;
@@ -5176,39 +5293,40 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 		this.vertices[7] = new oimo.collision.narrowphase.detector._BoxBoxDetector.IncidentVertex();
 		this.tmpVertices[7] = new oimo.collision.narrowphase.detector._BoxBoxDetector.IncidentVertex();
 	}
+
 	clip() {
 		let _g = 0;
-		let _g1 = this.numVertices;
+		const _g1 = this.numVertices;
 		while(_g < _g1) {
-			let i = _g++;
-			let v1 = this.vertices[i];
-			let v2 = this.vertices[(i + 1) % this.numVertices];
-			let s1 = this.w + v1.x;
-			let s2 = this.w + v2.x;
+			const i = _g++;
+			const v1 = this.vertices[i];
+			const v2 = this.vertices[(i + 1) % this.numVertices];
+			const s1 = this.w + v1.x;
+			const s2 = this.w + v2.x;
 			if(s1 > 0 && s2 > 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
 			} else if(s1 > 0 && s2 <= 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
-				let t = s1 / (s1 - s2);
-				let _this1 = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this1 = this.tmpVertices[this.numTmpVertices++];
 				_this1.x = v1.x + (v2.x - v1.x) * t;
 				_this1.y = v1.y + (v2.y - v1.y) * t;
 				_this1.wx = v1.wx + (v2.wx - v1.wx) * t;
 				_this1.wy = v1.wy + (v2.wy - v1.wy) * t;
 				_this1.wz = v1.wz + (v2.wz - v1.wz) * t;
 			} else if(s1 <= 0 && s2 > 0) {
-				let t = s1 / (s1 - s2);
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x + (v2.x - v1.x) * t;
 				_this.y = v1.y + (v2.y - v1.y) * t;
 				_this.wx = v1.wx + (v2.wx - v1.wx) * t;
@@ -5216,43 +5334,43 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 				_this.wz = v1.wz + (v2.wz - v1.wz) * t;
 			}
 		}
-		let tmp = this.vertices;
+		const tmp = this.vertices;
 		this.vertices = this.tmpVertices;
 		this.tmpVertices = tmp;
 		this.numVertices = this.numTmpVertices;
 		this.numTmpVertices = 0;
 		let _g2 = 0;
-		let _g3 = this.numVertices;
+		const _g3 = this.numVertices;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let v1 = this.vertices[i];
-			let v2 = this.vertices[(i + 1) % this.numVertices];
-			let s1 = this.w - v1.x;
-			let s2 = this.w - v2.x;
+			const i = _g2++;
+			const v1 = this.vertices[i];
+			const v2 = this.vertices[(i + 1) % this.numVertices];
+			const s1 = this.w - v1.x;
+			const s2 = this.w - v2.x;
 			if(s1 > 0 && s2 > 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
 			} else if(s1 > 0 && s2 <= 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
-				let t = s1 / (s1 - s2);
-				let _this1 = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this1 = this.tmpVertices[this.numTmpVertices++];
 				_this1.x = v1.x + (v2.x - v1.x) * t;
 				_this1.y = v1.y + (v2.y - v1.y) * t;
 				_this1.wx = v1.wx + (v2.wx - v1.wx) * t;
 				_this1.wy = v1.wy + (v2.wy - v1.wy) * t;
 				_this1.wz = v1.wz + (v2.wz - v1.wz) * t;
 			} else if(s1 <= 0 && s2 > 0) {
-				let t = s1 / (s1 - s2);
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x + (v2.x - v1.x) * t;
 				_this.y = v1.y + (v2.y - v1.y) * t;
 				_this.wx = v1.wx + (v2.wx - v1.wx) * t;
@@ -5260,43 +5378,43 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 				_this.wz = v1.wz + (v2.wz - v1.wz) * t;
 			}
 		}
-		let tmp1 = this.vertices;
+		const tmp1 = this.vertices;
 		this.vertices = this.tmpVertices;
 		this.tmpVertices = tmp1;
 		this.numVertices = this.numTmpVertices;
 		this.numTmpVertices = 0;
 		let _g4 = 0;
-		let _g5 = this.numVertices;
+		const _g5 = this.numVertices;
 		while(_g4 < _g5) {
-			let i = _g4++;
-			let v1 = this.vertices[i];
-			let v2 = this.vertices[(i + 1) % this.numVertices];
-			let s1 = this.h + v1.y;
-			let s2 = this.h + v2.y;
+			const i = _g4++;
+			const v1 = this.vertices[i];
+			const v2 = this.vertices[(i + 1) % this.numVertices];
+			const s1 = this.h + v1.y;
+			const s2 = this.h + v2.y;
 			if(s1 > 0 && s2 > 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
 			} else if(s1 > 0 && s2 <= 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
-				let t = s1 / (s1 - s2);
-				let _this1 = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this1 = this.tmpVertices[this.numTmpVertices++];
 				_this1.x = v1.x + (v2.x - v1.x) * t;
 				_this1.y = v1.y + (v2.y - v1.y) * t;
 				_this1.wx = v1.wx + (v2.wx - v1.wx) * t;
 				_this1.wy = v1.wy + (v2.wy - v1.wy) * t;
 				_this1.wz = v1.wz + (v2.wz - v1.wz) * t;
 			} else if(s1 <= 0 && s2 > 0) {
-				let t = s1 / (s1 - s2);
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x + (v2.x - v1.x) * t;
 				_this.y = v1.y + (v2.y - v1.y) * t;
 				_this.wx = v1.wx + (v2.wx - v1.wx) * t;
@@ -5304,43 +5422,43 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 				_this.wz = v1.wz + (v2.wz - v1.wz) * t;
 			}
 		}
-		let tmp2 = this.vertices;
+		const tmp2 = this.vertices;
 		this.vertices = this.tmpVertices;
 		this.tmpVertices = tmp2;
 		this.numVertices = this.numTmpVertices;
 		this.numTmpVertices = 0;
 		let _g6 = 0;
-		let _g7 = this.numVertices;
+		const _g7 = this.numVertices;
 		while(_g6 < _g7) {
-			let i = _g6++;
-			let v1 = this.vertices[i];
-			let v2 = this.vertices[(i + 1) % this.numVertices];
-			let s1 = this.h - v1.y;
-			let s2 = this.h - v2.y;
+			const i = _g6++;
+			const v1 = this.vertices[i];
+			const v2 = this.vertices[(i + 1) % this.numVertices];
+			const s1 = this.h - v1.y;
+			const s2 = this.h - v2.y;
 			if(s1 > 0 && s2 > 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
 			} else if(s1 > 0 && s2 <= 0) {
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x;
 				_this.y = v1.y;
 				_this.wx = v1.wx;
 				_this.wy = v1.wy;
 				_this.wz = v1.wz;
-				let t = s1 / (s1 - s2);
-				let _this1 = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this1 = this.tmpVertices[this.numTmpVertices++];
 				_this1.x = v1.x + (v2.x - v1.x) * t;
 				_this1.y = v1.y + (v2.y - v1.y) * t;
 				_this1.wx = v1.wx + (v2.wx - v1.wx) * t;
 				_this1.wy = v1.wy + (v2.wy - v1.wy) * t;
 				_this1.wz = v1.wz + (v2.wz - v1.wz) * t;
 			} else if(s1 <= 0 && s2 > 0) {
-				let t = s1 / (s1 - s2);
-				let _this = this.tmpVertices[this.numTmpVertices++];
+				const t = s1 / (s1 - s2);
+				const _this = this.tmpVertices[this.numTmpVertices++];
 				_this.x = v1.x + (v2.x - v1.x) * t;
 				_this.y = v1.y + (v2.y - v1.y) * t;
 				_this.wx = v1.wx + (v2.wx - v1.wx) * t;
@@ -5348,12 +5466,13 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 				_this.wz = v1.wz + (v2.wz - v1.wz) * t;
 			}
 		}
-		let tmp3 = this.vertices;
+		const tmp3 = this.vertices;
 		this.vertices = this.tmpVertices;
 		this.tmpVertices = tmp3;
 		this.numVertices = this.numTmpVertices;
 		this.numTmpVertices = 0;
 	}
+
 	reduce() {
 		if(this.numVertices < 4) {
 			return;
@@ -5366,16 +5485,16 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 		let min1V = null;
 		let max2V = null;
 		let min2V = null;
-		let e1x = 1;
-		let e1y = 1;
-		let e2x = -1;
-		let e2y = 1;
+		const e1x = 1;
+		const e1y = 1;
+		const e2x = -1;
+		const e2y = 1;
 		let _g = 0;
-		let _g1 = this.numVertices;
+		const _g1 = this.numVertices;
 		while(_g < _g1) {
-			let v = this.vertices[_g++];
-			let dot1 = v.x * e1x + v.y * e1y;
-			let dot2 = v.x * e2x + v.y * e2y;
+			const v = this.vertices[_g++];
+			const dot1 = v.x * e1x + v.y * e1y;
+			const dot2 = v.x * e2x + v.y * e2y;
 			if(dot1 > max1) {
 				max1 = dot1;
 				max1V = v;
@@ -5393,55 +5512,57 @@ oimo.collision.narrowphase.detector._BoxBoxDetector.FaceClipper = class oimo_col
 				min2V = v;
 			}
 		}
-		let _this = this.tmpVertices[this.numTmpVertices++];
+		const _this = this.tmpVertices[this.numTmpVertices++];
 		_this.x = max1V.x;
 		_this.y = max1V.y;
 		_this.wx = max1V.wx;
 		_this.wy = max1V.wy;
 		_this.wz = max1V.wz;
-		let _this1 = this.tmpVertices[this.numTmpVertices++];
+		const _this1 = this.tmpVertices[this.numTmpVertices++];
 		_this1.x = max2V.x;
 		_this1.y = max2V.y;
 		_this1.wx = max2V.wx;
 		_this1.wy = max2V.wy;
 		_this1.wz = max2V.wz;
-		let _this2 = this.tmpVertices[this.numTmpVertices++];
+		const _this2 = this.tmpVertices[this.numTmpVertices++];
 		_this2.x = min1V.x;
 		_this2.y = min1V.y;
 		_this2.wx = min1V.wx;
 		_this2.wy = min1V.wy;
 		_this2.wz = min1V.wz;
-		let _this3 = this.tmpVertices[this.numTmpVertices++];
+		const _this3 = this.tmpVertices[this.numTmpVertices++];
 		_this3.x = min2V.x;
 		_this3.y = min2V.y;
 		_this3.wx = min2V.wx;
 		_this3.wy = min2V.wy;
 		_this3.wz = min2V.wz;
-		let tmp = this.vertices;
+		const tmp = this.vertices;
 		this.vertices = this.tmpVertices;
 		this.tmpVertices = tmp;
 		this.numVertices = this.numTmpVertices;
 		this.numTmpVertices = 0;
 	}
-}
+};
 oimo.collision.narrowphase.detector.BoxBoxDetectorMacro = class oimo_collision_narrowphase_detector_BoxBoxDetectorMacro {
-}
+};
 oimo.collision.narrowphase.detector.CachedDetectorData = class oimo_collision_narrowphase_detector_CachedDetectorData {
 	constructor() {
 	}
+
 	_clear() {
 		if(this._gjkCache != null) {
 			this._gjkCache.clear();
 		}
 	}
-}
+};
 oimo.collision.narrowphase.detector.CapsuleCapsuleDetector = class oimo_collision_narrowphase_detector_CapsuleCapsuleDetector extends oimo.collision.narrowphase.detector.Detector {
 	constructor() {
 		super(false);
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
-		let c1 = geom1;
-		let c2 = geom2;
+		const c1 = geom1;
+		const c2 = geom2;
 		result.incremental = false;
 		let axis1X;
 		let axis1Y;
@@ -5455,10 +5576,10 @@ oimo.collision.narrowphase.detector.CapsuleCapsuleDetector = class oimo_collisio
 		axis2X = tf2._rotation01;
 		axis2Y = tf2._rotation11;
 		axis2Z = tf2._rotation21;
-		let hh1 = c1._halfHeight;
-		let hh2 = c2._halfHeight;
-		let r1 = c1._radius;
-		let r2 = c2._radius;
+		const hh1 = c1._halfHeight;
+		const hh2 = c2._halfHeight;
+		const r1 = c1._radius;
+		const r2 = c2._radius;
 		let p1X;
 		let p1Y;
 		let p1Z;
@@ -5501,11 +5622,11 @@ oimo.collision.narrowphase.detector.CapsuleCapsuleDetector = class oimo_collisio
 		d2X = q2X - p2X;
 		d2Y = q2Y - p2Y;
 		d2Z = q2Z - p2Z;
-		let p21d1 = -(p12X * d1X + p12Y * d1Y + p12Z * d1Z);
-		let p12d2 = p12X * d2X + p12Y * d2Y + p12Z * d2Z;
-		let d11 = hh1 * hh1 * 4;
-		let d12 = d1X * d2X + d1Y * d2Y + d1Z * d2Z;
-		let d22 = hh2 * hh2 * 4;
+		const p21d1 = -(p12X * d1X + p12Y * d1Y + p12Z * d1Z);
+		const p12d2 = p12X * d2X + p12Y * d2Y + p12Z * d2Z;
+		const d11 = hh1 * hh1 * 4;
+		const d12 = d1X * d2X + d1Y * d2Y + d1Z * d2Z;
+		const d22 = hh2 * hh2 * 4;
 		let t1;
 		let t2;
 		if(d11 == 0 && d22 == 0) {
@@ -5532,7 +5653,7 @@ oimo.collision.narrowphase.detector.CapsuleCapsuleDetector = class oimo_collisio
 				t1 = p21d1 / d11;
 			}
 		} else {
-			let det = d11 * d22 - d12 * d12;
+			const det = d11 * d22 - d12 * d12;
 			if(det == 0) {
 				t1 = 0;
 			} else {
@@ -5588,11 +5709,11 @@ oimo.collision.narrowphase.detector.CapsuleCapsuleDetector = class oimo_collisio
 		dX = cp1X - cp2X;
 		dY = cp1Y - cp2Y;
 		dZ = cp1Z - cp2Z;
-		let len2 = dX * dX + dY * dY + dZ * dZ;
+		const len2 = dX * dX + dY * dY + dZ * dZ;
 		if(len2 >= (r1 + r2) * (r1 + r2)) {
 			return;
 		}
-		let len = Math.sqrt(len2);
+		const len = Math.sqrt(len2);
 		let nX;
 		let nY;
 		let nZ;
@@ -5620,19 +5741,20 @@ oimo.collision.narrowphase.detector.CapsuleCapsuleDetector = class oimo_collisio
 		pos2Z = cp2Z + nZ * r2;
 		this.addPoint(result,pos1X,pos1Y,pos1Z,pos2X,pos2Y,pos2Z,r1 + r2 - len,0);
 	}
-}
+};
 oimo.collision.narrowphase.detector.GjkEpaDetector = class oimo_collision_narrowphase_detector_GjkEpaDetector extends oimo.collision.narrowphase.detector.Detector {
 	constructor() {
 		super(false);
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
-		let gjkEpa = oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
-		let g1 = geom1;
-		let g2 = geom2;
-		let status = gjkEpa.computeClosestPointsImpl(g1,g2,tf1,tf2,oimo.common.Setting.enableGJKCaching ? cachedData : null,true);
+		const gjkEpa = oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
+		const g1 = geom1;
+		const g2 = geom2;
+		const status = gjkEpa.computeClosestPointsImpl(g1,g2,tf1,tf2,oimo.common.Setting.enableGJKCaching ? cachedData : null,true);
 		result.incremental = true;
 		if(status != oimo.collision.narrowphase.detector.gjkepa.GjkEpaResultState.SUCCEEDED) {
-			console.log("src/oimo/collision/narrowphase/detector/GjkEpaDetector.hx:28:","GJK/EPA failed: status=" + status);
+			console.log('src/oimo/collision/narrowphase/detector/GjkEpaDetector.hx:28:','GJK/EPA failed: status=' + status);
 			return;
 		}
 		if(gjkEpa.distance > g1._gjkMargin + g2._gjkMargin) {
@@ -5644,11 +5766,11 @@ oimo.collision.narrowphase.detector.GjkEpaDetector = class oimo_collision_narrow
 		let pos2X;
 		let pos2Y;
 		let pos2Z;
-		let v = gjkEpa.closestPoint1;
+		const v = gjkEpa.closestPoint1;
 		pos1X = v.x;
 		pos1Y = v.y;
 		pos1Z = v.z;
-		let v1 = gjkEpa.closestPoint2;
+		const v1 = gjkEpa.closestPoint2;
 		pos2X = v1.x;
 		pos2Y = v1.y;
 		pos2Z = v1.z;
@@ -5682,13 +5804,14 @@ oimo.collision.narrowphase.detector.GjkEpaDetector = class oimo_collision_narrow
 		pos2Z += normalZ * g2._gjkMargin;
 		this.addPoint(result,pos1X,pos1Y,pos1Z,pos2X,pos2Y,pos2Z,g1._gjkMargin + g2._gjkMargin - gjkEpa.distance,0);
 	}
-}
+};
 oimo.collision.narrowphase.detector.SphereBoxDetector = class oimo_collision_narrowphase_detector_SphereBoxDetector extends oimo.collision.narrowphase.detector.Detector {
 	constructor(swapped) {
 		super(swapped);
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
-		let b = geom2;
+		const b = geom2;
 		result.incremental = false;
 		let halfExtX;
 		let halfExtY;
@@ -5702,7 +5825,7 @@ oimo.collision.narrowphase.detector.SphereBoxDetector = class oimo_collision_nar
 		negHalfExtX = -halfExtX;
 		negHalfExtY = -halfExtY;
 		negHalfExtZ = -halfExtZ;
-		let r = geom1._radius;
+		const r = geom1._radius;
 		let boxToSphereX;
 		let boxToSphereY;
 		let boxToSphereZ;
@@ -5734,9 +5857,9 @@ oimo.collision.narrowphase.detector.SphereBoxDetector = class oimo_collision_nar
 			let normalInBoxX;
 			let normalInBoxY;
 			let normalInBoxZ;
-			let distX = sphereToBoxSurfaceX;
-			let distY = sphereToBoxSurfaceY;
-			let distZ = sphereToBoxSurfaceZ;
+			const distX = sphereToBoxSurfaceX;
+			const distY = sphereToBoxSurfaceY;
+			const distZ = sphereToBoxSurfaceZ;
 			let depth;
 			let projectionMaskX;
 			let projectionMaskY;
@@ -5936,17 +6059,18 @@ oimo.collision.narrowphase.detector.SphereBoxDetector = class oimo_collision_nar
 		pos2Z = tf2._positionZ + boxToClosestPointZ;
 		this.addPoint(result,pos1X,pos1Y,pos1Z,pos2X,pos2Y,pos2Z,r - dist,0);
 	}
-}
+};
 oimo.collision.narrowphase.detector.SphereCapsuleDetector = class oimo_collision_narrowphase_detector_SphereCapsuleDetector extends oimo.collision.narrowphase.detector.Detector {
 	constructor(swapped) {
 		super(swapped);
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
-		let c2 = geom2;
+		const c2 = geom2;
 		result.incremental = false;
-		let hh2 = c2._halfHeight;
-		let r1 = geom1._radius;
-		let r2 = c2._radius;
+		const hh2 = c2._halfHeight;
+		const r1 = geom1._radius;
+		const r2 = c2._radius;
 		let axis2X;
 		let axis2Y;
 		let axis2Z;
@@ -5983,7 +6107,7 @@ oimo.collision.narrowphase.detector.SphereCapsuleDetector = class oimo_collision
 		d2X = q2X - p2X;
 		d2Y = q2Y - p2Y;
 		d2Z = q2Z - p2Z;
-		let d22 = hh2 * hh2 * 4;
+		const d22 = hh2 * hh2 * 4;
 		let t = p12X * d2X + p12Y * d2Y + p12Z * d2Z;
 		if(t < 0) {
 			t = 0;
@@ -6004,11 +6128,11 @@ oimo.collision.narrowphase.detector.SphereCapsuleDetector = class oimo_collision
 		dX = cp1X - cp2X;
 		dY = cp1Y - cp2Y;
 		dZ = cp1Z - cp2Z;
-		let len2 = dX * dX + dY * dY + dZ * dZ;
+		const len2 = dX * dX + dY * dY + dZ * dZ;
 		if(len2 >= (r1 + r2) * (r1 + r2)) {
 			return;
 		}
-		let len = Math.sqrt(len2);
+		const len = Math.sqrt(len2);
 		let nX;
 		let nY;
 		let nZ;
@@ -6036,11 +6160,12 @@ oimo.collision.narrowphase.detector.SphereCapsuleDetector = class oimo_collision
 		pos2Z = cp2Z + nZ * r2;
 		this.addPoint(result,pos1X,pos1Y,pos1Z,pos2X,pos2Y,pos2Z,r1 + r2 - len,0);
 	}
-}
+};
 oimo.collision.narrowphase.detector.SphereSphereDetector = class oimo_collision_narrowphase_detector_SphereSphereDetector extends oimo.collision.narrowphase.detector.Detector {
 	constructor() {
 		super(false);
 	}
+
 	detectImpl(result,geom1,geom2,tf1,tf2,cachedData) {
 		result.incremental = false;
 		let dX;
@@ -6049,13 +6174,13 @@ oimo.collision.narrowphase.detector.SphereSphereDetector = class oimo_collision_
 		dX = tf1._positionX - tf2._positionX;
 		dY = tf1._positionY - tf2._positionY;
 		dZ = tf1._positionZ - tf2._positionZ;
-		let r1 = geom1._radius;
-		let r2 = geom2._radius;
-		let len2 = dX * dX + dY * dY + dZ * dZ;
+		const r1 = geom1._radius;
+		const r2 = geom2._radius;
+		const len2 = dX * dX + dY * dY + dZ * dZ;
 		if(len2 >= (r1 + r2) * (r1 + r2)) {
 			return;
 		}
-		let len = Math.sqrt(len2);
+		const len = Math.sqrt(len2);
 		let nX;
 		let nY;
 		let nZ;
@@ -6083,7 +6208,7 @@ oimo.collision.narrowphase.detector.SphereSphereDetector = class oimo_collision_
 		pos2Z = tf2._positionZ + nZ * r2;
 		this.addPoint(result,pos1X,pos1Y,pos1Z,pos2X,pos2Y,pos2Z,r1 + r2 - len,0);
 	}
-}
+};
 if(!oimo.collision.narrowphase.detector.gjkepa) oimo.collision.narrowphase.detector.gjkepa = {};
 oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_narrowphase_detector_gjkepa_EpaPolyhedron {
 	constructor() {
@@ -6096,8 +6221,10 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		this._trianglePool = null;
 		this._vertexPool = null;
 	}
+
 	dumpHoleEdge(first) {
 	}
+
 	validate() {
 		let t = this._triangleList;
 		while(t != null) {
@@ -6135,21 +6262,22 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		}
 		return true;
 	}
+
 	findEdgeLoop(id,base,from) {
 		if(base._tmpDfsId == id) {
 			return;
 		}
 		base._tmpDfsId = id;
-		let _this = base.tmp;
+		const _this = base.tmp;
 		_this.x = from.x;
 		_this.y = from.y;
 		_this.z = from.z;
-		let v = base._vertices[0].v;
+		const v = base._vertices[0].v;
 		_this.x -= v.x;
 		_this.y -= v.y;
 		_this.z -= v.z;
-		let _this1 = base.tmp;
-		let v1 = base._normal;
+		const _this1 = base.tmp;
+		const v1 = base._normal;
 		base._tmpDfsVisible = _this1.x * v1.x + _this1.y * v1.y + _this1.z * v1.z > 0;
 		if(!base._tmpDfsVisible) {
 			this._status = 6;
@@ -6157,57 +6285,57 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		}
 		let _g = 0;
 		while(_g < 3) {
-			let i = _g++;
-			let t = base._adjacentTriangles[i];
+			const i = _g++;
+			const t = base._adjacentTriangles[i];
 			if(t == null) {
 				continue;
 			}
-			let _this = t.tmp;
+			const _this = t.tmp;
 			_this.x = from.x;
 			_this.y = from.y;
 			_this.z = from.z;
-			let v = t._vertices[0].v;
+			const v = t._vertices[0].v;
 			_this.x -= v.x;
 			_this.y -= v.y;
 			_this.z -= v.z;
-			let _this1 = t.tmp;
-			let v1 = t._normal;
+			const _this1 = t.tmp;
+			const v1 = t._normal;
 			t._tmpDfsVisible = _this1.x * v1.x + _this1.y * v1.y + _this1.z * v1.z > 0;
 			if(t._tmpDfsVisible) {
 				this.findEdgeLoop(id,t,from);
 			} else {
-				let v1 = base._vertices[i];
+				const v1 = base._vertices[i];
 				v1._tmpEdgeLoopNext = base._vertices[base._nextIndex[i]];
 				v1._tmpEdgeLoopOuterTriangle = t;
 			}
 		}
-		let triangle = base._adjacentTriangles[0];
+		const triangle = base._adjacentTriangles[0];
 		if(triangle != null) {
-			let pairIndex = base._adjacentPairIndex[0];
+			const pairIndex = base._adjacentPairIndex[0];
 			triangle._adjacentTriangles[pairIndex] = null;
 			triangle._adjacentPairIndex[pairIndex] = -1;
 			base._adjacentTriangles[0] = null;
 			base._adjacentPairIndex[0] = -1;
 		}
-		let triangle1 = base._adjacentTriangles[1];
+		const triangle1 = base._adjacentTriangles[1];
 		if(triangle1 != null) {
-			let pairIndex = base._adjacentPairIndex[1];
+			const pairIndex = base._adjacentPairIndex[1];
 			triangle1._adjacentTriangles[pairIndex] = null;
 			triangle1._adjacentPairIndex[pairIndex] = -1;
 			base._adjacentTriangles[1] = null;
 			base._adjacentPairIndex[1] = -1;
 		}
-		let triangle2 = base._adjacentTriangles[2];
+		const triangle2 = base._adjacentTriangles[2];
 		if(triangle2 != null) {
-			let pairIndex = base._adjacentPairIndex[2];
+			const pairIndex = base._adjacentPairIndex[2];
 			triangle2._adjacentTriangles[pairIndex] = null;
 			triangle2._adjacentPairIndex[pairIndex] = -1;
 			base._adjacentTriangles[2] = null;
 			base._adjacentPairIndex[2] = -1;
 		}
 		this._numTriangles--;
-		let prev = base._prev;
-		let next = base._next;
+		const prev = base._prev;
+		const next = base._next;
 		if(prev != null) {
 			prev._next = next;
 		}
@@ -6226,6 +6354,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		base._next = this._trianglePool;
 		this._trianglePool = base;
 	}
+
 	_init(v1,v2,v3,v4) {
 		this._status = 0;
 		this._numVertices = 4;
@@ -6233,20 +6362,20 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		this._vertices[1] = v2;
 		this._vertices[2] = v3;
 		this._vertices[3] = v4;
-		let _this = this._center;
-		let v = v1.v;
+		const _this = this._center;
+		const v = v1.v;
 		_this.x = v.x;
 		_this.y = v.y;
 		_this.z = v.z;
-		let v5 = v2.v;
+		const v5 = v2.v;
 		_this.x += v5.x;
 		_this.y += v5.y;
 		_this.z += v5.z;
-		let v6 = v3.v;
+		const v6 = v3.v;
 		_this.x += v6.x;
 		_this.y += v6.y;
 		_this.z += v6.z;
-		let v7 = v4.v;
+		const v7 = v4.v;
 		_this.x += v7.x;
 		_this.y += v7.y;
 		_this.z += v7.z;
@@ -6260,7 +6389,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		} else {
 			first = new oimo.collision.narrowphase.detector.gjkepa.EpaTriangle();
 		}
-		let t1 = first;
+		const t1 = first;
 		let first1 = this._trianglePool;
 		if(first1 != null) {
 			this._trianglePool = first1._next;
@@ -6268,7 +6397,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		} else {
 			first1 = new oimo.collision.narrowphase.detector.gjkepa.EpaTriangle();
 		}
-		let t2 = first1;
+		const t2 = first1;
 		let first2 = this._trianglePool;
 		if(first2 != null) {
 			this._trianglePool = first2._next;
@@ -6276,7 +6405,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		} else {
 			first2 = new oimo.collision.narrowphase.detector.gjkepa.EpaTriangle();
 		}
-		let t3 = first2;
+		const t3 = first2;
 		let first3 = this._trianglePool;
 		if(first3 != null) {
 			this._trianglePool = first3._next;
@@ -6284,7 +6413,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		} else {
 			first3 = new oimo.collision.narrowphase.detector.gjkepa.EpaTriangle();
 		}
-		let t4 = first3;
+		const t4 = first3;
 		if(!t1.init(v1,v2,v3,this._center,true)) {
 			this._status = 1;
 		}
@@ -6353,9 +6482,10 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 		}
 		return this._status == 0;
 	}
+
 	_addVertex(vertex,base) {
 		this._vertices[this._numVertices++] = vertex;
-		let v1 = base._vertices[0];
+		const v1 = base._vertices[0];
 		this.findEdgeLoop(this._numVertices,base,vertex.v);
 		if(this._status != 0) {
 			return false;
@@ -6380,7 +6510,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 			} else {
 				first = new oimo.collision.narrowphase.detector.gjkepa.EpaTriangle();
 			}
-			let t = first;
+			const t = first;
 			if(firstT == null) {
 				firstT = t;
 			}
@@ -6422,11 +6552,12 @@ oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron = class oimo_collision_
 			return false;
 		}
 	}
+
 	_dumpAsObjModel() {
 	}
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedronState = class oimo_collision_narrowphase_detector_gjkepa_EpaPolyhedronState {
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_narrowphase_detector_gjkepa_EpaTriangle {
 	constructor() {
 		this.id = ++oimo.collision.narrowphase.detector.gjkepa.EpaTriangle.count;
@@ -6445,6 +6576,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		this._nextIndex[1] = 2;
 		this._nextIndex[2] = 0;
 	}
+
 	init(vertex1,vertex2,vertex3,center,autoCheck) {
 		if(autoCheck == null) {
 			autoCheck = false;
@@ -6461,15 +6593,15 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		let vcX;
 		let vcY;
 		let vcZ;
-		let v = vertex1.v;
+		const v = vertex1.v;
 		v1X = v.x;
 		v1Y = v.y;
 		v1Z = v.z;
-		let v1 = vertex2.v;
+		const v1 = vertex2.v;
 		v2X = v1.x;
 		v2Y = v1.y;
 		v2Z = v1.z;
-		let v2 = vertex3.v;
+		const v2 = vertex3.v;
 		v3X = v2.x;
 		v3Y = v2.y;
 		v3Z = v2.z;
@@ -6503,7 +6635,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		let inverted = false;
 		if(vc1X * inorX + vc1Y * inorY + vc1Z * inorZ < 0) {
 			if(autoCheck) {
-				let tmp = vertex2;
+				const tmp = vertex2;
 				vertex2 = vertex3;
 				vertex3 = tmp;
 				inorX *= -1;
@@ -6516,14 +6648,14 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		this._vertices[0] = vertex1;
 		this._vertices[1] = vertex2;
 		this._vertices[2] = vertex3;
-		let v3 = this._normal;
+		const v3 = this._normal;
 		v3.x = inorX;
 		v3.y = inorY;
 		v3.z = inorZ;
-		let vec1 = vertex1.v;
-		let vec2 = vertex2.v;
-		let vec3 = vertex3.v;
-		let out = this.tmp;
+		const vec1 = vertex1.v;
+		const vec2 = vertex2.v;
+		const vec3 = vertex3.v;
+		const out = this.tmp;
 		let v1X1;
 		let v1Y1;
 		let v1Z1;
@@ -6676,7 +6808,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 				out.y = pY;
 				out.z = pZ;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mind = d;
 				minvX = out.x;
@@ -6724,7 +6856,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 				out.y = pY;
 				out.z = pZ;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mind = d;
 				minvX = out.x;
@@ -6753,7 +6885,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 			out.y = minvY;
 			out.z = minvZ;
 		}
-		let _this = this.tmp;
+		const _this = this.tmp;
 		this._distanceSq = _this.x * _this.x + _this.y * _this.y + _this.z * _this.z;
 		this._adjacentTriangles[0] = null;
 		this._adjacentTriangles[1] = null;
@@ -6763,6 +6895,7 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		this._adjacentPairIndex[2] = -1;
 		return !inverted;
 	}
+
 	setAdjacentTriangle(triangle) {
 		let count = 0;
 		if(this._vertices[0] == triangle._vertices[this._nextIndex[0]] && this._vertices[this._nextIndex[0]] == triangle._vertices[0]) {
@@ -6833,32 +6966,34 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		}
 		return true;
 	}
+
 	removeAdjacentTriangles() {
-		let triangle = this._adjacentTriangles[0];
+		const triangle = this._adjacentTriangles[0];
 		if(triangle != null) {
-			let pairIndex = this._adjacentPairIndex[0];
+			const pairIndex = this._adjacentPairIndex[0];
 			triangle._adjacentTriangles[pairIndex] = null;
 			triangle._adjacentPairIndex[pairIndex] = -1;
 			this._adjacentTriangles[0] = null;
 			this._adjacentPairIndex[0] = -1;
 		}
-		let triangle1 = this._adjacentTriangles[1];
+		const triangle1 = this._adjacentTriangles[1];
 		if(triangle1 != null) {
-			let pairIndex = this._adjacentPairIndex[1];
+			const pairIndex = this._adjacentPairIndex[1];
 			triangle1._adjacentTriangles[pairIndex] = null;
 			triangle1._adjacentPairIndex[pairIndex] = -1;
 			this._adjacentTriangles[1] = null;
 			this._adjacentPairIndex[1] = -1;
 		}
-		let triangle2 = this._adjacentTriangles[2];
+		const triangle2 = this._adjacentTriangles[2];
 		if(triangle2 != null) {
-			let pairIndex = this._adjacentPairIndex[2];
+			const pairIndex = this._adjacentPairIndex[2];
 			triangle2._adjacentTriangles[pairIndex] = null;
 			triangle2._adjacentPairIndex[pairIndex] = -1;
 			this._adjacentTriangles[2] = null;
 			this._adjacentPairIndex[2] = -1;
 		}
 	}
+
 	removeReferences() {
 		this._next = null;
 		this._prev = null;
@@ -6875,9 +7010,10 @@ oimo.collision.narrowphase.detector.gjkepa.EpaTriangle = class oimo_collision_na
 		this._adjacentPairIndex[1] = 0;
 		this._adjacentPairIndex[2] = 0;
 	}
+
 	dump() {
 	}
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.EpaVertex = class oimo_collision_narrowphase_detector_gjkepa_EpaVertex {
 	constructor() {
 		this.randId = Math.random() * 100000 | 0;
@@ -6885,16 +7021,17 @@ oimo.collision.narrowphase.detector.gjkepa.EpaVertex = class oimo_collision_narr
 		this.w1 = new oimo.common.Vec3();
 		this.w2 = new oimo.common.Vec3();
 	}
+
 	init(v,w1,w2) {
-		let _this = this.v;
+		const _this = this.v;
 		_this.x = v.x;
 		_this.y = v.y;
 		_this.z = v.z;
-		let _this1 = this.w1;
+		const _this1 = this.w1;
 		_this1.x = w1.x;
 		_this1.y = w1.y;
 		_this1.z = w1.z;
-		let _this2 = this.w2;
+		const _this2 = this.w2;
 		_this2.x = w2.x;
 		_this2.y = w2.y;
 		_this2.z = w2.z;
@@ -6903,20 +7040,22 @@ oimo.collision.narrowphase.detector.gjkepa.EpaVertex = class oimo_collision_narr
 		this._tmpEdgeLoopOuterTriangle = null;
 		return this;
 	}
+
 	removeReferences() {
 		this._next = null;
 		this._tmpEdgeLoopNext = null;
 		this._tmpEdgeLoopOuterTriangle = null;
 	}
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.GjkCache = class oimo_collision_narrowphase_detector_gjkepa_GjkCache {
 	constructor() {
 		this.prevClosestDir = new oimo.common.Vec3();
 	}
+
 	clear() {
 		this.prevClosestDir.zero();
 	}
-}
+};
 if(!oimo.common) oimo.common = {};
 oimo.common.Vec3 = class oimo_common_Vec3 {
 	constructor(x,y,z) {
@@ -6934,101 +7073,123 @@ oimo.common.Vec3 = class oimo_common_Vec3 {
 		this.z = z;
 		oimo.common.Vec3.numCreations++;
 	}
+
 	init(x,y,z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		return this;
 	}
+
 	zero() {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
 		return this;
 	}
+
 	add(v) {
 		return new oimo.common.Vec3(this.x + v.x,this.y + v.y,this.z + v.z);
 	}
+
 	add3(vx,vy,vz) {
 		return new oimo.common.Vec3(this.x + vx,this.y + vy,this.z + vz);
 	}
+
 	addScaled(v,s) {
 		return new oimo.common.Vec3(this.x + v.x * s,this.y + v.y * s,this.z + v.z * s);
 	}
+
 	sub(v) {
 		return new oimo.common.Vec3(this.x - v.x,this.y - v.y,this.z - v.z);
 	}
+
 	sub3(vx,vy,vz) {
 		return new oimo.common.Vec3(this.x - vx,this.y - vy,this.z - vz);
 	}
+
 	scale(s) {
 		return new oimo.common.Vec3(this.x * s,this.y * s,this.z * s);
 	}
+
 	scale3(sx,sy,sz) {
 		return new oimo.common.Vec3(this.x * sx,this.y * sy,this.z * sz);
 	}
+
 	dot(v) {
 		return this.x * v.x + this.y * v.y + this.z * v.z;
 	}
+
 	cross(v) {
 		return new oimo.common.Vec3(this.y * v.z - this.z * v.y,this.z * v.x - this.x * v.z,this.x * v.y - this.y * v.x);
 	}
+
 	addEq(v) {
 		this.x += v.x;
 		this.y += v.y;
 		this.z += v.z;
 		return this;
 	}
+
 	add3Eq(vx,vy,vz) {
 		this.x += vx;
 		this.y += vy;
 		this.z += vz;
 		return this;
 	}
+
 	addScaledEq(v,s) {
 		this.x += v.x * s;
 		this.y += v.y * s;
 		this.z += v.z * s;
 		return this;
 	}
+
 	subEq(v) {
 		this.x -= v.x;
 		this.y -= v.y;
 		this.z -= v.z;
 		return this;
 	}
+
 	sub3Eq(vx,vy,vz) {
 		this.x -= vx;
 		this.y -= vy;
 		this.z -= vz;
 		return this;
 	}
+
 	scaleEq(s) {
 		this.x *= s;
 		this.y *= s;
 		this.z *= s;
 		return this;
 	}
+
 	scale3Eq(sx,sy,sz) {
 		this.x *= sx;
 		this.y *= sy;
 		this.z *= sz;
 		return this;
 	}
+
 	crossEq(v) {
-		let y = this.z * v.x - this.x * v.z;
-		let z = this.x * v.y - this.y * v.x;
+		const y = this.z * v.x - this.x * v.z;
+		const z = this.x * v.y - this.y * v.x;
 		this.x = this.y * v.z - this.z * v.y;
 		this.y = y;
 		this.z = z;
 		return this;
 	}
+
 	mulMat3(m) {
 		return new oimo.common.Vec3(this.x * m.e00 + this.y * m.e01 + this.z * m.e02,this.x * m.e10 + this.y * m.e11 + this.z * m.e12,this.x * m.e20 + this.y * m.e21 + this.z * m.e22);
 	}
+
 	mulMat4(m) {
 		return new oimo.common.Vec3(this.x * m.e00 + this.y * m.e01 + this.z * m.e02 + m.e03,this.x * m.e10 + this.y * m.e11 + this.z * m.e12 + m.e13,this.x * m.e20 + this.y * m.e21 + this.z * m.e22 + m.e23);
 	}
+
 	mulTransform(tf) {
 		let vX;
 		let vY;
@@ -7048,28 +7209,31 @@ oimo.common.Vec3 = class oimo_common_Vec3 {
 		vX += tf._positionX;
 		vY += tf._positionY;
 		vZ += tf._positionZ;
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = vX;
 		res.y = vY;
 		res.z = vZ;
 		return res;
 	}
+
 	mulMat3Eq(m) {
-		let y = this.x * m.e10 + this.y * m.e11 + this.z * m.e12;
-		let z = this.x * m.e20 + this.y * m.e21 + this.z * m.e22;
+		const y = this.x * m.e10 + this.y * m.e11 + this.z * m.e12;
+		const z = this.x * m.e20 + this.y * m.e21 + this.z * m.e22;
 		this.x = this.x * m.e00 + this.y * m.e01 + this.z * m.e02;
 		this.y = y;
 		this.z = z;
 		return this;
 	}
+
 	mulMat4Eq(m) {
-		let y = this.x * m.e10 + this.y * m.e11 + this.z * m.e12 + m.e13;
-		let z = this.x * m.e20 + this.y * m.e21 + this.z * m.e22 + m.e23;
+		const y = this.x * m.e10 + this.y * m.e11 + this.z * m.e12 + m.e13;
+		const z = this.x * m.e20 + this.y * m.e21 + this.z * m.e22 + m.e23;
 		this.x = this.x * m.e00 + this.y * m.e01 + this.z * m.e02 + m.e03;
 		this.y = y;
 		this.z = z;
 		return this;
 	}
+
 	mulTransformEq(tf) {
 		let vX;
 		let vY;
@@ -7094,12 +7258,15 @@ oimo.common.Vec3 = class oimo_common_Vec3 {
 		this.z = vZ;
 		return this;
 	}
+
 	length() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 	}
+
 	lengthSq() {
 		return this.x * this.x + this.y * this.y + this.z * this.z;
 	}
+
 	normalized() {
 		let invLen = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 		if(invLen > 0) {
@@ -7107,6 +7274,7 @@ oimo.common.Vec3 = class oimo_common_Vec3 {
 		}
 		return new oimo.common.Vec3(this.x * invLen,this.y * invLen,this.z * invLen);
 	}
+
 	normalize() {
 		let invLen = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 		if(invLen > 0) {
@@ -7117,28 +7285,33 @@ oimo.common.Vec3 = class oimo_common_Vec3 {
 		this.z *= invLen;
 		return this;
 	}
+
 	negate() {
 		return new oimo.common.Vec3(-this.x,-this.y,-this.z);
 	}
+
 	negateEq() {
 		this.x = -this.x;
 		this.y = -this.y;
 		this.z = -this.z;
 		return this;
 	}
+
 	copyFrom(v) {
 		this.x = v.x;
 		this.y = v.y;
 		this.z = v.z;
 		return this;
 	}
+
 	clone() {
 		return new oimo.common.Vec3(this.x,this.y,this.z);
 	}
+
 	toString() {
-		return "Vec3[" + (this.x > 0 ? (this.x * 10000000 + 0.5 | 0) / 10000000 : (this.x * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.y > 0 ? (this.y * 10000000 + 0.5 | 0) / 10000000 : (this.y * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.z > 0 ? (this.z * 10000000 + 0.5 | 0) / 10000000 : (this.z * 10000000 - 0.5 | 0) / 10000000) + "]";
+		return 'Vec3[' + (this.x > 0 ? (this.x * 10000000 + 0.5 | 0) / 10000000 : (this.x * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.y > 0 ? (this.y * 10000000 + 0.5 | 0) / 10000000 : (this.y * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.z > 0 ? (this.z * 10000000 + 0.5 | 0) / 10000000 : (this.z * 10000000 - 0.5 | 0) / 10000000) + ']';
 	}
-}
+};
 oimo.common.Transform = class oimo_common_Transform {
 	constructor() {
 		this._positionX = 0;
@@ -7154,6 +7327,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation21 = 0;
 		this._rotation22 = 1;
 	}
+
 	identity() {
 		this._positionX = 0;
 		this._positionY = 0;
@@ -7169,24 +7343,28 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation22 = 1;
 		return this;
 	}
+
 	getPosition() {
-		let position = new oimo.common.Vec3();
+		const position = new oimo.common.Vec3();
 		position.x = this._positionX;
 		position.y = this._positionY;
 		position.z = this._positionZ;
 		return position;
 	}
+
 	getPositionTo(position) {
 		position.x = this._positionX;
 		position.y = this._positionY;
 		position.z = this._positionZ;
 	}
+
 	setPosition(position) {
 		this._positionX = position.x;
 		this._positionY = position.y;
 		this._positionZ = position.z;
 		return this;
 	}
+
 	translate(translation) {
 		let diffX;
 		let diffY;
@@ -7198,8 +7376,9 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._positionY += diffY;
 		this._positionZ += diffZ;
 	}
+
 	getRotation() {
-		let rotation = new oimo.common.Mat3();
+		const rotation = new oimo.common.Mat3();
 		rotation.e00 = this._rotation00;
 		rotation.e01 = this._rotation01;
 		rotation.e02 = this._rotation02;
@@ -7211,6 +7390,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		rotation.e22 = this._rotation22;
 		return rotation;
 	}
+
 	getRotationTo(out) {
 		out.e00 = this._rotation00;
 		out.e01 = this._rotation01;
@@ -7222,6 +7402,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		out.e21 = this._rotation21;
 		out.e22 = this._rotation22;
 	}
+
 	setRotation(rotation) {
 		this._rotation00 = rotation.e00;
 		this._rotation01 = rotation.e01;
@@ -7234,6 +7415,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation22 = rotation.e22;
 		return this;
 	}
+
 	setRotationXyz(eulerAngles) {
 		let xyzX;
 		let xyzY;
@@ -7241,12 +7423,12 @@ oimo.common.Transform = class oimo_common_Transform {
 		xyzX = eulerAngles.x;
 		xyzY = eulerAngles.y;
 		xyzZ = eulerAngles.z;
-		let sx = Math.sin(xyzX);
-		let sy = Math.sin(xyzY);
-		let sz = Math.sin(xyzZ);
-		let cx = Math.cos(xyzX);
-		let cy = Math.cos(xyzY);
-		let cz = Math.cos(xyzZ);
+		const sx = Math.sin(xyzX);
+		const sy = Math.sin(xyzY);
+		const sz = Math.sin(xyzZ);
+		const cx = Math.cos(xyzX);
+		const cy = Math.cos(xyzY);
+		const cz = Math.cos(xyzZ);
 		this._rotation00 = cy * cz;
 		this._rotation01 = -cy * sz;
 		this._rotation02 = sy;
@@ -7257,6 +7439,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation21 = cz * sx + cx * sy * sz;
 		this._rotation22 = cx * cy;
 	}
+
 	rotate(rotation) {
 		let rot00;
 		let rot01;
@@ -7304,6 +7487,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation21 = __tmp__21;
 		this._rotation22 = __tmp__22;
 	}
+
 	rotateXyz(eulerAngles) {
 		let xyzX;
 		let xyzY;
@@ -7320,12 +7504,12 @@ oimo.common.Transform = class oimo_common_Transform {
 		xyzX = eulerAngles.x;
 		xyzY = eulerAngles.y;
 		xyzZ = eulerAngles.z;
-		let sx = Math.sin(xyzX);
-		let sy = Math.sin(xyzY);
-		let sz = Math.sin(xyzZ);
-		let cx = Math.cos(xyzX);
-		let cy = Math.cos(xyzY);
-		let cz = Math.cos(xyzZ);
+		const sx = Math.sin(xyzX);
+		const sy = Math.sin(xyzY);
+		const sz = Math.sin(xyzZ);
+		const cx = Math.cos(xyzX);
+		const cy = Math.cos(xyzY);
+		const cz = Math.cos(xyzZ);
 		rot00 = cy * cz;
 		rot01 = -cy * sz;
 		rot02 = sy;
@@ -7363,16 +7547,17 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation21 = __tmp__21;
 		this._rotation22 = __tmp__22;
 	}
+
 	getOrientation() {
-		let q = new oimo.common.Quat();
+		const q = new oimo.common.Quat();
 		let iqX;
 		let iqY;
 		let iqZ;
 		let iqW;
-		let e00 = this._rotation00;
-		let e11 = this._rotation11;
-		let e22 = this._rotation22;
-		let t = e00 + e11 + e22;
+		const e00 = this._rotation00;
+		const e11 = this._rotation11;
+		const e22 = this._rotation22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -7418,15 +7603,16 @@ oimo.common.Transform = class oimo_common_Transform {
 		q.w = iqW;
 		return q;
 	}
+
 	getOrientationTo(orientation) {
 		let iqX;
 		let iqY;
 		let iqZ;
 		let iqW;
-		let e00 = this._rotation00;
-		let e11 = this._rotation11;
-		let e22 = this._rotation22;
-		let t = e00 + e11 + e22;
+		const e00 = this._rotation00;
+		const e11 = this._rotation11;
+		const e22 = this._rotation22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -7471,6 +7657,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		orientation.z = iqZ;
 		orientation.w = iqW;
 	}
+
 	setOrientation(quaternion) {
 		let qX;
 		let qY;
@@ -7480,22 +7667,22 @@ oimo.common.Transform = class oimo_common_Transform {
 		qY = quaternion.y;
 		qZ = quaternion.z;
 		qW = quaternion.w;
-		let x = qX;
-		let y = qY;
-		let z = qZ;
-		let w = qW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = qX;
+		const y = qY;
+		const z = qZ;
+		const w = qW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		this._rotation00 = 1 - yy - zz;
 		this._rotation01 = xy - wz;
 		this._rotation02 = xz + wy;
@@ -7507,8 +7694,9 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation22 = 1 - xx - yy;
 		return this;
 	}
+
 	clone() {
-		let tf = new oimo.common.Transform();
+		const tf = new oimo.common.Transform();
 		tf._positionX = this._positionX;
 		tf._positionY = this._positionY;
 		tf._positionZ = this._positionZ;
@@ -7523,6 +7711,7 @@ oimo.common.Transform = class oimo_common_Transform {
 		tf._rotation22 = this._rotation22;
 		return tf;
 	}
+
 	copyFrom(transform) {
 		this._positionX = transform._positionX;
 		this._positionY = transform._positionY;
@@ -7538,9 +7727,9 @@ oimo.common.Transform = class oimo_common_Transform {
 		this._rotation22 = transform._rotation22;
 		return this;
 	}
-}
+};
 oimo.common.Setting = class oimo_common_Setting {
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowphase_detector_gjkepa_GjkEpa {
 	constructor() {
 		this.s = new Array(4);
@@ -7573,16 +7762,17 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		this.closestPoint2 = new oimo.common.Vec3();
 		this.polyhedron = new oimo.collision.narrowphase.detector.gjkepa.EpaPolyhedron();
 	}
+
 	computeClosestPointsImpl(c1,c2,tf1,tf2,cache,useEpa) {
 		this.c1 = c1;
 		this.c2 = c2;
 		this.tf1 = tf1;
 		this.tf2 = tf2;
-		let s = this.s;
-		let w1 = this.w1;
-		let w2 = this.w2;
-		let closest = this.closest;
-		let dir = this.dir;
+		const s = this.s;
+		const w1 = this.w1;
+		const w2 = this.w2;
+		const closest = this.closest;
+		const dir = this.dir;
 		if(cache != null) {
 			if(cache._gjkCache == null) {
 				cache._gjkCache = new oimo.collision.narrowphase.detector.gjkepa.GjkCache();
@@ -7608,12 +7798,12 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		this.simplexSize = 0;
 		this.computeWitnessPoint1(false);
 		this.computeWitnessPoint2(false);
-		let _this = this.s[this.simplexSize];
-		let v = this.w1[this.simplexSize];
+		const _this = this.s[this.simplexSize];
+		const v = this.w1[this.simplexSize];
 		_this.x = v.x;
 		_this.y = v.y;
 		_this.z = v.z;
-		let v1 = this.w2[this.simplexSize];
+		const v1 = this.w2[this.simplexSize];
 		_this.x -= v1.x;
 		_this.y -= v1.y;
 		_this.z -= v1.z;
@@ -7623,7 +7813,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let v = 0;
 			switch(this.simplexSize) {
 			case 1:
-				let v1 = s[0];
+				const v1 = s[0];
 				closest.x = v1.x;
 				closest.y = v1.y;
 				closest.z = v1.z;
@@ -7636,11 +7826,11 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				let v2X;
 				let v2Y;
 				let v2Z;
-				let v2 = s[0];
+				const v2 = s[0];
 				v1X = v2.x;
 				v1Y = v2.y;
 				v1Z = v2.z;
-				let v3 = s[1];
+				const v3 = s[1];
 				v2X = v3.x;
 				v2Y = v3.y;
 				v2Z = v3.z;
@@ -7676,9 +7866,9 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				}
 				break;
 			case 3:
-				let vec1 = s[0];
-				let vec2 = s[1];
-				let vec3 = s[2];
+				const vec1 = s[0];
+				const vec2 = s[1];
+				const vec3 = s[2];
 				let v1X1;
 				let v1Y1;
 				let v1Z1;
@@ -7841,7 +8031,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = pZ;
 						b = 3;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind < 0 || d < mind) {
 						mini = b << 1;
 						mind = d;
@@ -7894,7 +8084,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = pZ;
 						b = 3;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind < 0 || d < mind) {
 						mini = b & 1 | (b & 2) << 1;
 						mind = d;
@@ -7928,10 +8118,10 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				}
 				break;
 			case 4:
-				let vec11 = s[0];
-				let vec21 = s[1];
-				let vec31 = s[2];
-				let vec4 = s[3];
+				const vec11 = s[0];
+				const vec21 = s[1];
+				const vec31 = s[2];
+				const vec4 = s[3];
 				let v1X2;
 				let v1Y2;
 				let v1Z2;
@@ -8010,7 +8200,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				n243X = v24Y * v23Z1 - v24Z * v23Y1;
 				n243Y = v24Z * v23X1 - v24X * v23Z1;
 				n243Z = v24X * v23Y1 - v24Y * v23X1;
-				let sign = v12X2 * n243X + v12Y2 * n243Y + v12Z2 * n243Z > 0 ? 1 : -1;
+				const sign = v12X2 * n243X + v12Y2 * n243Y + v12Z2 * n243Z > 0 ? 1 : -1;
 				let mind1 = -1;
 				let minvX1;
 				let minvY1;
@@ -8182,7 +8372,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -8235,7 +8425,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -8437,7 +8627,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -8490,7 +8680,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -8523,7 +8713,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = minvZ;
 						b = 7;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind1 < 0 || d < mind1) {
 						mini1 = b & 1 | (b & 6) << 1;
 						mind1 = d;
@@ -8695,7 +8885,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -8748,7 +8938,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -8781,7 +8971,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = minvZ;
 						b = 7;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind1 < 0 || d < mind1) {
 						mini1 = b & 3 | (b & 4) << 1;
 						mind1 = d;
@@ -8953,7 +9143,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -9006,7 +9196,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -9039,7 +9229,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = minvZ;
 						b = 7;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind1 < 0 || d < mind1) {
 						mini1 = b << 1;
 						mind1 = d;
@@ -9076,7 +9266,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 					break;
 				}
 				if(this.simplexSize == 4) {
-					let epaState = this.computeDepth(c1,c2,tf1,tf2,s,w1,w2);
+					const epaState = this.computeDepth(c1,c2,tf1,tf2,s,w1,w2);
 					if(epaState != 0) {
 						this.distance = 0;
 						return epaState;
@@ -9096,19 +9286,19 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			dir.z = -dir.z;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this = this.s[this.simplexSize];
-			let v4 = this.w1[this.simplexSize];
+			const _this = this.s[this.simplexSize];
+			const v4 = this.w1[this.simplexSize];
 			_this.x = v4.x;
 			_this.y = v4.y;
 			_this.z = v4.z;
-			let v5 = this.w2[this.simplexSize];
+			const v5 = this.w2[this.simplexSize];
 			_this.x -= v5.x;
 			_this.y -= v5.y;
 			_this.z -= v5.z;
 			if(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z < 1e-008) {
-				throw new Error("!?");
+				throw new Error('!?');
 			}
-			let _this1 = s[this.simplexSize];
+			const _this1 = s[this.simplexSize];
 			if(_this1.x * dir.x + _this1.y * dir.y + _this1.z * dir.z - (closest.x * dir.x + closest.y * dir.y + closest.z * dir.z) < 1e-008) {
 				this.interpolateClosestPoints();
 				this.distance = Math.sqrt(closest.x * closest.x + closest.y * closest.y + closest.z * closest.z);
@@ -9122,14 +9312,15 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		}
 		return 2;
 	}
+
 	convexCastImpl(c1,c2,tf1,tf2,tl1,tl2,hit) {
 		this.c1 = c1;
 		this.c2 = c2;
 		this.tf1 = tf1;
 		this.tf2 = tf2;
-		let s = this.s;
-		let closest = this.closest;
-		let dir = this.dir;
+		const s = this.s;
+		const closest = this.closest;
+		const dir = this.dir;
 		let firstDirX;
 		let firstDirY;
 		let firstDirZ;
@@ -9146,26 +9337,26 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		if(this.c1 != null) {
 			this.computeWitnessPoint1(true);
 		} else {
-			let v = this.w1[this.simplexSize];
+			const v = this.w1[this.simplexSize];
 			v.x = this.tf1._positionX;
 			v.y = this.tf1._positionY;
 			v.z = this.tf1._positionZ;
 		}
 		this.computeWitnessPoint2(true);
-		let _this = this.s[this.simplexSize];
-		let v = this.w1[this.simplexSize];
+		const _this = this.s[this.simplexSize];
+		const v = this.w1[this.simplexSize];
 		_this.x = v.x;
 		_this.y = v.y;
 		_this.z = v.z;
-		let v1 = this.w2[this.simplexSize];
+		const v1 = this.w2[this.simplexSize];
 		_this.x -= v1.x;
 		_this.y -= v1.y;
 		_this.z -= v1.z;
 		this.simplexSize = 1;
 		let count = 0;
 		let lambda = 0.0;
-		let rayX = this.rayX;
-		let rayR = this.rayR;
+		const rayX = this.rayX;
+		const rayR = this.rayR;
 		rayX.zero();
 		rayR.x = tl2.x;
 		rayR.y = tl2.y;
@@ -9177,7 +9368,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let v = 0;
 			switch(this.simplexSize) {
 			case 1:
-				let v1 = s[0];
+				const v1 = s[0];
 				closest.x = v1.x;
 				closest.y = v1.y;
 				closest.z = v1.z;
@@ -9190,11 +9381,11 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				let v2X;
 				let v2Y;
 				let v2Z;
-				let v2 = s[0];
+				const v2 = s[0];
 				v1X = v2.x;
 				v1Y = v2.y;
 				v1Z = v2.z;
-				let v3 = s[1];
+				const v3 = s[1];
 				v2X = v3.x;
 				v2Y = v3.y;
 				v2Z = v3.z;
@@ -9230,9 +9421,9 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				}
 				break;
 			case 3:
-				let vec1 = s[0];
-				let vec2 = s[1];
-				let vec3 = s[2];
+				const vec1 = s[0];
+				const vec2 = s[1];
+				const vec3 = s[2];
 				let v1X1;
 				let v1Y1;
 				let v1Z1;
@@ -9395,7 +9586,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = pZ;
 						b = 3;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind < 0 || d < mind) {
 						mini = b << 1;
 						mind = d;
@@ -9448,7 +9639,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = pZ;
 						b = 3;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind < 0 || d < mind) {
 						mini = b & 1 | (b & 2) << 1;
 						mind = d;
@@ -9482,10 +9673,10 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				}
 				break;
 			case 4:
-				let vec11 = s[0];
-				let vec21 = s[1];
-				let vec31 = s[2];
-				let vec4 = s[3];
+				const vec11 = s[0];
+				const vec21 = s[1];
+				const vec31 = s[2];
+				const vec4 = s[3];
 				let v1X2;
 				let v1Y2;
 				let v1Z2;
@@ -9564,7 +9755,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				n243X = v24Y * v23Z1 - v24Z * v23Y1;
 				n243Y = v24Z * v23X1 - v24X * v23Z1;
 				n243Z = v24X * v23Y1 - v24Y * v23X1;
-				let sign = v12X2 * n243X + v12Y2 * n243Y + v12Z2 * n243Z > 0 ? 1 : -1;
+				const sign = v12X2 * n243X + v12Y2 * n243Y + v12Z2 * n243Z > 0 ? 1 : -1;
 				let mind1 = -1;
 				let minvX1;
 				let minvY1;
@@ -9736,7 +9927,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -9789,7 +9980,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -9991,7 +10182,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -10044,7 +10235,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -10077,7 +10268,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = minvZ;
 						b = 7;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind1 < 0 || d < mind1) {
 						mini1 = b & 1 | (b & 6) << 1;
 						mind1 = d;
@@ -10249,7 +10440,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -10302,7 +10493,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -10335,7 +10526,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = minvZ;
 						b = 7;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind1 < 0 || d < mind1) {
 						mini1 = b & 3 | (b & 4) << 1;
 						mind1 = d;
@@ -10507,7 +10698,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b << 1;
 							mind = d;
@@ -10560,7 +10751,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 							closest.z = pZ;
 							b = 3;
 						}
-						let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+						const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 						if(mind < 0 || d < mind) {
 							mini = b & 1 | (b & 2) << 1;
 							mind = d;
@@ -10593,7 +10784,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 						closest.z = minvZ;
 						b = 7;
 					}
-					let d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
+					const d = closest.x * closest.x + closest.y * closest.y + closest.z * closest.z;
 					if(mind1 < 0 || d < mind1) {
 						mini1 = b << 1;
 						mind1 = d;
@@ -10621,7 +10812,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				}
 				this.interpolateClosestPoints();
 				hit.fraction = lambda;
-				let _this = hit.normal;
+				const _this = hit.normal;
 				_this.x = dir.x;
 				_this.y = dir.y;
 				_this.z = dir.z;
@@ -10632,8 +10823,8 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				_this.x *= invLen;
 				_this.y *= invLen;
 				_this.z *= invLen;
-				let _this1 = hit.position;
-				let v = this.closestPoint1;
+				const _this1 = hit.position;
+				const v = this.closestPoint1;
 				_this1.x = v.x;
 				_this1.y = v.y;
 				_this1.z = v.z;
@@ -10651,35 +10842,35 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			if(this.c1 != null) {
 				this.computeWitnessPoint1(true);
 			} else {
-				let v = this.w1[this.simplexSize];
+				const v = this.w1[this.simplexSize];
 				v.x = this.tf1._positionX;
 				v.y = this.tf1._positionY;
 				v.z = this.tf1._positionZ;
 			}
 			this.computeWitnessPoint2(true);
-			let _this = this.s[this.simplexSize];
-			let v4 = this.w1[this.simplexSize];
+			const _this = this.s[this.simplexSize];
+			const v4 = this.w1[this.simplexSize];
 			_this.x = v4.x;
 			_this.y = v4.y;
 			_this.z = v4.z;
-			let v5 = this.w2[this.simplexSize];
+			const v5 = this.w2[this.simplexSize];
 			_this.x -= v5.x;
 			_this.y -= v5.y;
 			_this.z -= v5.z;
-			let _this1 = s[this.simplexSize];
+			const _this1 = s[this.simplexSize];
 			_this1.x -= rayX.x;
 			_this1.y -= rayX.y;
 			_this1.z -= rayX.z;
 			if(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z < 1e-008) {
-				throw new Error("!?");
+				throw new Error('!?');
 			}
-			let p = s[this.simplexSize];
-			let pn = p.x * dir.x + p.y * dir.y + p.z * dir.z;
+			const p = s[this.simplexSize];
+			const pn = p.x * dir.x + p.y * dir.y + p.z * dir.z;
 			if(pn < 0) {
 				if(rayR.x * dir.x + rayR.y * dir.y + rayR.z * dir.z >= 0) {
 					return false;
 				}
-				let dLambda = pn / (rayR.x * dir.x + rayR.y * dir.y + rayR.z * dir.z);
+				const dLambda = pn / (rayR.x * dir.x + rayR.y * dir.y + rayR.z * dir.z);
 				lambda += dLambda;
 				if(lambda >= 1) {
 					return false;
@@ -10688,10 +10879,10 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				rayX.y += rayR.y * dLambda;
 				rayX.z += rayR.z * dLambda;
 				let _g = 0;
-				let _g1 = this.simplexSize + 1;
+				const _g1 = this.simplexSize + 1;
 				while(_g < _g1) {
-					let _this = s[_g++];
-					let s1 = -dLambda;
+					const _this = s[_g++];
+					const s1 = -dLambda;
 					_this.x += rayR.x * s1;
 					_this.y += rayR.y * s1;
 					_this.z += rayR.z * s1;
@@ -10699,12 +10890,12 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			}
 			let duplicate = false;
 			let _g = 0;
-			let _g1 = this.simplexSize;
+			const _g1 = this.simplexSize;
 			while(_g < _g1) {
-				let i = _g++;
-				let dx = s[i].x - s[this.simplexSize].x;
-				let dy = s[i].y - s[this.simplexSize].y;
-				let dz = s[i].z - s[this.simplexSize].z;
+				const i = _g++;
+				const dx = s[i].x - s[this.simplexSize].x;
+				const dy = s[i].y - s[this.simplexSize].y;
+				const dz = s[i].z - s[this.simplexSize].z;
 				if(dx * dx + dy * dy + dz * dz < 1e-008) {
 					duplicate = true;
 					break;
@@ -10717,16 +10908,17 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		}
 		return false;
 	}
+
 	interpolateClosestPoints() {
 		switch(this.simplexSize) {
 		case 1:
-			let _this = this.closestPoint1;
-			let v = this.w1[0];
+			const _this = this.closestPoint1;
+			const v = this.w1[0];
 			_this.x = v.x;
 			_this.y = v.y;
 			_this.z = v.z;
-			let _this1 = this.closestPoint2;
-			let v1 = this.w2[0];
+			const _this1 = this.closestPoint2;
+			const v1 = this.w2[0];
 			_this1.x = v1.x;
 			_this1.y = v1.y;
 			_this1.z = v1.z;
@@ -10735,7 +10927,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let cX;
 			let cY;
 			let cZ;
-			let v2 = this.closest;
+			const v2 = this.closest;
 			cX = v2.x;
 			cY = v2.y;
 			cZ = v2.z;
@@ -10757,27 +10949,27 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let w21X;
 			let w21Y;
 			let w21Z;
-			let v3 = this.s[0];
+			const v3 = this.s[0];
 			s0X = v3.x;
 			s0Y = v3.y;
 			s0Z = v3.z;
-			let v4 = this.w1[0];
+			const v4 = this.w1[0];
 			w10X = v4.x;
 			w10Y = v4.y;
 			w10Z = v4.z;
-			let v5 = this.w2[0];
+			const v5 = this.w2[0];
 			w20X = v5.x;
 			w20Y = v5.y;
 			w20Z = v5.z;
-			let v6 = this.s[1];
+			const v6 = this.s[1];
 			s1X = v6.x;
 			s1Y = v6.y;
 			s1Z = v6.z;
-			let v7 = this.w1[1];
+			const v7 = this.w1[1];
 			w11X = v7.x;
 			w11Y = v7.y;
 			w11Z = v7.z;
-			let v8 = this.w2[1];
+			const v8 = this.w2[1];
 			w21X = v8.x;
 			w21Y = v8.y;
 			w21Z = v8.z;
@@ -10797,7 +10989,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			s0cX = cX - s0X;
 			s0cY = cY - s0Y;
 			s0cZ = cZ - s0Z;
-			let t = (s0cX * s01X + s0cY * s01Y + s0cZ * s01Z) * invDet;
+			const t = (s0cX * s01X + s0cY * s01Y + s0cZ * s01Z) * invDet;
 			let diffX;
 			let diffY;
 			let diffZ;
@@ -10819,11 +11011,11 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			cp2X = w20X + diffX * t;
 			cp2Y = w20Y + diffY * t;
 			cp2Z = w20Z + diffZ * t;
-			let v9 = this.closestPoint1;
+			const v9 = this.closestPoint1;
 			v9.x = cp1X;
 			v9.y = cp1Y;
 			v9.z = cp1Z;
-			let v10 = this.closestPoint2;
+			const v10 = this.closestPoint2;
 			v10.x = cp2X;
 			v10.y = cp2Y;
 			v10.z = cp2Z;
@@ -10832,7 +11024,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let cX1;
 			let cY1;
 			let cZ1;
-			let v11 = this.closest;
+			const v11 = this.closest;
 			cX1 = v11.x;
 			cY1 = v11.y;
 			cZ1 = v11.z;
@@ -10863,39 +11055,39 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let w22X;
 			let w22Y;
 			let w22Z;
-			let v12 = this.s[0];
+			const v12 = this.s[0];
 			s0X1 = v12.x;
 			s0Y1 = v12.y;
 			s0Z1 = v12.z;
-			let v13 = this.w1[0];
+			const v13 = this.w1[0];
 			w10X1 = v13.x;
 			w10Y1 = v13.y;
 			w10Z1 = v13.z;
-			let v14 = this.w2[0];
+			const v14 = this.w2[0];
 			w20X1 = v14.x;
 			w20Y1 = v14.y;
 			w20Z1 = v14.z;
-			let v15 = this.s[1];
+			const v15 = this.s[1];
 			s1X1 = v15.x;
 			s1Y1 = v15.y;
 			s1Z1 = v15.z;
-			let v16 = this.w1[1];
+			const v16 = this.w1[1];
 			w11X1 = v16.x;
 			w11Y1 = v16.y;
 			w11Z1 = v16.z;
-			let v17 = this.w2[1];
+			const v17 = this.w2[1];
 			w21X1 = v17.x;
 			w21Y1 = v17.y;
 			w21Z1 = v17.z;
-			let v18 = this.s[2];
+			const v18 = this.s[2];
 			s2X = v18.x;
 			s2Y = v18.y;
 			s2Z = v18.z;
-			let v19 = this.w1[2];
+			const v19 = this.w1[2];
 			w12X = v19.x;
 			w12Y = v19.y;
 			w12Z = v19.z;
-			let v20 = this.w2[2];
+			const v20 = this.w2[2];
 			w22X = v20.x;
 			w22Y = v20.y;
 			w22Z = v20.z;
@@ -10917,17 +11109,17 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			s0cX1 = cX1 - s0X1;
 			s0cY1 = cY1 - s0Y1;
 			s0cZ1 = cZ1 - s0Z1;
-			let d11 = s01X1 * s01X1 + s01Y1 * s01Y1 + s01Z1 * s01Z1;
-			let d12 = s01X1 * s02X + s01Y1 * s02Y + s01Z1 * s02Z;
-			let d22 = s02X * s02X + s02Y * s02Y + s02Z * s02Z;
-			let d1c = s01X1 * s0cX1 + s01Y1 * s0cY1 + s01Z1 * s0cZ1;
-			let d2c = s02X * s0cX1 + s02Y * s0cY1 + s02Z * s0cZ1;
+			const d11 = s01X1 * s01X1 + s01Y1 * s01Y1 + s01Z1 * s01Z1;
+			const d12 = s01X1 * s02X + s01Y1 * s02Y + s01Z1 * s02Z;
+			const d22 = s02X * s02X + s02Y * s02Y + s02Z * s02Z;
+			const d1c = s01X1 * s0cX1 + s01Y1 * s0cY1 + s01Z1 * s0cZ1;
+			const d2c = s02X * s0cX1 + s02Y * s0cY1 + s02Z * s0cZ1;
 			let invDet1 = d11 * d22 - d12 * d12;
 			if(invDet1 != 0) {
 				invDet1 = 1 / invDet1;
 			}
-			let s = (d1c * d22 - d2c * d12) * invDet1;
-			let t1 = (-d1c * d12 + d2c * d11) * invDet1;
+			const s = (d1c * d22 - d2c * d12) * invDet1;
+			const t1 = (-d1c * d12 + d2c * d11) * invDet1;
 			let diffX1;
 			let diffY1;
 			let diffZ1;
@@ -10961,29 +11153,31 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			cp2X1 += diffX1 * t1;
 			cp2Y1 += diffY1 * t1;
 			cp2Z1 += diffZ1 * t1;
-			let v21 = this.closestPoint1;
+			const v21 = this.closestPoint1;
 			v21.x = cp1X1;
 			v21.y = cp1Y1;
 			v21.z = cp1Z1;
-			let v22 = this.closestPoint2;
+			const v22 = this.closestPoint2;
 			v22.x = cp2X1;
 			v22.y = cp2Y1;
 			v22.z = cp2Z1;
 			break;
 		default:
-			throw new Error("!?");
+			throw new Error('!?');
 		}
 	}
+
 	loadCache(gjkCache) {
-		let _this = this.dir;
-		let v = gjkCache.prevClosestDir;
+		const _this = this.dir;
+		const v = gjkCache.prevClosestDir;
 		_this.x = v.x;
 		_this.y = v.y;
 		_this.z = v.z;
 	}
+
 	saveCache(gjkCache) {
-		let _this = gjkCache.prevClosestDir;
-		let v = this.closest;
+		const _this = gjkCache.prevClosestDir;
+		const v = this.closest;
 		_this.x = v.x;
 		_this.y = v.y;
 		_this.z = v.z;
@@ -10991,215 +11185,217 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		_this.y = -_this.y;
 		_this.z = -_this.z;
 	}
+
 	shrinkSimplex(vertexBits) {
 		this.simplexSize = vertexBits;
 		this.simplexSize = (this.simplexSize & 5) + (this.simplexSize >> 1 & 5);
 		this.simplexSize = (this.simplexSize & 3) + (this.simplexSize >> 2 & 3);
 		switch(vertexBits) {
 		case 2:
-			let _this = this.s[0];
-			let v = this.s[1];
+			const _this = this.s[0];
+			const v = this.s[1];
 			_this.x = v.x;
 			_this.y = v.y;
 			_this.z = v.z;
-			let _this1 = this.w1[0];
-			let v1 = this.w1[1];
+			const _this1 = this.w1[0];
+			const v1 = this.w1[1];
 			_this1.x = v1.x;
 			_this1.y = v1.y;
 			_this1.z = v1.z;
-			let _this2 = this.w2[0];
-			let v2 = this.w2[1];
+			const _this2 = this.w2[0];
+			const v2 = this.w2[1];
 			_this2.x = v2.x;
 			_this2.y = v2.y;
 			_this2.z = v2.z;
 			break;
 		case 4:
-			let _this3 = this.s[0];
-			let v3 = this.s[2];
+			const _this3 = this.s[0];
+			const v3 = this.s[2];
 			_this3.x = v3.x;
 			_this3.y = v3.y;
 			_this3.z = v3.z;
-			let _this4 = this.w1[0];
-			let v4 = this.w1[2];
+			const _this4 = this.w1[0];
+			const v4 = this.w1[2];
 			_this4.x = v4.x;
 			_this4.y = v4.y;
 			_this4.z = v4.z;
-			let _this5 = this.w2[0];
-			let v5 = this.w2[2];
+			const _this5 = this.w2[0];
+			const v5 = this.w2[2];
 			_this5.x = v5.x;
 			_this5.y = v5.y;
 			_this5.z = v5.z;
 			break;
 		case 5:
-			let _this6 = this.s[1];
-			let v6 = this.s[2];
+			const _this6 = this.s[1];
+			const v6 = this.s[2];
 			_this6.x = v6.x;
 			_this6.y = v6.y;
 			_this6.z = v6.z;
-			let _this7 = this.w1[1];
-			let v7 = this.w1[2];
+			const _this7 = this.w1[1];
+			const v7 = this.w1[2];
 			_this7.x = v7.x;
 			_this7.y = v7.y;
 			_this7.z = v7.z;
-			let _this8 = this.w2[1];
-			let v8 = this.w2[2];
+			const _this8 = this.w2[1];
+			const v8 = this.w2[2];
 			_this8.x = v8.x;
 			_this8.y = v8.y;
 			_this8.z = v8.z;
 			break;
 		case 6:
-			let _this9 = this.s[0];
-			let v9 = this.s[2];
+			const _this9 = this.s[0];
+			const v9 = this.s[2];
 			_this9.x = v9.x;
 			_this9.y = v9.y;
 			_this9.z = v9.z;
-			let _this10 = this.w1[0];
-			let v10 = this.w1[2];
+			const _this10 = this.w1[0];
+			const v10 = this.w1[2];
 			_this10.x = v10.x;
 			_this10.y = v10.y;
 			_this10.z = v10.z;
-			let _this11 = this.w2[0];
-			let v11 = this.w2[2];
+			const _this11 = this.w2[0];
+			const v11 = this.w2[2];
 			_this11.x = v11.x;
 			_this11.y = v11.y;
 			_this11.z = v11.z;
 			break;
 		case 8:
-			let _this12 = this.s[0];
-			let v12 = this.s[3];
+			const _this12 = this.s[0];
+			const v12 = this.s[3];
 			_this12.x = v12.x;
 			_this12.y = v12.y;
 			_this12.z = v12.z;
-			let _this13 = this.w1[0];
-			let v13 = this.w1[3];
+			const _this13 = this.w1[0];
+			const v13 = this.w1[3];
 			_this13.x = v13.x;
 			_this13.y = v13.y;
 			_this13.z = v13.z;
-			let _this14 = this.w2[0];
-			let v14 = this.w2[3];
+			const _this14 = this.w2[0];
+			const v14 = this.w2[3];
 			_this14.x = v14.x;
 			_this14.y = v14.y;
 			_this14.z = v14.z;
 			break;
 		case 9:
-			let _this15 = this.s[1];
-			let v15 = this.s[3];
+			const _this15 = this.s[1];
+			const v15 = this.s[3];
 			_this15.x = v15.x;
 			_this15.y = v15.y;
 			_this15.z = v15.z;
-			let _this16 = this.w1[1];
-			let v16 = this.w1[3];
+			const _this16 = this.w1[1];
+			const v16 = this.w1[3];
 			_this16.x = v16.x;
 			_this16.y = v16.y;
 			_this16.z = v16.z;
-			let _this17 = this.w2[1];
-			let v17 = this.w2[3];
+			const _this17 = this.w2[1];
+			const v17 = this.w2[3];
 			_this17.x = v17.x;
 			_this17.y = v17.y;
 			_this17.z = v17.z;
 			break;
 		case 10:
-			let _this18 = this.s[0];
-			let v18 = this.s[3];
+			const _this18 = this.s[0];
+			const v18 = this.s[3];
 			_this18.x = v18.x;
 			_this18.y = v18.y;
 			_this18.z = v18.z;
-			let _this19 = this.w1[0];
-			let v19 = this.w1[3];
+			const _this19 = this.w1[0];
+			const v19 = this.w1[3];
 			_this19.x = v19.x;
 			_this19.y = v19.y;
 			_this19.z = v19.z;
-			let _this20 = this.w2[0];
-			let v20 = this.w2[3];
+			const _this20 = this.w2[0];
+			const v20 = this.w2[3];
 			_this20.x = v20.x;
 			_this20.y = v20.y;
 			_this20.z = v20.z;
 			break;
 		case 11:
-			let _this21 = this.s[2];
-			let v21 = this.s[3];
+			const _this21 = this.s[2];
+			const v21 = this.s[3];
 			_this21.x = v21.x;
 			_this21.y = v21.y;
 			_this21.z = v21.z;
-			let _this22 = this.w1[2];
-			let v22 = this.w1[3];
+			const _this22 = this.w1[2];
+			const v22 = this.w1[3];
 			_this22.x = v22.x;
 			_this22.y = v22.y;
 			_this22.z = v22.z;
-			let _this23 = this.w2[2];
-			let v23 = this.w2[3];
+			const _this23 = this.w2[2];
+			const v23 = this.w2[3];
 			_this23.x = v23.x;
 			_this23.y = v23.y;
 			_this23.z = v23.z;
 			break;
 		case 12:
-			let _this24 = this.s[0];
-			let v24 = this.s[2];
+			const _this24 = this.s[0];
+			const v24 = this.s[2];
 			_this24.x = v24.x;
 			_this24.y = v24.y;
 			_this24.z = v24.z;
-			let _this25 = this.w1[0];
-			let v25 = this.w1[2];
+			const _this25 = this.w1[0];
+			const v25 = this.w1[2];
 			_this25.x = v25.x;
 			_this25.y = v25.y;
 			_this25.z = v25.z;
-			let _this26 = this.w2[0];
-			let v26 = this.w2[2];
+			const _this26 = this.w2[0];
+			const v26 = this.w2[2];
 			_this26.x = v26.x;
 			_this26.y = v26.y;
 			_this26.z = v26.z;
-			let _this27 = this.s[1];
-			let v27 = this.s[3];
+			const _this27 = this.s[1];
+			const v27 = this.s[3];
 			_this27.x = v27.x;
 			_this27.y = v27.y;
 			_this27.z = v27.z;
-			let _this28 = this.w1[1];
-			let v28 = this.w1[3];
+			const _this28 = this.w1[1];
+			const v28 = this.w1[3];
 			_this28.x = v28.x;
 			_this28.y = v28.y;
 			_this28.z = v28.z;
-			let _this29 = this.w2[1];
-			let v29 = this.w2[3];
+			const _this29 = this.w2[1];
+			const v29 = this.w2[3];
 			_this29.x = v29.x;
 			_this29.y = v29.y;
 			_this29.z = v29.z;
 			break;
 		case 13:
-			let _this30 = this.s[1];
-			let v30 = this.s[3];
+			const _this30 = this.s[1];
+			const v30 = this.s[3];
 			_this30.x = v30.x;
 			_this30.y = v30.y;
 			_this30.z = v30.z;
-			let _this31 = this.w1[1];
-			let v31 = this.w1[3];
+			const _this31 = this.w1[1];
+			const v31 = this.w1[3];
 			_this31.x = v31.x;
 			_this31.y = v31.y;
 			_this31.z = v31.z;
-			let _this32 = this.w2[1];
-			let v32 = this.w2[3];
+			const _this32 = this.w2[1];
+			const v32 = this.w2[3];
 			_this32.x = v32.x;
 			_this32.y = v32.y;
 			_this32.z = v32.z;
 			break;
 		case 14:
-			let _this33 = this.s[0];
-			let v33 = this.s[3];
+			const _this33 = this.s[0];
+			const v33 = this.s[3];
 			_this33.x = v33.x;
 			_this33.y = v33.y;
 			_this33.z = v33.z;
-			let _this34 = this.w1[0];
-			let v34 = this.w1[3];
+			const _this34 = this.w1[0];
+			const v34 = this.w1[3];
 			_this34.x = v34.x;
 			_this34.y = v34.y;
 			_this34.z = v34.z;
-			let _this35 = this.w2[0];
-			let v35 = this.w2[3];
+			const _this35 = this.w2[0];
+			const v35 = this.w2[3];
 			_this35.x = v35.x;
 			_this35.y = v35.y;
 			_this35.z = v35.z;
 			break;
 		}
 	}
+
 	computeWitnessPoint1(addMargin) {
 		let tmpX;
 		let tmpY;
@@ -11207,7 +11403,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		let idirX;
 		let idirY;
 		let idirZ;
-		let v = this.dir;
+		const v = this.dir;
 		idirX = v.x;
 		idirY = v.y;
 		idirZ = v.z;
@@ -11226,13 +11422,13 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		let iw1X;
 		let iw1Y;
 		let iw1Z;
-		let v1 = this.dir;
+		const v1 = this.dir;
 		v1.x = ldir1X;
 		v1.y = ldir1Y;
 		v1.z = ldir1Z;
 		this.c1.computeLocalSupportingVertex(this.dir,this.w1[this.simplexSize]);
 		if(addMargin) {
-			let _this = this.dir;
+			const _this = this.dir;
 			let invLen = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z);
 			if(invLen > 0) {
 				invLen = 1 / invLen;
@@ -11240,14 +11436,14 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			_this.x *= invLen;
 			_this.y *= invLen;
 			_this.z *= invLen;
-			let _this1 = this.w1[this.simplexSize];
-			let v = this.dir;
-			let s = this.c1._gjkMargin;
+			const _this1 = this.w1[this.simplexSize];
+			const v = this.dir;
+			const s = this.c1._gjkMargin;
 			_this1.x += v.x * s;
 			_this1.y += v.y * s;
 			_this1.z += v.z * s;
 		}
-		let v2 = this.w1[this.simplexSize];
+		const v2 = this.w1[this.simplexSize];
 		tmpX = v2.x;
 		tmpY = v2.y;
 		tmpZ = v2.z;
@@ -11263,15 +11459,16 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		iw1X += this.tf1._positionX;
 		iw1Y += this.tf1._positionY;
 		iw1Z += this.tf1._positionZ;
-		let v3 = this.w1[this.simplexSize];
+		const v3 = this.w1[this.simplexSize];
 		v3.x = iw1X;
 		v3.y = iw1Y;
 		v3.z = iw1Z;
-		let v4 = this.dir;
+		const v4 = this.dir;
 		v4.x = idirX;
 		v4.y = idirY;
 		v4.z = idirZ;
 	}
+
 	computeWitnessPoint2(addMargin) {
 		let tmpX;
 		let tmpY;
@@ -11279,7 +11476,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		let idirX;
 		let idirY;
 		let idirZ;
-		let v = this.dir;
+		const v = this.dir;
 		idirX = v.x;
 		idirY = v.y;
 		idirZ = v.z;
@@ -11301,13 +11498,13 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		let iw2X;
 		let iw2Y;
 		let iw2Z;
-		let v1 = this.dir;
+		const v1 = this.dir;
 		v1.x = ldir2X;
 		v1.y = ldir2Y;
 		v1.z = ldir2Z;
 		this.c2.computeLocalSupportingVertex(this.dir,this.w2[this.simplexSize]);
 		if(addMargin) {
-			let _this = this.dir;
+			const _this = this.dir;
 			let invLen = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z);
 			if(invLen > 0) {
 				invLen = 1 / invLen;
@@ -11315,14 +11512,14 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			_this.x *= invLen;
 			_this.y *= invLen;
 			_this.z *= invLen;
-			let _this1 = this.w2[this.simplexSize];
-			let v = this.dir;
-			let s = this.c2._gjkMargin;
+			const _this1 = this.w2[this.simplexSize];
+			const v = this.dir;
+			const s = this.c2._gjkMargin;
 			_this1.x += v.x * s;
 			_this1.y += v.y * s;
 			_this1.z += v.z * s;
 		}
-		let v2 = this.w2[this.simplexSize];
+		const v2 = this.w2[this.simplexSize];
 		tmpX = v2.x;
 		tmpY = v2.y;
 		tmpZ = v2.z;
@@ -11338,31 +11535,32 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		iw2X += this.tf2._positionX;
 		iw2Y += this.tf2._positionY;
 		iw2Z += this.tf2._positionZ;
-		let v3 = this.w2[this.simplexSize];
+		const v3 = this.w2[this.simplexSize];
 		v3.x = iw2X;
 		v3.y = iw2Y;
 		v3.z = iw2Z;
-		let v4 = this.dir;
+		const v4 = this.dir;
 		v4.x = idirX;
 		v4.y = idirY;
 		v4.z = idirZ;
 	}
+
 	pointToTetrahedron() {
 		let _g = 0;
 		while(_g < 3) {
-			let _this = this.dir;
-			let v = this.baseDirs[_g++];
+			const _this = this.dir;
+			const v = this.baseDirs[_g++];
 			_this.x = v.x;
 			_this.y = v.y;
 			_this.z = v.z;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this1 = this.s[this.simplexSize];
-			let v1 = this.w1[this.simplexSize];
+			const _this1 = this.s[this.simplexSize];
+			const v1 = this.w1[this.simplexSize];
 			_this1.x = v1.x;
 			_this1.y = v1.y;
 			_this1.z = v1.z;
-			let v2 = this.w2[this.simplexSize];
+			const v2 = this.w2[this.simplexSize];
 			_this1.x -= v2.x;
 			_this1.y -= v2.y;
 			_this1.z -= v2.z;
@@ -11372,18 +11570,18 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				break;
 			}
 			this.simplexSize--;
-			let _this2 = this.dir;
+			const _this2 = this.dir;
 			_this2.x = -_this2.x;
 			_this2.y = -_this2.y;
 			_this2.z = -_this2.z;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this3 = this.s[this.simplexSize];
-			let v3 = this.w1[this.simplexSize];
+			const _this3 = this.s[this.simplexSize];
+			const v3 = this.w1[this.simplexSize];
 			_this3.x = v3.x;
 			_this3.y = v3.y;
 			_this3.z = v3.z;
-			let v4 = this.w2[this.simplexSize];
+			const v4 = this.w2[this.simplexSize];
 			_this3.x -= v4.x;
 			_this3.y -= v4.y;
 			_this3.z -= v4.z;
@@ -11395,11 +11593,12 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			this.simplexSize--;
 		}
 	}
+
 	lineToTetrahedron() {
 		let oldDirX;
 		let oldDirY;
 		let oldDirZ;
-		let v = this.dir;
+		const v = this.dir;
 		oldDirX = v.x;
 		oldDirY = v.y;
 		oldDirZ = v.z;
@@ -11412,11 +11611,11 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		let lineDirX;
 		let lineDirY;
 		let lineDirZ;
-		let v1 = this.s[0];
+		const v1 = this.s[0];
 		s0X = v1.x;
 		s0Y = v1.y;
 		s0Z = v1.z;
-		let v2 = this.s[1];
+		const v2 = this.s[1];
 		s1X = v2.x;
 		s1Y = v2.y;
 		s1Z = v2.z;
@@ -11428,7 +11627,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let baseDirX;
 			let baseDirY;
 			let baseDirZ;
-			let v = this.baseDirs[_g++];
+			const v = this.baseDirs[_g++];
 			baseDirX = v.x;
 			baseDirY = v.y;
 			baseDirZ = v.z;
@@ -11438,18 +11637,18 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			newDirX = lineDirY * baseDirZ - lineDirZ * baseDirY;
 			newDirY = lineDirZ * baseDirX - lineDirX * baseDirZ;
 			newDirZ = lineDirX * baseDirY - lineDirY * baseDirX;
-			let v1 = this.dir;
+			const v1 = this.dir;
 			v1.x = newDirX;
 			v1.y = newDirY;
 			v1.z = newDirZ;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this = this.s[this.simplexSize];
-			let v2 = this.w1[this.simplexSize];
+			const _this = this.s[this.simplexSize];
+			const v2 = this.w1[this.simplexSize];
 			_this.x = v2.x;
 			_this.y = v2.y;
 			_this.z = v2.z;
-			let v3 = this.w2[this.simplexSize];
+			const v3 = this.w2[this.simplexSize];
 			_this.x -= v3.x;
 			_this.y -= v3.y;
 			_this.z -= v3.z;
@@ -11459,18 +11658,18 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				break;
 			}
 			this.simplexSize--;
-			let _this1 = this.dir;
+			const _this1 = this.dir;
 			_this1.x = -_this1.x;
 			_this1.y = -_this1.y;
 			_this1.z = -_this1.z;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this2 = this.s[this.simplexSize];
-			let v4 = this.w1[this.simplexSize];
+			const _this2 = this.s[this.simplexSize];
+			const v4 = this.w1[this.simplexSize];
 			_this2.x = v4.x;
 			_this2.y = v4.y;
 			_this2.z = v4.z;
-			let v5 = this.w2[this.simplexSize];
+			const v5 = this.w2[this.simplexSize];
 			_this2.x -= v5.x;
 			_this2.y -= v5.y;
 			_this2.z -= v5.z;
@@ -11481,16 +11680,17 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			}
 			this.simplexSize--;
 		}
-		let v3 = this.dir;
+		const v3 = this.dir;
 		v3.x = oldDirX;
 		v3.y = oldDirY;
 		v3.z = oldDirZ;
 	}
+
 	triangleToTetrahedron() {
 		let oldDirX;
 		let oldDirY;
 		let oldDirZ;
-		let v = this.dir;
+		const v = this.dir;
 		oldDirX = v.x;
 		oldDirY = v.y;
 		oldDirZ = v.z;
@@ -11510,15 +11710,15 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			let s02X;
 			let s02Y;
 			let s02Z;
-			let v = this.s[0];
+			const v = this.s[0];
 			s0X = v.x;
 			s0Y = v.y;
 			s0Z = v.z;
-			let v1 = this.s[1];
+			const v1 = this.s[1];
 			s1X = v1.x;
 			s1Y = v1.y;
 			s1Z = v1.z;
-			let v2 = this.s[2];
+			const v2 = this.s[2];
 			s2X = v2.x;
 			s2Y = v2.y;
 			s2Z = v2.z;
@@ -11534,18 +11734,18 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			nX = s01Y * s02Z - s01Z * s02Y;
 			nY = s01Z * s02X - s01X * s02Z;
 			nZ = s01X * s02Y - s01Y * s02X;
-			let v3 = this.dir;
+			const v3 = this.dir;
 			v3.x = nX;
 			v3.y = nY;
 			v3.z = nZ;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this = this.s[this.simplexSize];
-			let v4 = this.w1[this.simplexSize];
+			const _this = this.s[this.simplexSize];
+			const v4 = this.w1[this.simplexSize];
 			_this.x = v4.x;
 			_this.y = v4.y;
 			_this.z = v4.z;
-			let v5 = this.w2[this.simplexSize];
+			const v5 = this.w2[this.simplexSize];
 			_this.x -= v5.x;
 			_this.y -= v5.y;
 			_this.z -= v5.z;
@@ -11554,18 +11754,18 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				break;
 			}
 			this.simplexSize--;
-			let _this1 = this.dir;
+			const _this1 = this.dir;
 			_this1.x = -_this1.x;
 			_this1.y = -_this1.y;
 			_this1.z = -_this1.z;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this2 = this.s[this.simplexSize];
-			let v6 = this.w1[this.simplexSize];
+			const _this2 = this.s[this.simplexSize];
+			const v6 = this.w1[this.simplexSize];
 			_this2.x = v6.x;
 			_this2.y = v6.y;
 			_this2.z = v6.z;
-			let v7 = this.w2[this.simplexSize];
+			const v7 = this.w2[this.simplexSize];
 			_this2.x -= v7.x;
 			_this2.y -= v7.y;
 			_this2.z -= v7.z;
@@ -11576,32 +11776,34 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			this.simplexSize--;
 			break;
 		}
-		let v1 = this.dir;
+		const v1 = this.dir;
 		v1.x = oldDirX;
 		v1.y = oldDirY;
 		v1.z = oldDirZ;
 	}
+
 	isValidTetrahedron() {
-		let e10 = this.s[2].x - this.s[0].x;
-		let e11 = this.s[2].y - this.s[0].y;
-		let e12 = this.s[2].z - this.s[0].z;
-		let e20 = this.s[3].x - this.s[0].x;
-		let e21 = this.s[3].y - this.s[0].y;
-		let e22 = this.s[3].z - this.s[0].z;
-		let det = (this.s[1].x - this.s[0].x) * (e11 * e22 - e12 * e21) - (this.s[1].y - this.s[0].y) * (e10 * e22 - e12 * e20) + (this.s[1].z - this.s[0].z) * (e10 * e21 - e11 * e20);
+		const e10 = this.s[2].x - this.s[0].x;
+		const e11 = this.s[2].y - this.s[0].y;
+		const e12 = this.s[2].z - this.s[0].z;
+		const e20 = this.s[3].x - this.s[0].x;
+		const e21 = this.s[3].y - this.s[0].y;
+		const e22 = this.s[3].z - this.s[0].z;
+		const det = (this.s[1].x - this.s[0].x) * (e11 * e22 - e12 * e21) - (this.s[1].y - this.s[0].y) * (e10 * e22 - e12 * e20) + (this.s[1].z - this.s[0].z) * (e10 * e21 - e11 * e20);
 		if(!(det > 1e-12)) {
 			return det < -1e-12;
 		} else {
 			return true;
 		}
 	}
+
 	computeDepth(convex1,convex2,tf1,tf2,initialPolyhedron,initialPolyhedron1,initialPolyhedron2) {
-		let _this = this.polyhedron;
+		const _this = this.polyhedron;
 		while(_this._numTriangles > 0) {
-			let t = _this._triangleList;
+			const t = _this._triangleList;
 			_this._numTriangles--;
-			let prev = t._prev;
-			let next = t._next;
+			const prev = t._prev;
+			const next = t._next;
 			if(prev != null) {
 				prev._next = next;
 			}
@@ -11621,13 +11823,13 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			_this._trianglePool = t;
 		}
 		while(_this._numVertices > 0) {
-			let v = _this._vertices[--_this._numVertices];
+			const v = _this._vertices[--_this._numVertices];
 			v.removeReferences();
 			v._next = _this._vertexPool;
 			_this._vertexPool = v;
 		}
-		let tmp = this.polyhedron;
-		let _this1 = this.polyhedron;
+		const tmp = this.polyhedron;
+		const _this1 = this.polyhedron;
 		let first = _this1._vertexPool;
 		if(first != null) {
 			_this1._vertexPool = first._next;
@@ -11635,8 +11837,8 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		} else {
 			first = new oimo.collision.narrowphase.detector.gjkepa.EpaVertex();
 		}
-		let tmp1 = first.init(initialPolyhedron[0],initialPolyhedron1[0],initialPolyhedron2[0]);
-		let _this2 = this.polyhedron;
+		const tmp1 = first.init(initialPolyhedron[0],initialPolyhedron1[0],initialPolyhedron2[0]);
+		const _this2 = this.polyhedron;
 		let first1 = _this2._vertexPool;
 		if(first1 != null) {
 			_this2._vertexPool = first1._next;
@@ -11644,8 +11846,8 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		} else {
 			first1 = new oimo.collision.narrowphase.detector.gjkepa.EpaVertex();
 		}
-		let tmp2 = first1.init(initialPolyhedron[1],initialPolyhedron1[1],initialPolyhedron2[1]);
-		let _this3 = this.polyhedron;
+		const tmp2 = first1.init(initialPolyhedron[1],initialPolyhedron1[1],initialPolyhedron2[1]);
+		const _this3 = this.polyhedron;
 		let first2 = _this3._vertexPool;
 		if(first2 != null) {
 			_this3._vertexPool = first2._next;
@@ -11653,8 +11855,8 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		} else {
 			first2 = new oimo.collision.narrowphase.detector.gjkepa.EpaVertex();
 		}
-		let tmp3 = first2.init(initialPolyhedron[2],initialPolyhedron1[2],initialPolyhedron2[2]);
-		let _this4 = this.polyhedron;
+		const tmp3 = first2.init(initialPolyhedron[2],initialPolyhedron1[2],initialPolyhedron2[2]);
+		const _this4 = this.polyhedron;
 		let first3 = _this4._vertexPool;
 		if(first3 != null) {
 			_this4._vertexPool = first3._next;
@@ -11666,9 +11868,9 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			return oimo.collision.narrowphase.detector.gjkepa.GjkEpaResultState.EPA_FAILED_TO_INIT;
 		}
 		this.simplexSize = 0;
-		let supportingVertex = this.s[0];
-		let witness1 = this.w1[0];
-		let witness2 = this.w2[0];
+		const supportingVertex = this.s[0];
+		const witness1 = this.w1[0];
+		const witness2 = this.w2[0];
 		let count = 0;
 		while(count < 40) {
 			let f = this.polyhedron._triangleList;
@@ -11681,9 +11883,9 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				}
 				f = f._next;
 			}
-			let face = minf;
-			let _this = this.dir;
-			let v = face._normal;
+			const face = minf;
+			const _this = this.dir;
+			const v = face._normal;
 			_this.x = v.x;
 			_this.y = v.y;
 			_this.z = v.z;
@@ -11696,38 +11898,38 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			_this.z *= invLen;
 			this.computeWitnessPoint1(false);
 			this.computeWitnessPoint2(false);
-			let _this1 = this.s[this.simplexSize];
-			let v1 = this.w1[this.simplexSize];
+			const _this1 = this.s[this.simplexSize];
+			const v1 = this.w1[this.simplexSize];
 			_this1.x = v1.x;
 			_this1.y = v1.y;
 			_this1.z = v1.z;
-			let v2 = this.w2[this.simplexSize];
+			const v2 = this.w2[this.simplexSize];
 			_this1.x -= v2.x;
 			_this1.y -= v2.y;
 			_this1.z -= v2.z;
-			let v0 = face._vertices[0];
-			let v11 = face._vertices[1];
-			let v21 = face._vertices[2];
-			let _this2 = v0.v;
-			let v3 = this.dir;
-			let v4 = this.dir;
+			const v0 = face._vertices[0];
+			const v11 = face._vertices[1];
+			const v21 = face._vertices[2];
+			const _this2 = v0.v;
+			const v3 = this.dir;
+			const v4 = this.dir;
 			if(supportingVertex.x * v4.x + supportingVertex.y * v4.y + supportingVertex.z * v4.z - (_this2.x * v3.x + _this2.y * v3.y + _this2.z * v3.z) < 1e-6 || count == 39) {
-				let _this = this.closest;
-				let v = this.dir;
+				const _this = this.closest;
+				const v = this.dir;
 				_this.x = v.x;
 				_this.y = v.y;
 				_this.z = v.z;
-				let _this1 = this.dir;
-				let v1 = v0.v;
-				let _this2 = this.dir;
-				let s = (_this1.x * v1.x + _this1.y * v1.y + _this1.z * v1.z) / (_this2.x * _this2.x + _this2.y * _this2.y + _this2.z * _this2.z);
+				const _this1 = this.dir;
+				const v1 = v0.v;
+				const _this2 = this.dir;
+				const s = (_this1.x * v1.x + _this1.y * v1.y + _this1.z * v1.z) / (_this2.x * _this2.x + _this2.y * _this2.y + _this2.z * _this2.z);
 				_this.x *= s;
 				_this.y *= s;
 				_this.z *= s;
 				let cX;
 				let cY;
 				let cZ;
-				let v2 = this.closest;
+				const v2 = this.closest;
 				cX = v2.x;
 				cY = v2.y;
 				cZ = v2.z;
@@ -11758,39 +11960,39 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				let w22X;
 				let w22Y;
 				let w22Z;
-				let v3 = v0.v;
+				const v3 = v0.v;
 				s0X = v3.x;
 				s0Y = v3.y;
 				s0Z = v3.z;
-				let v4 = v0.w1;
+				const v4 = v0.w1;
 				w10X = v4.x;
 				w10Y = v4.y;
 				w10Z = v4.z;
-				let v5 = v0.w2;
+				const v5 = v0.w2;
 				w20X = v5.x;
 				w20Y = v5.y;
 				w20Z = v5.z;
-				let v6 = v11.v;
+				const v6 = v11.v;
 				s1X = v6.x;
 				s1Y = v6.y;
 				s1Z = v6.z;
-				let v7 = v11.w1;
+				const v7 = v11.w1;
 				w11X = v7.x;
 				w11Y = v7.y;
 				w11Z = v7.z;
-				let v8 = v11.w2;
+				const v8 = v11.w2;
 				w21X = v8.x;
 				w21Y = v8.y;
 				w21Z = v8.z;
-				let v9 = v21.v;
+				const v9 = v21.v;
 				s2X = v9.x;
 				s2Y = v9.y;
 				s2Z = v9.z;
-				let v10 = v21.w1;
+				const v10 = v21.w1;
 				w12X = v10.x;
 				w12Y = v10.y;
 				w12Z = v10.z;
-				let v12 = v21.w2;
+				const v12 = v21.w2;
 				w22X = v12.x;
 				w22Y = v12.y;
 				w22Z = v12.z;
@@ -11812,17 +12014,17 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				s0cX = cX - s0X;
 				s0cY = cY - s0Y;
 				s0cZ = cZ - s0Z;
-				let d11 = s01X * s01X + s01Y * s01Y + s01Z * s01Z;
-				let d12 = s01X * s02X + s01Y * s02Y + s01Z * s02Z;
-				let d22 = s02X * s02X + s02Y * s02Y + s02Z * s02Z;
-				let d1c = s01X * s0cX + s01Y * s0cY + s01Z * s0cZ;
-				let d2c = s02X * s0cX + s02Y * s0cY + s02Z * s0cZ;
+				const d11 = s01X * s01X + s01Y * s01Y + s01Z * s01Z;
+				const d12 = s01X * s02X + s01Y * s02Y + s01Z * s02Z;
+				const d22 = s02X * s02X + s02Y * s02Y + s02Z * s02Z;
+				const d1c = s01X * s0cX + s01Y * s0cY + s01Z * s0cZ;
+				const d2c = s02X * s0cX + s02Y * s0cY + s02Z * s0cZ;
 				let invDet = d11 * d22 - d12 * d12;
 				if(invDet != 0) {
 					invDet = 1 / invDet;
 				}
-				let s1 = (d1c * d22 - d2c * d12) * invDet;
-				let t = (-d1c * d12 + d2c * d11) * invDet;
+				const s1 = (d1c * d22 - d2c * d12) * invDet;
+				const t = (-d1c * d12 + d2c * d11) * invDet;
 				let diffX;
 				let diffY;
 				let diffZ;
@@ -11856,19 +12058,19 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 				cp2X += diffX * t;
 				cp2Y += diffY * t;
 				cp2Z += diffZ * t;
-				let v13 = this.closestPoint1;
+				const v13 = this.closestPoint1;
 				v13.x = cp1X;
 				v13.y = cp1Y;
 				v13.z = cp1Z;
-				let v14 = this.closestPoint2;
+				const v14 = this.closestPoint2;
 				v14.x = cp2X;
 				v14.y = cp2Y;
 				v14.z = cp2Z;
-				let _this3 = this.closest;
+				const _this3 = this.closest;
 				this.depth = Math.sqrt(_this3.x * _this3.x + _this3.y * _this3.y + _this3.z * _this3.z);
 				return oimo.collision.narrowphase.detector.gjkepa.GjkEpaResultState.SUCCEEDED;
 			}
-			let _this3 = this.polyhedron;
+			const _this3 = this.polyhedron;
 			let first = _this3._vertexPool;
 			if(first != null) {
 				_this3._vertexPool = first._next;
@@ -11876,7 +12078,7 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 			} else {
 				first = new oimo.collision.narrowphase.detector.gjkepa.EpaVertex();
 			}
-			let epaVertex = first.init(supportingVertex,witness1,witness2);
+			const epaVertex = first.init(supportingVertex,witness1,witness2);
 			if(!this.polyhedron._addVertex(epaVertex,face)) {
 				return oimo.collision.narrowphase.detector.gjkepa.GjkEpaResultState.EPA_FAILED_TO_ADD_VERTEX;
 			}
@@ -11884,22 +12086,26 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		}
 		return oimo.collision.narrowphase.detector.gjkepa.GjkEpaResultState.EPA_DID_NOT_CONVERGE;
 	}
+
 	computeClosestPoints(c1,c2,tf1,tf2,cache) {
 		return this.computeClosestPointsImpl(c1,c2,tf1,tf2,cache,true);
 	}
+
 	computeDistance(c1,c2,tf1,tf2,cache) {
 		return this.computeClosestPointsImpl(c1,c2,tf1,tf2,cache,false);
 	}
+
 	convexCast(c1,c2,tf1,tf2,tl1,tl2,hit) {
 		return this.convexCastImpl(c1,c2,tf1,tf2,tl1,tl2,hit);
 	}
+
 	rayCast(c,tf,begin,end,hit) {
-		let tf1 = this.tempTransform;
+		const tf1 = this.tempTransform;
 		tf1._positionX = begin.x;
 		tf1._positionY = begin.y;
 		tf1._positionZ = begin.z;
-		let tl1 = this.tl1;
-		let tl2 = this.tl2;
+		const tl1 = this.tl1;
+		const tl2 = this.tl2;
 		tl1.x = end.x;
 		tl1.y = end.y;
 		tl1.z = end.z;
@@ -11909,14 +12115,15 @@ oimo.collision.narrowphase.detector.gjkepa.GjkEpa = class oimo_collision_narrowp
 		tl2.zero();
 		return this.convexCastImpl(null,c,tf1,tf,tl1,tl2,hit);
 	}
+
 	static getInstance() {
 		return oimo.collision.narrowphase.detector.gjkepa.GjkEpa.instance;
 	}
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.GjkEpaLog = class oimo_collision_narrowphase_detector_gjkepa_GjkEpaLog {
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.GjkEpaResultState = class oimo_collision_narrowphase_detector_gjkepa_GjkEpaResultState {
-}
+};
 oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_narrowphase_detector_gjkepa_SimplexUtil {
 	static projectOrigin2(vec1,vec2,out) {
 		let v1X;
@@ -11962,6 +12169,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 		out.z = pZ;
 		return 3;
 	}
+
 	static projectOrigin3(vec1,vec2,vec3,out) {
 		let v1X;
 		let v1Y;
@@ -12125,7 +12333,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 				out.z = pZ;
 				b = 3;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mini = b << 1;
 				mind = d;
@@ -12178,7 +12386,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 				out.z = pZ;
 				b = 3;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mini = b & 1 | (b & 2) << 1;
 				mind = d;
@@ -12210,6 +12418,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 		out.z = minvZ;
 		return 7;
 	}
+
 	static projectOrigin4(vec1,vec2,vec3,vec4,out) {
 		let v1X;
 		let v1Y;
@@ -12289,7 +12498,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 		n243X = v24Y * v23Z - v24Z * v23Y;
 		n243Y = v24Z * v23X - v24X * v23Z;
 		n243Z = v24X * v23Y - v24Y * v23X;
-		let sign = v12X * n243X + v12Y * n243Y + v12Z * n243Z > 0 ? 1 : -1;
+		const sign = v12X * n243X + v12Y * n243Y + v12Z * n243Z > 0 ? 1 : -1;
 		let mind = -1;
 		let minvX;
 		let minvY;
@@ -12461,7 +12670,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b << 1;
 					mind1 = d;
@@ -12514,7 +12723,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b & 1 | (b & 2) << 1;
 					mind1 = d;
@@ -12716,7 +12925,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b << 1;
 					mind1 = d;
@@ -12769,7 +12978,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b & 1 | (b & 2) << 1;
 					mind1 = d;
@@ -12802,7 +13011,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 				out.z = minvZ1;
 				b = 7;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mini = b & 1 | (b & 6) << 1;
 				mind = d;
@@ -12974,7 +13183,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b << 1;
 					mind1 = d;
@@ -13027,7 +13236,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b & 1 | (b & 2) << 1;
 					mind1 = d;
@@ -13060,7 +13269,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 				out.z = minvZ1;
 				b = 7;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mini = b & 3 | (b & 4) << 1;
 				mind = d;
@@ -13232,7 +13441,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b << 1;
 					mind1 = d;
@@ -13285,7 +13494,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 					out.z = pZ;
 					b = 3;
 				}
-				let d = out.x * out.x + out.y * out.y + out.z * out.z;
+				const d = out.x * out.x + out.y * out.y + out.z * out.z;
 				if(mind1 < 0 || d < mind1) {
 					mini1 = b & 1 | (b & 2) << 1;
 					mind1 = d;
@@ -13318,7 +13527,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 				out.z = minvZ1;
 				b = 7;
 			}
-			let d = out.x * out.x + out.y * out.y + out.z * out.z;
+			const d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if(mind < 0 || d < mind) {
 				mini = b << 1;
 				mind = d;
@@ -13336,7 +13545,7 @@ oimo.collision.narrowphase.detector.gjkepa.SimplexUtil = class oimo_collision_na
 		out.zero();
 		return 15;
 	}
-}
+};
 oimo.common.Mat3 = class oimo_common_Mat3 {
 	constructor(e00,e01,e02,e10,e11,e12,e20,e21,e22) {
 		if(e22 == null) {
@@ -13377,6 +13586,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = e22;
 		oimo.common.Mat3.numCreations++;
 	}
+
 	init(e00,e01,e02,e10,e11,e12,e20,e21,e22) {
 		this.e00 = e00;
 		this.e01 = e01;
@@ -13389,6 +13599,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = e22;
 		return this;
 	}
+
 	identity() {
 		this.e00 = 1;
 		this.e01 = 0;
@@ -13401,18 +13612,23 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = 1;
 		return this;
 	}
+
 	add(m) {
 		return new oimo.common.Mat3(this.e00 + m.e00,this.e01 + m.e01,this.e02 + m.e02,this.e10 + m.e10,this.e11 + m.e11,this.e12 + m.e12,this.e20 + m.e20,this.e21 + m.e21,this.e22 + m.e22);
 	}
+
 	sub(m) {
 		return new oimo.common.Mat3(this.e00 - m.e00,this.e01 - m.e01,this.e02 - m.e02,this.e10 - m.e10,this.e11 - m.e11,this.e12 - m.e12,this.e20 - m.e20,this.e21 - m.e21,this.e22 - m.e22);
 	}
+
 	scale(s) {
 		return new oimo.common.Mat3(this.e00 * s,this.e01 * s,this.e02 * s,this.e10 * s,this.e11 * s,this.e12 * s,this.e20 * s,this.e21 * s,this.e22 * s);
 	}
+
 	mul(m) {
 		return new oimo.common.Mat3(this.e00 * m.e00 + this.e01 * m.e10 + this.e02 * m.e20,this.e00 * m.e01 + this.e01 * m.e11 + this.e02 * m.e21,this.e00 * m.e02 + this.e01 * m.e12 + this.e02 * m.e22,this.e10 * m.e00 + this.e11 * m.e10 + this.e12 * m.e20,this.e10 * m.e01 + this.e11 * m.e11 + this.e12 * m.e21,this.e10 * m.e02 + this.e11 * m.e12 + this.e12 * m.e22,this.e20 * m.e00 + this.e21 * m.e10 + this.e22 * m.e20,this.e20 * m.e01 + this.e21 * m.e11 + this.e22 * m.e21,this.e20 * m.e02 + this.e21 * m.e12 + this.e22 * m.e22);
 	}
+
 	addEq(m) {
 		this.e00 += m.e00;
 		this.e01 += m.e01;
@@ -13425,6 +13641,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 += m.e22;
 		return this;
 	}
+
 	subEq(m) {
 		this.e00 -= m.e00;
 		this.e01 -= m.e01;
@@ -13437,6 +13654,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 -= m.e22;
 		return this;
 	}
+
 	scaleEq(s) {
 		this.e00 *= s;
 		this.e01 *= s;
@@ -13449,15 +13667,16 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 *= s;
 		return this;
 	}
+
 	mulEq(m) {
-		let e01 = this.e00 * m.e01 + this.e01 * m.e11 + this.e02 * m.e21;
-		let e02 = this.e00 * m.e02 + this.e01 * m.e12 + this.e02 * m.e22;
-		let e10 = this.e10 * m.e00 + this.e11 * m.e10 + this.e12 * m.e20;
-		let e11 = this.e10 * m.e01 + this.e11 * m.e11 + this.e12 * m.e21;
-		let e12 = this.e10 * m.e02 + this.e11 * m.e12 + this.e12 * m.e22;
-		let e20 = this.e20 * m.e00 + this.e21 * m.e10 + this.e22 * m.e20;
-		let e21 = this.e20 * m.e01 + this.e21 * m.e11 + this.e22 * m.e21;
-		let e22 = this.e20 * m.e02 + this.e21 * m.e12 + this.e22 * m.e22;
+		const e01 = this.e00 * m.e01 + this.e01 * m.e11 + this.e02 * m.e21;
+		const e02 = this.e00 * m.e02 + this.e01 * m.e12 + this.e02 * m.e22;
+		const e10 = this.e10 * m.e00 + this.e11 * m.e10 + this.e12 * m.e20;
+		const e11 = this.e10 * m.e01 + this.e11 * m.e11 + this.e12 * m.e21;
+		const e12 = this.e10 * m.e02 + this.e11 * m.e12 + this.e12 * m.e22;
+		const e20 = this.e20 * m.e00 + this.e21 * m.e10 + this.e22 * m.e20;
+		const e21 = this.e20 * m.e01 + this.e21 * m.e11 + this.e22 * m.e21;
+		const e22 = this.e20 * m.e02 + this.e21 * m.e12 + this.e22 * m.e22;
 		this.e00 = this.e00 * m.e00 + this.e01 * m.e10 + this.e02 * m.e20;
 		this.e01 = e01;
 		this.e02 = e02;
@@ -13469,42 +13688,47 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = e22;
 		return this;
 	}
+
 	prependScale(sx,sy,sz) {
 		return new oimo.common.Mat3(this.e00 * sx,this.e01 * sx,this.e02 * sx,this.e10 * sy,this.e11 * sy,this.e12 * sy,this.e20 * sz,this.e21 * sz,this.e22 * sz);
 	}
+
 	appendScale(sx,sy,sz) {
 		return new oimo.common.Mat3(this.e00 * sx,this.e01 * sy,this.e02 * sz,this.e10 * sx,this.e11 * sy,this.e12 * sz,this.e20 * sx,this.e21 * sy,this.e22 * sz);
 	}
+
 	prependRotation(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
 		return new oimo.common.Mat3(r00 * this.e00 + r01 * this.e10 + r02 * this.e20,r00 * this.e01 + r01 * this.e11 + r02 * this.e21,r00 * this.e02 + r01 * this.e12 + r02 * this.e22,r10 * this.e00 + r11 * this.e10 + r12 * this.e20,r10 * this.e01 + r11 * this.e11 + r12 * this.e21,r10 * this.e02 + r11 * this.e12 + r12 * this.e22,r20 * this.e00 + r21 * this.e10 + r22 * this.e20,r20 * this.e01 + r21 * this.e11 + r22 * this.e21,r20 * this.e02 + r21 * this.e12 + r22 * this.e22);
 	}
+
 	appendRotation(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
 		return new oimo.common.Mat3(this.e00 * r00 + this.e01 * r10 + this.e02 * r20,this.e00 * r01 + this.e01 * r11 + this.e02 * r21,this.e00 * r02 + this.e01 * r12 + this.e02 * r22,this.e10 * r00 + this.e11 * r10 + this.e12 * r20,this.e10 * r01 + this.e11 * r11 + this.e12 * r21,this.e10 * r02 + this.e11 * r12 + this.e12 * r22,this.e20 * r00 + this.e21 * r10 + this.e22 * r20,this.e20 * r01 + this.e21 * r11 + this.e22 * r21,this.e20 * r02 + this.e21 * r12 + this.e22 * r22);
 	}
+
 	prependScaleEq(sx,sy,sz) {
 		this.e00 *= sx;
 		this.e01 *= sx;
@@ -13517,6 +13741,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 *= sz;
 		return this;
 	}
+
 	appendScaleEq(sx,sy,sz) {
 		this.e00 *= sx;
 		this.e01 *= sy;
@@ -13529,25 +13754,26 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 *= sz;
 		return this;
 	}
+
 	prependRotationEq(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
-		let e10 = r10 * this.e00 + r11 * this.e10 + r12 * this.e20;
-		let e11 = r10 * this.e01 + r11 * this.e11 + r12 * this.e21;
-		let e12 = r10 * this.e02 + r11 * this.e12 + r12 * this.e22;
-		let e20 = r20 * this.e00 + r21 * this.e10 + r22 * this.e20;
-		let e21 = r20 * this.e01 + r21 * this.e11 + r22 * this.e21;
-		let e22 = r20 * this.e02 + r21 * this.e12 + r22 * this.e22;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
+		const e10 = r10 * this.e00 + r11 * this.e10 + r12 * this.e20;
+		const e11 = r10 * this.e01 + r11 * this.e11 + r12 * this.e21;
+		const e12 = r10 * this.e02 + r11 * this.e12 + r12 * this.e22;
+		const e20 = r20 * this.e00 + r21 * this.e10 + r22 * this.e20;
+		const e21 = r20 * this.e01 + r21 * this.e11 + r22 * this.e21;
+		const e22 = r20 * this.e02 + r21 * this.e12 + r22 * this.e22;
 		this.e00 = r00 * this.e00 + r01 * this.e10 + r02 * this.e20;
 		this.e01 = r00 * this.e01 + r01 * this.e11 + r02 * this.e21;
 		this.e02 = r00 * this.e02 + r01 * this.e12 + r02 * this.e22;
@@ -13559,25 +13785,26 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = e22;
 		return this;
 	}
+
 	appendRotationEq(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
-		let e01 = this.e00 * r01 + this.e01 * r11 + this.e02 * r21;
-		let e02 = this.e00 * r02 + this.e01 * r12 + this.e02 * r22;
-		let e11 = this.e10 * r01 + this.e11 * r11 + this.e12 * r21;
-		let e12 = this.e10 * r02 + this.e11 * r12 + this.e12 * r22;
-		let e21 = this.e20 * r01 + this.e21 * r11 + this.e22 * r21;
-		let e22 = this.e20 * r02 + this.e21 * r12 + this.e22 * r22;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
+		const e01 = this.e00 * r01 + this.e01 * r11 + this.e02 * r21;
+		const e02 = this.e00 * r02 + this.e01 * r12 + this.e02 * r22;
+		const e11 = this.e10 * r01 + this.e11 * r11 + this.e12 * r21;
+		const e12 = this.e10 * r02 + this.e11 * r12 + this.e12 * r22;
+		const e21 = this.e20 * r01 + this.e21 * r11 + this.e22 * r21;
+		const e22 = this.e20 * r02 + this.e21 * r12 + this.e22 * r22;
 		this.e00 = this.e00 * r00 + this.e01 * r10 + this.e02 * r20;
 		this.e01 = e01;
 		this.e02 = e02;
@@ -13589,13 +13816,15 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = e22;
 		return this;
 	}
+
 	transpose() {
 		return new oimo.common.Mat3(this.e00,this.e10,this.e20,this.e01,this.e11,this.e21,this.e02,this.e12,this.e22);
 	}
+
 	transposeEq() {
-		let e10 = this.e01;
-		let e20 = this.e02;
-		let e21 = this.e12;
+		const e10 = this.e01;
+		const e20 = this.e02;
+		const e21 = this.e12;
 
 		this.e01 = this.e10;
 		this.e02 = this.e20;
@@ -13607,35 +13836,39 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 
 		return this;
 	}
+
 	determinant() {
 		return this.e00 * (this.e11 * this.e22 - this.e12 * this.e21) - this.e01 * (this.e10 * this.e22 - this.e12 * this.e20) + this.e02 * (this.e10 * this.e21 - this.e11 * this.e20);
 	}
+
 	trace() {
 		return this.e00 + this.e11 + this.e22;
 	}
+
 	inverse() {
-		let d00 = this.e11 * this.e22 - this.e12 * this.e21;
-		let d01 = this.e10 * this.e22 - this.e12 * this.e20;
-		let d02 = this.e10 * this.e21 - this.e11 * this.e20;
+		const d00 = this.e11 * this.e22 - this.e12 * this.e21;
+		const d01 = this.e10 * this.e22 - this.e12 * this.e20;
+		const d02 = this.e10 * this.e21 - this.e11 * this.e20;
 		let invDet = this.e00 * d00 - this.e01 * d01 + this.e02 * d02;
 		if(invDet != 0) {
 			invDet = 1 / invDet;
 		}
 		return new oimo.common.Mat3(d00 * invDet,-(this.e01 * this.e22 - this.e02 * this.e21) * invDet,(this.e01 * this.e12 - this.e02 * this.e11) * invDet,-d01 * invDet,(this.e00 * this.e22 - this.e02 * this.e20) * invDet,-(this.e00 * this.e12 - this.e02 * this.e10) * invDet,d02 * invDet,-(this.e00 * this.e21 - this.e01 * this.e20) * invDet,(this.e00 * this.e11 - this.e01 * this.e10) * invDet);
 	}
+
 	inverseEq() {
-		let d00 = this.e11 * this.e22 - this.e12 * this.e21;
-		let d01 = this.e10 * this.e22 - this.e12 * this.e20;
-		let d02 = this.e10 * this.e21 - this.e11 * this.e20;
+		const d00 = this.e11 * this.e22 - this.e12 * this.e21;
+		const d01 = this.e10 * this.e22 - this.e12 * this.e20;
+		const d02 = this.e10 * this.e21 - this.e11 * this.e20;
 		let invDet = this.e00 * d00 - this.e01 * d01 + this.e02 * d02;
 		if(invDet != 0) {
 			invDet = 1 / invDet;
 		}
-		let t02 = (this.e01 * this.e12 - this.e02 * this.e11) * invDet;
-		let t11 = (this.e00 * this.e22 - this.e02 * this.e20) * invDet;
-		let t12 = -(this.e00 * this.e12 - this.e02 * this.e10) * invDet;
-		let t21 = -(this.e00 * this.e21 - this.e01 * this.e20) * invDet;
-		let t22 = (this.e00 * this.e11 - this.e01 * this.e10) * invDet;
+		const t02 = (this.e01 * this.e12 - this.e02 * this.e11) * invDet;
+		const t11 = (this.e00 * this.e22 - this.e02 * this.e20) * invDet;
+		const t12 = -(this.e00 * this.e12 - this.e02 * this.e10) * invDet;
+		const t21 = -(this.e00 * this.e21 - this.e01 * this.e20) * invDet;
+		const t22 = (this.e00 * this.e11 - this.e01 * this.e10) * invDet;
 		this.e00 = d00 * invDet;
 		this.e01 = -(this.e01 * this.e22 - this.e02 * this.e21) * invDet;
 		this.e02 = t02;
@@ -13647,6 +13880,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = t22;
 		return this;
 	}
+
 	toArray(columnMajor) {
 		if(columnMajor == null) {
 			columnMajor = false;
@@ -13657,6 +13891,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 			return [this.e00,this.e01,this.e02,this.e10,this.e11,this.e12,this.e20,this.e21,this.e22];
 		}
 	}
+
 	copyFrom(m) {
 		this.e00 = m.e00;
 		this.e01 = m.e01;
@@ -13669,26 +13904,28 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = m.e22;
 		return this;
 	}
+
 	clone() {
 		return new oimo.common.Mat3(this.e00,this.e01,this.e02,this.e10,this.e11,this.e12,this.e20,this.e21,this.e22);
 	}
+
 	fromQuat(q) {
-		let x = q.x;
-		let y = q.y;
-		let z = q.z;
-		let w = q.w;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = q.x;
+		const y = q.y;
+		const z = q.z;
+		const w = q.w;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		this.e00 = 1 - yy - zz;
 		this.e01 = xy - wz;
 		this.e02 = xz + wy;
@@ -13700,12 +13937,13 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = 1 - xx - yy;
 		return this;
 	}
+
 	toQuat() {
-		let _this = new oimo.common.Quat();
-		let e00 = this.e00;
-		let e11 = this.e11;
-		let e22 = this.e22;
-		let t = e00 + e11 + e22;
+		const _this = new oimo.common.Quat();
+		const e00 = this.e00;
+		const e11 = this.e11;
+		const e22 = this.e22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -13747,13 +13985,14 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		}
 		return _this;
 	}
+
 	fromEulerXyz(eulerAngles) {
-		let sx = Math.sin(eulerAngles.x);
-		let sy = Math.sin(eulerAngles.y);
-		let sz = Math.sin(eulerAngles.z);
-		let cx = Math.cos(eulerAngles.x);
-		let cy = Math.cos(eulerAngles.y);
-		let cz = Math.cos(eulerAngles.z);
+		const sx = Math.sin(eulerAngles.x);
+		const sy = Math.sin(eulerAngles.y);
+		const sz = Math.sin(eulerAngles.z);
+		const cx = Math.cos(eulerAngles.x);
+		const cy = Math.cos(eulerAngles.y);
+		const cz = Math.cos(eulerAngles.z);
 		this.e00 = cy * cz;
 		this.e01 = -cy * sz;
 		this.e02 = sy;
@@ -13765,18 +14004,20 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = cx * cy;
 		return this;
 	}
+
 	toEulerXyz() {
-		let sy = this.e02;
+		const sy = this.e02;
 		if(sy <= -1) {
-			let xSubZ = Math.atan2(this.e21,this.e11);
+			const xSubZ = Math.atan2(this.e21,this.e11);
 			return new oimo.common.Vec3(xSubZ * 0.5,-1.570796326794895,-xSubZ * 0.5);
 		}
 		if(sy >= 1) {
-			let xAddZ = Math.atan2(this.e21,this.e11);
+			const xAddZ = Math.atan2(this.e21,this.e11);
 			return new oimo.common.Vec3(xAddZ * 0.5,1.570796326794895,xAddZ * 0.5);
 		}
 		return new oimo.common.Vec3(Math.atan2(-this.e12,this.e22),Math.asin(sy),Math.atan2(-this.e01,this.e00));
 	}
+
 	getRow(index) {
 		if(index == 0) {
 			return new oimo.common.Vec3(this.e00,this.e01,this.e02);
@@ -13788,6 +14029,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 			return null;
 		}
 	}
+
 	getCol(index) {
 		if(index == 0) {
 			return new oimo.common.Vec3(this.e00,this.e10,this.e20);
@@ -13799,6 +14041,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 			return null;
 		}
 	}
+
 	getRowTo(index,dst) {
 		if(index == 0) {
 			dst.init(this.e00,this.e01,this.e02);
@@ -13810,6 +14053,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 			dst.zero();
 		}
 	}
+
 	getColTo(index,dst) {
 		if(index == 0) {
 			dst.init(this.e00,this.e10,this.e20);
@@ -13821,6 +14065,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 			dst.zero();
 		}
 	}
+
 	fromRows(row0,row1,row2) {
 		this.e00 = row0.x;
 		this.e01 = row0.y;
@@ -13833,6 +14078,7 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = row2.z;
 		return this;
 	}
+
 	fromCols(col0,col1,col2) {
 		this.e00 = col0.x;
 		this.e01 = col1.x;
@@ -13845,10 +14091,11 @@ oimo.common.Mat3 = class oimo_common_Mat3 {
 		this.e22 = col2.z;
 		return this;
 	}
+
 	toString() {
-		return "Mat3[" + (this.e00 > 0 ? (this.e00 * 10000000 + 0.5 | 0) / 10000000 : (this.e00 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e01 > 0 ? (this.e01 * 10000000 + 0.5 | 0) / 10000000 : (this.e01 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e02 > 0 ? (this.e02 * 10000000 + 0.5 | 0) / 10000000 : (this.e02 * 10000000 - 0.5 | 0) / 10000000) + ",\n" + "     " + (this.e10 > 0 ? (this.e10 * 10000000 + 0.5 | 0) / 10000000 : (this.e10 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e11 > 0 ? (this.e11 * 10000000 + 0.5 | 0) / 10000000 : (this.e11 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e12 > 0 ? (this.e12 * 10000000 + 0.5 | 0) / 10000000 : (this.e12 * 10000000 - 0.5 | 0) / 10000000) + ",\n" + "     " + (this.e20 > 0 ? (this.e20 * 10000000 + 0.5 | 0) / 10000000 : (this.e20 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e21 > 0 ? (this.e21 * 10000000 + 0.5 | 0) / 10000000 : (this.e21 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e22 > 0 ? (this.e22 * 10000000 + 0.5 | 0) / 10000000 : (this.e22 * 10000000 - 0.5 | 0) / 10000000) + "]";
+		return 'Mat3[' + (this.e00 > 0 ? (this.e00 * 10000000 + 0.5 | 0) / 10000000 : (this.e00 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e01 > 0 ? (this.e01 * 10000000 + 0.5 | 0) / 10000000 : (this.e01 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e02 > 0 ? (this.e02 * 10000000 + 0.5 | 0) / 10000000 : (this.e02 * 10000000 - 0.5 | 0) / 10000000) + ',\n' + '     ' + (this.e10 > 0 ? (this.e10 * 10000000 + 0.5 | 0) / 10000000 : (this.e10 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e11 > 0 ? (this.e11 * 10000000 + 0.5 | 0) / 10000000 : (this.e11 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e12 > 0 ? (this.e12 * 10000000 + 0.5 | 0) / 10000000 : (this.e12 * 10000000 - 0.5 | 0) / 10000000) + ',\n' + '     ' + (this.e20 > 0 ? (this.e20 * 10000000 + 0.5 | 0) / 10000000 : (this.e20 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e21 > 0 ? (this.e21 * 10000000 + 0.5 | 0) / 10000000 : (this.e21 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e22 > 0 ? (this.e22 * 10000000 + 0.5 | 0) / 10000000 : (this.e22 * 10000000 - 0.5 | 0) / 10000000) + ']';
 	}
-}
+};
 oimo.common.Mat4 = class oimo_common_Mat4 {
 	constructor(e00,e01,e02,e03,e10,e11,e12,e13,e20,e21,e22,e23,e30,e31,e32,e33) {
 		if(e33 == null) {
@@ -13917,6 +14164,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = e33;
 		oimo.common.Mat4.numCreations++;
 	}
+
 	init(e00,e01,e02,e03,e10,e11,e12,e13,e20,e21,e22,e23,e30,e31,e32,e33) {
 		this.e00 = e00;
 		this.e01 = e01;
@@ -13936,6 +14184,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = e33;
 		return this;
 	}
+
 	identity() {
 		this.e00 = 1;
 		this.e01 = 0;
@@ -13955,18 +14204,23 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = 1;
 		return this;
 	}
+
 	add(m) {
 		return new oimo.common.Mat4(this.e00 + m.e00,this.e01 + m.e01,this.e02 + m.e02,this.e03 + m.e03,this.e10 + m.e10,this.e11 + m.e11,this.e12 + m.e12,this.e13 + m.e13,this.e20 + m.e20,this.e21 + m.e21,this.e22 + m.e22,this.e23 + m.e23,this.e30 + m.e30,this.e31 + m.e31,this.e32 + m.e32,this.e33 + m.e33);
 	}
+
 	sub(m) {
 		return new oimo.common.Mat4(this.e00 - m.e00,this.e01 - m.e01,this.e02 - m.e02,this.e03 - m.e03,this.e10 - m.e10,this.e11 - m.e11,this.e12 - m.e12,this.e13 - m.e13,this.e20 - m.e20,this.e21 - m.e21,this.e22 - m.e22,this.e23 - m.e23,this.e30 - m.e30,this.e31 - m.e31,this.e32 - m.e32,this.e33 - m.e33);
 	}
+
 	scale(s) {
 		return new oimo.common.Mat4(this.e00 * s,this.e01 * s,this.e02 * s,this.e03 * s,this.e10 * s,this.e11 * s,this.e12 * s,this.e13 * s,this.e20 * s,this.e21 * s,this.e22 * s,this.e23 * s,this.e30 * s,this.e31 * s,this.e32 * s,this.e33 * s);
 	}
+
 	mul(m) {
 		return new oimo.common.Mat4(this.e00 * m.e00 + this.e01 * m.e10 + this.e02 * m.e20 + this.e03 * m.e30,this.e00 * m.e01 + this.e01 * m.e11 + this.e02 * m.e21 + this.e03 * m.e31,this.e00 * m.e02 + this.e01 * m.e12 + this.e02 * m.e22 + this.e03 * m.e32,this.e00 * m.e03 + this.e01 * m.e13 + this.e02 * m.e23 + this.e03 * m.e33,this.e10 * m.e00 + this.e11 * m.e10 + this.e12 * m.e20 + this.e13 * m.e30,this.e10 * m.e01 + this.e11 * m.e11 + this.e12 * m.e21 + this.e13 * m.e31,this.e10 * m.e02 + this.e11 * m.e12 + this.e12 * m.e22 + this.e13 * m.e32,this.e10 * m.e03 + this.e11 * m.e13 + this.e12 * m.e23 + this.e13 * m.e33,this.e20 * m.e00 + this.e21 * m.e10 + this.e22 * m.e20 + this.e23 * m.e30,this.e20 * m.e01 + this.e21 * m.e11 + this.e22 * m.e21 + this.e23 * m.e31,this.e20 * m.e02 + this.e21 * m.e12 + this.e22 * m.e22 + this.e23 * m.e32,this.e20 * m.e03 + this.e21 * m.e13 + this.e22 * m.e23 + this.e23 * m.e33,this.e30 * m.e00 + this.e31 * m.e10 + this.e32 * m.e20 + this.e33 * m.e30,this.e30 * m.e01 + this.e31 * m.e11 + this.e32 * m.e21 + this.e33 * m.e31,this.e30 * m.e02 + this.e31 * m.e12 + this.e32 * m.e22 + this.e33 * m.e32,this.e30 * m.e03 + this.e31 * m.e13 + this.e32 * m.e23 + this.e33 * m.e33);
 	}
+
 	addEq(m) {
 		this.e00 += m.e00;
 		this.e01 += m.e01;
@@ -13986,6 +14240,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 += m.e33;
 		return this;
 	}
+
 	subEq(m) {
 		this.e00 -= m.e00;
 		this.e01 -= m.e01;
@@ -14005,6 +14260,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 -= m.e33;
 		return this;
 	}
+
 	scaleEq(s) {
 		this.e00 *= s;
 		this.e01 *= s;
@@ -14024,22 +14280,23 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 *= s;
 		return this;
 	}
+
 	mulEq(m) {
-		let e01 = this.e00 * m.e01 + this.e01 * m.e11 + this.e02 * m.e21 + this.e03 * m.e31;
-		let e02 = this.e00 * m.e02 + this.e01 * m.e12 + this.e02 * m.e22 + this.e03 * m.e32;
-		let e03 = this.e00 * m.e03 + this.e01 * m.e13 + this.e02 * m.e23 + this.e03 * m.e33;
-		let e10 = this.e10 * m.e00 + this.e11 * m.e10 + this.e12 * m.e20 + this.e13 * m.e30;
-		let e11 = this.e10 * m.e01 + this.e11 * m.e11 + this.e12 * m.e21 + this.e13 * m.e31;
-		let e12 = this.e10 * m.e02 + this.e11 * m.e12 + this.e12 * m.e22 + this.e13 * m.e32;
-		let e13 = this.e10 * m.e03 + this.e11 * m.e13 + this.e12 * m.e23 + this.e13 * m.e33;
-		let e20 = this.e20 * m.e00 + this.e21 * m.e10 + this.e22 * m.e20 + this.e23 * m.e30;
-		let e21 = this.e20 * m.e01 + this.e21 * m.e11 + this.e22 * m.e21 + this.e23 * m.e31;
-		let e22 = this.e20 * m.e02 + this.e21 * m.e12 + this.e22 * m.e22 + this.e23 * m.e32;
-		let e23 = this.e20 * m.e03 + this.e21 * m.e13 + this.e22 * m.e23 + this.e23 * m.e33;
-		let e30 = this.e30 * m.e00 + this.e31 * m.e10 + this.e32 * m.e20 + this.e33 * m.e30;
-		let e31 = this.e30 * m.e01 + this.e31 * m.e11 + this.e32 * m.e21 + this.e33 * m.e31;
-		let e32 = this.e30 * m.e02 + this.e31 * m.e12 + this.e32 * m.e22 + this.e33 * m.e32;
-		let e33 = this.e30 * m.e03 + this.e31 * m.e13 + this.e32 * m.e23 + this.e33 * m.e33;
+		const e01 = this.e00 * m.e01 + this.e01 * m.e11 + this.e02 * m.e21 + this.e03 * m.e31;
+		const e02 = this.e00 * m.e02 + this.e01 * m.e12 + this.e02 * m.e22 + this.e03 * m.e32;
+		const e03 = this.e00 * m.e03 + this.e01 * m.e13 + this.e02 * m.e23 + this.e03 * m.e33;
+		const e10 = this.e10 * m.e00 + this.e11 * m.e10 + this.e12 * m.e20 + this.e13 * m.e30;
+		const e11 = this.e10 * m.e01 + this.e11 * m.e11 + this.e12 * m.e21 + this.e13 * m.e31;
+		const e12 = this.e10 * m.e02 + this.e11 * m.e12 + this.e12 * m.e22 + this.e13 * m.e32;
+		const e13 = this.e10 * m.e03 + this.e11 * m.e13 + this.e12 * m.e23 + this.e13 * m.e33;
+		const e20 = this.e20 * m.e00 + this.e21 * m.e10 + this.e22 * m.e20 + this.e23 * m.e30;
+		const e21 = this.e20 * m.e01 + this.e21 * m.e11 + this.e22 * m.e21 + this.e23 * m.e31;
+		const e22 = this.e20 * m.e02 + this.e21 * m.e12 + this.e22 * m.e22 + this.e23 * m.e32;
+		const e23 = this.e20 * m.e03 + this.e21 * m.e13 + this.e22 * m.e23 + this.e23 * m.e33;
+		const e30 = this.e30 * m.e00 + this.e31 * m.e10 + this.e32 * m.e20 + this.e33 * m.e30;
+		const e31 = this.e30 * m.e01 + this.e31 * m.e11 + this.e32 * m.e21 + this.e33 * m.e31;
+		const e32 = this.e30 * m.e02 + this.e31 * m.e12 + this.e32 * m.e22 + this.e33 * m.e32;
+		const e33 = this.e30 * m.e03 + this.e31 * m.e13 + this.e32 * m.e23 + this.e33 * m.e33;
 		this.e00 = this.e00 * m.e00 + this.e01 * m.e10 + this.e02 * m.e20 + this.e03 * m.e30;
 		this.e01 = e01;
 		this.e02 = e02;
@@ -14058,48 +14315,55 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = e33;
 		return this;
 	}
+
 	prependScale(sx,sy,sz) {
 		return new oimo.common.Mat4(this.e00 * sx,this.e01 * sx,this.e02 * sx,this.e03 * sx,this.e10 * sy,this.e11 * sy,this.e12 * sy,this.e13 * sy,this.e20 * sz,this.e21 * sz,this.e22 * sz,this.e23 * sz,this.e30,this.e31,this.e32,this.e33);
 	}
+
 	appendScale(sx,sy,sz) {
 		return new oimo.common.Mat4(this.e00 * sx,this.e01 * sy,this.e02 * sz,this.e03,this.e10 * sx,this.e11 * sy,this.e12 * sz,this.e13,this.e20 * sx,this.e21 * sy,this.e22 * sz,this.e23,this.e30 * sx,this.e31 * sy,this.e32 * sz,this.e33);
 	}
+
 	prependRotation(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
 		return new oimo.common.Mat4(r00 * this.e00 + r01 * this.e10 + r02 * this.e20,r00 * this.e01 + r01 * this.e11 + r02 * this.e21,r00 * this.e02 + r01 * this.e12 + r02 * this.e22,r00 * this.e03 + r01 * this.e13 + r02 * this.e23,r10 * this.e00 + r11 * this.e10 + r12 * this.e20,r10 * this.e01 + r11 * this.e11 + r12 * this.e21,r10 * this.e02 + r11 * this.e12 + r12 * this.e22,r10 * this.e03 + r11 * this.e13 + r12 * this.e23,r20 * this.e00 + r21 * this.e10 + r22 * this.e20,r20 * this.e01 + r21 * this.e11 + r22 * this.e21,r20 * this.e02 + r21 * this.e12 + r22 * this.e22,r20 * this.e03 + r21 * this.e13 + r22 * this.e23,this.e30,this.e31,this.e32,this.e33);
 	}
+
 	appendRotation(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
 		return new oimo.common.Mat4(this.e00 * r00 + this.e01 * r10 + this.e02 * r20,this.e00 * r01 + this.e01 * r11 + this.e02 * r21,this.e00 * r02 + this.e01 * r12 + this.e02 * r22,this.e03,this.e10 * r00 + this.e11 * r10 + this.e12 * r20,this.e10 * r01 + this.e11 * r11 + this.e12 * r21,this.e10 * r02 + this.e11 * r12 + this.e12 * r22,this.e13,this.e20 * r00 + this.e21 * r10 + this.e22 * r20,this.e20 * r01 + this.e21 * r11 + this.e22 * r21,this.e20 * r02 + this.e21 * r12 + this.e22 * r22,this.e23,this.e30 * r00 + this.e31 * r10 + this.e32 * r20,this.e30 * r01 + this.e31 * r11 + this.e32 * r21,this.e30 * r02 + this.e31 * r12 + this.e32 * r22,this.e33);
 	}
+
 	prependTranslation(tx,ty,tz) {
 		return new oimo.common.Mat4(this.e00 + tx * this.e30,this.e01 + tx * this.e31,this.e02 + tx * this.e32,this.e03 + tx * this.e33,this.e10 + ty * this.e30,this.e11 + ty * this.e31,this.e12 + ty * this.e32,this.e13 + ty * this.e33,this.e20 + tz * this.e30,this.e21 + tz * this.e31,this.e22 + tz * this.e32,this.e23 + tz * this.e33,this.e30,this.e31,this.e32,this.e33);
 	}
+
 	appendTranslation(tx,ty,tz) {
 		return new oimo.common.Mat4(this.e00,this.e01,this.e02,this.e00 * tx + this.e01 * ty + this.e02 * tz + this.e03,this.e10,this.e11,this.e12,this.e10 * tx + this.e11 * ty + this.e12 * tz + this.e13,this.e20,this.e21,this.e22,this.e20 * tx + this.e21 * ty + this.e22 * tz + this.e23,this.e30,this.e31,this.e32,this.e30 * tx + this.e31 * ty + this.e32 * tz + this.e33);
 	}
+
 	prependScaleEq(sx,sy,sz) {
 		this.e00 *= sx;
 		this.e01 *= sx;
@@ -14119,6 +14383,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 
 		return this;
 	}
+
 	appendScaleEq(sx,sy,sz) {
 		this.e00 *= sx;
 		this.e01 *= sy;
@@ -14138,27 +14403,28 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 
 		return this;
 	}
+
 	prependRotationEq(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
-		let e10 = r10 * this.e00 + r11 * this.e10 + r12 * this.e20;
-		let e11 = r10 * this.e01 + r11 * this.e11 + r12 * this.e21;
-		let e12 = r10 * this.e02 + r11 * this.e12 + r12 * this.e22;
-		let e13 = r10 * this.e03 + r11 * this.e13 + r12 * this.e23;
-		let e20 = r20 * this.e00 + r21 * this.e10 + r22 * this.e20;
-		let e21 = r20 * this.e01 + r21 * this.e11 + r22 * this.e21;
-		let e22 = r20 * this.e02 + r21 * this.e12 + r22 * this.e22;
-		let e23 = r20 * this.e03 + r21 * this.e13 + r22 * this.e23;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
+		const e10 = r10 * this.e00 + r11 * this.e10 + r12 * this.e20;
+		const e11 = r10 * this.e01 + r11 * this.e11 + r12 * this.e21;
+		const e12 = r10 * this.e02 + r11 * this.e12 + r12 * this.e22;
+		const e13 = r10 * this.e03 + r11 * this.e13 + r12 * this.e23;
+		const e20 = r20 * this.e00 + r21 * this.e10 + r22 * this.e20;
+		const e21 = r20 * this.e01 + r21 * this.e11 + r22 * this.e21;
+		const e22 = r20 * this.e02 + r21 * this.e12 + r22 * this.e22;
+		const e23 = r20 * this.e03 + r21 * this.e13 + r22 * this.e23;
 		this.e00 = r00 * this.e00 + r01 * this.e10 + r02 * this.e20;
 		this.e01 = r00 * this.e01 + r01 * this.e11 + r02 * this.e21;
 		this.e02 = r00 * this.e02 + r01 * this.e12 + r02 * this.e22;
@@ -14177,27 +14443,28 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 
 		return this;
 	}
+
 	appendRotationEq(rad,axisX,axisY,axisZ) {
-		let s = Math.sin(rad);
-		let c = Math.cos(rad);
-		let c1 = 1 - c;
-		let r00 = axisX * axisX * c1 + c;
-		let r01 = axisX * axisY * c1 - axisZ * s;
-		let r02 = axisX * axisZ * c1 + axisY * s;
-		let r10 = axisY * axisX * c1 + axisZ * s;
-		let r11 = axisY * axisY * c1 + c;
-		let r12 = axisY * axisZ * c1 - axisX * s;
-		let r20 = axisZ * axisX * c1 - axisY * s;
-		let r21 = axisZ * axisY * c1 + axisX * s;
-		let r22 = axisZ * axisZ * c1 + c;
-		let e01 = this.e00 * r01 + this.e01 * r11 + this.e02 * r21;
-		let e02 = this.e00 * r02 + this.e01 * r12 + this.e02 * r22;
-		let e11 = this.e10 * r01 + this.e11 * r11 + this.e12 * r21;
-		let e12 = this.e10 * r02 + this.e11 * r12 + this.e12 * r22;
-		let e21 = this.e20 * r01 + this.e21 * r11 + this.e22 * r21;
-		let e22 = this.e20 * r02 + this.e21 * r12 + this.e22 * r22;
-		let e31 = this.e30 * r01 + this.e31 * r11 + this.e32 * r21;
-		let e32 = this.e30 * r02 + this.e31 * r12 + this.e32 * r22;
+		const s = Math.sin(rad);
+		const c = Math.cos(rad);
+		const c1 = 1 - c;
+		const r00 = axisX * axisX * c1 + c;
+		const r01 = axisX * axisY * c1 - axisZ * s;
+		const r02 = axisX * axisZ * c1 + axisY * s;
+		const r10 = axisY * axisX * c1 + axisZ * s;
+		const r11 = axisY * axisY * c1 + c;
+		const r12 = axisY * axisZ * c1 - axisX * s;
+		const r20 = axisZ * axisX * c1 - axisY * s;
+		const r21 = axisZ * axisY * c1 + axisX * s;
+		const r22 = axisZ * axisZ * c1 + c;
+		const e01 = this.e00 * r01 + this.e01 * r11 + this.e02 * r21;
+		const e02 = this.e00 * r02 + this.e01 * r12 + this.e02 * r22;
+		const e11 = this.e10 * r01 + this.e11 * r11 + this.e12 * r21;
+		const e12 = this.e10 * r02 + this.e11 * r12 + this.e12 * r22;
+		const e21 = this.e20 * r01 + this.e21 * r11 + this.e22 * r21;
+		const e22 = this.e20 * r02 + this.e21 * r12 + this.e22 * r22;
+		const e31 = this.e30 * r01 + this.e31 * r11 + this.e32 * r21;
+		const e32 = this.e30 * r02 + this.e31 * r12 + this.e32 * r22;
 		this.e00 = this.e00 * r00 + this.e01 * r10 + this.e02 * r20;
 		this.e01 = e01;
 		this.e02 = e02;
@@ -14216,6 +14483,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 
 		return this;
 	}
+
 	prependTranslationEq(tx,ty,tz) {
 		this.e00 += tx * this.e30;
 		this.e01 += tx * this.e31;
@@ -14235,11 +14503,12 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 
 		return this;
 	}
+
 	appendTranslationEq(tx,ty,tz) {
-		let e03 = this.e00 * tx + this.e01 * ty + this.e02 * tz + this.e03;
-		let e13 = this.e10 * tx + this.e11 * ty + this.e12 * tz + this.e13;
-		let e23 = this.e20 * tx + this.e21 * ty + this.e22 * tz + this.e23;
-		let e33 = this.e30 * tx + this.e31 * ty + this.e32 * tz + this.e33;
+		const e03 = this.e00 * tx + this.e01 * ty + this.e02 * tz + this.e03;
+		const e13 = this.e10 * tx + this.e11 * ty + this.e12 * tz + this.e13;
+		const e23 = this.e20 * tx + this.e21 * ty + this.e22 * tz + this.e23;
+		const e33 = this.e30 * tx + this.e31 * ty + this.e32 * tz + this.e33;
 
 
 
@@ -14262,16 +14531,18 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = e33;
 		return this;
 	}
+
 	transpose() {
 		return new oimo.common.Mat4(this.e00,this.e10,this.e20,this.e30,this.e01,this.e11,this.e21,this.e31,this.e02,this.e12,this.e22,this.e32,this.e03,this.e13,this.e23,this.e33);
 	}
+
 	transposeEq() {
-		let e10 = this.e01;
-		let e20 = this.e02;
-		let e21 = this.e12;
-		let e30 = this.e03;
-		let e31 = this.e13;
-		let e32 = this.e23;
+		const e10 = this.e01;
+		const e20 = this.e02;
+		const e21 = this.e12;
+		const e30 = this.e03;
+		const e31 = this.e13;
+		const e32 = this.e23;
 
 		this.e01 = this.e10;
 		this.e02 = this.e20;
@@ -14290,68 +14561,72 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 
 		return this;
 	}
+
 	determinant() {
-		let d23_01 = this.e20 * this.e31 - this.e21 * this.e30;
-		let d23_02 = this.e20 * this.e32 - this.e22 * this.e30;
-		let d23_03 = this.e20 * this.e33 - this.e23 * this.e30;
-		let d23_12 = this.e21 * this.e32 - this.e22 * this.e31;
-		let d23_13 = this.e21 * this.e33 - this.e23 * this.e31;
-		let d23_23 = this.e22 * this.e33 - this.e23 * this.e32;
+		const d23_01 = this.e20 * this.e31 - this.e21 * this.e30;
+		const d23_02 = this.e20 * this.e32 - this.e22 * this.e30;
+		const d23_03 = this.e20 * this.e33 - this.e23 * this.e30;
+		const d23_12 = this.e21 * this.e32 - this.e22 * this.e31;
+		const d23_13 = this.e21 * this.e33 - this.e23 * this.e31;
+		const d23_23 = this.e22 * this.e33 - this.e23 * this.e32;
 		return this.e00 * (this.e11 * d23_23 - this.e12 * d23_13 + this.e13 * d23_12) - this.e01 * (this.e10 * d23_23 - this.e12 * d23_03 + this.e13 * d23_02) + this.e02 * (this.e10 * d23_13 - this.e11 * d23_03 + this.e13 * d23_01) - this.e03 * (this.e10 * d23_12 - this.e11 * d23_02 + this.e12 * d23_01);
 	}
+
 	trace() {
 		return this.e00 + this.e11 + this.e22 + this.e33;
 	}
+
 	inverse() {
-		let d01_01 = this.e00 * this.e11 - this.e01 * this.e10;
-		let d01_02 = this.e00 * this.e12 - this.e02 * this.e10;
-		let d01_03 = this.e00 * this.e13 - this.e03 * this.e10;
-		let d01_12 = this.e01 * this.e12 - this.e02 * this.e11;
-		let d01_13 = this.e01 * this.e13 - this.e03 * this.e11;
-		let d01_23 = this.e02 * this.e13 - this.e03 * this.e12;
-		let d23_01 = this.e20 * this.e31 - this.e21 * this.e30;
-		let d23_02 = this.e20 * this.e32 - this.e22 * this.e30;
-		let d23_03 = this.e20 * this.e33 - this.e23 * this.e30;
-		let d23_12 = this.e21 * this.e32 - this.e22 * this.e31;
-		let d23_13 = this.e21 * this.e33 - this.e23 * this.e31;
-		let d23_23 = this.e22 * this.e33 - this.e23 * this.e32;
-		let d00 = this.e11 * d23_23 - this.e12 * d23_13 + this.e13 * d23_12;
-		let d01 = this.e10 * d23_23 - this.e12 * d23_03 + this.e13 * d23_02;
-		let d02 = this.e10 * d23_13 - this.e11 * d23_03 + this.e13 * d23_01;
-		let d03 = this.e10 * d23_12 - this.e11 * d23_02 + this.e12 * d23_01;
+		const d01_01 = this.e00 * this.e11 - this.e01 * this.e10;
+		const d01_02 = this.e00 * this.e12 - this.e02 * this.e10;
+		const d01_03 = this.e00 * this.e13 - this.e03 * this.e10;
+		const d01_12 = this.e01 * this.e12 - this.e02 * this.e11;
+		const d01_13 = this.e01 * this.e13 - this.e03 * this.e11;
+		const d01_23 = this.e02 * this.e13 - this.e03 * this.e12;
+		const d23_01 = this.e20 * this.e31 - this.e21 * this.e30;
+		const d23_02 = this.e20 * this.e32 - this.e22 * this.e30;
+		const d23_03 = this.e20 * this.e33 - this.e23 * this.e30;
+		const d23_12 = this.e21 * this.e32 - this.e22 * this.e31;
+		const d23_13 = this.e21 * this.e33 - this.e23 * this.e31;
+		const d23_23 = this.e22 * this.e33 - this.e23 * this.e32;
+		const d00 = this.e11 * d23_23 - this.e12 * d23_13 + this.e13 * d23_12;
+		const d01 = this.e10 * d23_23 - this.e12 * d23_03 + this.e13 * d23_02;
+		const d02 = this.e10 * d23_13 - this.e11 * d23_03 + this.e13 * d23_01;
+		const d03 = this.e10 * d23_12 - this.e11 * d23_02 + this.e12 * d23_01;
 		let invDet = this.e00 * d00 - this.e01 * d01 + this.e02 * d02 - this.e03 * d03;
 		if(invDet != 0) {
 			invDet = 1 / invDet;
 		}
 		return new oimo.common.Mat4(d00 * invDet,-(this.e01 * d23_23 - this.e02 * d23_13 + this.e03 * d23_12) * invDet,(this.e31 * d01_23 - this.e32 * d01_13 + this.e33 * d01_12) * invDet,-(this.e21 * d01_23 - this.e22 * d01_13 + this.e23 * d01_12) * invDet,-d01 * invDet,(this.e00 * d23_23 - this.e02 * d23_03 + this.e03 * d23_02) * invDet,-(this.e30 * d01_23 - this.e32 * d01_03 + this.e33 * d01_02) * invDet,(this.e20 * d01_23 - this.e22 * d01_03 + this.e23 * d01_02) * invDet,d02 * invDet,-(this.e00 * d23_13 - this.e01 * d23_03 + this.e03 * d23_01) * invDet,(this.e30 * d01_13 - this.e31 * d01_03 + this.e33 * d01_01) * invDet,-(this.e20 * d01_13 - this.e21 * d01_03 + this.e23 * d01_01) * invDet,-d03 * invDet,(this.e00 * d23_12 - this.e01 * d23_02 + this.e02 * d23_01) * invDet,-(this.e30 * d01_12 - this.e31 * d01_02 + this.e32 * d01_01) * invDet,(this.e20 * d01_12 - this.e21 * d01_02 + this.e22 * d01_01) * invDet);
 	}
+
 	inverseEq() {
-		let d01_01 = this.e00 * this.e11 - this.e01 * this.e10;
-		let d01_02 = this.e00 * this.e12 - this.e02 * this.e10;
-		let d01_03 = this.e00 * this.e13 - this.e03 * this.e10;
-		let d01_12 = this.e01 * this.e12 - this.e02 * this.e11;
-		let d01_13 = this.e01 * this.e13 - this.e03 * this.e11;
-		let d01_23 = this.e02 * this.e13 - this.e03 * this.e12;
-		let d23_01 = this.e20 * this.e31 - this.e21 * this.e30;
-		let d23_02 = this.e20 * this.e32 - this.e22 * this.e30;
-		let d23_03 = this.e20 * this.e33 - this.e23 * this.e30;
-		let d23_12 = this.e21 * this.e32 - this.e22 * this.e31;
-		let d23_13 = this.e21 * this.e33 - this.e23 * this.e31;
-		let d23_23 = this.e22 * this.e33 - this.e23 * this.e32;
-		let d00 = this.e11 * d23_23 - this.e12 * d23_13 + this.e13 * d23_12;
-		let d01 = this.e10 * d23_23 - this.e12 * d23_03 + this.e13 * d23_02;
-		let d02 = this.e10 * d23_13 - this.e11 * d23_03 + this.e13 * d23_01;
-		let d03 = this.e10 * d23_12 - this.e11 * d23_02 + this.e12 * d23_01;
+		const d01_01 = this.e00 * this.e11 - this.e01 * this.e10;
+		const d01_02 = this.e00 * this.e12 - this.e02 * this.e10;
+		const d01_03 = this.e00 * this.e13 - this.e03 * this.e10;
+		const d01_12 = this.e01 * this.e12 - this.e02 * this.e11;
+		const d01_13 = this.e01 * this.e13 - this.e03 * this.e11;
+		const d01_23 = this.e02 * this.e13 - this.e03 * this.e12;
+		const d23_01 = this.e20 * this.e31 - this.e21 * this.e30;
+		const d23_02 = this.e20 * this.e32 - this.e22 * this.e30;
+		const d23_03 = this.e20 * this.e33 - this.e23 * this.e30;
+		const d23_12 = this.e21 * this.e32 - this.e22 * this.e31;
+		const d23_13 = this.e21 * this.e33 - this.e23 * this.e31;
+		const d23_23 = this.e22 * this.e33 - this.e23 * this.e32;
+		const d00 = this.e11 * d23_23 - this.e12 * d23_13 + this.e13 * d23_12;
+		const d01 = this.e10 * d23_23 - this.e12 * d23_03 + this.e13 * d23_02;
+		const d02 = this.e10 * d23_13 - this.e11 * d23_03 + this.e13 * d23_01;
+		const d03 = this.e10 * d23_12 - this.e11 * d23_02 + this.e12 * d23_01;
 		let invDet = this.e00 * d00 - this.e01 * d01 + this.e02 * d02 - this.e03 * d03;
 		if(invDet != 0) {
 			invDet = 1 / invDet;
 		}
-		let t11 = (this.e00 * d23_23 - this.e02 * d23_03 + this.e03 * d23_02) * invDet;
-		let t21 = -(this.e00 * d23_13 - this.e01 * d23_03 + this.e03 * d23_01) * invDet;
-		let t23 = -(this.e20 * d01_13 - this.e21 * d01_03 + this.e23 * d01_01) * invDet;
-		let t31 = (this.e00 * d23_12 - this.e01 * d23_02 + this.e02 * d23_01) * invDet;
-		let t32 = -(this.e30 * d01_12 - this.e31 * d01_02 + this.e32 * d01_01) * invDet;
-		let t33 = (this.e20 * d01_12 - this.e21 * d01_02 + this.e22 * d01_01) * invDet;
+		const t11 = (this.e00 * d23_23 - this.e02 * d23_03 + this.e03 * d23_02) * invDet;
+		const t21 = -(this.e00 * d23_13 - this.e01 * d23_03 + this.e03 * d23_01) * invDet;
+		const t23 = -(this.e20 * d01_13 - this.e21 * d01_03 + this.e23 * d01_01) * invDet;
+		const t31 = (this.e00 * d23_12 - this.e01 * d23_02 + this.e02 * d23_01) * invDet;
+		const t32 = -(this.e30 * d01_12 - this.e31 * d01_02 + this.e32 * d01_01) * invDet;
+		const t33 = (this.e20 * d01_12 - this.e21 * d01_02 + this.e22 * d01_01) * invDet;
 		this.e00 = d00 * invDet;
 		this.e01 = -(this.e01 * d23_23 - this.e02 * d23_13 + this.e03 * d23_12) * invDet;
 		this.e02 = (this.e31 * d01_23 - this.e32 * d01_13 + this.e33 * d01_12) * invDet;
@@ -14370,6 +14645,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = t33;
 		return this;
 	}
+
 	lookAt(eyeX,eyeY,eyeZ,atX,atY,atZ,upX,upY,upZ) {
 		let zx = eyeX - atX;
 		let zy = eyeY - atY;
@@ -14385,9 +14661,9 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		xx *= tmp;
 		xy *= tmp;
 		xz *= tmp;
-		let yx = zy * xz - zz * xy;
-		let yy = zz * xx - zx * xz;
-		let yz = zx * xy - zy * xx;
+		const yx = zy * xz - zz * xy;
+		const yy = zz * xx - zx * xz;
+		const yz = zx * xy - zy * xx;
 		this.e00 = xx;
 		this.e01 = xy;
 		this.e02 = xz;
@@ -14406,9 +14682,10 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = 1;
 		return this;
 	}
+
 	perspective(fovY,aspect,near,far) {
-		let h = 1 / Math.tan(fovY * 0.5);
-		let fnf = far / (near - far);
+		const h = 1 / Math.tan(fovY * 0.5);
+		const fnf = far / (near - far);
 		this.e00 = h / aspect;
 		this.e01 = 0;
 		this.e02 = 0;
@@ -14427,8 +14704,9 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = 0;
 		return this;
 	}
+
 	ortho(width,height,near,far) {
-		let nf = 1 / (near - far);
+		const nf = 1 / (near - far);
 		this.e00 = 2 / width;
 		this.e01 = 0;
 		this.e02 = 0;
@@ -14447,6 +14725,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = 1;
 		return this;
 	}
+
 	toArray(columnMajor) {
 		if(columnMajor == null) {
 			columnMajor = false;
@@ -14457,6 +14736,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 			return [this.e00,this.e01,this.e02,this.e03,this.e10,this.e11,this.e12,this.e13,this.e20,this.e21,this.e22,this.e23,this.e30,this.e31,this.e32,this.e33];
 		}
 	}
+
 	copyFrom(m) {
 		this.e00 = m.e00;
 		this.e01 = m.e01;
@@ -14476,6 +14756,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = m.e33;
 		return this;
 	}
+
 	fromMat3(m) {
 		this.e00 = m.e00;
 		this.e01 = m.e01;
@@ -14495,6 +14776,7 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = 1;
 		return this;
 	}
+
 	fromTransform(transform) {
 		this.e00 = transform._rotation00;
 		this.e01 = transform._rotation01;
@@ -14514,13 +14796,15 @@ oimo.common.Mat4 = class oimo_common_Mat4 {
 		this.e33 = 1;
 		return this;
 	}
+
 	clone() {
 		return new oimo.common.Mat4(this.e00,this.e01,this.e02,this.e03,this.e10,this.e11,this.e12,this.e13,this.e20,this.e21,this.e22,this.e23,this.e30,this.e31,this.e32,this.e33);
 	}
+
 	toString() {
-		return "Mat4[" + (this.e00 > 0 ? (this.e00 * 10000000 + 0.5 | 0) / 10000000 : (this.e00 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e01 > 0 ? (this.e01 * 10000000 + 0.5 | 0) / 10000000 : (this.e01 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e02 > 0 ? (this.e02 * 10000000 + 0.5 | 0) / 10000000 : (this.e02 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e03 > 0 ? (this.e03 * 10000000 + 0.5 | 0) / 10000000 : (this.e03 * 10000000 - 0.5 | 0) / 10000000) + ",\n" + "    " + (this.e10 > 0 ? (this.e10 * 10000000 + 0.5 | 0) / 10000000 : (this.e10 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e11 > 0 ? (this.e11 * 10000000 + 0.5 | 0) / 10000000 : (this.e11 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e12 > 0 ? (this.e12 * 10000000 + 0.5 | 0) / 10000000 : (this.e12 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e13 > 0 ? (this.e13 * 10000000 + 0.5 | 0) / 10000000 : (this.e13 * 10000000 - 0.5 | 0) / 10000000) + ",\n" + "    " + (this.e20 > 0 ? (this.e20 * 10000000 + 0.5 | 0) / 10000000 : (this.e20 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e21 > 0 ? (this.e21 * 10000000 + 0.5 | 0) / 10000000 : (this.e21 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e22 > 0 ? (this.e22 * 10000000 + 0.5 | 0) / 10000000 : (this.e22 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e23 > 0 ? (this.e23 * 10000000 + 0.5 | 0) / 10000000 : (this.e23 * 10000000 - 0.5 | 0) / 10000000) + ",\n" + "    " + (this.e30 > 0 ? (this.e30 * 10000000 + 0.5 | 0) / 10000000 : (this.e30 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e31 > 0 ? (this.e31 * 10000000 + 0.5 | 0) / 10000000 : (this.e31 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e32 > 0 ? (this.e32 * 10000000 + 0.5 | 0) / 10000000 : (this.e32 * 10000000 - 0.5 | 0) / 10000000) + ", " + (this.e33 > 0 ? (this.e33 * 10000000 + 0.5 | 0) / 10000000 : (this.e33 * 10000000 - 0.5 | 0) / 10000000) + "]";
+		return 'Mat4[' + (this.e00 > 0 ? (this.e00 * 10000000 + 0.5 | 0) / 10000000 : (this.e00 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e01 > 0 ? (this.e01 * 10000000 + 0.5 | 0) / 10000000 : (this.e01 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e02 > 0 ? (this.e02 * 10000000 + 0.5 | 0) / 10000000 : (this.e02 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e03 > 0 ? (this.e03 * 10000000 + 0.5 | 0) / 10000000 : (this.e03 * 10000000 - 0.5 | 0) / 10000000) + ',\n' + '    ' + (this.e10 > 0 ? (this.e10 * 10000000 + 0.5 | 0) / 10000000 : (this.e10 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e11 > 0 ? (this.e11 * 10000000 + 0.5 | 0) / 10000000 : (this.e11 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e12 > 0 ? (this.e12 * 10000000 + 0.5 | 0) / 10000000 : (this.e12 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e13 > 0 ? (this.e13 * 10000000 + 0.5 | 0) / 10000000 : (this.e13 * 10000000 - 0.5 | 0) / 10000000) + ',\n' + '    ' + (this.e20 > 0 ? (this.e20 * 10000000 + 0.5 | 0) / 10000000 : (this.e20 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e21 > 0 ? (this.e21 * 10000000 + 0.5 | 0) / 10000000 : (this.e21 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e22 > 0 ? (this.e22 * 10000000 + 0.5 | 0) / 10000000 : (this.e22 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e23 > 0 ? (this.e23 * 10000000 + 0.5 | 0) / 10000000 : (this.e23 * 10000000 - 0.5 | 0) / 10000000) + ',\n' + '    ' + (this.e30 > 0 ? (this.e30 * 10000000 + 0.5 | 0) / 10000000 : (this.e30 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e31 > 0 ? (this.e31 * 10000000 + 0.5 | 0) / 10000000 : (this.e31 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e32 > 0 ? (this.e32 * 10000000 + 0.5 | 0) / 10000000 : (this.e32 * 10000000 - 0.5 | 0) / 10000000) + ', ' + (this.e33 > 0 ? (this.e33 * 10000000 + 0.5 | 0) / 10000000 : (this.e33 * 10000000 - 0.5 | 0) / 10000000) + ']';
 	}
-}
+};
 oimo.common.MathUtil = class oimo_common_MathUtil {
 	static abs(x) {
 		if(x > 0) {
@@ -14529,24 +14813,31 @@ oimo.common.MathUtil = class oimo_common_MathUtil {
 			return -x;
 		}
 	}
+
 	static sin(x) {
 		return Math.sin(x);
 	}
+
 	static cos(x) {
 		return Math.cos(x);
 	}
+
 	static tan(x) {
 		return Math.tan(x);
 	}
+
 	static asin(x) {
 		return Math.asin(x);
 	}
+
 	static acos(x) {
 		return Math.acos(x);
 	}
+
 	static atan(x) {
 		return Math.atan(x);
 	}
+
 	static safeAsin(x) {
 		if(x <= -1) {
 			return -1.570796326794895;
@@ -14556,6 +14847,7 @@ oimo.common.MathUtil = class oimo_common_MathUtil {
 		}
 		return Math.asin(x);
 	}
+
 	static safeAcos(x) {
 		if(x <= -1) {
 			return 3.14159265358979;
@@ -14565,12 +14857,15 @@ oimo.common.MathUtil = class oimo_common_MathUtil {
 		}
 		return Math.acos(x);
 	}
+
 	static atan2(y,x) {
 		return Math.atan2(y,x);
 	}
+
 	static sqrt(x) {
 		return Math.sqrt(x);
 	}
+
 	static clamp(x,min,max) {
 		if(x < min) {
 			return min;
@@ -14580,19 +14875,23 @@ oimo.common.MathUtil = class oimo_common_MathUtil {
 			return x;
 		}
 	}
+
 	static rand() {
 		return Math.random();
 	}
+
 	static randIn(min,max) {
 		return min + Math.random() * (max - min);
 	}
+
 	static randVec3In(min,max) {
 		return new oimo.common.Vec3(min + Math.random() * (max - min),min + Math.random() * (max - min),min + Math.random() * (max - min));
 	}
+
 	static randVec3() {
 		return new oimo.common.Vec3(-1 + Math.random() * 2,-1 + Math.random() * 2,-1 + Math.random() * 2);
 	}
-}
+};
 oimo.common.Pool = class oimo_common_Pool {
 	constructor() {
 		this.stackVec3 = new Array(256);
@@ -14604,6 +14903,7 @@ oimo.common.Pool = class oimo_common_Pool {
 		this.stackQuat = new Array(256);
 		this.sizeQuat = 0;
 	}
+
 	vec3() {
 		if(this.sizeVec3 == 0) {
 			return new oimo.common.Vec3();
@@ -14611,6 +14911,7 @@ oimo.common.Pool = class oimo_common_Pool {
 			return this.stackVec3[--this.sizeVec3];
 		}
 	}
+
 	mat3() {
 		if(this.sizeMat3 == 0) {
 			return new oimo.common.Mat3();
@@ -14618,6 +14919,7 @@ oimo.common.Pool = class oimo_common_Pool {
 			return this.stackMat3[--this.sizeMat3];
 		}
 	}
+
 	mat4() {
 		if(this.sizeMat4 == 0) {
 			return new oimo.common.Mat4();
@@ -14625,6 +14927,7 @@ oimo.common.Pool = class oimo_common_Pool {
 			return this.stackMat4[--this.sizeMat4];
 		}
 	}
+
 	quat() {
 		if(this.sizeQuat == 0) {
 			return new oimo.common.Quat();
@@ -14632,15 +14935,16 @@ oimo.common.Pool = class oimo_common_Pool {
 			return this.stackQuat[--this.sizeQuat];
 		}
 	}
+
 	dispose(vec3,mat3,mat4,quat) {
 		if(vec3 != null) {
 			vec3.zero();
 			if(this.sizeVec3 == this.stackVec3.length) {
-				let newArray = new Array(this.sizeVec3 << 1);
+				const newArray = new Array(this.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = this.sizeVec3;
+				const _g1 = this.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.stackVec3[i];
 					this.stackVec3[i] = null;
 				}
@@ -14659,11 +14963,11 @@ oimo.common.Pool = class oimo_common_Pool {
 			mat3.e21 = 0;
 			mat3.e22 = 1;
 			if(this.sizeMat3 == this.stackMat3.length) {
-				let newArray = new Array(this.sizeMat3 << 1);
+				const newArray = new Array(this.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = this.sizeMat3;
+				const _g1 = this.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.stackMat3[i];
 					this.stackMat3[i] = null;
 				}
@@ -14689,11 +14993,11 @@ oimo.common.Pool = class oimo_common_Pool {
 			mat4.e32 = 0;
 			mat4.e33 = 1;
 			if(this.sizeMat4 == this.stackMat4.length) {
-				let newArray = new Array(this.sizeMat4 << 1);
+				const newArray = new Array(this.sizeMat4 << 1);
 				let _g = 0;
-				let _g1 = this.sizeMat4;
+				const _g1 = this.sizeMat4;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.stackMat4[i];
 					this.stackMat4[i] = null;
 				}
@@ -14707,11 +15011,11 @@ oimo.common.Pool = class oimo_common_Pool {
 			quat.z = 0;
 			quat.w = 1;
 			if(this.sizeQuat == this.stackQuat.length) {
-				let newArray = new Array(this.sizeQuat << 1);
+				const newArray = new Array(this.sizeQuat << 1);
 				let _g = 0;
-				let _g1 = this.sizeQuat;
+				const _g1 = this.sizeQuat;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.stackQuat[i];
 					this.stackQuat[i] = null;
 				}
@@ -14720,14 +15024,15 @@ oimo.common.Pool = class oimo_common_Pool {
 			this.stackQuat[this.sizeQuat++] = quat;
 		}
 	}
+
 	disposeVec3(v) {
 		v.zero();
 		if(this.sizeVec3 == this.stackVec3.length) {
-			let newArray = new Array(this.sizeVec3 << 1);
+			const newArray = new Array(this.sizeVec3 << 1);
 			let _g = 0;
-			let _g1 = this.sizeVec3;
+			const _g1 = this.sizeVec3;
 			while(_g < _g1) {
-				let i = _g++;
+				const i = _g++;
 				newArray[i] = this.stackVec3[i];
 				this.stackVec3[i] = null;
 			}
@@ -14735,6 +15040,7 @@ oimo.common.Pool = class oimo_common_Pool {
 		}
 		this.stackVec3[this.sizeVec3++] = v;
 	}
+
 	disposeMat3(m) {
 		m.e00 = 1;
 		m.e01 = 0;
@@ -14746,11 +15052,11 @@ oimo.common.Pool = class oimo_common_Pool {
 		m.e21 = 0;
 		m.e22 = 1;
 		if(this.sizeMat3 == this.stackMat3.length) {
-			let newArray = new Array(this.sizeMat3 << 1);
+			const newArray = new Array(this.sizeMat3 << 1);
 			let _g = 0;
-			let _g1 = this.sizeMat3;
+			const _g1 = this.sizeMat3;
 			while(_g < _g1) {
-				let i = _g++;
+				const i = _g++;
 				newArray[i] = this.stackMat3[i];
 				this.stackMat3[i] = null;
 			}
@@ -14758,6 +15064,7 @@ oimo.common.Pool = class oimo_common_Pool {
 		}
 		this.stackMat3[this.sizeMat3++] = m;
 	}
+
 	disposeMat4(m) {
 		m.e00 = 1;
 		m.e01 = 0;
@@ -14776,11 +15083,11 @@ oimo.common.Pool = class oimo_common_Pool {
 		m.e32 = 0;
 		m.e33 = 1;
 		if(this.sizeMat4 == this.stackMat4.length) {
-			let newArray = new Array(this.sizeMat4 << 1);
+			const newArray = new Array(this.sizeMat4 << 1);
 			let _g = 0;
-			let _g1 = this.sizeMat4;
+			const _g1 = this.sizeMat4;
 			while(_g < _g1) {
-				let i = _g++;
+				const i = _g++;
 				newArray[i] = this.stackMat4[i];
 				this.stackMat4[i] = null;
 			}
@@ -14788,17 +15095,18 @@ oimo.common.Pool = class oimo_common_Pool {
 		}
 		this.stackMat4[this.sizeMat4++] = m;
 	}
+
 	disposeQuat(q) {
 		q.x = 0;
 		q.y = 0;
 		q.z = 0;
 		q.w = 1;
 		if(this.sizeQuat == this.stackQuat.length) {
-			let newArray = new Array(this.sizeQuat << 1);
+			const newArray = new Array(this.sizeQuat << 1);
 			let _g = 0;
-			let _g1 = this.sizeQuat;
+			const _g1 = this.sizeQuat;
 			while(_g < _g1) {
-				let i = _g++;
+				const i = _g++;
 				newArray[i] = this.stackQuat[i];
 				this.stackQuat[i] = null;
 			}
@@ -14806,7 +15114,7 @@ oimo.common.Pool = class oimo_common_Pool {
 		}
 		this.stackQuat[this.sizeQuat++] = q;
 	}
-}
+};
 oimo.common.Quat = class oimo_common_Quat {
 	constructor(x,y,z,w) {
 		if(w == null) {
@@ -14827,6 +15135,7 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w = w;
 		oimo.common.Quat.numCreations++;
 	}
+
 	identity() {
 		this.x = 0;
 		this.y = 0;
@@ -14834,6 +15143,7 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w = 1;
 		return this;
 	}
+
 	init(x,y,z,w) {
 		this.x = x;
 		this.y = y;
@@ -14841,15 +15151,19 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w = w;
 		return this;
 	}
+
 	add(q) {
 		return new oimo.common.Quat(this.x + q.x,this.y + q.y,this.z + q.z,this.w + q.w);
 	}
+
 	sub(q) {
 		return new oimo.common.Quat(this.x - q.x,this.y - q.y,this.z - q.z,this.w - q.w);
 	}
+
 	scale(s) {
 		return new oimo.common.Quat(this.x * s,this.y * s,this.z * s,this.w * s);
 	}
+
 	addEq(q) {
 		this.x += q.x;
 		this.y += q.y;
@@ -14857,6 +15171,7 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w += q.w;
 		return this;
 	}
+
 	subEq(q) {
 		this.x -= q.x;
 		this.y -= q.y;
@@ -14864,6 +15179,7 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w -= q.w;
 		return this;
 	}
+
 	scaleEq(s) {
 		this.x *= s;
 		this.y *= s;
@@ -14871,15 +15187,19 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w *= s;
 		return this;
 	}
+
 	length() {
 		return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
 	}
+
 	lengthSq() {
 		return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
 	}
+
 	dot(q) {
 		return this.x * q.x + this.y * q.y + this.z * q.z + this.w * q.w;
 	}
+
 	normalized() {
 		let invLen = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
 		if(invLen > 0) {
@@ -14887,6 +15207,7 @@ oimo.common.Quat = class oimo_common_Quat {
 		}
 		return new oimo.common.Quat(this.x * invLen,this.y * invLen,this.z * invLen,this.w * invLen);
 	}
+
 	normalize() {
 		let invLen = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
 		if(invLen > 0) {
@@ -14898,10 +15219,11 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w *= invLen;
 		return this;
 	}
+
 	setArc(v1,v2) {
-		let x1 = v1.x;
-		let y1 = v1.y;
-		let z1 = v1.z;
+		const x1 = v1.x;
+		const y1 = v1.y;
+		const z1 = v1.z;
 		let x2 = v2.x;
 		let y2 = v2.y;
 		let z2 = v2.z;
@@ -14942,6 +15264,7 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.z = (x1 * y2 - y1 * x2) * d;
 		return this;
 	}
+
 	slerp(q,t) {
 		let qx;
 		let qy;
@@ -14961,7 +15284,7 @@ oimo.common.Quat = class oimo_common_Quat {
 			qw = q.w;
 		}
 		if(d > 0.999999) {
-			let _this = new oimo.common.Quat(this.x + (qx - this.x) * t,this.y + (qy - this.y) * t,this.z + (qz - this.z) * t,this.w + (qw - this.w) * t);
+			const _this = new oimo.common.Quat(this.x + (qx - this.x) * t,this.y + (qy - this.y) * t,this.z + (qz - this.z) * t,this.w + (qw - this.w) * t);
 			let invLen = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z + _this.w * _this.w);
 			if(invLen > 0) {
 				invLen = 1 / invLen;
@@ -14972,20 +15295,21 @@ oimo.common.Quat = class oimo_common_Quat {
 			_this.w *= invLen;
 			return _this;
 		}
-		let theta = t * Math.acos(d);
+		const theta = t * Math.acos(d);
 		qx -= this.x * d;
 		qy -= this.y * d;
 		qz -= this.z * d;
 		qw -= this.w * d;
-		let invLen = 1 / Math.sqrt(qx * qx + qy * qy + qz * qz + qw * qw);
+		const invLen = 1 / Math.sqrt(qx * qx + qy * qy + qz * qz + qw * qw);
 		qx *= invLen;
 		qy *= invLen;
 		qz *= invLen;
 		qw *= invLen;
-		let sin = Math.sin(theta);
-		let cos = Math.cos(theta);
+		const sin = Math.sin(theta);
+		const cos = Math.cos(theta);
 		return new oimo.common.Quat(this.x * cos + qx * sin,this.y * cos + qy * sin,this.z * cos + qz * sin,this.w * cos + qw * sin);
 	}
+
 	copyFrom(q) {
 		this.x = q.x;
 		this.y = q.y;
@@ -14993,14 +15317,16 @@ oimo.common.Quat = class oimo_common_Quat {
 		this.w = q.w;
 		return this;
 	}
+
 	clone() {
 		return new oimo.common.Quat(this.x,this.y,this.z,this.w);
 	}
+
 	fromMat3(m) {
-		let e00 = m.e00;
-		let e11 = m.e11;
-		let e22 = m.e22;
-		let t = e00 + e11 + e22;
+		const e00 = m.e00;
+		const e11 = m.e11;
+		const e22 = m.e22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -15042,24 +15368,25 @@ oimo.common.Quat = class oimo_common_Quat {
 		}
 		return this;
 	}
+
 	toMat3() {
-		let _this = new oimo.common.Mat3();
-		let x = this.x;
-		let y = this.y;
-		let z = this.z;
-		let w = this.w;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const _this = new oimo.common.Mat3();
+		const x = this.x;
+		const y = this.y;
+		const z = this.z;
+		const w = this.w;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		_this.e00 = 1 - yy - zz;
 		_this.e01 = xy - wz;
 		_this.e02 = xz + wy;
@@ -15071,10 +15398,11 @@ oimo.common.Quat = class oimo_common_Quat {
 		_this.e22 = 1 - xx - yy;
 		return _this;
 	}
+
 	toString() {
-		return "Quat[" + (this.x > 0 ? (this.x * 10000000 + 0.5 | 0) / 10000000 : (this.x * 10000000 - 0.5 | 0) / 10000000) + " i,\n" + "    " + (this.y > 0 ? (this.y * 10000000 + 0.5 | 0) / 10000000 : (this.y * 10000000 - 0.5 | 0) / 10000000) + " j,\n" + "    " + (this.z > 0 ? (this.z * 10000000 + 0.5 | 0) / 10000000 : (this.z * 10000000 - 0.5 | 0) / 10000000) + " k,\n" + "    " + (this.w > 0 ? (this.w * 10000000 + 0.5 | 0) / 10000000 : (this.w * 10000000 - 0.5 | 0) / 10000000) + "]";
+		return 'Quat[' + (this.x > 0 ? (this.x * 10000000 + 0.5 | 0) / 10000000 : (this.x * 10000000 - 0.5 | 0) / 10000000) + ' i,\n' + '    ' + (this.y > 0 ? (this.y * 10000000 + 0.5 | 0) / 10000000 : (this.y * 10000000 - 0.5 | 0) / 10000000) + ' j,\n' + '    ' + (this.z > 0 ? (this.z * 10000000 + 0.5 | 0) / 10000000 : (this.z * 10000000 - 0.5 | 0) / 10000000) + ' k,\n' + '    ' + (this.w > 0 ? (this.w * 10000000 + 0.5 | 0) / 10000000 : (this.w * 10000000 - 0.5 | 0) / 10000000) + ']';
 	}
-}
+};
 if(!oimo.dynamics) oimo.dynamics = {};
 oimo.dynamics.Contact = class oimo_dynamics_Contact {
 	constructor() {
@@ -15096,12 +15424,13 @@ oimo.dynamics.Contact = class oimo_dynamics_Contact {
 		this._contactConstraint = new oimo.dynamics.constraint.contact.ContactConstraint(this._manifold);
 		this._touching = false;
 	}
+
 	_updateManifold() {
 		if(this._detector == null) {
 			return;
 		}
-		let ptouching = this._touching;
-		let result = this._detectorResult;
+		const ptouching = this._touching;
+		const result = this._detectorResult;
 		this._detector.detect(result,this._s1._geom,this._s2._geom,this._s1._transform,this._s2._transform,this._cachedDetectorData);
 		this._touching = result.numPoints > 0;
 		if(this._touching) {
@@ -15120,7 +15449,7 @@ oimo.dynamics.Contact = class oimo_dynamics_Contact {
 			this._manifold._clear();
 		}
 		if(this._touching && !ptouching) {
-			let cc1 = this._s1._contactCallback;
+			const cc1 = this._s1._contactCallback;
 			let cc2 = this._s2._contactCallback;
 			if(cc1 == cc2) {
 				cc2 = null;
@@ -15133,7 +15462,7 @@ oimo.dynamics.Contact = class oimo_dynamics_Contact {
 			}
 		}
 		if(!this._touching && ptouching) {
-			let cc1 = this._s1._contactCallback;
+			const cc1 = this._s1._contactCallback;
 			let cc2 = this._s2._contactCallback;
 			if(cc1 == cc2) {
 				cc2 = null;
@@ -15146,7 +15475,7 @@ oimo.dynamics.Contact = class oimo_dynamics_Contact {
 			}
 		}
 		if(this._touching) {
-			let cc1 = this._s1._contactCallback;
+			const cc1 = this._s1._contactCallback;
 			let cc2 = this._s2._contactCallback;
 			if(cc1 == cc2) {
 				cc2 = null;
@@ -15159,8 +15488,9 @@ oimo.dynamics.Contact = class oimo_dynamics_Contact {
 			}
 		}
 	}
+
 	_postSolve() {
-		let cc1 = this._s1._contactCallback;
+		const cc1 = this._s1._contactCallback;
 		let cc2 = this._s2._contactCallback;
 		if(cc1 == cc2) {
 			cc2 = null;
@@ -15172,28 +15502,35 @@ oimo.dynamics.Contact = class oimo_dynamics_Contact {
 			cc2.postSolve(this);
 		}
 	}
+
 	getShape1() {
 		return this._s1;
 	}
+
 	getShape2() {
 		return this._s2;
 	}
+
 	isTouching() {
 		return this._touching;
 	}
+
 	getManifold() {
 		return this._manifold;
 	}
+
 	getContactConstraint() {
 		return this._contactConstraint;
 	}
+
 	getPrev() {
 		return this._prev;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 oimo.dynamics.ContactLink = class oimo_dynamics_ContactLink {
 	constructor() {
 		this._prev = null;
@@ -15201,29 +15538,34 @@ oimo.dynamics.ContactLink = class oimo_dynamics_ContactLink {
 		this._contact = null;
 		this._other = null;
 	}
+
 	getContact() {
 		return this._contact;
 	}
+
 	getOther() {
 		return this._other;
 	}
+
 	getPrev() {
 		return this._prev;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 	constructor(broadPhase) {
 		this._broadPhase = broadPhase;
 		this._collisionMatrix = new oimo.collision.narrowphase.CollisionMatrix();
 		this._numContacts = 0;
 	}
+
 	createContacts() {
 		let pp = this._broadPhase._proxyPairList;
 		while(pp != null) {
-			let n = pp._next;
+			const n = pp._next;
 			while(true) {
 				let s1;
 				let s2;
@@ -15237,19 +15579,19 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 				if(!this.shouldCollide(s1,s2)) {
 					break;
 				}
-				let b1 = s1._rigidBody;
-				let b2 = s2._rigidBody;
+				const b1 = s1._rigidBody;
+				const b2 = s2._rigidBody;
 				let l;
 				if(b1._numContactLinks < b2._numContactLinks) {
 					l = b1._contactLinkList;
 				} else {
 					l = b2._contactLinkList;
 				}
-				let id1 = s1._id;
-				let id2 = s2._id;
+				const id1 = s1._id;
+				const id2 = s2._id;
 				let found = false;
 				while(l != null) {
-					let c = l._contact;
+					const c = l._contact;
 					if(c._s1._id == id1 && c._s2._id == id2) {
 						c._latest = true;
 						found = true;
@@ -15265,7 +15607,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					} else {
 						first = new oimo.dynamics.Contact();
 					}
-					let c = first;
+					const c = first;
 					if(this._contactList == null) {
 						this._contactList = c;
 						this._contactListLast = c;
@@ -15275,7 +15617,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 						this._contactListLast = c;
 					}
 					c._latest = true;
-					let detector = this._collisionMatrix.detectors[s1._geom._type][s2._geom._type];
+					const detector = this._collisionMatrix.detectors[s1._geom._type][s2._geom._type];
 					c._s1 = s1;
 					c._s2 = s2;
 					c._b1 = s1._rigidBody;
@@ -15304,7 +15646,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					c._link1._contact = c;
 					c._link2._contact = c;
 					c._detector = detector;
-					let _this = c._contactConstraint;
+					const _this = c._contactConstraint;
 					_this._s1 = s1;
 					_this._s2 = s2;
 					_this._b1 = _this._s1._rigidBody;
@@ -15318,11 +15660,12 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 			pp = n;
 		}
 	}
+
 	destroyOutdatedContacts() {
-		let incremental = this._broadPhase._incremental;
+		const incremental = this._broadPhase._incremental;
 		let c = this._contactList;
 		while(c != null) {
-			let n = c._next;
+			const n = c._next;
 			while(true) {
 				if(c._latest) {
 					c._latest = false;
@@ -15330,8 +15673,8 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					break;
 				}
 				if(!incremental) {
-					let prev = c._prev;
-					let next = c._next;
+					const prev = c._prev;
+					const next = c._next;
 					if(prev != null) {
 						prev._next = next;
 					}
@@ -15347,7 +15690,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					c._next = null;
 					c._prev = null;
 					if(c._touching) {
-						let cc1 = c._s1._contactCallback;
+						const cc1 = c._s1._contactCallback;
 						let cc2 = c._s2._contactCallback;
 						if(cc1 == cc2) {
 							cc2 = null;
@@ -15359,8 +15702,8 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 							cc2.endContact(c);
 						}
 					}
-					let prev1 = c._link1._prev;
-					let next1 = c._link1._next;
+					const prev1 = c._link1._prev;
+					const next1 = c._link1._next;
 					if(prev1 != null) {
 						prev1._next = next1;
 					}
@@ -15375,8 +15718,8 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					}
 					c._link1._next = null;
 					c._link1._prev = null;
-					let prev2 = c._link2._prev;
-					let next2 = c._link2._next;
+					const prev2 = c._link2._prev;
+					const next2 = c._link2._next;
 					if(prev2 != null) {
 						prev2._next = next2;
 					}
@@ -15405,7 +15748,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					c._cachedDetectorData._clear();
 					c._manifold._clear();
 					c._detector = null;
-					let _this = c._contactConstraint;
+					const _this = c._contactConstraint;
 					_this._s1 = null;
 					_this._s2 = null;
 					_this._b1 = null;
@@ -15417,21 +15760,21 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					this._numContacts--;
 					break;
 				}
-				let s1 = c._s1;
-				let s2 = c._s2;
-				let r1 = s1._rigidBody;
-				let r2 = s2._rigidBody;
+				const s1 = c._s1;
+				const s2 = c._s2;
+				const r1 = s1._rigidBody;
+				const r2 = s2._rigidBody;
 				if(!(!r1._sleeping && r1._type != 1) && !(!r2._sleeping && r2._type != 1)) {
 					c._shouldBeSkipped = true;
 					break;
 				}
-				let aabb1 = s1._aabb;
-				let aabb2 = s2._aabb;
-				let proxy1 = s1._proxy;
-				let proxy2 = s2._proxy;
+				const aabb1 = s1._aabb;
+				const aabb2 = s2._aabb;
+				const proxy1 = s1._proxy;
+				const proxy2 = s2._proxy;
 				if(!(proxy1._aabbMinX < proxy2._aabbMaxX && proxy1._aabbMaxX > proxy2._aabbMinX && proxy1._aabbMinY < proxy2._aabbMaxY && proxy1._aabbMaxY > proxy2._aabbMinY && proxy1._aabbMinZ < proxy2._aabbMaxZ && proxy1._aabbMaxZ > proxy2._aabbMinZ) || !this.shouldCollide(s1,s2)) {
-					let prev = c._prev;
-					let next = c._next;
+					const prev = c._prev;
+					const next = c._next;
 					if(prev != null) {
 						prev._next = next;
 					}
@@ -15447,7 +15790,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					c._next = null;
 					c._prev = null;
 					if(c._touching) {
-						let cc1 = c._s1._contactCallback;
+						const cc1 = c._s1._contactCallback;
 						let cc2 = c._s2._contactCallback;
 						if(cc1 == cc2) {
 							cc2 = null;
@@ -15459,8 +15802,8 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 							cc2.endContact(c);
 						}
 					}
-					let prev1 = c._link1._prev;
-					let next1 = c._link1._next;
+					const prev1 = c._link1._prev;
+					const next1 = c._link1._next;
 					if(prev1 != null) {
 						prev1._next = next1;
 					}
@@ -15475,8 +15818,8 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					}
 					c._link1._next = null;
 					c._link1._prev = null;
-					let prev2 = c._link2._prev;
-					let next2 = c._link2._next;
+					const prev2 = c._link2._prev;
+					const next2 = c._link2._next;
 					if(prev2 != null) {
 						prev2._next = next2;
 					}
@@ -15505,7 +15848,7 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 					c._cachedDetectorData._clear();
 					c._manifold._clear();
 					c._detector = null;
-					let _this = c._contactConstraint;
+					const _this = c._contactConstraint;
 					_this._s1 = null;
 					_this._s2 = null;
 					_this._b1 = null;
@@ -15523,9 +15866,10 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 			c = n;
 		}
 	}
+
 	shouldCollide(s1,s2) {
-		let r1 = s1._rigidBody;
-		let r2 = s2._rigidBody;
+		const r1 = s1._rigidBody;
+		const r2 = s2._rigidBody;
 		if(r1 == r2) {
 			return false;
 		}
@@ -15552,28 +15896,32 @@ oimo.dynamics.ContactManager = class oimo_dynamics_ContactManager {
 		}
 		return true;
 	}
+
 	_updateContacts() {
 		this._broadPhase.collectPairs();
 		this.createContacts();
 		this.destroyOutdatedContacts();
 	}
+
 	_postSolve() {
 		let c = this._contactList;
 		while(c != null) {
-			let n = c._next;
+			const n = c._next;
 			if(c._touching) {
 				c._postSolve();
 			}
 			c = n;
 		}
 	}
+
 	getNumContacts() {
 		return this._numContacts;
 	}
+
 	getContactList() {
 		return this._contactList;
 	}
-}
+};
 oimo.dynamics.Island = class oimo_dynamics_Island {
 	constructor() {
 		this.rigidBodies = new Array(oimo.common.Setting.islandInitialRigidBodyArraySize);
@@ -15585,19 +15933,21 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 		this.numSolversSi = 0;
 		this.numSolversNgs = 0;
 	}
+
 	_clear() {
 		while(this.numRigidBodies > 0) this.rigidBodies[--this.numRigidBodies] = null;
 		while(this.numSolvers > 0) this.solvers[--this.numSolvers] = null;
 		while(this.numSolversSi > 0) this.solversSi[--this.numSolversSi] = null;
 		while(this.numSolversNgs > 0) this.solversNgs[--this.numSolversNgs] = null;
 	}
+
 	_addRigidBody(rigidBody) {
 		if(this.numRigidBodies == this.rigidBodies.length) {
-			let newArray = new Array(this.numRigidBodies << 1);
+			const newArray = new Array(this.numRigidBodies << 1);
 			let _g = 0;
-			let _g1 = this.numRigidBodies;
+			const _g1 = this.numRigidBodies;
 			while(_g < _g1) {
-				let i = _g++;
+				const i = _g++;
 				newArray[i] = this.rigidBodies[i];
 				this.rigidBodies[i] = null;
 			}
@@ -15606,13 +15956,14 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 		rigidBody._addedToIsland = true;
 		this.rigidBodies[this.numRigidBodies++] = rigidBody;
 	}
+
 	_addConstraintSolver(solver,positionCorrection) {
 		if(this.numSolvers == this.solvers.length) {
-			let newArray = new Array(this.numSolvers << 1);
+			const newArray = new Array(this.numSolvers << 1);
 			let _g = 0;
-			let _g1 = this.numSolvers;
+			const _g1 = this.numSolvers;
 			while(_g < _g1) {
-				let i = _g++;
+				const i = _g++;
 				newArray[i] = this.solvers[i];
 				this.solvers[i] = null;
 			}
@@ -15622,11 +15973,11 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 		this.solvers[this.numSolvers++] = solver;
 		if(positionCorrection == oimo.dynamics.constraint.PositionCorrectionAlgorithm.SPLIT_IMPULSE) {
 			if(this.numSolversSi == this.solversSi.length) {
-				let newArray = new Array(this.numSolversSi << 1);
+				const newArray = new Array(this.numSolversSi << 1);
 				let _g = 0;
-				let _g1 = this.numSolversSi;
+				const _g1 = this.numSolversSi;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.solversSi[i];
 					this.solversSi[i] = null;
 				}
@@ -15636,11 +15987,11 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 		}
 		if(positionCorrection == oimo.dynamics.constraint.PositionCorrectionAlgorithm.NGS) {
 			if(this.numSolversNgs == this.solversNgs.length) {
-				let newArray = new Array(this.numSolversNgs << 1);
+				const newArray = new Array(this.numSolversNgs << 1);
 				let _g = 0;
-				let _g1 = this.numSolversNgs;
+				const _g1 = this.numSolversNgs;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = this.solversNgs[i];
 					this.solversNgs[i] = null;
 				}
@@ -15649,10 +16000,11 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 			this.solversNgs[this.numSolversNgs++] = solver;
 		}
 	}
+
 	_stepSingleRigidBody(timeStep,rb) {
-		let dt = timeStep.dt;
-		let dst = rb._ptransform;
-		let src = rb._transform;
+		const dt = timeStep.dt;
+		const dst = rb._ptransform;
+		const src = rb._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -15682,12 +16034,12 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 		}
 		if(!rb._sleeping) {
 			if(rb._type == 0) {
-				let x = dt * rb._linearDamping;
-				let x2 = x * x;
-				let linScale = 1 / (1 + x + x2 * (0.5 + x * 0.16666666666666666 + x2 * 0.041666666666666664));
-				let x1 = dt * rb._angularDamping;
-				let x21 = x1 * x1;
-				let angScale = 1 / (1 + x1 + x21 * (0.5 + x1 * 0.16666666666666666 + x21 * 0.041666666666666664));
+				const x = dt * rb._linearDamping;
+				const x2 = x * x;
+				const linScale = 1 / (1 + x + x2 * (0.5 + x * 0.16666666666666666 + x2 * 0.041666666666666664));
+				const x1 = dt * rb._angularDamping;
+				const x21 = x1 * x1;
+				const angScale = 1 / (1 + x1 + x21 * (0.5 + x1 * 0.16666666666666666 + x21 * 0.041666666666666664));
 				let linAccX;
 				let linAccY;
 				let linAccZ;
@@ -15725,11 +16077,11 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 			rb._integrate(dt);
 			let s = rb._shapeList;
 			while(s != null) {
-				let n = s._next;
-				let tf1 = rb._ptransform;
-				let tf2 = rb._transform;
-				let dst = s._ptransform;
-				let src1 = s._localTransform;
+				const n = s._next;
+				const tf1 = rb._ptransform;
+				const tf2 = rb._transform;
+				const dst = s._ptransform;
+				const src1 = s._localTransform;
 				let __tmp__00;
 				let __tmp__01;
 				let __tmp__02;
@@ -15769,8 +16121,8 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 				dst._positionX += tf1._positionX;
 				dst._positionY += tf1._positionY;
 				dst._positionZ += tf1._positionZ;
-				let dst1 = s._transform;
-				let src11 = s._localTransform;
+				const dst1 = s._transform;
+				const src11 = s._localTransform;
 				let __tmp__001;
 				let __tmp__011;
 				let __tmp__021;
@@ -15837,7 +16189,7 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 					dX = s._transform._positionX - s._ptransform._positionX;
 					dY = s._transform._positionY - s._ptransform._positionY;
 					dZ = s._transform._positionZ - s._ptransform._positionZ;
-					let v = s.displacement;
+					const v = s.displacement;
 					v.x = dX;
 					v.y = dY;
 					v.z = dZ;
@@ -15847,15 +16199,16 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 			}
 		}
 	}
+
 	_step(timeStep,numVelocityIterations,numPositionIterations) {
-		let dt = timeStep.dt;
+		const dt = timeStep.dt;
 		let sleepIsland = true;
 		let _g = 0;
-		let _g1 = this.numRigidBodies;
+		const _g1 = this.numRigidBodies;
 		while(_g < _g1) {
-			let rb = this.rigidBodies[_g++];
-			let dst = rb._ptransform;
-			let src = rb._transform;
+			const rb = this.rigidBodies[_g++];
+			const dst = rb._ptransform;
+			const src = rb._transform;
 			dst._positionX = src._positionX;
 			dst._positionY = src._positionY;
 			dst._positionZ = src._positionZ;
@@ -15884,12 +16237,12 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 				sleepIsland = false;
 			}
 			if(rb._type == 0) {
-				let x = dt * rb._linearDamping;
-				let x2 = x * x;
-				let linScale = 1 / (1 + x + x2 * (0.5 + x * 0.16666666666666666 + x2 * 0.041666666666666664));
-				let x1 = dt * rb._angularDamping;
-				let x21 = x1 * x1;
-				let angScale = 1 / (1 + x1 + x21 * (0.5 + x1 * 0.16666666666666666 + x21 * 0.041666666666666664));
+				const x = dt * rb._linearDamping;
+				const x2 = x * x;
+				const linScale = 1 / (1 + x + x2 * (0.5 + x * 0.16666666666666666 + x2 * 0.041666666666666664));
+				const x1 = dt * rb._angularDamping;
+				const x21 = x1 * x1;
+				const angScale = 1 / (1 + x1 + x21 * (0.5 + x1 * 0.16666666666666666 + x21 * 0.041666666666666664));
 				let linAccX;
 				let linAccY;
 				let linAccZ;
@@ -15927,70 +16280,70 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 		}
 		if(sleepIsland) {
 			let _g = 0;
-			let _g1 = this.numRigidBodies;
+			const _g1 = this.numRigidBodies;
 			while(_g < _g1) {
-				let rb = this.rigidBodies[_g++];
+				const rb = this.rigidBodies[_g++];
 				rb._sleeping = true;
 				rb._sleepTime = 0;
 			}
 			return;
 		}
 		let _g2 = 0;
-		let _g3 = this.numSolvers;
+		const _g3 = this.numSolvers;
 		while(_g2 < _g3) this.solvers[_g2++].preSolveVelocity(timeStep);
 		let _g4 = 0;
-		let _g5 = this.numSolvers;
+		const _g5 = this.numSolvers;
 		while(_g4 < _g5) this.solvers[_g4++].warmStart(timeStep);
 		let _g6 = 0;
 		while(_g6 < numVelocityIterations) {
 			++_g6;
 			let _g = 0;
-			let _g1 = this.numSolvers;
+			const _g1 = this.numSolvers;
 			while(_g < _g1) this.solvers[_g++].solveVelocity();
 		}
 		let _g7 = 0;
-		let _g8 = this.numSolvers;
+		const _g8 = this.numSolvers;
 		while(_g7 < _g8) this.solvers[_g7++].postSolveVelocity(timeStep);
 		let _g9 = 0;
-		let _g10 = this.numRigidBodies;
+		const _g10 = this.numRigidBodies;
 		while(_g9 < _g10) this.rigidBodies[_g9++]._integrate(dt);
 		let _g11 = 0;
-		let _g12 = this.numSolversSi;
+		const _g12 = this.numSolversSi;
 		while(_g11 < _g12) this.solversSi[_g11++].preSolvePosition(timeStep);
 		let _g13 = 0;
 		while(_g13 < numPositionIterations) {
 			++_g13;
 			let _g = 0;
-			let _g1 = this.numSolversSi;
+			const _g1 = this.numSolversSi;
 			while(_g < _g1) this.solversSi[_g++].solvePositionSplitImpulse();
 		}
 		let _g14 = 0;
-		let _g15 = this.numRigidBodies;
+		const _g15 = this.numRigidBodies;
 		while(_g14 < _g15) this.rigidBodies[_g14++]._integratePseudoVelocity();
 		let _g16 = 0;
-		let _g17 = this.numSolversNgs;
+		const _g17 = this.numSolversNgs;
 		while(_g16 < _g17) this.solversNgs[_g16++].preSolvePosition(timeStep);
 		let _g18 = 0;
 		while(_g18 < numPositionIterations) {
 			++_g18;
 			let _g = 0;
-			let _g1 = this.numSolversNgs;
+			const _g1 = this.numSolversNgs;
 			while(_g < _g1) this.solversNgs[_g++].solvePositionNgs(timeStep);
 		}
 		let _g19 = 0;
-		let _g20 = this.numSolvers;
+		const _g20 = this.numSolvers;
 		while(_g19 < _g20) this.solvers[_g19++].postSolve();
 		let _g21 = 0;
-		let _g22 = this.numRigidBodies;
+		const _g22 = this.numRigidBodies;
 		while(_g21 < _g22) {
-			let rb = this.rigidBodies[_g21++];
+			const rb = this.rigidBodies[_g21++];
 			let s = rb._shapeList;
 			while(s != null) {
-				let n = s._next;
-				let tf1 = rb._ptransform;
-				let tf2 = rb._transform;
-				let dst = s._ptransform;
-				let src1 = s._localTransform;
+				const n = s._next;
+				const tf1 = rb._ptransform;
+				const tf2 = rb._transform;
+				const dst = s._ptransform;
+				const src1 = s._localTransform;
 				let __tmp__00;
 				let __tmp__01;
 				let __tmp__02;
@@ -16030,8 +16383,8 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 				dst._positionX += tf1._positionX;
 				dst._positionY += tf1._positionY;
 				dst._positionZ += tf1._positionZ;
-				let dst1 = s._transform;
-				let src11 = s._localTransform;
+				const dst1 = s._transform;
+				const src11 = s._localTransform;
 				let __tmp__001;
 				let __tmp__011;
 				let __tmp__021;
@@ -16098,7 +16451,7 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 					dX = s._transform._positionX - s._ptransform._positionX;
 					dY = s._transform._positionY - s._ptransform._positionY;
 					dZ = s._transform._positionZ - s._ptransform._positionZ;
-					let v = s.displacement;
+					const v = s.displacement;
 					v.x = dX;
 					v.y = dY;
 					v.z = dZ;
@@ -16108,14 +16461,14 @@ oimo.dynamics.Island = class oimo_dynamics_Island {
 			}
 		}
 	}
-}
+};
 oimo.dynamics.TimeStep = class oimo_dynamics_TimeStep {
 	constructor() {
 		this.dt = 0;
 		this.invDt = 0;
 		this.dtRatio = 1;
 	}
-}
+};
 oimo.dynamics.World = class oimo_dynamics_World {
 	constructor(broadPhaseType,gravity) {
 		if(broadPhaseType == null) {
@@ -16154,14 +16507,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		this._pool = new oimo.common.Pool();
 		this._shapeIdCount = 0;
 	}
+
 	_updateContacts() {
-		let st = Date.now() / 1000;
+		const st = Date.now() / 1000;
 		this._contactManager._updateContacts();
 		oimo.dynamics.common.Performance.broadPhaseCollisionTime = (Date.now() / 1000 - st) * 1000;
-		let st1 = Date.now() / 1000;
+		const st1 = Date.now() / 1000;
 		let c = this._contactManager._contactList;
 		while(c != null) {
-			let n = c._next;
+			const n = c._next;
 			if(!c._shouldBeSkipped) {
 				c._updateManifold();
 			}
@@ -16169,8 +16523,9 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		}
 		oimo.dynamics.common.Performance.narrowPhaseCollisionTime = (Date.now() / 1000 - st1) * 1000;
 	}
+
 	_solveIslands() {
-		let st = Date.now() / 1000;
+		const st = Date.now() / 1000;
 		if(oimo.common.Setting.disableSleeping) {
 			let b = this._rigidBodyList;
 			while(b != null) {
@@ -16185,15 +16540,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			this._rigidBodyStack = new Array(newStackSize);
 		}
 		this._numIslands = 0;
-		let _this = this._island;
-		let gravity = this._gravity;
+		const _this = this._island;
+		const gravity = this._gravity;
 		_this.gravityX = gravity.x;
 		_this.gravityY = gravity.y;
 		_this.gravityZ = gravity.z;
 		let b = this._rigidBodyList;
 		this._numSolversInIslands = 0;
 		while(b != null) {
-			let n = b._next;
+			const n = b._next;
 			while(!(b._addedToIsland || b._sleeping || b._type == 1)) {
 				if(b._numContactLinks == 0 && b._numJointLinks == 0) {
 					this._island._stepSingleRigidBody(this._timeStep,b);
@@ -16230,28 +16585,29 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		}
 		oimo.dynamics.common.Performance.dynamicsTime = (Date.now() / 1000 - st) * 1000;
 	}
+
 	buildIsland(base) {
 		let stackCount = 1;
 		this._island._addRigidBody(base);
 		this._rigidBodyStack[0] = base;
 		while(stackCount > 0) {
-			let rb = this._rigidBodyStack[--stackCount];
+			const rb = this._rigidBodyStack[--stackCount];
 			this._rigidBodyStack[stackCount] = null;
 			if(rb._type == 1) {
 				continue;
 			}
 			let cl = rb._contactLinkList;
 			while(cl != null) {
-				let n = cl._next;
-				let cc = cl._contact._contactConstraint;
-				let ccs = cl._contact._contactConstraint._solver;
+				const n = cl._next;
+				const cc = cl._contact._contactConstraint;
+				const ccs = cl._contact._contactConstraint._solver;
 				if(cc.isTouching() && !ccs._addedToIsland) {
 					if(this._solversInIslands.length == this._numSolversInIslands) {
-						let newArray = new Array(this._numSolversInIslands << 1);
+						const newArray = new Array(this._numSolversInIslands << 1);
 						let _g = 0;
-						let _g1 = this._numSolversInIslands;
+						const _g1 = this._numSolversInIslands;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = this._solversInIslands[i];
 							this._solversInIslands[i] = null;
 						}
@@ -16259,7 +16615,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					this._solversInIslands[this._numSolversInIslands++] = ccs;
 					this._island._addConstraintSolver(ccs,cc._positionCorrectionAlgorithm);
-					let other = cl._other;
+					const other = cl._other;
 					if(!other._addedToIsland) {
 						this._island._addRigidBody(other);
 						this._rigidBodyStack[stackCount++] = other;
@@ -16269,16 +16625,16 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			let jl = rb._jointLinkList;
 			while(jl != null) {
-				let n = jl._next;
-				let j = jl._joint;
-				let js1 = j._solver;
+				const n = jl._next;
+				const j = jl._joint;
+				const js1 = j._solver;
 				if(!js1._addedToIsland) {
 					if(this._solversInIslands.length == this._numSolversInIslands) {
-						let newArray = new Array(this._numSolversInIslands << 1);
+						const newArray = new Array(this._numSolversInIslands << 1);
 						let _g = 0;
-						let _g1 = this._numSolversInIslands;
+						const _g1 = this._numSolversInIslands;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = this._solversInIslands[i];
 							this._solversInIslands[i] = null;
 						}
@@ -16286,7 +16642,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					this._solversInIslands[this._numSolversInIslands++] = js1;
 					this._island._addConstraintSolver(js1,j._positionCorrectionAlgorithm);
-					let other = jl._other;
+					const other = jl._other;
 					if(!other._addedToIsland) {
 						this._island._addRigidBody(other);
 						this._rigidBodyStack[stackCount++] = other;
@@ -16296,38 +16652,40 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 		}
 	}
+
 	_drawBvh(d,tree) {
 		if(d.drawBvh) {
 			this._drawBvhNode(d,tree._root,0,d.style.bvhNodeColor);
 		}
 	}
+
 	_drawBvhNode(d,node,level,color) {
 		if(node == null) {
 			return;
 		}
 		if(level >= d.drawBvhMinLevel && level <= d.drawBvhMaxLevel) {
-			let _this = this._pool;
-			let min = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-			let _this1 = this._pool;
-			let max = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-			let v = min;
+			const _this = this._pool;
+			const min = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this1 = this._pool;
+			const max = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+			const v = min;
 			v.x = node._aabbMinX;
 			v.y = node._aabbMinY;
 			v.z = node._aabbMinZ;
-			let v1 = max;
+			const v1 = max;
 			v1.x = node._aabbMaxX;
 			v1.y = node._aabbMaxY;
 			v1.z = node._aabbMaxZ;
 			d.aabb(min,max,color);
-			let _this2 = this._pool;
+			const _this2 = this._pool;
 			if(min != null) {
 				min.zero();
 				if(_this2.sizeVec3 == _this2.stackVec3.length) {
-					let newArray = new Array(_this2.sizeVec3 << 1);
+					const newArray = new Array(_this2.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this2.sizeVec3;
+					const _g1 = _this2.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this2.stackVec3[i];
 						_this2.stackVec3[i] = null;
 					}
@@ -16335,15 +16693,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 				}
 				_this2.stackVec3[_this2.sizeVec3++] = min;
 			}
-			let _this3 = this._pool;
+			const _this3 = this._pool;
 			if(max != null) {
 				max.zero();
 				if(_this3.sizeVec3 == _this3.stackVec3.length) {
-					let newArray = new Array(_this3.sizeVec3 << 1);
+					const newArray = new Array(_this3.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this3.sizeVec3;
+					const _g1 = _this3.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this3.stackVec3[i];
 						_this3.stackVec3[i] = null;
 					}
@@ -16355,23 +16713,24 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		this._drawBvhNode(d,node._children[0],level + 1,color);
 		this._drawBvhNode(d,node._children[1],level + 1,color);
 	}
+
 	_drawRigidBodies(d) {
-		let style = d.style;
+		const style = d.style;
 		let r = this._rigidBodyList;
 		while(r != null) {
-			let n = r._next;
+			const n = r._next;
 			if(d.drawBases) {
-				let style = d.style;
+				const style = d.style;
 				d.basis(r._transform,style.basisLength,style.basisColorX,style.basisColorY,style.basisColorZ);
 			}
 			let shapeColor = null;
-			let isDynamic = r._type == 0;
+			const isDynamic = r._type == 0;
 			if(!isDynamic) {
 				shapeColor = r._type == 2 ? style.kinematicShapeColor : style.staticShapeColor;
 			}
 			let s = r._shapeList;
 			while(s != null) {
-				let n = s._next;
+				const n = s._next;
 				if(isDynamic) {
 					if((s._id & 1) == 0) {
 						shapeColor = r._sleeping ? style.sleepingShapeColor1 : r._sleepTime > oimo.common.Setting.sleepingTimeThreshold ? style.sleepyShapeColor1 : style.shapeColor1;
@@ -16380,30 +16739,30 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 				}
 				if(d.drawShapes) {
-					let geom = s._geom;
-					let tf = s._transform;
+					const geom = s._geom;
+					const tf = s._transform;
 					switch(geom._type) {
 					case 0:
 						d.sphere(tf,geom._radius,shapeColor);
 						break;
 					case 1:
-						let g = geom;
-						let _this = this._pool;
-						let hx = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-						let v = hx;
+						const g = geom;
+						const _this = this._pool;
+						const hx = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+						const v = hx;
 						v.x = g._halfExtentsX;
 						v.y = g._halfExtentsY;
 						v.z = g._halfExtentsZ;
 						d.box(tf,hx,shapeColor);
-						let _this1 = this._pool;
+						const _this1 = this._pool;
 						if(hx != null) {
 							hx.zero();
 							if(_this1.sizeVec3 == _this1.stackVec3.length) {
-								let newArray = new Array(_this1.sizeVec3 << 1);
+								const newArray = new Array(_this1.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this1.sizeVec3;
+								const _g1 = _this1.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this1.stackVec3[i];
 									_this1.stackVec3[i] = null;
 								}
@@ -16413,37 +16772,37 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						}
 						break;
 					case 2:
-						let g1 = geom;
+						const g1 = geom;
 						d.cylinder(tf,g1._radius,g1._halfHeight,shapeColor);
 						break;
 					case 3:
-						let g2 = geom;
+						const g2 = geom;
 						d.cone(tf,g2._radius,g2._halfHeight,shapeColor);
 						break;
 					case 4:
-						let g3 = geom;
+						const g3 = geom;
 						d.capsule(tf,g3._radius,g3._halfHeight,shapeColor);
 						break;
 					case 5:
-						let g4 = geom;
-						let n = g4._numVertices;
-						let _this2 = this._pool;
-						let v1 = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-						let _this3 = this._pool;
-						let v2 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-						let _this4 = this._pool;
-						let v3 = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
-						let _this5 = this._pool;
-						let v12 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
-						let _this6 = this._pool;
-						let v13 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
-						let _this7 = this._pool;
-						let normal = _this7.sizeVec3 == 0 ? new oimo.common.Vec3() : _this7.stackVec3[--_this7.sizeVec3];
-						let _this8 = this._pool;
-						let m = _this8.sizeMat3 == 0 ? new oimo.common.Mat3() : _this8.stackMat3[--_this8.sizeMat3];
-						let _this9 = this._pool;
-						let o = _this9.sizeVec3 == 0 ? new oimo.common.Vec3() : _this9.stackVec3[--_this9.sizeVec3];
-						let m1 = m;
+						const g4 = geom;
+						const n = g4._numVertices;
+						const _this2 = this._pool;
+						const v1 = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+						const _this3 = this._pool;
+						const v2 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+						const _this4 = this._pool;
+						const v3 = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
+						const _this5 = this._pool;
+						const v12 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+						const _this6 = this._pool;
+						const v13 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+						const _this7 = this._pool;
+						const normal = _this7.sizeVec3 == 0 ? new oimo.common.Vec3() : _this7.stackVec3[--_this7.sizeVec3];
+						const _this8 = this._pool;
+						const m = _this8.sizeMat3 == 0 ? new oimo.common.Mat3() : _this8.stackMat3[--_this8.sizeMat3];
+						const _this9 = this._pool;
+						const o = _this9.sizeVec3 == 0 ? new oimo.common.Vec3() : _this9.stackVec3[--_this9.sizeVec3];
+						const m1 = m;
 						m1.e00 = tf._rotation00;
 						m1.e01 = tf._rotation01;
 						m1.e02 = tf._rotation02;
@@ -16453,20 +16812,20 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						m1.e20 = tf._rotation20;
 						m1.e21 = tf._rotation21;
 						m1.e22 = tf._rotation22;
-						let v4 = o;
+						const v4 = o;
 						v4.x = tf._positionX;
 						v4.y = tf._positionY;
 						v4.z = tf._positionZ;
 						let _g = 0;
 						while(_g < n) {
-							let i = _g++;
-							let _this = g4._tmpVertices[i];
-							let v = g4._vertices[i];
+							const i = _g++;
+							const _this = g4._tmpVertices[i];
+							const v = g4._vertices[i];
 							_this.x = v.x;
 							_this.y = v.y;
 							_this.z = v.z;
-							let y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
-							let z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
+							const y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
+							const z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
 							_this.x = _this.x * m.e00 + _this.y * m.e01 + _this.z * m.e02;
 							_this.y = y;
 							_this.z = z;
@@ -16477,12 +16836,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						if(n > 30) {
 							let _g = 0;
 							while(_g < n) {
-								let i = _g++;
-								let v = g4._tmpVertices[i];
+								const i = _g++;
+								const v = g4._tmpVertices[i];
 								v1.x = v.x;
 								v1.y = v.y;
 								v1.z = v.z;
-								let v3 = g4._tmpVertices[(i + 1) % n];
+								const v3 = g4._tmpVertices[(i + 1) % n];
 								v2.x = v3.x;
 								v2.y = v3.y;
 								v2.z = v3.z;
@@ -16491,14 +16850,14 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						} else if(this._debugDraw.wireframe || n > 10) {
 							let _g = 0;
 							while(_g < n) {
-								let i = _g++;
-								let v = g4._tmpVertices[i];
+								const i = _g++;
+								const v = g4._tmpVertices[i];
 								v1.x = v.x;
 								v1.y = v.y;
 								v1.z = v.z;
 								let _g1 = 0;
 								while(_g1 < i) {
-									let v = g4._tmpVertices[_g1++];
+									const v = g4._tmpVertices[_g1++];
 									v2.x = v.x;
 									v2.y = v.y;
 									v2.z = v.z;
@@ -16508,44 +16867,44 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						} else {
 							let _g = 0;
 							while(_g < n) {
-								let i = _g++;
-								let v = g4._tmpVertices[i];
+								const i = _g++;
+								const v = g4._tmpVertices[i];
 								v1.x = v.x;
 								v1.y = v.y;
 								v1.z = v.z;
 								let _g1 = 0;
 								while(_g1 < i) {
-									let j = _g1++;
-									let v = g4._tmpVertices[j];
+									const j = _g1++;
+									const v = g4._tmpVertices[j];
 									v2.x = v.x;
 									v2.y = v.y;
 									v2.z = v.z;
 									let _g = 0;
 									while(_g < j) {
-										let v = g4._tmpVertices[_g++];
+										const v = g4._tmpVertices[_g++];
 										v3.x = v.x;
 										v3.y = v.y;
 										v3.z = v.z;
 										v12.x = v2.x;
 										v12.y = v2.y;
 										v12.z = v2.z;
-										let _this = v12;
+										const _this = v12;
 										_this.x -= v1.x;
 										_this.y -= v1.y;
 										_this.z -= v1.z;
 										v13.x = v3.x;
 										v13.y = v3.y;
 										v13.z = v3.z;
-										let _this1 = v13;
+										const _this1 = v13;
 										_this1.x -= v1.x;
 										_this1.y -= v1.y;
 										_this1.z -= v1.z;
 										normal.x = v12.x;
 										normal.y = v12.y;
 										normal.z = v12.z;
-										let _this2 = normal;
-										let y = _this2.z * v13.x - _this2.x * v13.z;
-										let z = _this2.x * v13.y - _this2.y * v13.x;
+										const _this2 = normal;
+										const y = _this2.z * v13.x - _this2.x * v13.z;
+										const z = _this2.x * v13.y - _this2.y * v13.x;
 										_this2.x = _this2.y * v13.z - _this2.z * v13.y;
 										_this2.y = y;
 										_this2.z = z;
@@ -16565,15 +16924,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 								}
 							}
 						}
-						let _this10 = this._pool;
+						const _this10 = this._pool;
 						if(v1 != null) {
 							v1.zero();
 							if(_this10.sizeVec3 == _this10.stackVec3.length) {
-								let newArray = new Array(_this10.sizeVec3 << 1);
+								const newArray = new Array(_this10.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this10.sizeVec3;
+								const _g1 = _this10.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this10.stackVec3[i];
 									_this10.stackVec3[i] = null;
 								}
@@ -16581,15 +16940,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this10.stackVec3[_this10.sizeVec3++] = v1;
 						}
-						let _this11 = this._pool;
+						const _this11 = this._pool;
 						if(v2 != null) {
 							v2.zero();
 							if(_this11.sizeVec3 == _this11.stackVec3.length) {
-								let newArray = new Array(_this11.sizeVec3 << 1);
+								const newArray = new Array(_this11.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this11.sizeVec3;
+								const _g1 = _this11.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this11.stackVec3[i];
 									_this11.stackVec3[i] = null;
 								}
@@ -16597,15 +16956,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this11.stackVec3[_this11.sizeVec3++] = v2;
 						}
-						let _this12 = this._pool;
+						const _this12 = this._pool;
 						if(v3 != null) {
 							v3.zero();
 							if(_this12.sizeVec3 == _this12.stackVec3.length) {
-								let newArray = new Array(_this12.sizeVec3 << 1);
+								const newArray = new Array(_this12.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this12.sizeVec3;
+								const _g1 = _this12.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this12.stackVec3[i];
 									_this12.stackVec3[i] = null;
 								}
@@ -16613,15 +16972,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this12.stackVec3[_this12.sizeVec3++] = v3;
 						}
-						let _this13 = this._pool;
+						const _this13 = this._pool;
 						if(v12 != null) {
 							v12.zero();
 							if(_this13.sizeVec3 == _this13.stackVec3.length) {
-								let newArray = new Array(_this13.sizeVec3 << 1);
+								const newArray = new Array(_this13.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this13.sizeVec3;
+								const _g1 = _this13.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this13.stackVec3[i];
 									_this13.stackVec3[i] = null;
 								}
@@ -16629,15 +16988,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this13.stackVec3[_this13.sizeVec3++] = v12;
 						}
-						let _this14 = this._pool;
+						const _this14 = this._pool;
 						if(v13 != null) {
 							v13.zero();
 							if(_this14.sizeVec3 == _this14.stackVec3.length) {
-								let newArray = new Array(_this14.sizeVec3 << 1);
+								const newArray = new Array(_this14.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this14.sizeVec3;
+								const _g1 = _this14.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this14.stackVec3[i];
 									_this14.stackVec3[i] = null;
 								}
@@ -16645,15 +17004,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this14.stackVec3[_this14.sizeVec3++] = v13;
 						}
-						let _this15 = this._pool;
+						const _this15 = this._pool;
 						if(normal != null) {
 							normal.zero();
 							if(_this15.sizeVec3 == _this15.stackVec3.length) {
-								let newArray = new Array(_this15.sizeVec3 << 1);
+								const newArray = new Array(_this15.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this15.sizeVec3;
+								const _g1 = _this15.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this15.stackVec3[i];
 									_this15.stackVec3[i] = null;
 								}
@@ -16661,7 +17020,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this15.stackVec3[_this15.sizeVec3++] = normal;
 						}
-						let _this16 = this._pool;
+						const _this16 = this._pool;
 						if(m != null) {
 							m.e00 = 1;
 							m.e01 = 0;
@@ -16673,11 +17032,11 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							m.e21 = 0;
 							m.e22 = 1;
 							if(_this16.sizeMat3 == _this16.stackMat3.length) {
-								let newArray = new Array(_this16.sizeMat3 << 1);
+								const newArray = new Array(_this16.sizeMat3 << 1);
 								let _g = 0;
-								let _g1 = _this16.sizeMat3;
+								const _g1 = _this16.sizeMat3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this16.stackMat3[i];
 									_this16.stackMat3[i] = null;
 								}
@@ -16685,15 +17044,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this16.stackMat3[_this16.sizeMat3++] = m;
 						}
-						let _this17 = this._pool;
+						const _this17 = this._pool;
 						if(o != null) {
 							o.zero();
 							if(_this17.sizeVec3 == _this17.stackVec3.length) {
-								let newArray = new Array(_this17.sizeVec3 << 1);
+								const newArray = new Array(_this17.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this17.sizeVec3;
+								const _g1 = _this17.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this17.stackVec3[i];
 									_this17.stackVec3[i] = null;
 								}
@@ -16705,30 +17064,30 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 				}
 				if(d.drawAabbs) {
-					let aabb = s._aabb;
-					let color = style.aabbColor;
-					let _this = this._pool;
-					let min = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-					let _this1 = this._pool;
-					let max = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-					let v = min;
+					const aabb = s._aabb;
+					const color = style.aabbColor;
+					const _this = this._pool;
+					const min = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+					const _this1 = this._pool;
+					const max = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+					const v = min;
 					v.x = aabb._minX;
 					v.y = aabb._minY;
 					v.z = aabb._minZ;
-					let v1 = max;
+					const v1 = max;
 					v1.x = aabb._maxX;
 					v1.y = aabb._maxY;
 					v1.z = aabb._maxZ;
 					d.aabb(min,max,color);
-					let _this2 = this._pool;
+					const _this2 = this._pool;
 					if(min != null) {
 						min.zero();
 						if(_this2.sizeVec3 == _this2.stackVec3.length) {
-							let newArray = new Array(_this2.sizeVec3 << 1);
+							const newArray = new Array(_this2.sizeVec3 << 1);
 							let _g = 0;
-							let _g1 = _this2.sizeVec3;
+							const _g1 = _this2.sizeVec3;
 							while(_g < _g1) {
-								let i = _g++;
+								const i = _g++;
 								newArray[i] = _this2.stackVec3[i];
 								_this2.stackVec3[i] = null;
 							}
@@ -16736,15 +17095,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						}
 						_this2.stackVec3[_this2.sizeVec3++] = min;
 					}
-					let _this3 = this._pool;
+					const _this3 = this._pool;
 					if(max != null) {
 						max.zero();
 						if(_this3.sizeVec3 == _this3.stackVec3.length) {
-							let newArray = new Array(_this3.sizeVec3 << 1);
+							const newArray = new Array(_this3.sizeVec3 << 1);
 							let _g = 0;
-							let _g1 = _this3.sizeVec3;
+							const _g1 = _this3.sizeVec3;
 							while(_g < _g1) {
-								let i = _g++;
+								const i = _g++;
 								newArray[i] = _this3.stackVec3[i];
 								_this3.stackVec3[i] = null;
 							}
@@ -16758,36 +17117,37 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			r = n;
 		}
 	}
+
 	_drawConstraints(d) {
-		let style = d.style;
+		const style = d.style;
 		if(d.drawPairs || d.drawContacts) {
 			let c = this._contactManager._contactList;
 			while(c != null) {
-				let n = c._next;
+				const n = c._next;
 				if(d.drawPairs) {
-					let color = style.pairColor;
-					let _this = this._pool;
-					let v1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-					let _this1 = this._pool;
-					let v2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-					let v = v1;
+					const color = style.pairColor;
+					const _this = this._pool;
+					const v1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+					const _this1 = this._pool;
+					const v2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+					const v = v1;
 					v.x = c._s1._transform._positionX;
 					v.y = c._s1._transform._positionY;
 					v.z = c._s1._transform._positionZ;
-					let v3 = v2;
+					const v3 = v2;
 					v3.x = c._s2._transform._positionX;
 					v3.y = c._s2._transform._positionY;
 					v3.z = c._s2._transform._positionZ;
 					d.line(v1,v2,color);
-					let _this2 = this._pool;
+					const _this2 = this._pool;
 					if(v1 != null) {
 						v1.zero();
 						if(_this2.sizeVec3 == _this2.stackVec3.length) {
-							let newArray = new Array(_this2.sizeVec3 << 1);
+							const newArray = new Array(_this2.sizeVec3 << 1);
 							let _g = 0;
-							let _g1 = _this2.sizeVec3;
+							const _g1 = _this2.sizeVec3;
 							while(_g < _g1) {
-								let i = _g++;
+								const i = _g++;
 								newArray[i] = _this2.stackVec3[i];
 								_this2.stackVec3[i] = null;
 							}
@@ -16795,15 +17155,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						}
 						_this2.stackVec3[_this2.sizeVec3++] = v1;
 					}
-					let _this3 = this._pool;
+					const _this3 = this._pool;
 					if(v2 != null) {
 						v2.zero();
 						if(_this3.sizeVec3 == _this3.stackVec3.length) {
-							let newArray = new Array(_this3.sizeVec3 << 1);
+							const newArray = new Array(_this3.sizeVec3 << 1);
 							let _g = 0;
-							let _g1 = _this3.sizeVec3;
+							const _g1 = _this3.sizeVec3;
 							while(_g < _g1) {
-								let i = _g++;
+								const i = _g++;
 								newArray[i] = _this3.stackVec3[i];
 								_this3.stackVec3[i] = null;
 							}
@@ -16813,40 +17173,40 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 				}
 				if(d.drawContacts) {
-					let cc = c._contactConstraint;
-					let ps = c._contactConstraint._manifold._points;
+					const cc = c._contactConstraint;
+					const ps = c._contactConstraint._manifold._points;
 					let _g = 0;
-					let _g1 = c._contactConstraint._manifold._numPoints;
+					const _g1 = c._contactConstraint._manifold._numPoints;
 					while(_g < _g1) {
-						let p = ps[_g++];
-						let style = d.style;
-						let _this = this._pool;
-						let pos1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-						let _this1 = this._pool;
-						let pos2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-						let _this2 = this._pool;
-						let normal = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-						let _this3 = this._pool;
-						let tangent = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-						let _this4 = this._pool;
-						let binormal = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
-						let v = pos1;
+						const p = ps[_g++];
+						const style = d.style;
+						const _this = this._pool;
+						const pos1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+						const _this1 = this._pool;
+						const pos2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+						const _this2 = this._pool;
+						const normal = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+						const _this3 = this._pool;
+						const tangent = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+						const _this4 = this._pool;
+						const binormal = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
+						const v = pos1;
 						v.x = p._pos1X;
 						v.y = p._pos1Y;
 						v.z = p._pos1Z;
-						let v1 = pos2;
+						const v1 = pos2;
 						v1.x = p._pos2X;
 						v1.y = p._pos2Y;
 						v1.z = p._pos2Z;
-						let v2 = normal;
+						const v2 = normal;
 						v2.x = cc._manifold._normalX;
 						v2.y = cc._manifold._normalY;
 						v2.z = cc._manifold._normalZ;
-						let v3 = tangent;
+						const v3 = tangent;
 						v3.x = cc._manifold._tangentX;
 						v3.y = cc._manifold._tangentY;
 						v3.z = cc._manifold._tangentZ;
-						let v4 = binormal;
+						const v4 = binormal;
 						v4.x = cc._manifold._binormalX;
 						v4.y = cc._manifold._binormalY;
 						v4.z = cc._manifold._binormalZ;
@@ -16880,8 +17240,8 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						pos2.x = pos1.x;
 						pos2.y = pos1.y;
 						pos2.z = pos1.z;
-						let _this5 = pos2;
-						let s = style.contactNormalLength;
+						const _this5 = pos2;
+						const s = style.contactNormalLength;
 						_this5.x += normal.x * s;
 						_this5.y += normal.y * s;
 						_this5.z += normal.z * s;
@@ -16890,8 +17250,8 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							pos2.x = pos1.x;
 							pos2.y = pos1.y;
 							pos2.z = pos1.z;
-							let _this = pos2;
-							let s = style.contactTangentLength;
+							const _this = pos2;
+							const s = style.contactTangentLength;
 							_this.x += tangent.x * s;
 							_this.y += tangent.y * s;
 							_this.z += tangent.z * s;
@@ -16899,22 +17259,22 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							pos2.x = pos1.x;
 							pos2.y = pos1.y;
 							pos2.z = pos1.z;
-							let _this1 = pos2;
-							let s1 = style.contactBinormalLength;
+							const _this1 = pos2;
+							const s1 = style.contactBinormalLength;
 							_this1.x += binormal.x * s1;
 							_this1.y += binormal.y * s1;
 							_this1.z += binormal.z * s1;
 							d.line(pos1,pos2,style.contactBinormalColor);
 						}
-						let _this6 = this._pool;
+						const _this6 = this._pool;
 						if(pos1 != null) {
 							pos1.zero();
 							if(_this6.sizeVec3 == _this6.stackVec3.length) {
-								let newArray = new Array(_this6.sizeVec3 << 1);
+								const newArray = new Array(_this6.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this6.sizeVec3;
+								const _g1 = _this6.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this6.stackVec3[i];
 									_this6.stackVec3[i] = null;
 								}
@@ -16922,15 +17282,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this6.stackVec3[_this6.sizeVec3++] = pos1;
 						}
-						let _this7 = this._pool;
+						const _this7 = this._pool;
 						if(pos2 != null) {
 							pos2.zero();
 							if(_this7.sizeVec3 == _this7.stackVec3.length) {
-								let newArray = new Array(_this7.sizeVec3 << 1);
+								const newArray = new Array(_this7.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this7.sizeVec3;
+								const _g1 = _this7.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this7.stackVec3[i];
 									_this7.stackVec3[i] = null;
 								}
@@ -16938,15 +17298,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this7.stackVec3[_this7.sizeVec3++] = pos2;
 						}
-						let _this8 = this._pool;
+						const _this8 = this._pool;
 						if(normal != null) {
 							normal.zero();
 							if(_this8.sizeVec3 == _this8.stackVec3.length) {
-								let newArray = new Array(_this8.sizeVec3 << 1);
+								const newArray = new Array(_this8.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this8.sizeVec3;
+								const _g1 = _this8.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this8.stackVec3[i];
 									_this8.stackVec3[i] = null;
 								}
@@ -16954,15 +17314,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this8.stackVec3[_this8.sizeVec3++] = normal;
 						}
-						let _this9 = this._pool;
+						const _this9 = this._pool;
 						if(tangent != null) {
 							tangent.zero();
 							if(_this9.sizeVec3 == _this9.stackVec3.length) {
-								let newArray = new Array(_this9.sizeVec3 << 1);
+								const newArray = new Array(_this9.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this9.sizeVec3;
+								const _g1 = _this9.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this9.stackVec3[i];
 									_this9.stackVec3[i] = null;
 								}
@@ -16970,15 +17330,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							}
 							_this9.stackVec3[_this9.sizeVec3++] = tangent;
 						}
-						let _this10 = this._pool;
+						const _this10 = this._pool;
 						if(binormal != null) {
 							binormal.zero();
 							if(_this10.sizeVec3 == _this10.stackVec3.length) {
-								let newArray = new Array(_this10.sizeVec3 << 1);
+								const newArray = new Array(_this10.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this10.sizeVec3;
+								const _g1 = _this10.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this10.stackVec3[i];
 									_this10.stackVec3[i] = null;
 								}
@@ -16994,64 +17354,64 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		if(d.drawJoints) {
 			let j = this._jointList;
 			while(j != null) {
-				let n = j._next;
-				let _this = this._pool;
-				let p1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-				let _this1 = this._pool;
-				let p2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-				let v = p1;
+				const n = j._next;
+				const _this = this._pool;
+				const p1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+				const _this1 = this._pool;
+				const p2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+				const v = p1;
 				v.x = j._b1._transform._positionX;
 				v.y = j._b1._transform._positionY;
 				v.z = j._b1._transform._positionZ;
-				let v1 = p2;
+				const v1 = p2;
 				v1.x = j._b2._transform._positionX;
 				v1.y = j._b2._transform._positionY;
 				v1.z = j._b2._transform._positionZ;
-				let _this2 = this._pool;
-				let anchor1 = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-				let _this3 = this._pool;
-				let anchor2 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-				let _this4 = this._pool;
-				let basisX1 = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
-				let _this5 = this._pool;
-				let basisY1 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
-				let _this6 = this._pool;
-				let basisZ1 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
-				let _this7 = this._pool;
-				let basisX2 = _this7.sizeVec3 == 0 ? new oimo.common.Vec3() : _this7.stackVec3[--_this7.sizeVec3];
-				let _this8 = this._pool;
-				let basisY2 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
-				let _this9 = this._pool;
-				let basisZ2 = _this9.sizeVec3 == 0 ? new oimo.common.Vec3() : _this9.stackVec3[--_this9.sizeVec3];
-				let v2 = anchor1;
+				const _this2 = this._pool;
+				const anchor1 = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+				const _this3 = this._pool;
+				const anchor2 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+				const _this4 = this._pool;
+				const basisX1 = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
+				const _this5 = this._pool;
+				const basisY1 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+				const _this6 = this._pool;
+				const basisZ1 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+				const _this7 = this._pool;
+				const basisX2 = _this7.sizeVec3 == 0 ? new oimo.common.Vec3() : _this7.stackVec3[--_this7.sizeVec3];
+				const _this8 = this._pool;
+				const basisY2 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
+				const _this9 = this._pool;
+				const basisZ2 = _this9.sizeVec3 == 0 ? new oimo.common.Vec3() : _this9.stackVec3[--_this9.sizeVec3];
+				const v2 = anchor1;
 				v2.x = j._anchor1X;
 				v2.y = j._anchor1Y;
 				v2.z = j._anchor1Z;
-				let v3 = anchor2;
+				const v3 = anchor2;
 				v3.x = j._anchor2X;
 				v3.y = j._anchor2Y;
 				v3.z = j._anchor2Z;
-				let v4 = basisX1;
+				const v4 = basisX1;
 				v4.x = j._basisX1X;
 				v4.y = j._basisX1Y;
 				v4.z = j._basisX1Z;
-				let v5 = basisY1;
+				const v5 = basisY1;
 				v5.x = j._basisY1X;
 				v5.y = j._basisY1Y;
 				v5.z = j._basisY1Z;
-				let v6 = basisZ1;
+				const v6 = basisZ1;
 				v6.x = j._basisZ1X;
 				v6.y = j._basisZ1Y;
 				v6.z = j._basisZ1Z;
-				let v7 = basisX2;
+				const v7 = basisX2;
 				v7.x = j._basisX2X;
 				v7.y = j._basisX2Y;
 				v7.z = j._basisX2Z;
-				let v8 = basisY2;
+				const v8 = basisY2;
 				v8.x = j._basisY2X;
 				v8.y = j._basisY2Y;
 				v8.z = j._basisY2Z;
-				let v9 = basisZ2;
+				const v9 = basisZ2;
 				v9.x = j._basisZ2X;
 				v9.y = j._basisZ2Y;
 				v9.z = j._basisZ2Z;
@@ -17062,56 +17422,56 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					case 0:
 						break;
 					case 1:
-						let lm = j._lm;
+						const lm = j._lm;
 						this._drawRotationalLimit(d,anchor1,basisY1,basisZ1,basisY2,d.style.jointRotationalConstraintRadius,lm.lowerLimit,lm.upperLimit,d.style.jointLineColor);
 						break;
 					case 2:
-						let j1 = j;
-						let color = d.style.jointLineColor;
-						let rlm = j1._rotLm;
-						let tlm = j1._translLm;
+						const j1 = j;
+						const color = d.style.jointLineColor;
+						const rlm = j1._rotLm;
+						const tlm = j1._translLm;
 						this._drawRotationalLimit(d,anchor2,basisY1,basisZ1,basisY2,d.style.jointRotationalConstraintRadius,rlm.lowerLimit,rlm.upperLimit,color);
 						this._drawTranslationalLimit(d,anchor1,basisX1,tlm.lowerLimit,tlm.upperLimit,color);
 						break;
 					case 3:
-						let lm1 = j._lm;
+						const lm1 = j._lm;
 						this._drawTranslationalLimit(d,anchor1,basisX1,lm1.lowerLimit,lm1.upperLimit,d.style.jointLineColor);
 						break;
 					case 4:
-						let j2 = j;
-						let radius = d.style.jointRotationalConstraintRadius;
-						let color1 = d.style.jointLineColor;
-						let lm11 = j2._lm1;
-						let lm2 = j2._lm2;
+						const j2 = j;
+						const radius = d.style.jointRotationalConstraintRadius;
+						const color1 = d.style.jointLineColor;
+						const lm11 = j2._lm1;
+						const lm2 = j2._lm2;
 						this._drawRotationalLimit(d,anchor1,basisY1,basisZ1,basisY1,radius,j2._angleX - lm11.upperLimit,j2._angleX - lm11.lowerLimit,color1);
 						this._drawRotationalLimit(d,anchor2,basisX2,basisY2,basisX2,radius,lm2.lowerLimit - j2._angleZ,lm2.upperLimit - j2._angleZ,color1);
 						break;
 					case 5:
-						let j3 = j;
-						let radius1 = d.style.jointRotationalConstraintRadius;
-						let color2 = d.style.jointLineColor;
-						let lm3 = j3._twistLm;
+						const j3 = j;
+						const radius1 = d.style.jointRotationalConstraintRadius;
+						const color2 = d.style.jointLineColor;
+						const lm3 = j3._twistLm;
 						this._drawRotationalLimit(d,anchor2,basisY2,basisZ2,basisY2,radius1,lm3.lowerLimit - j3._twistAngle,lm3.upperLimit - j3._twistAngle,color2);
 						this._drawEllipseOnSphere(d,anchor1,basisX1,basisY1,basisZ1,j3._maxSwingAngle1,j3._maxSwingAngle2,radius1,color2);
-						let _this10 = this._pool;
-						let _this11 = _this10.sizeVec3 == 0 ? new oimo.common.Vec3() : _this10.stackVec3[--_this10.sizeVec3];
+						const _this10 = this._pool;
+						const _this11 = _this10.sizeVec3 == 0 ? new oimo.common.Vec3() : _this10.stackVec3[--_this10.sizeVec3];
 						_this11.x = anchor2.x;
 						_this11.y = anchor2.y;
 						_this11.z = anchor2.z;
-						let _this12 = _this11;
+						const _this12 = _this11;
 						_this12.x += basisX2.x * radius1;
 						_this12.y += basisX2.y * radius1;
 						_this12.z += basisX2.z * radius1;
 						d.line(anchor2,_this12,color2);
-						let _this13 = this._pool;
+						const _this13 = this._pool;
 						if(_this12 != null) {
 							_this12.zero();
 							if(_this13.sizeVec3 == _this13.stackVec3.length) {
-								let newArray = new Array(_this13.sizeVec3 << 1);
+								const newArray = new Array(_this13.sizeVec3 << 1);
 								let _g = 0;
-								let _g1 = _this13.sizeVec3;
+								const _g1 = _this13.sizeVec3;
 								while(_g < _g1) {
-									let i = _g++;
+									const i = _g++;
 									newArray[i] = _this13.stackVec3[i];
 									_this13.stackVec3[i] = null;
 								}
@@ -17121,33 +17481,33 @@ oimo.dynamics.World = class oimo_dynamics_World {
 						}
 						break;
 					case 6:
-						let j4 = j;
-						let radius2 = d.style.jointRotationalConstraintRadius;
-						let color3 = d.style.jointLineColor;
-						let rxlm = j4._rotLms[0];
-						let rylm = j4._rotLms[1];
-						let rzlm = j4._rotLms[2];
+						const j4 = j;
+						const radius2 = d.style.jointRotationalConstraintRadius;
+						const color3 = d.style.jointLineColor;
+						const rxlm = j4._rotLms[0];
+						const rylm = j4._rotLms[1];
+						const rzlm = j4._rotLms[2];
 						this._drawTranslationalLimit3D(d,anchor1,basisX1,basisY1,basisZ1,j4._translLms[0],j4._translLms[1],j4._translLms[2],color3);
-						let _this14 = this._pool;
-						let rotYAxis = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
-						let v10 = rotYAxis;
+						const _this14 = this._pool;
+						const rotYAxis = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
+						const v10 = rotYAxis;
 						v10.x = j4._axisYX;
 						v10.y = j4._axisYY;
 						v10.z = j4._axisYZ;
-						let _this15 = this._pool;
-						let _this16 = _this15.sizeVec3 == 0 ? new oimo.common.Vec3() : _this15.stackVec3[--_this15.sizeVec3];
+						const _this15 = this._pool;
+						const _this16 = _this15.sizeVec3 == 0 ? new oimo.common.Vec3() : _this15.stackVec3[--_this15.sizeVec3];
 						_this16.x = basisX1.x;
 						_this16.y = basisX1.y;
 						_this16.z = basisX1.z;
-						let rotYBasisX = _this16;
-						let _this17 = this._pool;
-						let _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
+						const rotYBasisX = _this16;
+						const _this17 = this._pool;
+						const _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
 						_this18.x = basisX1.x;
 						_this18.y = basisX1.y;
 						_this18.z = basisX1.z;
-						let _this19 = _this18;
-						let y = _this19.z * rotYAxis.x - _this19.x * rotYAxis.z;
-						let z = _this19.x * rotYAxis.y - _this19.y * rotYAxis.x;
+						const _this19 = _this18;
+						const y = _this19.z * rotYAxis.x - _this19.x * rotYAxis.z;
+						const z = _this19.x * rotYAxis.y - _this19.y * rotYAxis.x;
 						_this19.x = _this19.y * rotYAxis.z - _this19.z * rotYAxis.y;
 						_this19.y = y;
 						_this19.z = z;
@@ -17158,15 +17518,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 				}
 				d.line(anchor1,anchor2,d.style.jointErrorColor);
-				let _this20 = this._pool;
+				const _this20 = this._pool;
 				if(p1 != null) {
 					p1.zero();
 					if(_this20.sizeVec3 == _this20.stackVec3.length) {
-						let newArray = new Array(_this20.sizeVec3 << 1);
+						const newArray = new Array(_this20.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this20.sizeVec3;
+						const _g1 = _this20.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this20.stackVec3[i];
 							_this20.stackVec3[i] = null;
 						}
@@ -17174,15 +17534,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this20.stackVec3[_this20.sizeVec3++] = p1;
 				}
-				let _this21 = this._pool;
+				const _this21 = this._pool;
 				if(p2 != null) {
 					p2.zero();
 					if(_this21.sizeVec3 == _this21.stackVec3.length) {
-						let newArray = new Array(_this21.sizeVec3 << 1);
+						const newArray = new Array(_this21.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this21.sizeVec3;
+						const _g1 = _this21.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this21.stackVec3[i];
 							_this21.stackVec3[i] = null;
 						}
@@ -17190,15 +17550,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this21.stackVec3[_this21.sizeVec3++] = p2;
 				}
-				let _this22 = this._pool;
+				const _this22 = this._pool;
 				if(anchor1 != null) {
 					anchor1.zero();
 					if(_this22.sizeVec3 == _this22.stackVec3.length) {
-						let newArray = new Array(_this22.sizeVec3 << 1);
+						const newArray = new Array(_this22.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this22.sizeVec3;
+						const _g1 = _this22.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this22.stackVec3[i];
 							_this22.stackVec3[i] = null;
 						}
@@ -17206,15 +17566,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this22.stackVec3[_this22.sizeVec3++] = anchor1;
 				}
-				let _this23 = this._pool;
+				const _this23 = this._pool;
 				if(anchor2 != null) {
 					anchor2.zero();
 					if(_this23.sizeVec3 == _this23.stackVec3.length) {
-						let newArray = new Array(_this23.sizeVec3 << 1);
+						const newArray = new Array(_this23.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this23.sizeVec3;
+						const _g1 = _this23.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this23.stackVec3[i];
 							_this23.stackVec3[i] = null;
 						}
@@ -17222,15 +17582,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this23.stackVec3[_this23.sizeVec3++] = anchor2;
 				}
-				let _this24 = this._pool;
+				const _this24 = this._pool;
 				if(basisX1 != null) {
 					basisX1.zero();
 					if(_this24.sizeVec3 == _this24.stackVec3.length) {
-						let newArray = new Array(_this24.sizeVec3 << 1);
+						const newArray = new Array(_this24.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this24.sizeVec3;
+						const _g1 = _this24.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this24.stackVec3[i];
 							_this24.stackVec3[i] = null;
 						}
@@ -17238,15 +17598,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this24.stackVec3[_this24.sizeVec3++] = basisX1;
 				}
-				let _this25 = this._pool;
+				const _this25 = this._pool;
 				if(basisY1 != null) {
 					basisY1.zero();
 					if(_this25.sizeVec3 == _this25.stackVec3.length) {
-						let newArray = new Array(_this25.sizeVec3 << 1);
+						const newArray = new Array(_this25.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this25.sizeVec3;
+						const _g1 = _this25.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this25.stackVec3[i];
 							_this25.stackVec3[i] = null;
 						}
@@ -17254,15 +17614,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this25.stackVec3[_this25.sizeVec3++] = basisY1;
 				}
-				let _this26 = this._pool;
+				const _this26 = this._pool;
 				if(basisZ1 != null) {
 					basisZ1.zero();
 					if(_this26.sizeVec3 == _this26.stackVec3.length) {
-						let newArray = new Array(_this26.sizeVec3 << 1);
+						const newArray = new Array(_this26.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this26.sizeVec3;
+						const _g1 = _this26.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this26.stackVec3[i];
 							_this26.stackVec3[i] = null;
 						}
@@ -17270,15 +17630,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this26.stackVec3[_this26.sizeVec3++] = basisZ1;
 				}
-				let _this27 = this._pool;
+				const _this27 = this._pool;
 				if(basisX2 != null) {
 					basisX2.zero();
 					if(_this27.sizeVec3 == _this27.stackVec3.length) {
-						let newArray = new Array(_this27.sizeVec3 << 1);
+						const newArray = new Array(_this27.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this27.sizeVec3;
+						const _g1 = _this27.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this27.stackVec3[i];
 							_this27.stackVec3[i] = null;
 						}
@@ -17286,15 +17646,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this27.stackVec3[_this27.sizeVec3++] = basisX2;
 				}
-				let _this28 = this._pool;
+				const _this28 = this._pool;
 				if(basisY2 != null) {
 					basisY2.zero();
 					if(_this28.sizeVec3 == _this28.stackVec3.length) {
-						let newArray = new Array(_this28.sizeVec3 << 1);
+						const newArray = new Array(_this28.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this28.sizeVec3;
+						const _g1 = _this28.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this28.stackVec3[i];
 							_this28.stackVec3[i] = null;
 						}
@@ -17302,15 +17662,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					_this28.stackVec3[_this28.sizeVec3++] = basisY2;
 				}
-				let _this29 = this._pool;
+				const _this29 = this._pool;
 				if(basisZ2 != null) {
 					basisZ2.zero();
 					if(_this29.sizeVec3 == _this29.stackVec3.length) {
-						let newArray = new Array(_this29.sizeVec3 << 1);
+						const newArray = new Array(_this29.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this29.sizeVec3;
+						const _g1 = _this29.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this29.stackVec3[i];
 							_this29.stackVec3[i] = null;
 						}
@@ -17322,27 +17682,28 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 		}
 	}
+
 	_drawRotationalLimit(d,center,ex,ey,needle,radius,min,max,color) {
 		if(min != max) {
-			let _this = this._pool;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this._pool;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = center.x;
 			_this1.y = center.y;
 			_this1.z = center.z;
-			let _this2 = _this1;
+			const _this2 = _this1;
 			_this2.x += needle.x * radius;
 			_this2.y += needle.y * radius;
 			_this2.z += needle.z * radius;
 			d.line(center,_this2,color);
-			let _this3 = this._pool;
+			const _this3 = this._pool;
 			if(_this2 != null) {
 				_this2.zero();
 				if(_this3.sizeVec3 == _this3.stackVec3.length) {
-					let newArray = new Array(_this3.sizeVec3 << 1);
+					const newArray = new Array(_this3.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this3.sizeVec3;
+					const _g1 = _this3.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this3.stackVec3[i];
 						_this3.stackVec3[i] = null;
 					}
@@ -17357,36 +17718,37 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 		}
 	}
+
 	_drawTranslationalLimit(d,center,ex,min,max,color) {
 		if(min < max) {
-			let _this = this._pool;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this._pool;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = center.x;
 			_this1.y = center.y;
 			_this1.z = center.z;
-			let _this2 = _this1;
+			const _this2 = _this1;
 			_this2.x += ex.x * min;
 			_this2.y += ex.y * min;
 			_this2.z += ex.z * min;
-			let _this3 = this._pool;
-			let _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+			const _this3 = this._pool;
+			const _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 			_this4.x = center.x;
 			_this4.y = center.y;
 			_this4.z = center.z;
-			let _this5 = _this4;
+			const _this5 = _this4;
 			_this5.x += ex.x * max;
 			_this5.y += ex.y * max;
 			_this5.z += ex.z * max;
 			d.line(_this2,_this5,color);
-			let _this6 = this._pool;
+			const _this6 = this._pool;
 			if(_this2 != null) {
 				_this2.zero();
 				if(_this6.sizeVec3 == _this6.stackVec3.length) {
-					let newArray = new Array(_this6.sizeVec3 << 1);
+					const newArray = new Array(_this6.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this6.sizeVec3;
+					const _g1 = _this6.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this6.stackVec3[i];
 						_this6.stackVec3[i] = null;
 					}
@@ -17394,15 +17756,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 				}
 				_this6.stackVec3[_this6.sizeVec3++] = _this2;
 			}
-			let _this7 = this._pool;
+			const _this7 = this._pool;
 			if(_this5 != null) {
 				_this5.zero();
 				if(_this7.sizeVec3 == _this7.stackVec3.length) {
-					let newArray = new Array(_this7.sizeVec3 << 1);
+					const newArray = new Array(_this7.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this7.sizeVec3;
+					const _g1 = _this7.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this7.stackVec3[i];
 						_this7.stackVec3[i] = null;
 					}
@@ -17412,31 +17774,32 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 		}
 	}
+
 	_drawTranslationalLimit3D(d,center,ex,ey,ez,xlm,ylm,zlm,color) {
-		let minx = xlm.lowerLimit;
-		let maxx = xlm.upperLimit;
-		let miny = ylm.lowerLimit;
-		let maxy = ylm.upperLimit;
-		let minz = zlm.lowerLimit;
-		let maxz = zlm.upperLimit;
-		let _this = this._pool;
+		const minx = xlm.lowerLimit;
+		const maxx = xlm.upperLimit;
+		const miny = ylm.lowerLimit;
+		const maxy = ylm.upperLimit;
+		const minz = zlm.lowerLimit;
+		const maxz = zlm.upperLimit;
+		const _this = this._pool;
 		if(_this.sizeVec3 == 0) {
 			new oimo.common.Vec3();
 		} else {
 			--_this.sizeVec3;
 		}
-		let _this1 = this._pool;
+		const _this1 = this._pool;
 		if(_this1.sizeVec3 == 0) {
 			new oimo.common.Vec3();
 		} else {
 			--_this1.sizeVec3;
 		}
-		let _this2 = this._pool;
-		let _this3 = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+		const _this2 = this._pool;
+		const _this3 = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
 		_this3.x = center.x;
 		_this3.y = center.y;
 		_this3.z = center.z;
-		let _this4 = _this3;
+		const _this4 = _this3;
 		_this4.x += ex.x * minx;
 		_this4.y += ex.y * minx;
 		_this4.z += ex.z * minx;
@@ -17446,12 +17809,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this4.x += ez.x * minz;
 		_this4.y += ez.y * minz;
 		_this4.z += ez.z * minz;
-		let _this5 = this._pool;
-		let _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+		const _this5 = this._pool;
+		const _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
 		_this6.x = center.x;
 		_this6.y = center.y;
 		_this6.z = center.z;
-		let _this7 = _this6;
+		const _this7 = _this6;
 		_this7.x += ex.x * minx;
 		_this7.y += ex.y * minx;
 		_this7.z += ex.z * minx;
@@ -17461,12 +17824,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this7.x += ez.x * maxz;
 		_this7.y += ez.y * maxz;
 		_this7.z += ez.z * maxz;
-		let _this8 = this._pool;
-		let _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
+		const _this8 = this._pool;
+		const _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
 		_this9.x = center.x;
 		_this9.y = center.y;
 		_this9.z = center.z;
-		let _this10 = _this9;
+		const _this10 = _this9;
 		_this10.x += ex.x * minx;
 		_this10.y += ex.y * minx;
 		_this10.z += ex.z * minx;
@@ -17476,12 +17839,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this10.x += ez.x * minz;
 		_this10.y += ez.y * minz;
 		_this10.z += ez.z * minz;
-		let _this11 = this._pool;
-		let _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
+		const _this11 = this._pool;
+		const _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
 		_this12.x = center.x;
 		_this12.y = center.y;
 		_this12.z = center.z;
-		let _this13 = _this12;
+		const _this13 = _this12;
 		_this13.x += ex.x * minx;
 		_this13.y += ex.y * minx;
 		_this13.z += ex.z * minx;
@@ -17491,12 +17854,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this13.x += ez.x * maxz;
 		_this13.y += ez.y * maxz;
 		_this13.z += ez.z * maxz;
-		let _this14 = this._pool;
-		let _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
+		const _this14 = this._pool;
+		const _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
 		_this15.x = center.x;
 		_this15.y = center.y;
 		_this15.z = center.z;
-		let _this16 = _this15;
+		const _this16 = _this15;
 		_this16.x += ex.x * maxx;
 		_this16.y += ex.y * maxx;
 		_this16.z += ex.z * maxx;
@@ -17506,12 +17869,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this16.x += ez.x * minz;
 		_this16.y += ez.y * minz;
 		_this16.z += ez.z * minz;
-		let _this17 = this._pool;
-		let _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
+		const _this17 = this._pool;
+		const _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
 		_this18.x = center.x;
 		_this18.y = center.y;
 		_this18.z = center.z;
-		let _this19 = _this18;
+		const _this19 = _this18;
 		_this19.x += ex.x * maxx;
 		_this19.y += ex.y * maxx;
 		_this19.z += ex.z * maxx;
@@ -17521,12 +17884,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this19.x += ez.x * maxz;
 		_this19.y += ez.y * maxz;
 		_this19.z += ez.z * maxz;
-		let _this20 = this._pool;
-		let _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
+		const _this20 = this._pool;
+		const _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
 		_this21.x = center.x;
 		_this21.y = center.y;
 		_this21.z = center.z;
-		let _this22 = _this21;
+		const _this22 = _this21;
 		_this22.x += ex.x * maxx;
 		_this22.y += ex.y * maxx;
 		_this22.z += ex.z * maxx;
@@ -17536,12 +17899,12 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this22.x += ez.x * minz;
 		_this22.y += ez.y * minz;
 		_this22.z += ez.z * minz;
-		let _this23 = this._pool;
-		let _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
+		const _this23 = this._pool;
+		const _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
 		_this24.x = center.x;
 		_this24.y = center.y;
 		_this24.z = center.z;
-		let _this25 = _this24;
+		const _this25 = _this24;
 		_this25.x += ex.x * maxx;
 		_this25.y += ex.y * maxx;
 		_this25.z += ex.z * maxx;
@@ -17563,15 +17926,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		d.line(_this16,_this19,color);
 		d.line(_this10,_this13,color);
 		d.line(_this22,_this25,color);
-		let _this26 = this._pool;
+		const _this26 = this._pool;
 		if(_this4 != null) {
 			_this4.zero();
 			if(_this26.sizeVec3 == _this26.stackVec3.length) {
-				let newArray = new Array(_this26.sizeVec3 << 1);
+				const newArray = new Array(_this26.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this26.sizeVec3;
+				const _g1 = _this26.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this26.stackVec3[i];
 					_this26.stackVec3[i] = null;
 				}
@@ -17579,15 +17942,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this26.stackVec3[_this26.sizeVec3++] = _this4;
 		}
-		let _this27 = this._pool;
+		const _this27 = this._pool;
 		if(_this7 != null) {
 			_this7.zero();
 			if(_this27.sizeVec3 == _this27.stackVec3.length) {
-				let newArray = new Array(_this27.sizeVec3 << 1);
+				const newArray = new Array(_this27.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this27.sizeVec3;
+				const _g1 = _this27.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this27.stackVec3[i];
 					_this27.stackVec3[i] = null;
 				}
@@ -17595,15 +17958,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this27.stackVec3[_this27.sizeVec3++] = _this7;
 		}
-		let _this28 = this._pool;
+		const _this28 = this._pool;
 		if(_this10 != null) {
 			_this10.zero();
 			if(_this28.sizeVec3 == _this28.stackVec3.length) {
-				let newArray = new Array(_this28.sizeVec3 << 1);
+				const newArray = new Array(_this28.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this28.sizeVec3;
+				const _g1 = _this28.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this28.stackVec3[i];
 					_this28.stackVec3[i] = null;
 				}
@@ -17611,15 +17974,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this28.stackVec3[_this28.sizeVec3++] = _this10;
 		}
-		let _this29 = this._pool;
+		const _this29 = this._pool;
 		if(_this13 != null) {
 			_this13.zero();
 			if(_this29.sizeVec3 == _this29.stackVec3.length) {
-				let newArray = new Array(_this29.sizeVec3 << 1);
+				const newArray = new Array(_this29.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this29.sizeVec3;
+				const _g1 = _this29.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this29.stackVec3[i];
 					_this29.stackVec3[i] = null;
 				}
@@ -17627,15 +17990,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this29.stackVec3[_this29.sizeVec3++] = _this13;
 		}
-		let _this30 = this._pool;
+		const _this30 = this._pool;
 		if(_this16 != null) {
 			_this16.zero();
 			if(_this30.sizeVec3 == _this30.stackVec3.length) {
-				let newArray = new Array(_this30.sizeVec3 << 1);
+				const newArray = new Array(_this30.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this30.sizeVec3;
+				const _g1 = _this30.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this30.stackVec3[i];
 					_this30.stackVec3[i] = null;
 				}
@@ -17643,15 +18006,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this30.stackVec3[_this30.sizeVec3++] = _this16;
 		}
-		let _this31 = this._pool;
+		const _this31 = this._pool;
 		if(_this19 != null) {
 			_this19.zero();
 			if(_this31.sizeVec3 == _this31.stackVec3.length) {
-				let newArray = new Array(_this31.sizeVec3 << 1);
+				const newArray = new Array(_this31.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this31.sizeVec3;
+				const _g1 = _this31.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this31.stackVec3[i];
 					_this31.stackVec3[i] = null;
 				}
@@ -17659,15 +18022,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this31.stackVec3[_this31.sizeVec3++] = _this19;
 		}
-		let _this32 = this._pool;
+		const _this32 = this._pool;
 		if(_this22 != null) {
 			_this22.zero();
 			if(_this32.sizeVec3 == _this32.stackVec3.length) {
-				let newArray = new Array(_this32.sizeVec3 << 1);
+				const newArray = new Array(_this32.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this32.sizeVec3;
+				const _g1 = _this32.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this32.stackVec3[i];
 					_this32.stackVec3[i] = null;
 				}
@@ -17675,15 +18038,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this32.stackVec3[_this32.sizeVec3++] = _this22;
 		}
-		let _this33 = this._pool;
+		const _this33 = this._pool;
 		if(_this25 != null) {
 			_this25.zero();
 			if(_this33.sizeVec3 == _this33.stackVec3.length) {
-				let newArray = new Array(_this33.sizeVec3 << 1);
+				const newArray = new Array(_this33.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this33.sizeVec3;
+				const _g1 = _this33.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this33.stackVec3[i];
 					_this33.stackVec3[i] = null;
 				}
@@ -17692,32 +18055,33 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			_this33.stackVec3[_this33.sizeVec3++] = _this25;
 		}
 	}
+
 	_drawEllipseOnSphere(d,center,normal,x,y,radiansX,radiansY,radius,color) {
 		let theta = 0;
-		let _this = this._pool;
-		let rotVec = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this._pool;
-		let rotQ = _this1.sizeQuat == 0 ? new oimo.common.Quat() : _this1.stackQuat[--_this1.sizeQuat];
-		let _this2 = this._pool;
-		let rotM = _this2.sizeMat3 == 0 ? new oimo.common.Mat3() : _this2.stackMat3[--_this2.sizeMat3];
-		let _this3 = this._pool;
+		const _this = this._pool;
+		const rotVec = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this._pool;
+		const rotQ = _this1.sizeQuat == 0 ? new oimo.common.Quat() : _this1.stackQuat[--_this1.sizeQuat];
+		const _this2 = this._pool;
+		const rotM = _this2.sizeMat3 == 0 ? new oimo.common.Mat3() : _this2.stackMat3[--_this2.sizeMat3];
+		const _this3 = this._pool;
 		let prevV = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 		let _g = 0;
 		while(_g < 17) {
-			let i = _g++;
-			let rx = Math.cos(theta) * radiansX;
-			let ry = Math.sin(theta) * radiansY;
-			let halfRotAng = Math.sqrt(rx * rx + ry * ry);
-			let rotSin = Math.sin(halfRotAng * 0.5);
-			let rotCos = Math.cos(halfRotAng * 0.5);
-			let _this = rotVec.zero();
+			const i = _g++;
+			const rx = Math.cos(theta) * radiansX;
+			const ry = Math.sin(theta) * radiansY;
+			const halfRotAng = Math.sqrt(rx * rx + ry * ry);
+			const rotSin = Math.sin(halfRotAng * 0.5);
+			const rotCos = Math.cos(halfRotAng * 0.5);
+			const _this = rotVec.zero();
 			_this.x += x.x * rx;
 			_this.y += x.y * rx;
 			_this.z += x.z * rx;
 			_this.x += y.x * ry;
 			_this.y += y.y * ry;
 			_this.z += y.z * ry;
-			let s = 1 / halfRotAng * rotSin;
+			const s = 1 / halfRotAng * rotSin;
 			rotVec.x *= s;
 			rotVec.y *= s;
 			rotVec.z *= s;
@@ -17725,22 +18089,22 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			rotQ.y = rotVec.y;
 			rotQ.z = rotVec.z;
 			rotQ.w = rotCos;
-			let x1 = rotQ.x;
-			let y1 = rotQ.y;
-			let z = rotQ.z;
-			let w = rotQ.w;
-			let x2 = 2 * x1;
-			let y2 = 2 * y1;
-			let z2 = 2 * z;
-			let xx = x1 * x2;
-			let yy = y1 * y2;
-			let zz = z * z2;
-			let xy = x1 * y2;
-			let yz = y1 * z2;
-			let xz = x1 * z2;
-			let wx = w * x2;
-			let wy = w * y2;
-			let wz = w * z2;
+			const x1 = rotQ.x;
+			const y1 = rotQ.y;
+			const z = rotQ.z;
+			const w = rotQ.w;
+			const x2 = 2 * x1;
+			const y2 = 2 * y1;
+			const z2 = 2 * z;
+			const xx = x1 * x2;
+			const yy = y1 * y2;
+			const zz = z * z2;
+			const xy = x1 * y2;
+			const yz = y1 * z2;
+			const xz = x1 * z2;
+			const wx = w * x2;
+			const wy = w * y2;
+			const wz = w * z2;
 			rotM.e00 = 1 - yy - zz;
 			rotM.e01 = xy - wz;
 			rotM.e02 = xz + wy;
@@ -17750,14 +18114,14 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			rotM.e20 = xz - wy;
 			rotM.e21 = yz + wx;
 			rotM.e22 = 1 - xx - yy;
-			let _this1 = this._pool;
-			let _this2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+			const _this1 = this._pool;
+			const _this2 = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
 			_this2.x += normal.x * radius;
 			_this2.y += normal.y * radius;
 			_this2.z += normal.z * radius;
-			let v = _this2;
-			let y3 = v.x * rotM.e10 + v.y * rotM.e11 + v.z * rotM.e12;
-			let z1 = v.x * rotM.e20 + v.y * rotM.e21 + v.z * rotM.e22;
+			const v = _this2;
+			const y3 = v.x * rotM.e10 + v.y * rotM.e11 + v.z * rotM.e12;
+			const z1 = v.x * rotM.e20 + v.y * rotM.e21 + v.z * rotM.e22;
 			v.x = v.x * rotM.e00 + v.y * rotM.e01 + v.z * rotM.e02;
 			v.y = y3;
 			v.z = z1;
@@ -17767,15 +18131,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			if(i >= 1) {
 				d.line(prevV,v,color);
 			}
-			let _this3 = this._pool;
+			const _this3 = this._pool;
 			if(prevV != null) {
 				prevV.zero();
 				if(_this3.sizeVec3 == _this3.stackVec3.length) {
-					let newArray = new Array(_this3.sizeVec3 << 1);
+					const newArray = new Array(_this3.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this3.sizeVec3;
+					const _g1 = _this3.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this3.stackVec3[i];
 						_this3.stackVec3[i] = null;
 					}
@@ -17786,15 +18150,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			prevV = v;
 			theta += 0.39269908169872375;
 		}
-		let _this4 = this._pool;
+		const _this4 = this._pool;
 		if(rotVec != null) {
 			rotVec.zero();
 			if(_this4.sizeVec3 == _this4.stackVec3.length) {
-				let newArray = new Array(_this4.sizeVec3 << 1);
+				const newArray = new Array(_this4.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this4.sizeVec3;
+				const _g1 = _this4.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this4.stackVec3[i];
 					_this4.stackVec3[i] = null;
 				}
@@ -17802,18 +18166,18 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this4.stackVec3[_this4.sizeVec3++] = rotVec;
 		}
-		let _this5 = this._pool;
+		const _this5 = this._pool;
 		if(rotQ != null) {
 			rotQ.x = 0;
 			rotQ.y = 0;
 			rotQ.z = 0;
 			rotQ.w = 1;
 			if(_this5.sizeQuat == _this5.stackQuat.length) {
-				let newArray = new Array(_this5.sizeQuat << 1);
+				const newArray = new Array(_this5.sizeQuat << 1);
 				let _g = 0;
-				let _g1 = _this5.sizeQuat;
+				const _g1 = _this5.sizeQuat;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this5.stackQuat[i];
 					_this5.stackQuat[i] = null;
 				}
@@ -17821,7 +18185,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this5.stackQuat[_this5.sizeQuat++] = rotQ;
 		}
-		let _this6 = this._pool;
+		const _this6 = this._pool;
 		if(rotM != null) {
 			rotM.e00 = 1;
 			rotM.e01 = 0;
@@ -17833,11 +18197,11 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			rotM.e21 = 0;
 			rotM.e22 = 1;
 			if(_this6.sizeMat3 == _this6.stackMat3.length) {
-				let newArray = new Array(_this6.sizeMat3 << 1);
+				const newArray = new Array(_this6.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this6.sizeMat3;
+				const _g1 = _this6.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this6.stackMat3[i];
 					_this6.stackMat3[i] = null;
 				}
@@ -17845,15 +18209,15 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			}
 			_this6.stackMat3[_this6.sizeMat3++] = rotM;
 		}
-		let _this7 = this._pool;
+		const _this7 = this._pool;
 		if(prevV != null) {
 			prevV.zero();
 			if(_this7.sizeVec3 == _this7.stackVec3.length) {
-				let newArray = new Array(_this7.sizeVec3 << 1);
+				const newArray = new Array(_this7.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this7.sizeVec3;
+				const _g1 = _this7.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this7.stackVec3[i];
 					_this7.stackVec3[i] = null;
 				}
@@ -17862,20 +18226,22 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			_this7.stackVec3[_this7.sizeVec3++] = prevV;
 		}
 	}
+
 	step(timeStep) {
 		if(this._timeStep.dt > 0) {
 			this._timeStep.dtRatio = timeStep / this._timeStep.dt;
 		}
 		this._timeStep.dt = timeStep;
 		this._timeStep.invDt = 1 / timeStep;
-		let st = Date.now() / 1000;
+		const st = Date.now() / 1000;
 		this._updateContacts();
 		this._solveIslands();
 		oimo.dynamics.common.Performance.totalTime = (Date.now() / 1000 - st) * 1000;
 	}
+
 	addRigidBody(rigidBody) {
 		if(rigidBody._world != null) {
-			throw new Error("A rigid body cannot belong to multiple worlds.");
+			throw new Error('A rigid body cannot belong to multiple worlds.');
 		}
 		if(this._rigidBodyList == null) {
 			this._rigidBodyList = rigidBody;
@@ -17888,7 +18254,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		rigidBody._world = this;
 		let s = rigidBody._shapeList;
 		while(s != null) {
-			let n = s._next;
+			const n = s._next;
 			s._proxy = this._broadPhase.createProxy(s,s._aabb);
 			s._id = this._shapeIdCount++;
 			this._numShapes++;
@@ -17896,12 +18262,13 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		}
 		this._numRigidBodies++;
 	}
+
 	removeRigidBody(rigidBody) {
 		if(rigidBody._world != this) {
-			throw new Error("The rigid body doesn't belong to the world.");
+			throw new Error('The rigid body doesn\'t belong to the world.');
 		}
-		let prev = rigidBody._prev;
-		let next = rigidBody._next;
+		const prev = rigidBody._prev;
+		const next = rigidBody._next;
 		if(prev != null) {
 			prev._next = next;
 		}
@@ -17919,21 +18286,21 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		rigidBody._world = null;
 		let s = rigidBody._shapeList;
 		while(s != null) {
-			let n = s._next;
+			const n = s._next;
 			this._broadPhase.destroyProxy(s._proxy);
 			s._proxy = null;
 			s._id = -1;
 			let cl = s._rigidBody._contactLinkList;
 			while(cl != null) {
-				let n = cl._next;
-				let c = cl._contact;
+				const n = cl._next;
+				const c = cl._contact;
 				if(c._s1 == s || c._s2 == s) {
-					let _this = cl._other;
+					const _this = cl._other;
 					_this._sleeping = false;
 					_this._sleepTime = 0;
-					let _this1 = this._contactManager;
-					let prev = c._prev;
-					let next = c._next;
+					const _this1 = this._contactManager;
+					const prev = c._prev;
+					const next = c._next;
 					if(prev != null) {
 						prev._next = next;
 					}
@@ -17949,7 +18316,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					c._next = null;
 					c._prev = null;
 					if(c._touching) {
-						let cc1 = c._s1._contactCallback;
+						const cc1 = c._s1._contactCallback;
 						let cc2 = c._s2._contactCallback;
 						if(cc1 == cc2) {
 							cc2 = null;
@@ -17961,8 +18328,8 @@ oimo.dynamics.World = class oimo_dynamics_World {
 							cc2.endContact(c);
 						}
 					}
-					let prev1 = c._link1._prev;
-					let next1 = c._link1._next;
+					const prev1 = c._link1._prev;
+					const next1 = c._link1._next;
 					if(prev1 != null) {
 						prev1._next = next1;
 					}
@@ -17977,8 +18344,8 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					}
 					c._link1._next = null;
 					c._link1._prev = null;
-					let prev2 = c._link2._prev;
-					let next2 = c._link2._next;
+					const prev2 = c._link2._prev;
+					const next2 = c._link2._next;
 					if(prev2 != null) {
 						prev2._next = next2;
 					}
@@ -18007,7 +18374,7 @@ oimo.dynamics.World = class oimo_dynamics_World {
 					c._cachedDetectorData._clear();
 					c._manifold._clear();
 					c._detector = null;
-					let _this2 = c._contactConstraint;
+					const _this2 = c._contactConstraint;
 					_this2._s1 = null;
 					_this2._s2 = null;
 					_this2._b1 = null;
@@ -18025,9 +18392,10 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		}
 		this._numRigidBodies--;
 	}
+
 	addJoint(joint) {
 		if(joint._world != null) {
-			throw new Error("A joint cannot belong to multiple worlds.");
+			throw new Error('A joint cannot belong to multiple worlds.');
 		}
 		if(this._jointList == null) {
 			this._jointList = joint;
@@ -18058,21 +18426,22 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		}
 		joint._b1._numJointLinks++;
 		joint._b2._numJointLinks++;
-		let _this = joint._b1;
+		const _this = joint._b1;
 		_this._sleeping = false;
 		_this._sleepTime = 0;
-		let _this1 = joint._b2;
+		const _this1 = joint._b2;
 		_this1._sleeping = false;
 		_this1._sleepTime = 0;
 		joint._syncAnchors();
 		this._numJoints++;
 	}
+
 	removeJoint(joint) {
 		if(joint._world != this) {
-			throw new Error("The joint doesn't belong to the world.");
+			throw new Error('The joint doesn\'t belong to the world.');
 		}
-		let prev = joint._prev;
-		let next = joint._next;
+		const prev = joint._prev;
+		const next = joint._next;
 		if(prev != null) {
 			prev._next = next;
 		}
@@ -18088,8 +18457,8 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		joint._next = null;
 		joint._prev = null;
 		joint._world = null;
-		let prev1 = joint._link1._prev;
-		let next1 = joint._link1._next;
+		const prev1 = joint._link1._prev;
+		const next1 = joint._link1._next;
 		if(prev1 != null) {
 			prev1._next = next1;
 		}
@@ -18104,8 +18473,8 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		}
 		joint._link1._next = null;
 		joint._link1._prev = null;
-		let prev2 = joint._link2._prev;
-		let next2 = joint._link2._next;
+		const prev2 = joint._link2._prev;
+		const next2 = joint._link2._next;
 		if(prev2 != null) {
 			prev2._next = next2;
 		}
@@ -18124,20 +18493,23 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		joint._link2._other = null;
 		joint._b1._numJointLinks--;
 		joint._b2._numJointLinks--;
-		let _this = joint._b1;
+		const _this = joint._b1;
 		_this._sleeping = false;
 		_this._sleepTime = 0;
-		let _this1 = joint._b2;
+		const _this1 = joint._b2;
 		_this1._sleeping = false;
 		_this1._sleepTime = 0;
 		this._numJoints--;
 	}
+
 	setDebugDraw(debugDraw) {
 		this._debugDraw = debugDraw;
 	}
+
 	getDebugDraw() {
 		return this._debugDraw;
 	}
+
 	debugDraw() {
 		if(this._debugDraw != null) {
 			if(this._broadPhase._type == 2) {
@@ -18147,21 +18519,23 @@ oimo.dynamics.World = class oimo_dynamics_World {
 			this._drawConstraints(this._debugDraw);
 		}
 	}
+
 	rayCast(begin,end,callback) {
-		let _this = this._rayCastWrapper.begin;
+		const _this = this._rayCastWrapper.begin;
 		_this.x = begin.x;
 		_this.y = begin.y;
 		_this.z = begin.z;
-		let _this1 = this._rayCastWrapper.end;
+		const _this1 = this._rayCastWrapper.end;
 		_this1.x = end.x;
 		_this1.y = end.y;
 		_this1.z = end.z;
 		this._rayCastWrapper.callback = callback;
 		this._broadPhase.rayCast(begin,end,this._rayCastWrapper);
 	}
+
 	convexCast(convex,begin,translation,callback) {
 		this._convexCastWrapper.convex = convex;
-		let _this = this._convexCastWrapper.begin;
+		const _this = this._convexCastWrapper.begin;
 		_this._positionX = begin._positionX;
 		_this._positionY = begin._positionY;
 		_this._positionZ = begin._positionZ;
@@ -18174,64 +18548,79 @@ oimo.dynamics.World = class oimo_dynamics_World {
 		_this._rotation20 = begin._rotation20;
 		_this._rotation21 = begin._rotation21;
 		_this._rotation22 = begin._rotation22;
-		let _this1 = this._convexCastWrapper.translation;
+		const _this1 = this._convexCastWrapper.translation;
 		_this1.x = translation.x;
 		_this1.y = translation.y;
 		_this1.z = translation.z;
 		this._convexCastWrapper.callback = callback;
 		this._broadPhase.convexCast(convex,begin,translation,this._convexCastWrapper);
 	}
+
 	aabbTest(aabb,callback) {
 		this._aabbTestWrapper._aabb.copyFrom(aabb);
 		this._aabbTestWrapper._callback = callback;
 		this._broadPhase.aabbTest(aabb,this._aabbTestWrapper);
 	}
+
 	getRigidBodyList() {
 		return this._rigidBodyList;
 	}
+
 	getJointList() {
 		return this._jointList;
 	}
+
 	getBroadPhase() {
 		return this._broadPhase;
 	}
+
 	getContactManager() {
 		return this._contactManager;
 	}
+
 	getNumRigidBodies() {
 		return this._numRigidBodies;
 	}
+
 	getNumJoints() {
 		return this._numJoints;
 	}
+
 	getNumShapes() {
 		return this._numShapes;
 	}
+
 	getNumIslands() {
 		return this._numIslands;
 	}
+
 	getNumVelocityIterations() {
 		return this._numVelocityIterations;
 	}
+
 	setNumVelocityIterations(numVelocityIterations) {
 		this._numVelocityIterations = numVelocityIterations;
 	}
+
 	getNumPositionIterations() {
 		return this._numPositionIterations;
 	}
+
 	setNumPositionIterations(numPositionIterations) {
 		this._numPositionIterations = numPositionIterations;
 	}
+
 	getGravity() {
 		return this._gravity;
 	}
+
 	setGravity(gravity) {
-		let _this = this._gravity;
+		const _this = this._gravity;
 		_this.x = gravity.x;
 		_this.y = gravity.y;
 		_this.z = gravity.z;
 	}
-}
+};
 if(!oimo.dynamics._World) oimo.dynamics._World = {};
 oimo.dynamics._World.RayCastWrapper = class oimo_dynamics__$World_RayCastWrapper extends oimo.collision.broadphase.BroadPhaseProxyCallback {
 	constructor() {
@@ -18241,13 +18630,14 @@ oimo.dynamics._World.RayCastWrapper = class oimo_dynamics__$World_RayCastWrapper
 		this.end = new oimo.common.Vec3();
 		this.callback = null;
 	}
+
 	process(proxy) {
-		let shape = proxy.userData;
+		const shape = proxy.userData;
 		if(shape._geom.rayCast(this.begin,this.end,shape._transform,this.rayCastHit)) {
 			this.callback.process(shape,this.rayCastHit);
 		}
 	}
-}
+};
 oimo.dynamics._World.ConvexCastWrapper = class oimo_dynamics__$World_ConvexCastWrapper extends oimo.collision.broadphase.BroadPhaseProxyCallback {
 	constructor() {
 		super();
@@ -18258,9 +18648,10 @@ oimo.dynamics._World.ConvexCastWrapper = class oimo_dynamics__$World_ConvexCastW
 		this.callback = null;
 		this.convex = null;
 	}
+
 	process(proxy) {
-		let shape = proxy.userData;
-		let type = shape._geom._type;
+		const shape = proxy.userData;
+		const type = shape._geom._type;
 		if(type < 0 || type > 5) {
 			return;
 		}
@@ -18268,46 +18659,53 @@ oimo.dynamics._World.ConvexCastWrapper = class oimo_dynamics__$World_ConvexCastW
 			this.callback.process(shape,this.rayCastHit);
 		}
 	}
-}
+};
 oimo.dynamics._World.AabbTestWrapper = class oimo_dynamics__$World_AabbTestWrapper extends oimo.collision.broadphase.BroadPhaseProxyCallback {
 	constructor() {
 		super();
 		this._aabb = new oimo.collision.geometry.Aabb();
 		this._callback = null;
 	}
+
 	process(proxy) {
-		let shape = proxy.userData;
-		let shapeAabb = shape._aabb;
+		const shape = proxy.userData;
+		const shapeAabb = shape._aabb;
 		if(shapeAabb._minX < this._aabb._maxX && shapeAabb._maxX > this._aabb._minX && shapeAabb._minY < this._aabb._maxY && shapeAabb._maxY > this._aabb._minY && shapeAabb._minZ < this._aabb._maxZ && shapeAabb._maxZ > this._aabb._minZ) {
 			this._callback.process(shape);
 		}
 	}
-}
+};
 if(!oimo.dynamics.callback) oimo.dynamics.callback = {};
 oimo.dynamics.callback.AabbTestCallback = class oimo_dynamics_callback_AabbTestCallback {
 	constructor() {
 	}
+
 	process(shape) {
 	}
-}
+};
 oimo.dynamics.callback.ContactCallback = class oimo_dynamics_callback_ContactCallback {
 	constructor() {
 	}
+
 	beginContact(c) {
 	}
+
 	preSolve(c) {
 	}
+
 	postSolve(c) {
 	}
+
 	endContact(c) {
 	}
-}
+};
 oimo.dynamics.callback.RayCastCallback = class oimo_dynamics_callback_RayCastCallback {
 	constructor() {
 	}
+
 	process(shape,hit) {
 	}
-}
+};
 oimo.dynamics.callback.RayCastClosest = class oimo_dynamics_callback_RayCastClosest extends oimo.dynamics.callback.RayCastCallback {
 	constructor() {
 		super();
@@ -18319,6 +18717,7 @@ oimo.dynamics.callback.RayCastClosest = class oimo_dynamics_callback_RayCastClos
 		this.normal.zero();
 		this.hit = false;
 	}
+
 	clear() {
 		this.shape = null;
 		this.fraction = 1;
@@ -18326,24 +18725,25 @@ oimo.dynamics.callback.RayCastClosest = class oimo_dynamics_callback_RayCastClos
 		this.normal.zero();
 		this.hit = false;
 	}
+
 	process(shape,hit) {
 		if(hit.fraction < this.fraction) {
 			this.shape = shape;
 			this.hit = true;
 			this.fraction = hit.fraction;
-			let _this = this.position;
-			let v = hit.position;
+			const _this = this.position;
+			const v = hit.position;
 			_this.x = v.x;
 			_this.y = v.y;
 			_this.z = v.z;
-			let _this1 = this.normal;
-			let v1 = hit.normal;
+			const _this1 = this.normal;
+			const v1 = hit.normal;
 			_this1.x = v1.x;
 			_this1.y = v1.y;
 			_this1.z = v1.z;
 		}
 	}
-}
+};
 if(!oimo.dynamics.common) oimo.dynamics.common = {};
 oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 	constructor() {
@@ -18364,16 +18764,16 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		this.tmpSphereNorms = new Array(5);
 		let _g = 0;
 		while(_g < 5) {
-			let i = _g++;
-			let num = i == 0 || i == 4 ? 1 : 8;
+			const i = _g++;
+			const num = i == 0 || i == 4 ? 1 : 8;
 			this.sphereCoords[i] = new Array(num);
 			this.tmpSphereVerts[i] = new Array(num);
 			this.tmpSphereNorms[i] = new Array(num);
 			let _g1 = 0;
 			while(_g1 < 8) {
-				let j = _g1++;
-				let theta = i * 0.7853981633974475;
-				let phi = j * 0.7853981633974475;
+				const j = _g1++;
+				const theta = i * 0.7853981633974475;
+				const phi = j * 0.7853981633974475;
 				this.sphereCoords[i][j] = new oimo.common.Vec3(Math.sin(theta) * Math.cos(phi),Math.cos(theta),-Math.sin(theta) * Math.sin(phi));
 				this.tmpSphereVerts[i][j] = new oimo.common.Vec3();
 				this.tmpSphereNorms[i][j] = new oimo.common.Vec3();
@@ -18386,7 +18786,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		this.tmpCircleNorms = new Array(8);
 		let _g1 = 0;
 		while(_g1 < 8) {
-			let i = _g1++;
+			const i = _g1++;
 			this.circleCoords[i] = new oimo.common.Vec3(Math.cos(i * 0.7853981633974475),0,-Math.sin(i * 0.7853981633974475));
 			this.circleCoordsShift[i] = new oimo.common.Vec3(Math.cos((i + 0.5) * 0.7853981633974475),0,-Math.sin((i + 0.5) * 0.7853981633974475));
 			this.tmpCircleVerts1[i] = new oimo.common.Vec3();
@@ -18395,23 +18795,24 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		}
 		this.style = new oimo.dynamics.common.DebugDrawStyle();
 	}
+
 	aabb(min,max,color) {
-		let _this = this.p;
-		let v1 = (_this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3]).init(min.x,min.y,min.z);
-		let _this1 = this.p;
-		let v2 = (_this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3]).init(min.x,min.y,max.z);
-		let _this2 = this.p;
-		let v3 = (_this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3]).init(min.x,max.y,min.z);
-		let _this3 = this.p;
-		let v4 = (_this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3]).init(min.x,max.y,max.z);
-		let _this4 = this.p;
-		let v5 = (_this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3]).init(max.x,min.y,min.z);
-		let _this5 = this.p;
-		let v6 = (_this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3]).init(max.x,min.y,max.z);
-		let _this6 = this.p;
-		let v7 = (_this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3]).init(max.x,max.y,min.z);
-		let _this7 = this.p;
-		let v8 = (_this7.sizeVec3 == 0 ? new oimo.common.Vec3() : _this7.stackVec3[--_this7.sizeVec3]).init(max.x,max.y,max.z);
+		const _this = this.p;
+		const v1 = (_this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3]).init(min.x,min.y,min.z);
+		const _this1 = this.p;
+		const v2 = (_this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3]).init(min.x,min.y,max.z);
+		const _this2 = this.p;
+		const v3 = (_this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3]).init(min.x,max.y,min.z);
+		const _this3 = this.p;
+		const v4 = (_this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3]).init(min.x,max.y,max.z);
+		const _this4 = this.p;
+		const v5 = (_this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3]).init(max.x,min.y,min.z);
+		const _this5 = this.p;
+		const v6 = (_this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3]).init(max.x,min.y,max.z);
+		const _this6 = this.p;
+		const v7 = (_this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3]).init(max.x,max.y,min.z);
+		const _this7 = this.p;
+		const v8 = (_this7.sizeVec3 == 0 ? new oimo.common.Vec3() : _this7.stackVec3[--_this7.sizeVec3]).init(max.x,max.y,max.z);
 		this.line(v1,v2,color);
 		this.line(v3,v4,color);
 		this.line(v5,v6,color);
@@ -18424,15 +18825,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		this.line(v2,v6,color);
 		this.line(v3,v7,color);
 		this.line(v4,v8,color);
-		let _this8 = this.p;
+		const _this8 = this.p;
 		if(v1 != null) {
 			v1.zero();
 			if(_this8.sizeVec3 == _this8.stackVec3.length) {
-				let newArray = new Array(_this8.sizeVec3 << 1);
+				const newArray = new Array(_this8.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this8.sizeVec3;
+				const _g1 = _this8.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this8.stackVec3[i];
 					_this8.stackVec3[i] = null;
 				}
@@ -18440,15 +18841,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this8.stackVec3[_this8.sizeVec3++] = v1;
 		}
-		let _this9 = this.p;
+		const _this9 = this.p;
 		if(v2 != null) {
 			v2.zero();
 			if(_this9.sizeVec3 == _this9.stackVec3.length) {
-				let newArray = new Array(_this9.sizeVec3 << 1);
+				const newArray = new Array(_this9.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this9.sizeVec3;
+				const _g1 = _this9.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this9.stackVec3[i];
 					_this9.stackVec3[i] = null;
 				}
@@ -18456,15 +18857,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this9.stackVec3[_this9.sizeVec3++] = v2;
 		}
-		let _this10 = this.p;
+		const _this10 = this.p;
 		if(v3 != null) {
 			v3.zero();
 			if(_this10.sizeVec3 == _this10.stackVec3.length) {
-				let newArray = new Array(_this10.sizeVec3 << 1);
+				const newArray = new Array(_this10.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this10.sizeVec3;
+				const _g1 = _this10.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this10.stackVec3[i];
 					_this10.stackVec3[i] = null;
 				}
@@ -18472,15 +18873,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this10.stackVec3[_this10.sizeVec3++] = v3;
 		}
-		let _this11 = this.p;
+		const _this11 = this.p;
 		if(v4 != null) {
 			v4.zero();
 			if(_this11.sizeVec3 == _this11.stackVec3.length) {
-				let newArray = new Array(_this11.sizeVec3 << 1);
+				const newArray = new Array(_this11.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this11.sizeVec3;
+				const _g1 = _this11.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this11.stackVec3[i];
 					_this11.stackVec3[i] = null;
 				}
@@ -18488,15 +18889,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this11.stackVec3[_this11.sizeVec3++] = v4;
 		}
-		let _this12 = this.p;
+		const _this12 = this.p;
 		if(v5 != null) {
 			v5.zero();
 			if(_this12.sizeVec3 == _this12.stackVec3.length) {
-				let newArray = new Array(_this12.sizeVec3 << 1);
+				const newArray = new Array(_this12.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this12.sizeVec3;
+				const _g1 = _this12.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this12.stackVec3[i];
 					_this12.stackVec3[i] = null;
 				}
@@ -18504,15 +18905,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this12.stackVec3[_this12.sizeVec3++] = v5;
 		}
-		let _this13 = this.p;
+		const _this13 = this.p;
 		if(v6 != null) {
 			v6.zero();
 			if(_this13.sizeVec3 == _this13.stackVec3.length) {
-				let newArray = new Array(_this13.sizeVec3 << 1);
+				const newArray = new Array(_this13.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this13.sizeVec3;
+				const _g1 = _this13.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this13.stackVec3[i];
 					_this13.stackVec3[i] = null;
 				}
@@ -18520,15 +18921,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this13.stackVec3[_this13.sizeVec3++] = v6;
 		}
-		let _this14 = this.p;
+		const _this14 = this.p;
 		if(v7 != null) {
 			v7.zero();
 			if(_this14.sizeVec3 == _this14.stackVec3.length) {
-				let newArray = new Array(_this14.sizeVec3 << 1);
+				const newArray = new Array(_this14.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this14.sizeVec3;
+				const _g1 = _this14.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this14.stackVec3[i];
 					_this14.stackVec3[i] = null;
 				}
@@ -18536,15 +18937,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this14.stackVec3[_this14.sizeVec3++] = v7;
 		}
-		let _this15 = this.p;
+		const _this15 = this.p;
 		if(v8 != null) {
 			v8.zero();
 			if(_this15.sizeVec3 == _this15.stackVec3.length) {
-				let newArray = new Array(_this15.sizeVec3 << 1);
+				const newArray = new Array(_this15.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this15.sizeVec3;
+				const _g1 = _this15.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this15.stackVec3[i];
 					_this15.stackVec3[i] = null;
 				}
@@ -18553,22 +18954,23 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this15.stackVec3[_this15.sizeVec3++] = v8;
 		}
 	}
+
 	basis(transform,length,colorX,colorY,colorZ) {
-		let _this = this.p;
-		let pos = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this.p;
-		let rot = _this1.sizeMat3 == 0 ? new oimo.common.Mat3() : _this1.stackMat3[--_this1.sizeMat3];
-		let _this2 = this.p;
-		let ex = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-		let _this3 = this.p;
-		let ey = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-		let _this4 = this.p;
-		let ez = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
-		let v = pos;
+		const _this = this.p;
+		const pos = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this.p;
+		const rot = _this1.sizeMat3 == 0 ? new oimo.common.Mat3() : _this1.stackMat3[--_this1.sizeMat3];
+		const _this2 = this.p;
+		const ex = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+		const _this3 = this.p;
+		const ey = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+		const _this4 = this.p;
+		const ez = _this4.sizeVec3 == 0 ? new oimo.common.Vec3() : _this4.stackVec3[--_this4.sizeVec3];
+		const v = pos;
 		v.x = transform._positionX;
 		v.y = transform._positionY;
 		v.z = transform._positionZ;
-		let m = rot;
+		const m = rot;
 		m.e00 = transform._rotation00;
 		m.e01 = transform._rotation01;
 		m.e02 = transform._rotation02;
@@ -18584,36 +18986,36 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		ex.x *= length;
 		ex.y *= length;
 		ex.z *= length;
-		let _this5 = ex;
+		const _this5 = ex;
 		_this5.x += pos.x;
 		_this5.y += pos.y;
 		_this5.z += pos.z;
 		ey.x *= length;
 		ey.y *= length;
 		ey.z *= length;
-		let _this6 = ey;
+		const _this6 = ey;
 		_this6.x += pos.x;
 		_this6.y += pos.y;
 		_this6.z += pos.z;
 		ez.x *= length;
 		ez.y *= length;
 		ez.z *= length;
-		let _this7 = ez;
+		const _this7 = ez;
 		_this7.x += pos.x;
 		_this7.y += pos.y;
 		_this7.z += pos.z;
 		this.line(pos,ex,colorX);
 		this.line(pos,ey,colorY);
 		this.line(pos,ez,colorZ);
-		let _this8 = this.p;
+		const _this8 = this.p;
 		if(pos != null) {
 			pos.zero();
 			if(_this8.sizeVec3 == _this8.stackVec3.length) {
-				let newArray = new Array(_this8.sizeVec3 << 1);
+				const newArray = new Array(_this8.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this8.sizeVec3;
+				const _g1 = _this8.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this8.stackVec3[i];
 					_this8.stackVec3[i] = null;
 				}
@@ -18621,7 +19023,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this8.stackVec3[_this8.sizeVec3++] = pos;
 		}
-		let _this9 = this.p;
+		const _this9 = this.p;
 		if(rot != null) {
 			rot.e00 = 1;
 			rot.e01 = 0;
@@ -18633,11 +19035,11 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			rot.e21 = 0;
 			rot.e22 = 1;
 			if(_this9.sizeMat3 == _this9.stackMat3.length) {
-				let newArray = new Array(_this9.sizeMat3 << 1);
+				const newArray = new Array(_this9.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this9.sizeMat3;
+				const _g1 = _this9.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this9.stackMat3[i];
 					_this9.stackMat3[i] = null;
 				}
@@ -18645,15 +19047,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this9.stackMat3[_this9.sizeMat3++] = rot;
 		}
-		let _this10 = this.p;
+		const _this10 = this.p;
 		if(ex != null) {
 			ex.zero();
 			if(_this10.sizeVec3 == _this10.stackVec3.length) {
-				let newArray = new Array(_this10.sizeVec3 << 1);
+				const newArray = new Array(_this10.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this10.sizeVec3;
+				const _g1 = _this10.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this10.stackVec3[i];
 					_this10.stackVec3[i] = null;
 				}
@@ -18661,15 +19063,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this10.stackVec3[_this10.sizeVec3++] = ex;
 		}
-		let _this11 = this.p;
+		const _this11 = this.p;
 		if(ey != null) {
 			ey.zero();
 			if(_this11.sizeVec3 == _this11.stackVec3.length) {
-				let newArray = new Array(_this11.sizeVec3 << 1);
+				const newArray = new Array(_this11.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this11.sizeVec3;
+				const _g1 = _this11.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this11.stackVec3[i];
 					_this11.stackVec3[i] = null;
 				}
@@ -18677,15 +19079,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this11.stackVec3[_this11.sizeVec3++] = ey;
 		}
-		let _this12 = this.p;
+		const _this12 = this.p;
 		if(ez != null) {
 			ez.zero();
 			if(_this12.sizeVec3 == _this12.stackVec3.length) {
-				let newArray = new Array(_this12.sizeVec3 << 1);
+				const newArray = new Array(_this12.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this12.sizeVec3;
+				const _g1 = _this12.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this12.stackVec3[i];
 					_this12.stackVec3[i] = null;
 				}
@@ -18694,26 +19096,28 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this12.stackVec3[_this12.sizeVec3++] = ez;
 		}
 	}
+
 	ellipse(center,ex,ey,radiusX,radiusY,color) {
 		this.arc(center,ex,ey,radiusX,radiusY,0,6.28318530717958,false,color);
 	}
+
 	arc(center,ex,ey,radiusX,radiusY,startAngle,endAngle,drawSector,color) {
-		let _this = this.p;
-		let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this = this.p;
+		const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 		_this1.x = ex.x;
 		_this1.y = ex.y;
 		_this1.z = ex.z;
-		let _this2 = _this1;
+		const _this2 = _this1;
 		_this2.x *= radiusX;
 		_this2.y *= radiusX;
 		_this2.z *= radiusX;
 
-		let _this3 = this.p;
-		let _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+		const _this3 = this.p;
+		const _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 		_this4.x = ey.x;
 		_this4.y = ey.y;
 		_this4.z = ey.z;
-		let _this5 = _this4;
+		const _this5 = _this4;
 		_this5.x *= radiusY;
 		_this5.y *= radiusY;
 		_this5.z *= radiusY;
@@ -18727,18 +19131,18 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			n = 1;
 		}
 		let theta = startAngle;
-		let dt = (endAngle - startAngle) / n;
-		let _this6 = this.p;
-		let _this7 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+		const dt = (endAngle - startAngle) / n;
+		const _this6 = this.p;
+		const _this7 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
 		_this7.x = center.x;
 		_this7.y = center.y;
 		_this7.z = center.z;
-		let _this8 = _this7;
-		let s = Math.cos(startAngle);
+		const _this8 = _this7;
+		const s = Math.cos(startAngle);
 		_this8.x += _this2.x * s;
 		_this8.y += _this2.y * s;
 		_this8.z += _this2.z * s;
-		let s1 = Math.sin(startAngle);
+		const s1 = Math.sin(startAngle);
 		_this8.x += _this5.x * s1;
 		_this8.y += _this5.y * s1;
 		_this8.z += _this5.z * s1;
@@ -18747,34 +19151,34 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			this.line(center,_this8,color);
 		}
 		let _g = 0;
-		let _g1 = n;
+		const _g1 = n;
 		while(_g < _g1) {
 			++_g;
 			theta += dt;
-			let _this = this.p;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this.p;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = center.x;
 			_this1.y = center.y;
 			_this1.z = center.z;
-			let _this3 = _this1;
-			let s = Math.cos(theta);
+			const _this3 = _this1;
+			const s = Math.cos(theta);
 			_this3.x += _this2.x * s;
 			_this3.y += _this2.y * s;
 			_this3.z += _this2.z * s;
-			let s1 = Math.sin(theta);
+			const s1 = Math.sin(theta);
 			_this3.x += _this5.x * s1;
 			_this3.y += _this5.y * s1;
 			_this3.z += _this5.z * s1;
 			this.line(prevV,_this3,color);
-			let _this4 = this.p;
+			const _this4 = this.p;
 			if(prevV != null) {
 				prevV.zero();
 				if(_this4.sizeVec3 == _this4.stackVec3.length) {
-					let newArray = new Array(_this4.sizeVec3 << 1);
+					const newArray = new Array(_this4.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this4.sizeVec3;
+					const _g1 = _this4.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this4.stackVec3[i];
 						_this4.stackVec3[i] = null;
 					}
@@ -18787,15 +19191,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		if(drawSector) {
 			this.line(center,prevV,color);
 		}
-		let _this9 = this.p;
+		const _this9 = this.p;
 		if(prevV != null) {
 			prevV.zero();
 			if(_this9.sizeVec3 == _this9.stackVec3.length) {
-				let newArray = new Array(_this9.sizeVec3 << 1);
+				const newArray = new Array(_this9.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this9.sizeVec3;
+				const _g1 = _this9.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this9.stackVec3[i];
 					_this9.stackVec3[i] = null;
 				}
@@ -18803,15 +19207,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this9.stackVec3[_this9.sizeVec3++] = prevV;
 		}
-		let _this10 = this.p;
+		const _this10 = this.p;
 		if(_this2 != null) {
 			_this2.zero();
 			if(_this10.sizeVec3 == _this10.stackVec3.length) {
-				let newArray = new Array(_this10.sizeVec3 << 1);
+				const newArray = new Array(_this10.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this10.sizeVec3;
+				const _g1 = _this10.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this10.stackVec3[i];
 					_this10.stackVec3[i] = null;
 				}
@@ -18819,15 +19223,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this10.stackVec3[_this10.sizeVec3++] = _this2;
 		}
-		let _this11 = this.p;
+		const _this11 = this.p;
 		if(_this5 != null) {
 			_this5.zero();
 			if(_this11.sizeVec3 == _this11.stackVec3.length) {
-				let newArray = new Array(_this11.sizeVec3 << 1);
+				const newArray = new Array(_this11.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this11.sizeVec3;
+				const _g1 = _this11.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this11.stackVec3[i];
 					_this11.stackVec3[i] = null;
 				}
@@ -18836,22 +19240,23 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this11.stackVec3[_this11.sizeVec3++] = _this5;
 		}
 	}
+
 	cone(tf,radius,halfHeight,color) {
-		let _this = this.p;
-		let ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this.p;
-		let ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-		let _this2 = this.p;
-		let ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-		let _this3 = this.p;
-		let o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-		let _this4 = this.p;
-		let m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
-		let v = o;
+		const _this = this.p;
+		const ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this.p;
+		const ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+		const _this2 = this.p;
+		const ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+		const _this3 = this.p;
+		const o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+		const _this4 = this.p;
+		const m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
+		const v = o;
 		v.x = tf._positionX;
 		v.y = tf._positionY;
 		v.z = tf._positionZ;
-		let m1 = m;
+		const m1 = m;
 		m1.e00 = tf._rotation00;
 		m1.e01 = tf._rotation01;
 		m1.e02 = tf._rotation02;
@@ -18864,70 +19269,70 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		ex.init(m.e00,m.e10,m.e20);
 		ey.init(m.e01,m.e11,m.e21);
 		ez.init(m.e02,m.e12,m.e22);
-		let _this5 = this.p;
-		let _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+		const _this5 = this.p;
+		const _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
 		_this6.x = o.x;
 		_this6.y = o.y;
 		_this6.z = o.z;
-		let _this7 = _this6;
+		const _this7 = _this6;
 		_this7.x += ey.x * halfHeight;
 		_this7.y += ey.y * halfHeight;
 		_this7.z += ey.z * halfHeight;
-		let _this8 = this.p;
-		let _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
+		const _this8 = this.p;
+		const _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
 		_this9.x = o.x;
 		_this9.y = o.y;
 		_this9.z = o.z;
-		let _this10 = _this9;
-		let s = -halfHeight;
+		const _this10 = _this9;
+		const s = -halfHeight;
 		_this10.x += ey.x * s;
 		_this10.y += ey.y * s;
 		_this10.z += ey.z * s;
 		if(this.wireframe) {
-			let _this = this.p;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this.p;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = _this10.x;
 			_this1.y = _this10.y;
 			_this1.z = _this10.z;
-			let _this2 = _this1;
-			let s = -radius;
+			const _this2 = _this1;
+			const s = -radius;
 			_this2.x += ex.x * s;
 			_this2.y += ex.y * s;
 			_this2.z += ex.z * s;
 			_this2.x += ez.x * 0;
 			_this2.y += ez.y * 0;
 			_this2.z += ez.z * 0;
-			let _this3 = this.p;
-			let _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+			const _this3 = this.p;
+			const _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 			_this4.x = _this10.x;
 			_this4.y = _this10.y;
 			_this4.z = _this10.z;
-			let _this5 = _this4;
+			const _this5 = _this4;
 			_this5.x += ex.x * radius;
 			_this5.y += ex.y * radius;
 			_this5.z += ex.z * radius;
 			_this5.x += ez.x * 0;
 			_this5.y += ez.y * 0;
 			_this5.z += ez.z * 0;
-			let _this6 = this.p;
-			let _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+			const _this6 = this.p;
+			const _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
 			_this8.x = _this10.x;
 			_this8.y = _this10.y;
 			_this8.z = _this10.z;
-			let _this9 = _this8;
+			const _this9 = _this8;
 			_this9.x += ex.x * 0;
 			_this9.y += ex.y * 0;
 			_this9.z += ex.z * 0;
-			let s1 = -radius;
+			const s1 = -radius;
 			_this9.x += ez.x * s1;
 			_this9.y += ez.y * s1;
 			_this9.z += ez.z * s1;
-			let _this11 = this.p;
-			let _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
+			const _this11 = this.p;
+			const _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
 			_this12.x = _this10.x;
 			_this12.y = _this10.y;
 			_this12.z = _this10.z;
-			let _this13 = _this12;
+			const _this13 = _this12;
 			_this13.x += ex.x * 0;
 			_this13.y += ex.y * 0;
 			_this13.z += ex.z * 0;
@@ -18939,15 +19344,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			this.line(_this7,_this5,color);
 			this.line(_this7,_this9,color);
 			this.line(_this7,_this13,color);
-			let _this14 = this.p;
+			const _this14 = this.p;
 			if(_this2 != null) {
 				_this2.zero();
 				if(_this14.sizeVec3 == _this14.stackVec3.length) {
-					let newArray = new Array(_this14.sizeVec3 << 1);
+					const newArray = new Array(_this14.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this14.sizeVec3;
+					const _g1 = _this14.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this14.stackVec3[i];
 						_this14.stackVec3[i] = null;
 					}
@@ -18955,15 +19360,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this14.stackVec3[_this14.sizeVec3++] = _this2;
 			}
-			let _this15 = this.p;
+			const _this15 = this.p;
 			if(_this5 != null) {
 				_this5.zero();
 				if(_this15.sizeVec3 == _this15.stackVec3.length) {
-					let newArray = new Array(_this15.sizeVec3 << 1);
+					const newArray = new Array(_this15.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this15.sizeVec3;
+					const _g1 = _this15.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this15.stackVec3[i];
 						_this15.stackVec3[i] = null;
 					}
@@ -18971,15 +19376,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this15.stackVec3[_this15.sizeVec3++] = _this5;
 			}
-			let _this16 = this.p;
+			const _this16 = this.p;
 			if(_this9 != null) {
 				_this9.zero();
 				if(_this16.sizeVec3 == _this16.stackVec3.length) {
-					let newArray = new Array(_this16.sizeVec3 << 1);
+					const newArray = new Array(_this16.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this16.sizeVec3;
+					const _g1 = _this16.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this16.stackVec3[i];
 						_this16.stackVec3[i] = null;
 					}
@@ -18987,15 +19392,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this16.stackVec3[_this16.sizeVec3++] = _this9;
 			}
-			let _this17 = this.p;
+			const _this17 = this.p;
 			if(_this13 != null) {
 				_this13.zero();
 				if(_this17.sizeVec3 == _this17.stackVec3.length) {
-					let newArray = new Array(_this17.sizeVec3 << 1);
+					const newArray = new Array(_this17.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this17.sizeVec3;
+					const _g1 = _this17.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this17.stackVec3[i];
 						_this17.stackVec3[i] = null;
 					}
@@ -19004,14 +19409,14 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this17.stackVec3[_this17.sizeVec3++] = _this13;
 			}
 		} else {
-			let invDenom = 1 / Math.sqrt(radius * radius + 4 * halfHeight * halfHeight);
-			let cos = 2 * halfHeight * invDenom;
-			let sin = radius * invDenom;
+			const invDenom = 1 / Math.sqrt(radius * radius + 4 * halfHeight * halfHeight);
+			const cos = 2 * halfHeight * invDenom;
+			const sin = radius * invDenom;
 			let _g = 0;
 			while(_g < 8) {
-				let i = _g++;
-				let _this = this.tmpCircleNorms[i];
-				let v = this.circleCoords[i];
+				const i = _g++;
+				const _this = this.tmpCircleNorms[i];
+				const v = this.circleCoords[i];
 				_this.x = v.x;
 				_this.y = v.y;
 				_this.z = v.z;
@@ -19019,14 +19424,14 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this.y *= cos;
 				_this.z *= cos;
 				_this.y += sin;
-				let _this1 = this.tmpCircleNorms[i];
-				let y = _this1.x * m.e10 + _this1.y * m.e11 + _this1.z * m.e12;
-				let z = _this1.x * m.e20 + _this1.y * m.e21 + _this1.z * m.e22;
+				const _this1 = this.tmpCircleNorms[i];
+				const y = _this1.x * m.e10 + _this1.y * m.e11 + _this1.z * m.e12;
+				const z = _this1.x * m.e20 + _this1.y * m.e21 + _this1.z * m.e22;
 				_this1.x = _this1.x * m.e00 + _this1.y * m.e01 + _this1.z * m.e02;
 				_this1.y = y;
 				_this1.z = z;
-				let _this2 = this.tmpCircleVerts1[i];
-				let v1 = this.circleCoordsShift[i];
+				const _this2 = this.tmpCircleVerts1[i];
+				const v1 = this.circleCoordsShift[i];
 				_this2.x = v1.x;
 				_this2.y = v1.y;
 				_this2.z = v1.z;
@@ -19034,19 +19439,19 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this2.y *= cos;
 				_this2.z *= cos;
 				_this2.y += sin;
-				let _this3 = this.tmpCircleVerts1[i];
-				let y1 = _this3.x * m.e10 + _this3.y * m.e11 + _this3.z * m.e12;
-				let z1 = _this3.x * m.e20 + _this3.y * m.e21 + _this3.z * m.e22;
+				const _this3 = this.tmpCircleVerts1[i];
+				const y1 = _this3.x * m.e10 + _this3.y * m.e11 + _this3.z * m.e12;
+				const z1 = _this3.x * m.e20 + _this3.y * m.e21 + _this3.z * m.e22;
 				_this3.x = _this3.x * m.e00 + _this3.y * m.e01 + _this3.z * m.e02;
 				_this3.y = y1;
 				_this3.z = z1;
-				let _this4 = this.tmpCircleVerts2[i];
-				let v2 = this.circleCoords[i];
+				const _this4 = this.tmpCircleVerts2[i];
+				const v2 = this.circleCoords[i];
 				_this4.x = v2.x;
 				_this4.y = v2.y;
 				_this4.z = v2.z;
-				let y2 = _this4.x * m.e10 + _this4.y * m.e11 + _this4.z * m.e12;
-				let z2 = _this4.x * m.e20 + _this4.y * m.e21 + _this4.z * m.e22;
+				const y2 = _this4.x * m.e10 + _this4.y * m.e11 + _this4.z * m.e12;
+				const z2 = _this4.x * m.e20 + _this4.y * m.e21 + _this4.z * m.e22;
 				_this4.x = _this4.x * m.e00 + _this4.y * m.e01 + _this4.z * m.e02;
 				_this4.y = y2;
 				_this4.z = z2;
@@ -19056,41 +19461,41 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this4.x += o.x;
 				_this4.y += o.y;
 				_this4.z += o.z;
-				let _this5 = this.tmpCircleVerts2[i];
-				let s = -halfHeight;
+				const _this5 = this.tmpCircleVerts2[i];
+				const s = -halfHeight;
 				_this5.x += ey.x * s;
 				_this5.y += ey.y * s;
 				_this5.z += ey.z * s;
 			}
 			let _g1 = 0;
 			while(_g1 < 8) {
-				let i = _g1++;
+				const i = _g1++;
 				let v2 = this.tmpCircleVerts2[i];
 				let v3 = this.tmpCircleVerts2[(i + 1) % 8];
-				let n1 = this.tmpCircleVerts1[i];
+				const n1 = this.tmpCircleVerts1[i];
 				this.triangle(_this7,v2,v3,n1,this.tmpCircleNorms[i],this.tmpCircleNorms[(i + 1) % 8],color);
 				v2 = this.tmpCircleVerts2[(i + 1) % 8];
 				v3 = this.tmpCircleVerts2[i];
-				let _this = this.p;
-				let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+				const _this = this.p;
+				const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 				_this1.x = ey.x;
 				_this1.y = ey.y;
 				_this1.z = ey.z;
-				let _this2 = _this1;
+				const _this2 = _this1;
 				_this2.x = -_this2.x;
 				_this2.y = -_this2.y;
 				_this2.z = -_this2.z;
 
 				this.triangle(_this10,v2,v3,_this2,_this2,_this2,color);
-				let _this3 = this.p;
+				const _this3 = this.p;
 				if(_this2 != null) {
 					_this2.zero();
 					if(_this3.sizeVec3 == _this3.stackVec3.length) {
-						let newArray = new Array(_this3.sizeVec3 << 1);
+						const newArray = new Array(_this3.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this3.sizeVec3;
+						const _g1 = _this3.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this3.stackVec3[i];
 							_this3.stackVec3[i] = null;
 						}
@@ -19100,15 +19505,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 			}
 		}
-		let _this11 = this.p;
+		const _this11 = this.p;
 		if(_this7 != null) {
 			_this7.zero();
 			if(_this11.sizeVec3 == _this11.stackVec3.length) {
-				let newArray = new Array(_this11.sizeVec3 << 1);
+				const newArray = new Array(_this11.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this11.sizeVec3;
+				const _g1 = _this11.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this11.stackVec3[i];
 					_this11.stackVec3[i] = null;
 				}
@@ -19116,15 +19521,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this11.stackVec3[_this11.sizeVec3++] = _this7;
 		}
-		let _this12 = this.p;
+		const _this12 = this.p;
 		if(_this10 != null) {
 			_this10.zero();
 			if(_this12.sizeVec3 == _this12.stackVec3.length) {
-				let newArray = new Array(_this12.sizeVec3 << 1);
+				const newArray = new Array(_this12.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this12.sizeVec3;
+				const _g1 = _this12.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this12.stackVec3[i];
 					_this12.stackVec3[i] = null;
 				}
@@ -19132,15 +19537,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this12.stackVec3[_this12.sizeVec3++] = _this10;
 		}
-		let _this13 = this.p;
+		const _this13 = this.p;
 		if(o != null) {
 			o.zero();
 			if(_this13.sizeVec3 == _this13.stackVec3.length) {
-				let newArray = new Array(_this13.sizeVec3 << 1);
+				const newArray = new Array(_this13.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this13.sizeVec3;
+				const _g1 = _this13.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this13.stackVec3[i];
 					_this13.stackVec3[i] = null;
 				}
@@ -19148,7 +19553,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this13.stackVec3[_this13.sizeVec3++] = o;
 		}
-		let _this14 = this.p;
+		const _this14 = this.p;
 		if(m != null) {
 			m.e00 = 1;
 			m.e01 = 0;
@@ -19160,11 +19565,11 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			m.e21 = 0;
 			m.e22 = 1;
 			if(_this14.sizeMat3 == _this14.stackMat3.length) {
-				let newArray = new Array(_this14.sizeMat3 << 1);
+				const newArray = new Array(_this14.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this14.sizeMat3;
+				const _g1 = _this14.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this14.stackMat3[i];
 					_this14.stackMat3[i] = null;
 				}
@@ -19172,15 +19577,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this14.stackMat3[_this14.sizeMat3++] = m;
 		}
-		let _this15 = this.p;
+		const _this15 = this.p;
 		if(ex != null) {
 			ex.zero();
 			if(_this15.sizeVec3 == _this15.stackVec3.length) {
-				let newArray = new Array(_this15.sizeVec3 << 1);
+				const newArray = new Array(_this15.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this15.sizeVec3;
+				const _g1 = _this15.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this15.stackVec3[i];
 					_this15.stackVec3[i] = null;
 				}
@@ -19188,15 +19593,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this15.stackVec3[_this15.sizeVec3++] = ex;
 		}
-		let _this16 = this.p;
+		const _this16 = this.p;
 		if(ey != null) {
 			ey.zero();
 			if(_this16.sizeVec3 == _this16.stackVec3.length) {
-				let newArray = new Array(_this16.sizeVec3 << 1);
+				const newArray = new Array(_this16.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this16.sizeVec3;
+				const _g1 = _this16.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this16.stackVec3[i];
 					_this16.stackVec3[i] = null;
 				}
@@ -19204,15 +19609,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this16.stackVec3[_this16.sizeVec3++] = ey;
 		}
-		let _this17 = this.p;
+		const _this17 = this.p;
 		if(ez != null) {
 			ez.zero();
 			if(_this17.sizeVec3 == _this17.stackVec3.length) {
-				let newArray = new Array(_this17.sizeVec3 << 1);
+				const newArray = new Array(_this17.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this17.sizeVec3;
+				const _g1 = _this17.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this17.stackVec3[i];
 					_this17.stackVec3[i] = null;
 				}
@@ -19221,22 +19626,23 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this17.stackVec3[_this17.sizeVec3++] = ez;
 		}
 	}
+
 	cylinder(tf,radius,halfHeight,color) {
-		let _this = this.p;
-		let ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this.p;
-		let ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-		let _this2 = this.p;
-		let ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-		let _this3 = this.p;
-		let o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-		let _this4 = this.p;
-		let m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
-		let v = o;
+		const _this = this.p;
+		const ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this.p;
+		const ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+		const _this2 = this.p;
+		const ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+		const _this3 = this.p;
+		const o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+		const _this4 = this.p;
+		const m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
+		const v = o;
 		v.x = tf._positionX;
 		v.y = tf._positionY;
 		v.z = tf._positionZ;
-		let m1 = m;
+		const m1 = m;
 		m1.e00 = tf._rotation00;
 		m1.e01 = tf._rotation01;
 		m1.e02 = tf._rotation02;
@@ -19249,120 +19655,120 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		ex.init(m.e00,m.e10,m.e20);
 		ey.init(m.e01,m.e11,m.e21);
 		ez.init(m.e02,m.e12,m.e22);
-		let _this5 = this.p;
-		let _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+		const _this5 = this.p;
+		const _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
 		_this6.x = o.x;
 		_this6.y = o.y;
 		_this6.z = o.z;
-		let _this7 = _this6;
+		const _this7 = _this6;
 		_this7.x += ey.x * halfHeight;
 		_this7.y += ey.y * halfHeight;
 		_this7.z += ey.z * halfHeight;
-		let _this8 = this.p;
-		let _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
+		const _this8 = this.p;
+		const _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
 		_this9.x = o.x;
 		_this9.y = o.y;
 		_this9.z = o.z;
-		let _this10 = _this9;
-		let s = -halfHeight;
+		const _this10 = _this9;
+		const s = -halfHeight;
 		_this10.x += ey.x * s;
 		_this10.y += ey.y * s;
 		_this10.z += ey.z * s;
 		if(this.wireframe) {
-			let _this = this.p;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this.p;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = _this7.x;
 			_this1.y = _this7.y;
 			_this1.z = _this7.z;
-			let _this2 = _this1;
-			let s = -radius;
+			const _this2 = _this1;
+			const s = -radius;
 			_this2.x += ex.x * s;
 			_this2.y += ex.y * s;
 			_this2.z += ex.z * s;
 			_this2.x += ez.x * 0;
 			_this2.y += ez.y * 0;
 			_this2.z += ez.z * 0;
-			let _this3 = this.p;
-			let _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+			const _this3 = this.p;
+			const _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 			_this4.x = _this7.x;
 			_this4.y = _this7.y;
 			_this4.z = _this7.z;
-			let _this5 = _this4;
+			const _this5 = _this4;
 			_this5.x += ex.x * radius;
 			_this5.y += ex.y * radius;
 			_this5.z += ex.z * radius;
 			_this5.x += ez.x * 0;
 			_this5.y += ez.y * 0;
 			_this5.z += ez.z * 0;
-			let _this6 = this.p;
-			let _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+			const _this6 = this.p;
+			const _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
 			_this8.x = _this7.x;
 			_this8.y = _this7.y;
 			_this8.z = _this7.z;
-			let _this9 = _this8;
+			const _this9 = _this8;
 			_this9.x += ex.x * 0;
 			_this9.y += ex.y * 0;
 			_this9.z += ex.z * 0;
-			let s1 = -radius;
+			const s1 = -radius;
 			_this9.x += ez.x * s1;
 			_this9.y += ez.y * s1;
 			_this9.z += ez.z * s1;
-			let _this11 = this.p;
-			let _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
+			const _this11 = this.p;
+			const _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
 			_this12.x = _this7.x;
 			_this12.y = _this7.y;
 			_this12.z = _this7.z;
-			let _this13 = _this12;
+			const _this13 = _this12;
 			_this13.x += ex.x * 0;
 			_this13.y += ex.y * 0;
 			_this13.z += ex.z * 0;
 			_this13.x += ez.x * radius;
 			_this13.y += ez.y * radius;
 			_this13.z += ez.z * radius;
-			let _this14 = this.p;
-			let _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
+			const _this14 = this.p;
+			const _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
 			_this15.x = _this10.x;
 			_this15.y = _this10.y;
 			_this15.z = _this10.z;
-			let _this16 = _this15;
-			let s2 = -radius;
+			const _this16 = _this15;
+			const s2 = -radius;
 			_this16.x += ex.x * s2;
 			_this16.y += ex.y * s2;
 			_this16.z += ex.z * s2;
 			_this16.x += ez.x * 0;
 			_this16.y += ez.y * 0;
 			_this16.z += ez.z * 0;
-			let _this17 = this.p;
-			let _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
+			const _this17 = this.p;
+			const _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
 			_this18.x = _this10.x;
 			_this18.y = _this10.y;
 			_this18.z = _this10.z;
-			let _this19 = _this18;
+			const _this19 = _this18;
 			_this19.x += ex.x * radius;
 			_this19.y += ex.y * radius;
 			_this19.z += ex.z * radius;
 			_this19.x += ez.x * 0;
 			_this19.y += ez.y * 0;
 			_this19.z += ez.z * 0;
-			let _this20 = this.p;
-			let _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
+			const _this20 = this.p;
+			const _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
 			_this21.x = _this10.x;
 			_this21.y = _this10.y;
 			_this21.z = _this10.z;
-			let _this22 = _this21;
+			const _this22 = _this21;
 			_this22.x += ex.x * 0;
 			_this22.y += ex.y * 0;
 			_this22.z += ex.z * 0;
-			let s3 = -radius;
+			const s3 = -radius;
 			_this22.x += ez.x * s3;
 			_this22.y += ez.y * s3;
 			_this22.z += ez.z * s3;
-			let _this23 = this.p;
-			let _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
+			const _this23 = this.p;
+			const _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
 			_this24.x = _this10.x;
 			_this24.y = _this10.y;
 			_this24.z = _this10.z;
-			let _this25 = _this24;
+			const _this25 = _this24;
 			_this25.x += ex.x * 0;
 			_this25.y += ex.y * 0;
 			_this25.z += ex.z * 0;
@@ -19375,15 +19781,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			this.line(_this5,_this19,color);
 			this.line(_this9,_this22,color);
 			this.line(_this13,_this25,color);
-			let _this26 = this.p;
+			const _this26 = this.p;
 			if(_this2 != null) {
 				_this2.zero();
 				if(_this26.sizeVec3 == _this26.stackVec3.length) {
-					let newArray = new Array(_this26.sizeVec3 << 1);
+					const newArray = new Array(_this26.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this26.sizeVec3;
+					const _g1 = _this26.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this26.stackVec3[i];
 						_this26.stackVec3[i] = null;
 					}
@@ -19391,15 +19797,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this26.stackVec3[_this26.sizeVec3++] = _this2;
 			}
-			let _this27 = this.p;
+			const _this27 = this.p;
 			if(_this5 != null) {
 				_this5.zero();
 				if(_this27.sizeVec3 == _this27.stackVec3.length) {
-					let newArray = new Array(_this27.sizeVec3 << 1);
+					const newArray = new Array(_this27.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this27.sizeVec3;
+					const _g1 = _this27.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this27.stackVec3[i];
 						_this27.stackVec3[i] = null;
 					}
@@ -19407,15 +19813,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this27.stackVec3[_this27.sizeVec3++] = _this5;
 			}
-			let _this28 = this.p;
+			const _this28 = this.p;
 			if(_this9 != null) {
 				_this9.zero();
 				if(_this28.sizeVec3 == _this28.stackVec3.length) {
-					let newArray = new Array(_this28.sizeVec3 << 1);
+					const newArray = new Array(_this28.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this28.sizeVec3;
+					const _g1 = _this28.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this28.stackVec3[i];
 						_this28.stackVec3[i] = null;
 					}
@@ -19423,15 +19829,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this28.stackVec3[_this28.sizeVec3++] = _this9;
 			}
-			let _this29 = this.p;
+			const _this29 = this.p;
 			if(_this13 != null) {
 				_this13.zero();
 				if(_this29.sizeVec3 == _this29.stackVec3.length) {
-					let newArray = new Array(_this29.sizeVec3 << 1);
+					const newArray = new Array(_this29.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this29.sizeVec3;
+					const _g1 = _this29.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this29.stackVec3[i];
 						_this29.stackVec3[i] = null;
 					}
@@ -19439,15 +19845,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this29.stackVec3[_this29.sizeVec3++] = _this13;
 			}
-			let _this30 = this.p;
+			const _this30 = this.p;
 			if(_this16 != null) {
 				_this16.zero();
 				if(_this30.sizeVec3 == _this30.stackVec3.length) {
-					let newArray = new Array(_this30.sizeVec3 << 1);
+					const newArray = new Array(_this30.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this30.sizeVec3;
+					const _g1 = _this30.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this30.stackVec3[i];
 						_this30.stackVec3[i] = null;
 					}
@@ -19455,15 +19861,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this30.stackVec3[_this30.sizeVec3++] = _this16;
 			}
-			let _this31 = this.p;
+			const _this31 = this.p;
 			if(_this19 != null) {
 				_this19.zero();
 				if(_this31.sizeVec3 == _this31.stackVec3.length) {
-					let newArray = new Array(_this31.sizeVec3 << 1);
+					const newArray = new Array(_this31.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this31.sizeVec3;
+					const _g1 = _this31.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this31.stackVec3[i];
 						_this31.stackVec3[i] = null;
 					}
@@ -19471,15 +19877,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this31.stackVec3[_this31.sizeVec3++] = _this19;
 			}
-			let _this32 = this.p;
+			const _this32 = this.p;
 			if(_this22 != null) {
 				_this22.zero();
 				if(_this32.sizeVec3 == _this32.stackVec3.length) {
-					let newArray = new Array(_this32.sizeVec3 << 1);
+					const newArray = new Array(_this32.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this32.sizeVec3;
+					const _g1 = _this32.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this32.stackVec3[i];
 						_this32.stackVec3[i] = null;
 					}
@@ -19487,15 +19893,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this32.stackVec3[_this32.sizeVec3++] = _this22;
 			}
-			let _this33 = this.p;
+			const _this33 = this.p;
 			if(_this25 != null) {
 				_this25.zero();
 				if(_this33.sizeVec3 == _this33.stackVec3.length) {
-					let newArray = new Array(_this33.sizeVec3 << 1);
+					const newArray = new Array(_this33.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this33.sizeVec3;
+					const _g1 = _this33.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this33.stackVec3[i];
 						_this33.stackVec3[i] = null;
 					}
@@ -19506,19 +19912,19 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		} else {
 			let _g = 0;
 			while(_g < 8) {
-				let i = _g++;
-				let _this = this.tmpCircleNorms[i];
-				let v = this.circleCoords[i];
+				const i = _g++;
+				const _this = this.tmpCircleNorms[i];
+				const v = this.circleCoords[i];
 				_this.x = v.x;
 				_this.y = v.y;
 				_this.z = v.z;
-				let y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
-				let z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
+				const y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
+				const z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
 				_this.x = _this.x * m.e00 + _this.y * m.e01 + _this.z * m.e02;
 				_this.y = y;
 				_this.z = z;
-				let _this1 = this.tmpCircleVerts1[i];
-				let v1 = this.tmpCircleNorms[i];
+				const _this1 = this.tmpCircleVerts1[i];
+				const v1 = this.tmpCircleNorms[i];
 				_this1.x = v1.x;
 				_this1.y = v1.y;
 				_this1.z = v1.z;
@@ -19528,24 +19934,24 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this1.x += o.x;
 				_this1.y += o.y;
 				_this1.z += o.z;
-				let _this2 = this.tmpCircleVerts2[i];
-				let v2 = this.tmpCircleVerts1[i];
+				const _this2 = this.tmpCircleVerts2[i];
+				const v2 = this.tmpCircleVerts1[i];
 				_this2.x = v2.x;
 				_this2.y = v2.y;
 				_this2.z = v2.z;
-				let _this3 = this.tmpCircleVerts1[i];
+				const _this3 = this.tmpCircleVerts1[i];
 				_this3.x += ey.x * halfHeight;
 				_this3.y += ey.y * halfHeight;
 				_this3.z += ey.z * halfHeight;
-				let _this4 = this.tmpCircleVerts2[i];
-				let s = -halfHeight;
+				const _this4 = this.tmpCircleVerts2[i];
+				const s = -halfHeight;
 				_this4.x += ey.x * s;
 				_this4.y += ey.y * s;
 				_this4.z += ey.z * s;
 			}
 			let _g1 = 0;
 			while(_g1 < 8) {
-				let i = _g1++;
+				const i = _g1++;
 				let v1;
 				let v2 = this.tmpCircleVerts1[i];
 				let v3 = this.tmpCircleVerts1[(i + 1) % 8];
@@ -19554,26 +19960,26 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 
 				v2 = this.tmpCircleVerts2[(i + 1) % 8];
 				v3 = this.tmpCircleVerts2[i];
-				let _this = this.p;
-				let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+				const _this = this.p;
+				const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 				_this1.x = ey.x;
 				_this1.y = ey.y;
 				_this1.z = ey.z;
-				let _this2 = _this1;
+				const _this2 = _this1;
 				_this2.x = -_this2.x;
 				_this2.y = -_this2.y;
 				_this2.z = -_this2.z;
 
 				this.triangle(_this10,v2,v3,_this2,_this2,_this2,color);
-				let _this3 = this.p;
+				const _this3 = this.p;
 				if(_this2 != null) {
 					_this2.zero();
 					if(_this3.sizeVec3 == _this3.stackVec3.length) {
-						let newArray = new Array(_this3.sizeVec3 << 1);
+						const newArray = new Array(_this3.sizeVec3 << 1);
 						let _g = 0;
-						let _g1 = _this3.sizeVec3;
+						const _g1 = _this3.sizeVec3;
 						while(_g < _g1) {
-							let i = _g++;
+							const i = _g++;
 							newArray[i] = _this3.stackVec3[i];
 							_this3.stackVec3[i] = null;
 						}
@@ -19585,19 +19991,19 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				v2 = this.tmpCircleVerts2[i];
 				v3 = this.tmpCircleVerts2[(i + 1) % 8];
 				n1 = this.tmpCircleNorms[i];
-				let n2 = this.tmpCircleNorms[(i + 1) % 8];
+				const n2 = this.tmpCircleNorms[(i + 1) % 8];
 				this.rect(v1,v2,v3,this.tmpCircleVerts1[(i + 1) % 8],n1,n1,n2,n2,color);
 			}
 		}
-		let _this11 = this.p;
+		const _this11 = this.p;
 		if(_this7 != null) {
 			_this7.zero();
 			if(_this11.sizeVec3 == _this11.stackVec3.length) {
-				let newArray = new Array(_this11.sizeVec3 << 1);
+				const newArray = new Array(_this11.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this11.sizeVec3;
+				const _g1 = _this11.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this11.stackVec3[i];
 					_this11.stackVec3[i] = null;
 				}
@@ -19605,15 +20011,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this11.stackVec3[_this11.sizeVec3++] = _this7;
 		}
-		let _this12 = this.p;
+		const _this12 = this.p;
 		if(_this10 != null) {
 			_this10.zero();
 			if(_this12.sizeVec3 == _this12.stackVec3.length) {
-				let newArray = new Array(_this12.sizeVec3 << 1);
+				const newArray = new Array(_this12.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this12.sizeVec3;
+				const _g1 = _this12.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this12.stackVec3[i];
 					_this12.stackVec3[i] = null;
 				}
@@ -19621,15 +20027,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this12.stackVec3[_this12.sizeVec3++] = _this10;
 		}
-		let _this13 = this.p;
+		const _this13 = this.p;
 		if(o != null) {
 			o.zero();
 			if(_this13.sizeVec3 == _this13.stackVec3.length) {
-				let newArray = new Array(_this13.sizeVec3 << 1);
+				const newArray = new Array(_this13.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this13.sizeVec3;
+				const _g1 = _this13.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this13.stackVec3[i];
 					_this13.stackVec3[i] = null;
 				}
@@ -19637,7 +20043,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this13.stackVec3[_this13.sizeVec3++] = o;
 		}
-		let _this14 = this.p;
+		const _this14 = this.p;
 		if(m != null) {
 			m.e00 = 1;
 			m.e01 = 0;
@@ -19649,11 +20055,11 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			m.e21 = 0;
 			m.e22 = 1;
 			if(_this14.sizeMat3 == _this14.stackMat3.length) {
-				let newArray = new Array(_this14.sizeMat3 << 1);
+				const newArray = new Array(_this14.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this14.sizeMat3;
+				const _g1 = _this14.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this14.stackMat3[i];
 					_this14.stackMat3[i] = null;
 				}
@@ -19661,15 +20067,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this14.stackMat3[_this14.sizeMat3++] = m;
 		}
-		let _this15 = this.p;
+		const _this15 = this.p;
 		if(ex != null) {
 			ex.zero();
 			if(_this15.sizeVec3 == _this15.stackVec3.length) {
-				let newArray = new Array(_this15.sizeVec3 << 1);
+				const newArray = new Array(_this15.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this15.sizeVec3;
+				const _g1 = _this15.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this15.stackVec3[i];
 					_this15.stackVec3[i] = null;
 				}
@@ -19677,15 +20083,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this15.stackVec3[_this15.sizeVec3++] = ex;
 		}
-		let _this16 = this.p;
+		const _this16 = this.p;
 		if(ey != null) {
 			ey.zero();
 			if(_this16.sizeVec3 == _this16.stackVec3.length) {
-				let newArray = new Array(_this16.sizeVec3 << 1);
+				const newArray = new Array(_this16.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this16.sizeVec3;
+				const _g1 = _this16.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this16.stackVec3[i];
 					_this16.stackVec3[i] = null;
 				}
@@ -19693,15 +20099,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this16.stackVec3[_this16.sizeVec3++] = ey;
 		}
-		let _this17 = this.p;
+		const _this17 = this.p;
 		if(ez != null) {
 			ez.zero();
 			if(_this17.sizeVec3 == _this17.stackVec3.length) {
-				let newArray = new Array(_this17.sizeVec3 << 1);
+				const newArray = new Array(_this17.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this17.sizeVec3;
+				const _g1 = _this17.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this17.stackVec3[i];
 					_this17.stackVec3[i] = null;
 				}
@@ -19710,22 +20116,23 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this17.stackVec3[_this17.sizeVec3++] = ez;
 		}
 	}
+
 	capsule(tf,radius,halfHeight,color) {
-		let _this = this.p;
-		let ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this.p;
-		let ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-		let _this2 = this.p;
-		let ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-		let _this3 = this.p;
-		let o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-		let _this4 = this.p;
-		let m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
-		let v = o;
+		const _this = this.p;
+		const ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this.p;
+		const ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+		const _this2 = this.p;
+		const ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+		const _this3 = this.p;
+		const o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+		const _this4 = this.p;
+		const m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
+		const v = o;
 		v.x = tf._positionX;
 		v.y = tf._positionY;
 		v.z = tf._positionZ;
-		let m1 = m;
+		const m1 = m;
 		m1.e00 = tf._rotation00;
 		m1.e01 = tf._rotation01;
 		m1.e02 = tf._rotation02;
@@ -19738,22 +20145,22 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		ex.init(m.e00,m.e10,m.e20);
 		ey.init(m.e01,m.e11,m.e21);
 		ez.init(m.e02,m.e12,m.e22);
-		let vs = this.tmpSphereVerts;
-		let ns = this.tmpSphereNorms;
+		const vs = this.tmpSphereVerts;
+		const ns = this.tmpSphereNorms;
 		let _g = 0;
 		while(_g < 5) {
-			let i2 = _g++;
-			let n = this.tmpSphereVerts[i2].length;
+			const i2 = _g++;
+			const n = this.tmpSphereVerts[i2].length;
 			let _g1 = 0;
 			while(_g1 < n) {
-				let j2 = _g1++;
-				let _this = ns[i2][j2];
-				let v = this.sphereCoords[i2][j2];
+				const j2 = _g1++;
+				const _this = ns[i2][j2];
+				const v = this.sphereCoords[i2][j2];
 				_this.x = v.x;
 				_this.y = v.y;
 				_this.z = v.z;
-				let y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
-				let z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
+				const y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
+				const z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
 				_this.x = _this.x * m.e00 + _this.y * m.e01 + _this.z * m.e02;
 				_this.y = y;
 				_this.z = z;
@@ -19761,17 +20168,17 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		}
 		let _g1 = 0;
 		while(_g1 < 4) {
-			let i = _g1++;
+			const i = _g1++;
 			if(i == 0) {
 				let _g = 0;
 				while(_g < 3) {
-					let i2 = _g++;
-					let n = this.tmpSphereVerts[i2].length;
+					const i2 = _g++;
+					const n = this.tmpSphereVerts[i2].length;
 					let _g1 = 0;
 					while(_g1 < n) {
-						let j2 = _g1++;
-						let _this = vs[i2][j2];
-						let v = ns[i2][j2];
+						const j2 = _g1++;
+						const _this = vs[i2][j2];
+						const v = ns[i2][j2];
 						_this.x = v.x;
 						_this.y = v.y;
 						_this.z = v.z;
@@ -19790,13 +20197,13 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			if(i == 2) {
 				let _g = 2;
 				while(_g < 5) {
-					let i2 = _g++;
-					let n = this.tmpSphereVerts[i2].length;
+					const i2 = _g++;
+					const n = this.tmpSphereVerts[i2].length;
 					let _g1 = 0;
 					while(_g1 < n) {
-						let j2 = _g1++;
-						let _this = vs[i2][j2];
-						let v = ns[i2][j2];
+						const j2 = _g1++;
+						const _this = vs[i2][j2];
+						const v = ns[i2][j2];
 						_this.x = v.x;
 						_this.y = v.y;
 						_this.z = v.z;
@@ -19806,7 +20213,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 						_this.x += o.x;
 						_this.y += o.y;
 						_this.z += o.z;
-						let s = -halfHeight;
+						const s = -halfHeight;
 						_this.x += ey.x * s;
 						_this.y += ey.y * s;
 						_this.z += ey.z * s;
@@ -19815,7 +20222,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			let _g = 0;
 			while(_g < 8) {
-				let j = _g++;
+				const j = _g++;
 				let v1;
 				let v2;
 				let v3;
@@ -19873,120 +20280,120 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 			}
 		}
-		let _this5 = this.p;
-		let _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+		const _this5 = this.p;
+		const _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
 		_this6.x = o.x;
 		_this6.y = o.y;
 		_this6.z = o.z;
-		let _this7 = _this6;
+		const _this7 = _this6;
 		_this7.x += ey.x * halfHeight;
 		_this7.y += ey.y * halfHeight;
 		_this7.z += ey.z * halfHeight;
-		let _this8 = this.p;
-		let _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
+		const _this8 = this.p;
+		const _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
 		_this9.x = o.x;
 		_this9.y = o.y;
 		_this9.z = o.z;
-		let _this10 = _this9;
-		let s = -halfHeight;
+		const _this10 = _this9;
+		const s = -halfHeight;
 		_this10.x += ey.x * s;
 		_this10.y += ey.y * s;
 		_this10.z += ey.z * s;
 		if(this.wireframe) {
-			let _this = this.p;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this.p;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = _this7.x;
 			_this1.y = _this7.y;
 			_this1.z = _this7.z;
-			let _this2 = _this1;
-			let s = -radius;
+			const _this2 = _this1;
+			const s = -radius;
 			_this2.x += ex.x * s;
 			_this2.y += ex.y * s;
 			_this2.z += ex.z * s;
 			_this2.x += ez.x * 0;
 			_this2.y += ez.y * 0;
 			_this2.z += ez.z * 0;
-			let _this3 = this.p;
-			let _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+			const _this3 = this.p;
+			const _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 			_this4.x = _this7.x;
 			_this4.y = _this7.y;
 			_this4.z = _this7.z;
-			let _this5 = _this4;
+			const _this5 = _this4;
 			_this5.x += ex.x * radius;
 			_this5.y += ex.y * radius;
 			_this5.z += ex.z * radius;
 			_this5.x += ez.x * 0;
 			_this5.y += ez.y * 0;
 			_this5.z += ez.z * 0;
-			let _this6 = this.p;
-			let _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+			const _this6 = this.p;
+			const _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
 			_this8.x = _this7.x;
 			_this8.y = _this7.y;
 			_this8.z = _this7.z;
-			let _this9 = _this8;
+			const _this9 = _this8;
 			_this9.x += ex.x * 0;
 			_this9.y += ex.y * 0;
 			_this9.z += ex.z * 0;
-			let s1 = -radius;
+			const s1 = -radius;
 			_this9.x += ez.x * s1;
 			_this9.y += ez.y * s1;
 			_this9.z += ez.z * s1;
-			let _this11 = this.p;
-			let _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
+			const _this11 = this.p;
+			const _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
 			_this12.x = _this7.x;
 			_this12.y = _this7.y;
 			_this12.z = _this7.z;
-			let _this13 = _this12;
+			const _this13 = _this12;
 			_this13.x += ex.x * 0;
 			_this13.y += ex.y * 0;
 			_this13.z += ex.z * 0;
 			_this13.x += ez.x * radius;
 			_this13.y += ez.y * radius;
 			_this13.z += ez.z * radius;
-			let _this14 = this.p;
-			let _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
+			const _this14 = this.p;
+			const _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
 			_this15.x = _this10.x;
 			_this15.y = _this10.y;
 			_this15.z = _this10.z;
-			let _this16 = _this15;
-			let s2 = -radius;
+			const _this16 = _this15;
+			const s2 = -radius;
 			_this16.x += ex.x * s2;
 			_this16.y += ex.y * s2;
 			_this16.z += ex.z * s2;
 			_this16.x += ez.x * 0;
 			_this16.y += ez.y * 0;
 			_this16.z += ez.z * 0;
-			let _this17 = this.p;
-			let _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
+			const _this17 = this.p;
+			const _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
 			_this18.x = _this10.x;
 			_this18.y = _this10.y;
 			_this18.z = _this10.z;
-			let _this19 = _this18;
+			const _this19 = _this18;
 			_this19.x += ex.x * radius;
 			_this19.y += ex.y * radius;
 			_this19.z += ex.z * radius;
 			_this19.x += ez.x * 0;
 			_this19.y += ez.y * 0;
 			_this19.z += ez.z * 0;
-			let _this20 = this.p;
-			let _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
+			const _this20 = this.p;
+			const _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
 			_this21.x = _this10.x;
 			_this21.y = _this10.y;
 			_this21.z = _this10.z;
-			let _this22 = _this21;
+			const _this22 = _this21;
 			_this22.x += ex.x * 0;
 			_this22.y += ex.y * 0;
 			_this22.z += ex.z * 0;
-			let s3 = -radius;
+			const s3 = -radius;
 			_this22.x += ez.x * s3;
 			_this22.y += ez.y * s3;
 			_this22.z += ez.z * s3;
-			let _this23 = this.p;
-			let _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
+			const _this23 = this.p;
+			const _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
 			_this24.x = _this10.x;
 			_this24.y = _this10.y;
 			_this24.z = _this10.z;
-			let _this25 = _this24;
+			const _this25 = _this24;
 			_this25.x += ex.x * 0;
 			_this25.y += ex.y * 0;
 			_this25.z += ex.z * 0;
@@ -19999,15 +20406,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			this.line(_this5,_this19,color);
 			this.line(_this9,_this22,color);
 			this.line(_this13,_this25,color);
-			let _this26 = this.p;
+			const _this26 = this.p;
 			if(_this2 != null) {
 				_this2.zero();
 				if(_this26.sizeVec3 == _this26.stackVec3.length) {
-					let newArray = new Array(_this26.sizeVec3 << 1);
+					const newArray = new Array(_this26.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this26.sizeVec3;
+					const _g1 = _this26.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this26.stackVec3[i];
 						_this26.stackVec3[i] = null;
 					}
@@ -20015,15 +20422,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this26.stackVec3[_this26.sizeVec3++] = _this2;
 			}
-			let _this27 = this.p;
+			const _this27 = this.p;
 			if(_this5 != null) {
 				_this5.zero();
 				if(_this27.sizeVec3 == _this27.stackVec3.length) {
-					let newArray = new Array(_this27.sizeVec3 << 1);
+					const newArray = new Array(_this27.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this27.sizeVec3;
+					const _g1 = _this27.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this27.stackVec3[i];
 						_this27.stackVec3[i] = null;
 					}
@@ -20031,15 +20438,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this27.stackVec3[_this27.sizeVec3++] = _this5;
 			}
-			let _this28 = this.p;
+			const _this28 = this.p;
 			if(_this9 != null) {
 				_this9.zero();
 				if(_this28.sizeVec3 == _this28.stackVec3.length) {
-					let newArray = new Array(_this28.sizeVec3 << 1);
+					const newArray = new Array(_this28.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this28.sizeVec3;
+					const _g1 = _this28.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this28.stackVec3[i];
 						_this28.stackVec3[i] = null;
 					}
@@ -20047,15 +20454,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this28.stackVec3[_this28.sizeVec3++] = _this9;
 			}
-			let _this29 = this.p;
+			const _this29 = this.p;
 			if(_this13 != null) {
 				_this13.zero();
 				if(_this29.sizeVec3 == _this29.stackVec3.length) {
-					let newArray = new Array(_this29.sizeVec3 << 1);
+					const newArray = new Array(_this29.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this29.sizeVec3;
+					const _g1 = _this29.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this29.stackVec3[i];
 						_this29.stackVec3[i] = null;
 					}
@@ -20063,15 +20470,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this29.stackVec3[_this29.sizeVec3++] = _this13;
 			}
-			let _this30 = this.p;
+			const _this30 = this.p;
 			if(_this16 != null) {
 				_this16.zero();
 				if(_this30.sizeVec3 == _this30.stackVec3.length) {
-					let newArray = new Array(_this30.sizeVec3 << 1);
+					const newArray = new Array(_this30.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this30.sizeVec3;
+					const _g1 = _this30.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this30.stackVec3[i];
 						_this30.stackVec3[i] = null;
 					}
@@ -20079,15 +20486,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this30.stackVec3[_this30.sizeVec3++] = _this16;
 			}
-			let _this31 = this.p;
+			const _this31 = this.p;
 			if(_this19 != null) {
 				_this19.zero();
 				if(_this31.sizeVec3 == _this31.stackVec3.length) {
-					let newArray = new Array(_this31.sizeVec3 << 1);
+					const newArray = new Array(_this31.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this31.sizeVec3;
+					const _g1 = _this31.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this31.stackVec3[i];
 						_this31.stackVec3[i] = null;
 					}
@@ -20095,15 +20502,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this31.stackVec3[_this31.sizeVec3++] = _this19;
 			}
-			let _this32 = this.p;
+			const _this32 = this.p;
 			if(_this22 != null) {
 				_this22.zero();
 				if(_this32.sizeVec3 == _this32.stackVec3.length) {
-					let newArray = new Array(_this32.sizeVec3 << 1);
+					const newArray = new Array(_this32.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this32.sizeVec3;
+					const _g1 = _this32.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this32.stackVec3[i];
 						_this32.stackVec3[i] = null;
 					}
@@ -20111,15 +20518,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this32.stackVec3[_this32.sizeVec3++] = _this22;
 			}
-			let _this33 = this.p;
+			const _this33 = this.p;
 			if(_this25 != null) {
 				_this25.zero();
 				if(_this33.sizeVec3 == _this33.stackVec3.length) {
-					let newArray = new Array(_this33.sizeVec3 << 1);
+					const newArray = new Array(_this33.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this33.sizeVec3;
+					const _g1 = _this33.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this33.stackVec3[i];
 						_this33.stackVec3[i] = null;
 					}
@@ -20130,19 +20537,19 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		} else {
 			let _g = 0;
 			while(_g < 8) {
-				let i = _g++;
-				let _this = this.tmpCircleNorms[i];
-				let v = this.circleCoords[i];
+				const i = _g++;
+				const _this = this.tmpCircleNorms[i];
+				const v = this.circleCoords[i];
 				_this.x = v.x;
 				_this.y = v.y;
 				_this.z = v.z;
-				let y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
-				let z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
+				const y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
+				const z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
 				_this.x = _this.x * m.e00 + _this.y * m.e01 + _this.z * m.e02;
 				_this.y = y;
 				_this.z = z;
-				let _this1 = this.tmpCircleVerts1[i];
-				let v1 = this.tmpCircleNorms[i];
+				const _this1 = this.tmpCircleVerts1[i];
+				const v1 = this.tmpCircleNorms[i];
 				_this1.x = v1.x;
 				_this1.y = v1.y;
 				_this1.z = v1.z;
@@ -20152,38 +20559,38 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this1.x += o.x;
 				_this1.y += o.y;
 				_this1.z += o.z;
-				let _this2 = this.tmpCircleVerts2[i];
-				let v2 = this.tmpCircleVerts1[i];
+				const _this2 = this.tmpCircleVerts2[i];
+				const v2 = this.tmpCircleVerts1[i];
 				_this2.x = v2.x;
 				_this2.y = v2.y;
 				_this2.z = v2.z;
-				let _this3 = this.tmpCircleVerts1[i];
+				const _this3 = this.tmpCircleVerts1[i];
 				_this3.x += ey.x * halfHeight;
 				_this3.y += ey.y * halfHeight;
 				_this3.z += ey.z * halfHeight;
-				let _this4 = this.tmpCircleVerts2[i];
-				let s = -halfHeight;
+				const _this4 = this.tmpCircleVerts2[i];
+				const s = -halfHeight;
 				_this4.x += ey.x * s;
 				_this4.y += ey.y * s;
 				_this4.z += ey.z * s;
 			}
 			let _g1 = 0;
 			while(_g1 < 8) {
-				let i = _g1++;
-				let n1 = this.tmpCircleNorms[i];
-				let n2 = this.tmpCircleNorms[(i + 1) % 8];
+				const i = _g1++;
+				const n1 = this.tmpCircleNorms[i];
+				const n2 = this.tmpCircleNorms[(i + 1) % 8];
 				this.rect(this.tmpCircleVerts1[i],this.tmpCircleVerts2[i],this.tmpCircleVerts2[(i + 1) % 8],this.tmpCircleVerts1[(i + 1) % 8],n1,n1,n2,n2,color);
 			}
 		}
-		let _this11 = this.p;
+		const _this11 = this.p;
 		if(_this7 != null) {
 			_this7.zero();
 			if(_this11.sizeVec3 == _this11.stackVec3.length) {
-				let newArray = new Array(_this11.sizeVec3 << 1);
+				const newArray = new Array(_this11.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this11.sizeVec3;
+				const _g1 = _this11.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this11.stackVec3[i];
 					_this11.stackVec3[i] = null;
 				}
@@ -20191,15 +20598,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this11.stackVec3[_this11.sizeVec3++] = _this7;
 		}
-		let _this12 = this.p;
+		const _this12 = this.p;
 		if(_this10 != null) {
 			_this10.zero();
 			if(_this12.sizeVec3 == _this12.stackVec3.length) {
-				let newArray = new Array(_this12.sizeVec3 << 1);
+				const newArray = new Array(_this12.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this12.sizeVec3;
+				const _g1 = _this12.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this12.stackVec3[i];
 					_this12.stackVec3[i] = null;
 				}
@@ -20207,15 +20614,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this12.stackVec3[_this12.sizeVec3++] = _this10;
 		}
-		let _this13 = this.p;
+		const _this13 = this.p;
 		if(o != null) {
 			o.zero();
 			if(_this13.sizeVec3 == _this13.stackVec3.length) {
-				let newArray = new Array(_this13.sizeVec3 << 1);
+				const newArray = new Array(_this13.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this13.sizeVec3;
+				const _g1 = _this13.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this13.stackVec3[i];
 					_this13.stackVec3[i] = null;
 				}
@@ -20223,7 +20630,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this13.stackVec3[_this13.sizeVec3++] = o;
 		}
-		let _this14 = this.p;
+		const _this14 = this.p;
 		if(m != null) {
 			m.e00 = 1;
 			m.e01 = 0;
@@ -20235,11 +20642,11 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			m.e21 = 0;
 			m.e22 = 1;
 			if(_this14.sizeMat3 == _this14.stackMat3.length) {
-				let newArray = new Array(_this14.sizeMat3 << 1);
+				const newArray = new Array(_this14.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this14.sizeMat3;
+				const _g1 = _this14.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this14.stackMat3[i];
 					_this14.stackMat3[i] = null;
 				}
@@ -20247,15 +20654,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this14.stackMat3[_this14.sizeMat3++] = m;
 		}
-		let _this15 = this.p;
+		const _this15 = this.p;
 		if(ex != null) {
 			ex.zero();
 			if(_this15.sizeVec3 == _this15.stackVec3.length) {
-				let newArray = new Array(_this15.sizeVec3 << 1);
+				const newArray = new Array(_this15.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this15.sizeVec3;
+				const _g1 = _this15.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this15.stackVec3[i];
 					_this15.stackVec3[i] = null;
 				}
@@ -20263,15 +20670,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this15.stackVec3[_this15.sizeVec3++] = ex;
 		}
-		let _this16 = this.p;
+		const _this16 = this.p;
 		if(ey != null) {
 			ey.zero();
 			if(_this16.sizeVec3 == _this16.stackVec3.length) {
-				let newArray = new Array(_this16.sizeVec3 << 1);
+				const newArray = new Array(_this16.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this16.sizeVec3;
+				const _g1 = _this16.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this16.stackVec3[i];
 					_this16.stackVec3[i] = null;
 				}
@@ -20279,15 +20686,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this16.stackVec3[_this16.sizeVec3++] = ey;
 		}
-		let _this17 = this.p;
+		const _this17 = this.p;
 		if(ez != null) {
 			ez.zero();
 			if(_this17.sizeVec3 == _this17.stackVec3.length) {
-				let newArray = new Array(_this17.sizeVec3 << 1);
+				const newArray = new Array(_this17.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this17.sizeVec3;
+				const _g1 = _this17.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this17.stackVec3[i];
 					_this17.stackVec3[i] = null;
 				}
@@ -20296,16 +20703,17 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this17.stackVec3[_this17.sizeVec3++] = ez;
 		}
 	}
+
 	sphere(tf,radius,color) {
-		let _this = this.p;
-		let o = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this.p;
-		let m = _this1.sizeMat3 == 0 ? new oimo.common.Mat3() : _this1.stackMat3[--_this1.sizeMat3];
-		let v = o;
+		const _this = this.p;
+		const o = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this.p;
+		const m = _this1.sizeMat3 == 0 ? new oimo.common.Mat3() : _this1.stackMat3[--_this1.sizeMat3];
+		const v = o;
 		v.x = tf._positionX;
 		v.y = tf._positionY;
 		v.z = tf._positionZ;
-		let m1 = m;
+		const m1 = m;
 		m1.e00 = tf._rotation00;
 		m1.e01 = tf._rotation01;
 		m1.e02 = tf._rotation02;
@@ -20315,27 +20723,27 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		m1.e20 = tf._rotation20;
 		m1.e21 = tf._rotation21;
 		m1.e22 = tf._rotation22;
-		let vs = this.tmpSphereVerts;
-		let ns = this.tmpSphereNorms;
+		const vs = this.tmpSphereVerts;
+		const ns = this.tmpSphereNorms;
 		let _g = 0;
 		while(_g < 5) {
-			let i = _g++;
-			let n = this.tmpSphereVerts[i].length;
+			const i = _g++;
+			const n = this.tmpSphereVerts[i].length;
 			let _g1 = 0;
 			while(_g1 < n) {
-				let j = _g1++;
-				let _this = ns[i][j];
-				let v = this.sphereCoords[i][j];
+				const j = _g1++;
+				const _this = ns[i][j];
+				const v = this.sphereCoords[i][j];
 				_this.x = v.x;
 				_this.y = v.y;
 				_this.z = v.z;
-				let y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
-				let z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
+				const y = _this.x * m.e10 + _this.y * m.e11 + _this.z * m.e12;
+				const z = _this.x * m.e20 + _this.y * m.e21 + _this.z * m.e22;
 				_this.x = _this.x * m.e00 + _this.y * m.e01 + _this.z * m.e02;
 				_this.y = y;
 				_this.z = z;
-				let _this1 = vs[i][j];
-				let v1 = ns[i][j];
+				const _this1 = vs[i][j];
+				const v1 = ns[i][j];
 				_this1.x = v1.x;
 				_this1.y = v1.y;
 				_this1.z = v1.z;
@@ -20349,10 +20757,10 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		}
 		let _g1 = 0;
 		while(_g1 < 4) {
-			let i = _g1++;
+			const i = _g1++;
 			let _g = 0;
 			while(_g < 8) {
-				let j = _g++;
+				const j = _g++;
 				let v1;
 				let v2;
 				let v3;
@@ -20410,15 +20818,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 			}
 		}
-		let _this2 = this.p;
+		const _this2 = this.p;
 		if(o != null) {
 			o.zero();
 			if(_this2.sizeVec3 == _this2.stackVec3.length) {
-				let newArray = new Array(_this2.sizeVec3 << 1);
+				const newArray = new Array(_this2.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this2.sizeVec3;
+				const _g1 = _this2.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this2.stackVec3[i];
 					_this2.stackVec3[i] = null;
 				}
@@ -20426,7 +20834,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this2.stackVec3[_this2.sizeVec3++] = o;
 		}
-		let _this3 = this.p;
+		const _this3 = this.p;
 		if(m != null) {
 			m.e00 = 1;
 			m.e01 = 0;
@@ -20438,11 +20846,11 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			m.e21 = 0;
 			m.e22 = 1;
 			if(_this3.sizeMat3 == _this3.stackMat3.length) {
-				let newArray = new Array(_this3.sizeMat3 << 1);
+				const newArray = new Array(_this3.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this3.sizeMat3;
+				const _g1 = _this3.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this3.stackMat3[i];
 					_this3.stackMat3[i] = null;
 				}
@@ -20451,22 +20859,23 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this3.stackMat3[_this3.sizeMat3++] = m;
 		}
 	}
+
 	box(tf,halfExtents,color) {
-		let _this = this.p;
-		let ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
-		let _this1 = this.p;
-		let ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
-		let _this2 = this.p;
-		let ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
-		let _this3 = this.p;
-		let o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
-		let _this4 = this.p;
-		let m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
-		let v = o;
+		const _this = this.p;
+		const ex = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+		const _this1 = this.p;
+		const ey = _this1.sizeVec3 == 0 ? new oimo.common.Vec3() : _this1.stackVec3[--_this1.sizeVec3];
+		const _this2 = this.p;
+		const ez = _this2.sizeVec3 == 0 ? new oimo.common.Vec3() : _this2.stackVec3[--_this2.sizeVec3];
+		const _this3 = this.p;
+		const o = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+		const _this4 = this.p;
+		const m = _this4.sizeMat3 == 0 ? new oimo.common.Mat3() : _this4.stackMat3[--_this4.sizeMat3];
+		const v = o;
 		v.x = tf._positionX;
 		v.y = tf._positionY;
 		v.z = tf._positionZ;
-		let m1 = m;
+		const m1 = m;
 		m1.e00 = tf._rotation00;
 		m1.e01 = tf._rotation01;
 		m1.e02 = tf._rotation02;
@@ -20479,68 +20888,68 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		ex.init(m.e00,m.e10,m.e20);
 		ey.init(m.e01,m.e11,m.e21);
 		ez.init(m.e02,m.e12,m.e22);
-		let hx = halfExtents.x;
-		let hy = halfExtents.y;
-		let hz = halfExtents.z;
-		let _this5 = this.p;
-		let _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
+		const hx = halfExtents.x;
+		const hy = halfExtents.y;
+		const hz = halfExtents.z;
+		const _this5 = this.p;
+		const _this6 = _this5.sizeVec3 == 0 ? new oimo.common.Vec3() : _this5.stackVec3[--_this5.sizeVec3];
 		_this6.x = o.x;
 		_this6.y = o.y;
 		_this6.z = o.z;
-		let _this7 = _this6;
-		let s = -hx;
+		const _this7 = _this6;
+		const s = -hx;
 		_this7.x += ex.x * s;
 		_this7.y += ex.y * s;
 		_this7.z += ex.z * s;
-		let s1 = -hy;
+		const s1 = -hy;
 		_this7.x += ey.x * s1;
 		_this7.y += ey.y * s1;
 		_this7.z += ey.z * s1;
-		let s2 = -hz;
+		const s2 = -hz;
 		_this7.x += ez.x * s2;
 		_this7.y += ez.y * s2;
 		_this7.z += ez.z * s2;
-		let _this8 = this.p;
-		let _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
+		const _this8 = this.p;
+		const _this9 = _this8.sizeVec3 == 0 ? new oimo.common.Vec3() : _this8.stackVec3[--_this8.sizeVec3];
 		_this9.x = o.x;
 		_this9.y = o.y;
 		_this9.z = o.z;
-		let _this10 = _this9;
-		let s3 = -hx;
+		const _this10 = _this9;
+		const s3 = -hx;
 		_this10.x += ex.x * s3;
 		_this10.y += ex.y * s3;
 		_this10.z += ex.z * s3;
-		let s4 = -hy;
+		const s4 = -hy;
 		_this10.x += ey.x * s4;
 		_this10.y += ey.y * s4;
 		_this10.z += ey.z * s4;
 		_this10.x += ez.x * hz;
 		_this10.y += ez.y * hz;
 		_this10.z += ez.z * hz;
-		let _this11 = this.p;
-		let _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
+		const _this11 = this.p;
+		const _this12 = _this11.sizeVec3 == 0 ? new oimo.common.Vec3() : _this11.stackVec3[--_this11.sizeVec3];
 		_this12.x = o.x;
 		_this12.y = o.y;
 		_this12.z = o.z;
-		let _this13 = _this12;
-		let s5 = -hx;
+		const _this13 = _this12;
+		const s5 = -hx;
 		_this13.x += ex.x * s5;
 		_this13.y += ex.y * s5;
 		_this13.z += ex.z * s5;
 		_this13.x += ey.x * hy;
 		_this13.y += ey.y * hy;
 		_this13.z += ey.z * hy;
-		let s6 = -hz;
+		const s6 = -hz;
 		_this13.x += ez.x * s6;
 		_this13.y += ez.y * s6;
 		_this13.z += ez.z * s6;
-		let _this14 = this.p;
-		let _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
+		const _this14 = this.p;
+		const _this15 = _this14.sizeVec3 == 0 ? new oimo.common.Vec3() : _this14.stackVec3[--_this14.sizeVec3];
 		_this15.x = o.x;
 		_this15.y = o.y;
 		_this15.z = o.z;
-		let _this16 = _this15;
-		let s7 = -hx;
+		const _this16 = _this15;
+		const s7 = -hx;
 		_this16.x += ex.x * s7;
 		_this16.y += ex.y * s7;
 		_this16.z += ex.z * s7;
@@ -20550,61 +20959,61 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 		_this16.x += ez.x * hz;
 		_this16.y += ez.y * hz;
 		_this16.z += ez.z * hz;
-		let _this17 = this.p;
-		let _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
+		const _this17 = this.p;
+		const _this18 = _this17.sizeVec3 == 0 ? new oimo.common.Vec3() : _this17.stackVec3[--_this17.sizeVec3];
 		_this18.x = o.x;
 		_this18.y = o.y;
 		_this18.z = o.z;
-		let _this19 = _this18;
+		const _this19 = _this18;
 		_this19.x += ex.x * hx;
 		_this19.y += ex.y * hx;
 		_this19.z += ex.z * hx;
-		let s8 = -hy;
+		const s8 = -hy;
 		_this19.x += ey.x * s8;
 		_this19.y += ey.y * s8;
 		_this19.z += ey.z * s8;
-		let s9 = -hz;
+		const s9 = -hz;
 		_this19.x += ez.x * s9;
 		_this19.y += ez.y * s9;
 		_this19.z += ez.z * s9;
-		let _this20 = this.p;
-		let _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
+		const _this20 = this.p;
+		const _this21 = _this20.sizeVec3 == 0 ? new oimo.common.Vec3() : _this20.stackVec3[--_this20.sizeVec3];
 		_this21.x = o.x;
 		_this21.y = o.y;
 		_this21.z = o.z;
-		let _this22 = _this21;
+		const _this22 = _this21;
 		_this22.x += ex.x * hx;
 		_this22.y += ex.y * hx;
 		_this22.z += ex.z * hx;
-		let s10 = -hy;
+		const s10 = -hy;
 		_this22.x += ey.x * s10;
 		_this22.y += ey.y * s10;
 		_this22.z += ey.z * s10;
 		_this22.x += ez.x * hz;
 		_this22.y += ez.y * hz;
 		_this22.z += ez.z * hz;
-		let _this23 = this.p;
-		let _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
+		const _this23 = this.p;
+		const _this24 = _this23.sizeVec3 == 0 ? new oimo.common.Vec3() : _this23.stackVec3[--_this23.sizeVec3];
 		_this24.x = o.x;
 		_this24.y = o.y;
 		_this24.z = o.z;
-		let _this25 = _this24;
+		const _this25 = _this24;
 		_this25.x += ex.x * hx;
 		_this25.y += ex.y * hx;
 		_this25.z += ex.z * hx;
 		_this25.x += ey.x * hy;
 		_this25.y += ey.y * hy;
 		_this25.z += ey.z * hy;
-		let s11 = -hz;
+		const s11 = -hz;
 		_this25.x += ez.x * s11;
 		_this25.y += ez.y * s11;
 		_this25.z += ez.z * s11;
-		let _this26 = this.p;
-		let _this27 = _this26.sizeVec3 == 0 ? new oimo.common.Vec3() : _this26.stackVec3[--_this26.sizeVec3];
+		const _this26 = this.p;
+		const _this27 = _this26.sizeVec3 == 0 ? new oimo.common.Vec3() : _this26.stackVec3[--_this26.sizeVec3];
 		_this27.x = o.x;
 		_this27.y = o.y;
 		_this27.z = o.z;
-		let _this28 = _this27;
+		const _this28 = _this27;
 		_this28.x += ex.x * hx;
 		_this28.y += ex.y * hx;
 		_this28.z += ex.z * hx;
@@ -20628,30 +21037,30 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			this.line(_this13,_this25,color);
 			this.line(_this16,_this28,color);
 		} else {
-			let _this = this.p;
-			let _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
+			const _this = this.p;
+			const _this1 = _this.sizeVec3 == 0 ? new oimo.common.Vec3() : _this.stackVec3[--_this.sizeVec3];
 			_this1.x = ex.x;
 			_this1.y = ex.y;
 			_this1.z = ex.z;
-			let _this2 = _this1;
+			const _this2 = _this1;
 			_this2.x = -_this2.x;
 			_this2.y = -_this2.y;
 			_this2.z = -_this2.z;
-			let _this3 = this.p;
-			let _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
+			const _this3 = this.p;
+			const _this4 = _this3.sizeVec3 == 0 ? new oimo.common.Vec3() : _this3.stackVec3[--_this3.sizeVec3];
 			_this4.x = ey.x;
 			_this4.y = ey.y;
 			_this4.z = ey.z;
-			let _this5 = _this4;
+			const _this5 = _this4;
 			_this5.x = -_this5.x;
 			_this5.y = -_this5.y;
 			_this5.z = -_this5.z;
-			let _this6 = this.p;
-			let _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
+			const _this6 = this.p;
+			const _this8 = _this6.sizeVec3 == 0 ? new oimo.common.Vec3() : _this6.stackVec3[--_this6.sizeVec3];
 			_this8.x = ez.x;
 			_this8.y = ez.y;
 			_this8.z = ez.z;
-			let _this9 = _this8;
+			const _this9 = _this8;
 			_this9.x = -_this9.x;
 			_this9.y = -_this9.y;
 			_this9.z = -_this9.z;
@@ -20661,15 +21070,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			this.rect(_this13,_this16,_this28,_this25,ey,ey,ey,ey,color);
 			this.rect(_this7,_this13,_this25,_this19,_this9,_this9,_this9,_this9,color);
 			this.rect(_this10,_this22,_this28,_this16,ez,ez,ez,ez,color);
-			let _this11 = this.p;
+			const _this11 = this.p;
 			if(_this2 != null) {
 				_this2.zero();
 				if(_this11.sizeVec3 == _this11.stackVec3.length) {
-					let newArray = new Array(_this11.sizeVec3 << 1);
+					const newArray = new Array(_this11.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this11.sizeVec3;
+					const _g1 = _this11.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this11.stackVec3[i];
 						_this11.stackVec3[i] = null;
 					}
@@ -20677,15 +21086,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this11.stackVec3[_this11.sizeVec3++] = _this2;
 			}
-			let _this12 = this.p;
+			const _this12 = this.p;
 			if(_this5 != null) {
 				_this5.zero();
 				if(_this12.sizeVec3 == _this12.stackVec3.length) {
-					let newArray = new Array(_this12.sizeVec3 << 1);
+					const newArray = new Array(_this12.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this12.sizeVec3;
+					const _g1 = _this12.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this12.stackVec3[i];
 						_this12.stackVec3[i] = null;
 					}
@@ -20693,15 +21102,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				}
 				_this12.stackVec3[_this12.sizeVec3++] = _this5;
 			}
-			let _this14 = this.p;
+			const _this14 = this.p;
 			if(_this9 != null) {
 				_this9.zero();
 				if(_this14.sizeVec3 == _this14.stackVec3.length) {
-					let newArray = new Array(_this14.sizeVec3 << 1);
+					const newArray = new Array(_this14.sizeVec3 << 1);
 					let _g = 0;
-					let _g1 = _this14.sizeVec3;
+					const _g1 = _this14.sizeVec3;
 					while(_g < _g1) {
-						let i = _g++;
+						const i = _g++;
 						newArray[i] = _this14.stackVec3[i];
 						_this14.stackVec3[i] = null;
 					}
@@ -20710,15 +21119,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 				_this14.stackVec3[_this14.sizeVec3++] = _this9;
 			}
 		}
-		let _this29 = this.p;
+		const _this29 = this.p;
 		if(_this7 != null) {
 			_this7.zero();
 			if(_this29.sizeVec3 == _this29.stackVec3.length) {
-				let newArray = new Array(_this29.sizeVec3 << 1);
+				const newArray = new Array(_this29.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this29.sizeVec3;
+				const _g1 = _this29.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this29.stackVec3[i];
 					_this29.stackVec3[i] = null;
 				}
@@ -20726,15 +21135,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this29.stackVec3[_this29.sizeVec3++] = _this7;
 		}
-		let _this30 = this.p;
+		const _this30 = this.p;
 		if(_this10 != null) {
 			_this10.zero();
 			if(_this30.sizeVec3 == _this30.stackVec3.length) {
-				let newArray = new Array(_this30.sizeVec3 << 1);
+				const newArray = new Array(_this30.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this30.sizeVec3;
+				const _g1 = _this30.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this30.stackVec3[i];
 					_this30.stackVec3[i] = null;
 				}
@@ -20742,15 +21151,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this30.stackVec3[_this30.sizeVec3++] = _this10;
 		}
-		let _this31 = this.p;
+		const _this31 = this.p;
 		if(_this13 != null) {
 			_this13.zero();
 			if(_this31.sizeVec3 == _this31.stackVec3.length) {
-				let newArray = new Array(_this31.sizeVec3 << 1);
+				const newArray = new Array(_this31.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this31.sizeVec3;
+				const _g1 = _this31.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this31.stackVec3[i];
 					_this31.stackVec3[i] = null;
 				}
@@ -20758,15 +21167,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this31.stackVec3[_this31.sizeVec3++] = _this13;
 		}
-		let _this32 = this.p;
+		const _this32 = this.p;
 		if(_this16 != null) {
 			_this16.zero();
 			if(_this32.sizeVec3 == _this32.stackVec3.length) {
-				let newArray = new Array(_this32.sizeVec3 << 1);
+				const newArray = new Array(_this32.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this32.sizeVec3;
+				const _g1 = _this32.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this32.stackVec3[i];
 					_this32.stackVec3[i] = null;
 				}
@@ -20774,15 +21183,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this32.stackVec3[_this32.sizeVec3++] = _this16;
 		}
-		let _this33 = this.p;
+		const _this33 = this.p;
 		if(_this19 != null) {
 			_this19.zero();
 			if(_this33.sizeVec3 == _this33.stackVec3.length) {
-				let newArray = new Array(_this33.sizeVec3 << 1);
+				const newArray = new Array(_this33.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this33.sizeVec3;
+				const _g1 = _this33.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this33.stackVec3[i];
 					_this33.stackVec3[i] = null;
 				}
@@ -20790,15 +21199,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this33.stackVec3[_this33.sizeVec3++] = _this19;
 		}
-		let _this34 = this.p;
+		const _this34 = this.p;
 		if(_this22 != null) {
 			_this22.zero();
 			if(_this34.sizeVec3 == _this34.stackVec3.length) {
-				let newArray = new Array(_this34.sizeVec3 << 1);
+				const newArray = new Array(_this34.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this34.sizeVec3;
+				const _g1 = _this34.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this34.stackVec3[i];
 					_this34.stackVec3[i] = null;
 				}
@@ -20806,15 +21215,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this34.stackVec3[_this34.sizeVec3++] = _this22;
 		}
-		let _this35 = this.p;
+		const _this35 = this.p;
 		if(_this25 != null) {
 			_this25.zero();
 			if(_this35.sizeVec3 == _this35.stackVec3.length) {
-				let newArray = new Array(_this35.sizeVec3 << 1);
+				const newArray = new Array(_this35.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this35.sizeVec3;
+				const _g1 = _this35.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this35.stackVec3[i];
 					_this35.stackVec3[i] = null;
 				}
@@ -20822,15 +21231,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this35.stackVec3[_this35.sizeVec3++] = _this25;
 		}
-		let _this36 = this.p;
+		const _this36 = this.p;
 		if(_this28 != null) {
 			_this28.zero();
 			if(_this36.sizeVec3 == _this36.stackVec3.length) {
-				let newArray = new Array(_this36.sizeVec3 << 1);
+				const newArray = new Array(_this36.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this36.sizeVec3;
+				const _g1 = _this36.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this36.stackVec3[i];
 					_this36.stackVec3[i] = null;
 				}
@@ -20838,15 +21247,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this36.stackVec3[_this36.sizeVec3++] = _this28;
 		}
-		let _this37 = this.p;
+		const _this37 = this.p;
 		if(o != null) {
 			o.zero();
 			if(_this37.sizeVec3 == _this37.stackVec3.length) {
-				let newArray = new Array(_this37.sizeVec3 << 1);
+				const newArray = new Array(_this37.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this37.sizeVec3;
+				const _g1 = _this37.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this37.stackVec3[i];
 					_this37.stackVec3[i] = null;
 				}
@@ -20854,7 +21263,7 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this37.stackVec3[_this37.sizeVec3++] = o;
 		}
-		let _this38 = this.p;
+		const _this38 = this.p;
 		if(m != null) {
 			m.e00 = 1;
 			m.e01 = 0;
@@ -20866,11 +21275,11 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			m.e21 = 0;
 			m.e22 = 1;
 			if(_this38.sizeMat3 == _this38.stackMat3.length) {
-				let newArray = new Array(_this38.sizeMat3 << 1);
+				const newArray = new Array(_this38.sizeMat3 << 1);
 				let _g = 0;
-				let _g1 = _this38.sizeMat3;
+				const _g1 = _this38.sizeMat3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this38.stackMat3[i];
 					_this38.stackMat3[i] = null;
 				}
@@ -20878,15 +21287,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this38.stackMat3[_this38.sizeMat3++] = m;
 		}
-		let _this39 = this.p;
+		const _this39 = this.p;
 		if(ex != null) {
 			ex.zero();
 			if(_this39.sizeVec3 == _this39.stackVec3.length) {
-				let newArray = new Array(_this39.sizeVec3 << 1);
+				const newArray = new Array(_this39.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this39.sizeVec3;
+				const _g1 = _this39.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this39.stackVec3[i];
 					_this39.stackVec3[i] = null;
 				}
@@ -20894,15 +21303,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this39.stackVec3[_this39.sizeVec3++] = ex;
 		}
-		let _this40 = this.p;
+		const _this40 = this.p;
 		if(ey != null) {
 			ey.zero();
 			if(_this40.sizeVec3 == _this40.stackVec3.length) {
-				let newArray = new Array(_this40.sizeVec3 << 1);
+				const newArray = new Array(_this40.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this40.sizeVec3;
+				const _g1 = _this40.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this40.stackVec3[i];
 					_this40.stackVec3[i] = null;
 				}
@@ -20910,15 +21319,15 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			}
 			_this40.stackVec3[_this40.sizeVec3++] = ey;
 		}
-		let _this41 = this.p;
+		const _this41 = this.p;
 		if(ez != null) {
 			ez.zero();
 			if(_this41.sizeVec3 == _this41.stackVec3.length) {
-				let newArray = new Array(_this41.sizeVec3 << 1);
+				const newArray = new Array(_this41.sizeVec3 << 1);
 				let _g = 0;
-				let _g1 = _this41.sizeVec3;
+				const _g1 = _this41.sizeVec3;
 				while(_g < _g1) {
-					let i = _g++;
+					const i = _g++;
 					newArray[i] = _this41.stackVec3[i];
 					_this41.stackVec3[i] = null;
 				}
@@ -20927,17 +21336,21 @@ oimo.dynamics.common.DebugDraw = class oimo_dynamics_common_DebugDraw {
 			_this41.stackVec3[_this41.sizeVec3++] = ez;
 		}
 	}
+
 	rect(v1,v2,v3,v4,n1,n2,n3,n4,color) {
 		this.triangle(v1,v2,v3,n1,n2,n3,color);
 		this.triangle(v1,v3,v4,n1,n3,n4,color);
 	}
+
 	point(v,color) {
 	}
+
 	triangle(v1,v2,v3,n1,n2,n3,color) {
 	}
+
 	line(v1,v2,color) {
 	}
-}
+};
 oimo.dynamics.common.DebugDrawStyle = class oimo_dynamics_common_DebugDrawStyle {
 	constructor() {
 		this.basisColorZ = new oimo.common.Vec3(0.0,0.0,1.0);
@@ -20971,9 +21384,9 @@ oimo.dynamics.common.DebugDrawStyle = class oimo_dynamics_common_DebugDrawStyle 
 		this.shapeColor2 = new oimo.common.Vec3(1.0,0.8,0.1);
 		this.shapeColor1 = new oimo.common.Vec3(0.7,0.2,0.4);
 	}
-}
+};
 oimo.dynamics.common.Performance = class oimo_dynamics_common_Performance {
-}
+};
 if(!oimo.dynamics.constraint) oimo.dynamics.constraint = {};
 oimo.dynamics.constraint.ConstraintSolver = class oimo_dynamics_constraint_ConstraintSolver {
 	constructor() {
@@ -20981,31 +21394,40 @@ oimo.dynamics.constraint.ConstraintSolver = class oimo_dynamics_constraint_Const
 		this._b2 = null;
 		this._addedToIsland = false;
 	}
+
 	preSolveVelocity(timeStep) {
 	}
+
 	warmStart(timeStep) {
 	}
+
 	solveVelocity() {
 	}
+
 	postSolveVelocity(timeStep) {
 	}
+
 	preSolvePosition(timeStep) {
 	}
+
 	solvePositionSplitImpulse() {
 	}
+
 	solvePositionNgs(timeStep) {
 	}
+
 	postSolve() {
 	}
-}
+};
 oimo.dynamics.constraint.PositionCorrectionAlgorithm = class oimo_dynamics_constraint_PositionCorrectionAlgorithm {
-}
+};
 if(!oimo.dynamics.constraint.contact) oimo.dynamics.constraint.contact = {};
 oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constraint_contact_ContactConstraint {
 	constructor(manifold) {
 		this._solver = new oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver(this);
 		this._manifold = manifold;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		info.b1 = this._b1;
 		info.b2 = this._b2;
@@ -21027,16 +21449,16 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 		binormalX = this._manifold._binormalX;
 		binormalY = this._manifold._binormalY;
 		binormalZ = this._manifold._binormalZ;
-		let friction = Math.sqrt(this._s1._friction * this._s2._friction);
-		let restitution = Math.sqrt(this._s1._restitution * this._s2._restitution);
-		let num = this._manifold._numPoints;
+		const friction = Math.sqrt(this._s1._friction * this._s2._friction);
+		const restitution = Math.sqrt(this._s1._restitution * this._s2._restitution);
+		const num = this._manifold._numPoints;
 		info.numRows = 0;
 		let _g = 0;
 		while(_g < num) {
-			let p = this._manifold._points[_g++];
+			const p = this._manifold._points[_g++];
 			if(p._depth < 0) {
 				p._disabled = true;
-				let _this = p._impulse;
+				const _this = p._impulse;
 				_this.impulseN = 0;
 				_this.impulseT = 0;
 				_this.impulseB = 0;
@@ -21048,7 +21470,7 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 			} else {
 				p._disabled = false;
 			}
-			let row = info.rows[info.numRows++];
+			const row = info.rows[info.numRows++];
 			row.friction = friction;
 			row.cfm = 0;
 			let j = row.jacobianN;
@@ -21091,7 +21513,7 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 			j.ang2Y = p._relPos2Z * binormalX - p._relPos2X * binormalZ;
 			j.ang2Z = p._relPos2X * binormalY - p._relPos2Y * binormalX;
 			j = row.jacobianN;
-			let rvn = j.lin1X * this._b1._velX + j.lin1Y * this._b1._velY + j.lin1Z * this._b1._velZ + (j.ang1X * this._b1._angVelX + j.ang1Y * this._b1._angVelY + j.ang1Z * this._b1._angVelZ) - (j.lin2X * this._b2._velX + j.lin2Y * this._b2._velY + j.lin2Z * this._b2._velZ + (j.ang2X * this._b2._angVelX + j.ang2Y * this._b2._angVelY + j.ang2Z * this._b2._angVelZ));
+			const rvn = j.lin1X * this._b1._velX + j.lin1Y * this._b1._velY + j.lin1Z * this._b1._velZ + (j.ang1X * this._b1._angVelX + j.ang1Y * this._b1._angVelY + j.ang1Z * this._b1._angVelZ) - (j.lin2X * this._b2._velX + j.lin2Y * this._b2._velY + j.lin2Z * this._b2._velZ + (j.ang2X * this._b2._angVelX + j.ang2Y * this._b2._angVelY + j.ang2Z * this._b2._angVelZ));
 			if(rvn < -oimo.common.Setting.contactEnableBounceThreshold && !p._warmStarted) {
 				row.rhs = -rvn * restitution;
 			} else {
@@ -21099,14 +21521,14 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 			}
 			if(this._positionCorrectionAlgorithm == oimo.dynamics.constraint.PositionCorrectionAlgorithm.BAUMGARTE) {
 				if(p._depth > oimo.common.Setting.linearSlop) {
-					let minRhs = (p._depth - oimo.common.Setting.linearSlop) * oimo.common.Setting.velocityBaumgarte * timeStep.invDt;
+					const minRhs = (p._depth - oimo.common.Setting.linearSlop) * oimo.common.Setting.velocityBaumgarte * timeStep.invDt;
 					if(row.rhs < minRhs) {
 						row.rhs = minRhs;
 					}
 				}
 			}
 			if(!p._warmStarted) {
-				let _this = p._impulse;
+				const _this = p._impulse;
 				_this.impulseN = 0;
 				_this.impulseT = 0;
 				_this.impulseB = 0;
@@ -21118,6 +21540,7 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 			row.impulse = p._impulse;
 		}
 	}
+
 	_getPositionSolverInfo(info) {
 		info.b1 = this._b1;
 		info.b2 = this._b2;
@@ -21127,16 +21550,16 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 		normalX = this._manifold._normalX;
 		normalY = this._manifold._normalY;
 		normalZ = this._manifold._normalZ;
-		let num = this._manifold._numPoints;
+		const num = this._manifold._numPoints;
 		info.numRows = 0;
 		let _g = 0;
 		while(_g < num) {
-			let p = this._manifold._points[_g++];
+			const p = this._manifold._points[_g++];
 			if(p._disabled) {
 				continue;
 			}
-			let row = info.rows[info.numRows++];
-			let j = row.jacobianN;
+			const row = info.rows[info.numRows++];
+			const j = row.jacobianN;
 			j.lin1X = normalX;
 			j.lin1Y = normalY;
 			j.lin1Z = normalZ;
@@ -21156,27 +21579,32 @@ oimo.dynamics.constraint.contact.ContactConstraint = class oimo_dynamics_constra
 			row.impulse = p._impulse;
 		}
 	}
+
 	_syncManifold() {
 		this._manifold._updateDepthsAndPositions(this._tf1,this._tf2);
 	}
+
 	getShape1() {
 		return this._s1;
 	}
+
 	getShape2() {
 		return this._s2;
 	}
+
 	getManifold() {
 		return this._manifold;
 	}
+
 	isTouching() {
 		let _g = 0;
-		let _g1 = this._manifold._numPoints;
+		const _g1 = this._manifold._numPoints;
 		while(_g < _g1) if(this._manifold._points[_g++]._depth >= 0) {
 			return true;
 		}
 		return false;
 	}
-}
+};
 oimo.dynamics.constraint.contact.ContactImpulse = class oimo_dynamics_constraint_contact_ContactImpulse {
 	constructor() {
 		this.impulseN = 0;
@@ -21187,6 +21615,7 @@ oimo.dynamics.constraint.contact.ContactImpulse = class oimo_dynamics_constraint
 		this.impulseLY = 0;
 		this.impulseLZ = 0;
 	}
+
 	copyFrom(imp) {
 		this.impulseN = imp.impulseN;
 		this.impulseT = imp.impulseT;
@@ -21195,7 +21624,7 @@ oimo.dynamics.constraint.contact.ContactImpulse = class oimo_dynamics_constraint
 		this.impulseLY = imp.impulseLY;
 		this.impulseLZ = imp.impulseLZ;
 	}
-}
+};
 oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_contact_Manifold {
 	constructor() {
 		this._normalX = 0;
@@ -21210,14 +21639,15 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 		this._numPoints = 0;
 		this._points = new Array(oimo.common.Setting.maxManifoldPoints);
 		let _g = 0;
-		let _g1 = oimo.common.Setting.maxManifoldPoints;
+		const _g1 = oimo.common.Setting.maxManifoldPoints;
 		while(_g < _g1) this._points[_g++] = new oimo.dynamics.constraint.contact.ManifoldPoint();
 	}
+
 	_clear() {
 		let _g = 0;
-		let _g1 = this._numPoints;
+		const _g1 = this._numPoints;
 		while(_g < _g1) {
-			let _this = this._points[_g++];
+			const _this = this._points[_g++];
 			_this._localPos1X = 0;
 			_this._localPos1Y = 0;
 			_this._localPos1Z = 0;
@@ -21237,7 +21667,7 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 			_this._pos2Y = 0;
 			_this._pos2Z = 0;
 			_this._depth = 0;
-			let _this1 = _this._impulse;
+			const _this1 = _this._impulse;
 			_this1.impulseN = 0;
 			_this1.impulseT = 0;
 			_this1.impulseB = 0;
@@ -21251,16 +21681,17 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 		}
 		this._numPoints = 0;
 	}
+
 	_buildBasis(normal) {
 		this._normalX = normal.x;
 		this._normalY = normal.y;
 		this._normalZ = normal.z;
-		let nx = normal.x;
-		let ny = normal.y;
-		let nz = normal.z;
-		let nx2 = nx * nx;
-		let ny2 = ny * ny;
-		let nz2 = nz * nz;
+		const nx = normal.x;
+		const ny = normal.y;
+		const nz = normal.z;
+		const nx2 = nx * nx;
+		const ny2 = ny * ny;
+		const nz2 = nz * nz;
 		let tx;
 		let ty;
 		let tz;
@@ -21269,7 +21700,7 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 		let bz;
 		if(nx2 < ny2) {
 			if(nx2 < nz2) {
-				let invL = 1 / Math.sqrt(ny2 + nz2);
+				const invL = 1 / Math.sqrt(ny2 + nz2);
 				tx = 0;
 				ty = -nz * invL;
 				tz = ny * invL;
@@ -21277,7 +21708,7 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 				by = -nx * tz;
 				bz = nx * ty;
 			} else {
-				let invL = 1 / Math.sqrt(nx2 + ny2);
+				const invL = 1 / Math.sqrt(nx2 + ny2);
 				tx = -ny * invL;
 				ty = nx * invL;
 				tz = 0;
@@ -21286,7 +21717,7 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 				bz = nx * ty - ny * tx;
 			}
 		} else if(ny2 < nz2) {
-			let invL = 1 / Math.sqrt(nx2 + nz2);
+			const invL = 1 / Math.sqrt(nx2 + nz2);
 			tx = nz * invL;
 			ty = 0;
 			tz = -nx * invL;
@@ -21294,7 +21725,7 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 			by = nz * tx - nx * tz;
 			bz = -ny * tx;
 		} else {
-			let invL = 1 / Math.sqrt(nx2 + ny2);
+			const invL = 1 / Math.sqrt(nx2 + ny2);
 			tx = -ny * invL;
 			ty = nx * invL;
 			tz = 0;
@@ -21309,11 +21740,12 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 		this._binormalY = by;
 		this._binormalZ = bz;
 	}
+
 	_updateDepthsAndPositions(tf1,tf2) {
 		let _g = 0;
-		let _g1 = this._numPoints;
+		const _g1 = this._numPoints;
 		while(_g < _g1) {
-			let p = this._points[_g++];
+			const p = this._points[_g++];
 			let __tmp__X;
 			let __tmp__Y;
 			let __tmp__Z;
@@ -21347,49 +21779,57 @@ oimo.dynamics.constraint.contact.Manifold = class oimo_dynamics_constraint_conta
 			p._depth = -(diffX * this._normalX + diffY * this._normalY + diffZ * this._normalZ);
 		}
 	}
+
 	getNormal() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._normalX;
 		v.y = this._normalY;
 		v.z = this._normalZ;
 		return v;
 	}
+
 	getNormalTo(normal) {
 		normal.x = this._normalX;
 		normal.y = this._normalY;
 		normal.z = this._normalZ;
 	}
+
 	getTangent() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._tangentX;
 		v.y = this._tangentY;
 		v.z = this._tangentZ;
 		return v;
 	}
+
 	getTangentTo(tangent) {
 		tangent.x = this._tangentX;
 		tangent.y = this._tangentY;
 		tangent.z = this._tangentZ;
 	}
+
 	getBinormal() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._binormalX;
 		v.y = this._binormalY;
 		v.z = this._binormalZ;
 		return v;
 	}
+
 	getBinormalTo(binormal) {
 		binormal.x = this._binormalX;
 		binormal.y = this._binormalY;
 		binormal.z = this._binormalZ;
 	}
+
 	getPoints() {
 		return this._points;
 	}
+
 	getNumPoints() {
 		return this._numPoints;
 	}
-}
+};
 oimo.dynamics.constraint.contact.ManifoldPoint = class oimo_dynamics_constraint_contact_ManifoldPoint {
 	constructor() {
 		this._localPos1X = 0;
@@ -21416,69 +21856,80 @@ oimo.dynamics.constraint.contact.ManifoldPoint = class oimo_dynamics_constraint_
 		this._disabled = false;
 		this._id = -1;
 	}
+
 	getPosition1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._pos1X;
 		v.y = this._pos1Y;
 		v.z = this._pos1Z;
 		return v;
 	}
+
 	getPosition1To(position) {
 		position.x = this._pos1X;
 		position.y = this._pos1Y;
 		position.z = this._pos1Z;
 	}
+
 	getPosition2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._pos2X;
 		v.y = this._pos2Y;
 		v.z = this._pos2Z;
 		return v;
 	}
+
 	getPosition2To(position) {
 		position.x = this._pos2X;
 		position.y = this._pos2Y;
 		position.z = this._pos2Z;
 	}
+
 	getDepth() {
 		return this._depth;
 	}
+
 	isWarmStarted() {
 		return this._warmStarted;
 	}
+
 	getNormalImpulse() {
 		return this._impulse.impulseN;
 	}
+
 	getTangentImpulse() {
 		return this._impulse.impulseT;
 	}
+
 	getBinormalImpulse() {
 		return this._impulse.impulseB;
 	}
+
 	isEnabled() {
 		return !this._disabled;
 	}
-}
+};
 oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constraint_contact_ManifoldUpdater {
 	constructor(manifold) {
 		this._manifold = manifold;
 		this.numOldPoints = 0;
 		this.oldPoints = new Array(oimo.common.Setting.maxManifoldPoints);
 		let _g = 0;
-		let _g1 = oimo.common.Setting.maxManifoldPoints;
+		const _g1 = oimo.common.Setting.maxManifoldPoints;
 		while(_g < _g1) this.oldPoints[_g++] = new oimo.dynamics.constraint.contact.ManifoldPoint();
 	}
+
 	removeOutdatedPoints() {
 		let index = this._manifold._numPoints;
 		while(--index >= 0) {
-			let p = this._manifold._points[index];
+			const p = this._manifold._points[index];
 			let diffX;
 			let diffY;
 			let diffZ;
 			diffX = p._pos1X - p._pos2X;
 			diffY = p._pos1Y - p._pos2Y;
 			diffZ = p._pos1Z - p._pos2Z;
-			let dotN = this._manifold._normalX * diffX + this._manifold._normalY * diffY + this._manifold._normalZ * diffZ;
+			const dotN = this._manifold._normalX * diffX + this._manifold._normalY * diffY + this._manifold._normalZ * diffZ;
 			if(dotN > oimo.common.Setting.contactPersistenceThreshold) {
 				this.removeManifoldPoint(index);
 				continue;
@@ -21492,14 +21943,15 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			}
 		}
 	}
+
 	removeManifoldPoint(index) {
-		let lastIndex = --this._manifold._numPoints;
+		const lastIndex = --this._manifold._numPoints;
 		if(index != lastIndex) {
-			let tmp = this._manifold._points[index];
+			const tmp = this._manifold._points[index];
 			this._manifold._points[index] = this._manifold._points[lastIndex];
 			this._manifold._points[lastIndex] = tmp;
 		}
-		let _this = this._manifold._points[lastIndex];
+		const _this = this._manifold._points[lastIndex];
 		_this._localPos1X = 0;
 		_this._localPos1Y = 0;
 		_this._localPos1Z = 0;
@@ -21519,7 +21971,7 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		_this._pos2Y = 0;
 		_this._pos2Z = 0;
 		_this._depth = 0;
-		let _this1 = _this._impulse;
+		const _this1 = _this._impulse;
 		_this1.impulseN = 0;
 		_this1.impulseT = 0;
 		_this1.impulseB = 0;
@@ -21531,16 +21983,17 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		_this._disabled = false;
 		_this._id = -1;
 	}
+
 	addManifoldPoint(point,tf1,tf2) {
-		let num = this._manifold._numPoints;
+		const num = this._manifold._numPoints;
 		if(num == oimo.common.Setting.maxManifoldPoints) {
-			let targetIndex = this.computeTargetIndex(point,tf1,tf2);
-			let _this = this._manifold._points[targetIndex];
-			let v = point.position1;
+			const targetIndex = this.computeTargetIndex(point,tf1,tf2);
+			const _this = this._manifold._points[targetIndex];
+			const v = point.position1;
 			_this._pos1X = v.x;
 			_this._pos1Y = v.y;
 			_this._pos1Z = v.z;
-			let v1 = point.position2;
+			const v1 = point.position2;
 			_this._pos2X = v1.x;
 			_this._pos2Y = v1.y;
 			_this._pos2Z = v1.z;
@@ -21569,7 +22022,7 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			_this._localPos2Y = __tmp__Y1;
 			_this._localPos2Z = __tmp__Z1;
 			_this._depth = point.depth;
-			let _this1 = _this._impulse;
+			const _this1 = _this._impulse;
 			_this1.impulseN = 0;
 			_this1.impulseT = 0;
 			_this1.impulseB = 0;
@@ -21582,12 +22035,12 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			_this._disabled = false;
 			return;
 		}
-		let _this = this._manifold._points[num];
-		let v = point.position1;
+		const _this = this._manifold._points[num];
+		const v = point.position1;
 		_this._pos1X = v.x;
 		_this._pos1Y = v.y;
 		_this._pos1Z = v.z;
-		let v1 = point.position2;
+		const v1 = point.position2;
 		_this._pos2X = v1.x;
 		_this._pos2Y = v1.y;
 		_this._pos2Z = v1.z;
@@ -21616,7 +22069,7 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		_this._localPos2Y = __tmp__Y1;
 		_this._localPos2Z = __tmp__Z1;
 		_this._depth = point.depth;
-		let _this1 = _this._impulse;
+		const _this1 = _this._impulse;
 		_this1.impulseN = 0;
 		_this1.impulseT = 0;
 		_this1.impulseB = 0;
@@ -21629,11 +22082,12 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		_this._disabled = false;
 		this._manifold._numPoints++;
 	}
+
 	computeTargetIndex(newPoint,tf1,tf2) {
-		let p1 = this._manifold._points[0];
-		let p2 = this._manifold._points[1];
-		let p3 = this._manifold._points[2];
-		let p4 = this._manifold._points[3];
+		const p1 = this._manifold._points[0];
+		const p2 = this._manifold._points[1];
+		const p3 = this._manifold._points[2];
+		const p4 = this._manifold._points[3];
 		let maxDepth = p1._depth;
 		let maxDepthIndex = 0;
 		if(p2._depth > maxDepth) {
@@ -21651,22 +22105,22 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		let rp1X;
 		let rp1Y;
 		let rp1Z;
-		let v = newPoint.position1;
+		const v = newPoint.position1;
 		rp1X = v.x;
 		rp1Y = v.y;
 		rp1Z = v.z;
 		rp1X -= tf1._positionX;
 		rp1Y -= tf1._positionY;
 		rp1Z -= tf1._positionZ;
-		let p1X = p2._relPos1X;
-		let p1Y = p2._relPos1Y;
-		let p1Z = p2._relPos1Z;
-		let p2X = p3._relPos1X;
-		let p2Y = p3._relPos1Y;
-		let p2Z = p3._relPos1Z;
-		let p3X = p4._relPos1X;
-		let p3Y = p4._relPos1Y;
-		let p3Z = p4._relPos1Z;
+		const p1X = p2._relPos1X;
+		const p1Y = p2._relPos1Y;
+		const p1Z = p2._relPos1Z;
+		const p2X = p3._relPos1X;
+		const p2Y = p3._relPos1Y;
+		const p2Z = p3._relPos1Z;
+		const p3X = p4._relPos1X;
+		const p3Y = p4._relPos1Y;
+		const p3Z = p4._relPos1Z;
 		let v12X;
 		let v12Y;
 		let v12Z;
@@ -21721,18 +22175,18 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		cross3X = v14Y * v23Z - v14Z * v23Y;
 		cross3Y = v14Z * v23X - v14X * v23Z;
 		cross3Z = v14X * v23Y - v14Y * v23X;
-		let a1 = cross1X * cross1X + cross1Y * cross1Y + cross1Z * cross1Z;
-		let a2 = cross2X * cross2X + cross2Y * cross2Y + cross2Z * cross2Z;
-		let a3 = cross3X * cross3X + cross3Y * cross3Y + cross3Z * cross3Z;
-		let p1X1 = p1._relPos1X;
-		let p1Y1 = p1._relPos1Y;
-		let p1Z1 = p1._relPos1Z;
-		let p2X1 = p3._relPos1X;
-		let p2Y1 = p3._relPos1Y;
-		let p2Z1 = p3._relPos1Z;
-		let p3X1 = p4._relPos1X;
-		let p3Y1 = p4._relPos1Y;
-		let p3Z1 = p4._relPos1Z;
+		const a1 = cross1X * cross1X + cross1Y * cross1Y + cross1Z * cross1Z;
+		const a2 = cross2X * cross2X + cross2Y * cross2Y + cross2Z * cross2Z;
+		const a3 = cross3X * cross3X + cross3Y * cross3Y + cross3Z * cross3Z;
+		const p1X1 = p1._relPos1X;
+		const p1Y1 = p1._relPos1Y;
+		const p1Z1 = p1._relPos1Z;
+		const p2X1 = p3._relPos1X;
+		const p2Y1 = p3._relPos1Y;
+		const p2Z1 = p3._relPos1Z;
+		const p3X1 = p4._relPos1X;
+		const p3Y1 = p4._relPos1Y;
+		const p3Z1 = p4._relPos1Z;
 		let v12X1;
 		let v12Y1;
 		let v12Z1;
@@ -21787,19 +22241,19 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		cross3X1 = v14Y1 * v23Z1 - v14Z1 * v23Y1;
 		cross3Y1 = v14Z1 * v23X1 - v14X1 * v23Z1;
 		cross3Z1 = v14X1 * v23Y1 - v14Y1 * v23X1;
-		let a11 = cross1X1 * cross1X1 + cross1Y1 * cross1Y1 + cross1Z1 * cross1Z1;
-		let a21 = cross2X1 * cross2X1 + cross2Y1 * cross2Y1 + cross2Z1 * cross2Z1;
-		let a31 = cross3X1 * cross3X1 + cross3Y1 * cross3Y1 + cross3Z1 * cross3Z1;
-		let a22 = a11 > a21 ? a11 > a31 ? a11 : a31 : a21 > a31 ? a21 : a31;
-		let p1X2 = p1._relPos1X;
-		let p1Y2 = p1._relPos1Y;
-		let p1Z2 = p1._relPos1Z;
-		let p2X2 = p2._relPos1X;
-		let p2Y2 = p2._relPos1Y;
-		let p2Z2 = p2._relPos1Z;
-		let p3X2 = p4._relPos1X;
-		let p3Y2 = p4._relPos1Y;
-		let p3Z2 = p4._relPos1Z;
+		const a11 = cross1X1 * cross1X1 + cross1Y1 * cross1Y1 + cross1Z1 * cross1Z1;
+		const a21 = cross2X1 * cross2X1 + cross2Y1 * cross2Y1 + cross2Z1 * cross2Z1;
+		const a31 = cross3X1 * cross3X1 + cross3Y1 * cross3Y1 + cross3Z1 * cross3Z1;
+		const a22 = a11 > a21 ? a11 > a31 ? a11 : a31 : a21 > a31 ? a21 : a31;
+		const p1X2 = p1._relPos1X;
+		const p1Y2 = p1._relPos1Y;
+		const p1Z2 = p1._relPos1Z;
+		const p2X2 = p2._relPos1X;
+		const p2Y2 = p2._relPos1Y;
+		const p2Z2 = p2._relPos1Z;
+		const p3X2 = p4._relPos1X;
+		const p3Y2 = p4._relPos1Y;
+		const p3Z2 = p4._relPos1Z;
 		let v12X2;
 		let v12Y2;
 		let v12Z2;
@@ -21854,19 +22308,19 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		cross3X2 = v14Y2 * v23Z2 - v14Z2 * v23Y2;
 		cross3Y2 = v14Z2 * v23X2 - v14X2 * v23Z2;
 		cross3Z2 = v14X2 * v23Y2 - v14Y2 * v23X2;
-		let a12 = cross1X2 * cross1X2 + cross1Y2 * cross1Y2 + cross1Z2 * cross1Z2;
-		let a23 = cross2X2 * cross2X2 + cross2Y2 * cross2Y2 + cross2Z2 * cross2Z2;
-		let a32 = cross3X2 * cross3X2 + cross3Y2 * cross3Y2 + cross3Z2 * cross3Z2;
-		let a33 = a12 > a23 ? a12 > a32 ? a12 : a32 : a23 > a32 ? a23 : a32;
-		let p1X3 = p1._relPos1X;
-		let p1Y3 = p1._relPos1Y;
-		let p1Z3 = p1._relPos1Z;
-		let p2X3 = p2._relPos1X;
-		let p2Y3 = p2._relPos1Y;
-		let p2Z3 = p2._relPos1Z;
-		let p3X3 = p3._relPos1X;
-		let p3Y3 = p3._relPos1Y;
-		let p3Z3 = p3._relPos1Z;
+		const a12 = cross1X2 * cross1X2 + cross1Y2 * cross1Y2 + cross1Z2 * cross1Z2;
+		const a23 = cross2X2 * cross2X2 + cross2Y2 * cross2Y2 + cross2Z2 * cross2Z2;
+		const a32 = cross3X2 * cross3X2 + cross3Y2 * cross3Y2 + cross3Z2 * cross3Z2;
+		const a33 = a12 > a23 ? a12 > a32 ? a12 : a32 : a23 > a32 ? a23 : a32;
+		const p1X3 = p1._relPos1X;
+		const p1Y3 = p1._relPos1Y;
+		const p1Z3 = p1._relPos1Z;
+		const p2X3 = p2._relPos1X;
+		const p2Y3 = p2._relPos1Y;
+		const p2Z3 = p2._relPos1Z;
+		const p3X3 = p3._relPos1X;
+		const p3Y3 = p3._relPos1Y;
+		const p3Z3 = p3._relPos1Z;
 		let v12X3;
 		let v12Y3;
 		let v12Z3;
@@ -21921,10 +22375,10 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		cross3X3 = v14Y3 * v23Z3 - v14Z3 * v23Y3;
 		cross3Y3 = v14Z3 * v23X3 - v14X3 * v23Z3;
 		cross3Z3 = v14X3 * v23Y3 - v14Y3 * v23X3;
-		let a13 = cross1X3 * cross1X3 + cross1Y3 * cross1Y3 + cross1Z3 * cross1Z3;
-		let a24 = cross2X3 * cross2X3 + cross2Y3 * cross2Y3 + cross2Z3 * cross2Z3;
-		let a34 = cross3X3 * cross3X3 + cross3Y3 * cross3Y3 + cross3Z3 * cross3Z3;
-		let a4 = a13 > a24 ? a13 > a34 ? a13 : a34 : a24 > a34 ? a24 : a34;
+		const a13 = cross1X3 * cross1X3 + cross1Y3 * cross1Y3 + cross1Z3 * cross1Z3;
+		const a24 = cross2X3 * cross2X3 + cross2Y3 * cross2Y3 + cross2Z3 * cross2Z3;
+		const a34 = cross3X3 * cross3X3 + cross3Y3 * cross3Y3 + cross3Z3 * cross3Z3;
+		const a4 = a13 > a24 ? a13 > a34 ? a13 : a34 : a24 > a34 ? a24 : a34;
 		let max = a1 > a2 ? a1 > a3 ? a1 : a3 : a2 > a3 ? a2 : a3;
 		let target = 0;
 		if(a22 > max && maxDepthIndex != 1 || maxDepthIndex == 0) {
@@ -21941,11 +22395,12 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		}
 		return target;
 	}
+
 	computeRelativePositions(tf1,tf2) {
-		let num = this._manifold._numPoints;
+		const num = this._manifold._numPoints;
 		let _g = 0;
 		while(_g < num) {
-			let p = this._manifold._points[_g++];
+			const p = this._manifold._points[_g++];
 			let __tmp__X;
 			let __tmp__Y;
 			let __tmp__Z;
@@ -21967,25 +22422,26 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			p._warmStarted = true;
 		}
 	}
+
 	findNearestContactPointIndex(target,tf1,tf2) {
 		let nearestSq = oimo.common.Setting.contactPersistenceThreshold * oimo.common.Setting.contactPersistenceThreshold;
 		let idx = -1;
 		let _g = 0;
-		let _g1 = this._manifold._numPoints;
+		const _g1 = this._manifold._numPoints;
 		while(_g < _g1) {
-			let i = _g++;
-			let mp = this._manifold._points[i];
+			const i = _g++;
+			const mp = this._manifold._points[i];
 			let rp1X;
 			let rp1Y;
 			let rp1Z;
 			let rp2X;
 			let rp2Y;
 			let rp2Z;
-			let v = target.position1;
+			const v = target.position1;
 			rp1X = v.x;
 			rp1Y = v.y;
 			rp1Z = v.z;
-			let v1 = target.position2;
+			const v1 = target.position2;
 			rp2X = v1.x;
 			rp2Y = v1.y;
 			rp2Z = v1.z;
@@ -22007,9 +22463,9 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			diff2X = mp._relPos2X - rp2X;
 			diff2Y = mp._relPos2Y - rp2Y;
 			diff2Z = mp._relPos2Z - rp2Z;
-			let sq1 = diff1X * diff1X + diff1Y * diff1Y + diff1Z * diff1Z;
-			let sq2 = diff2X * diff2X + diff2Y * diff2Y + diff2Z * diff2Z;
-			let d = sq1 < sq2 ? sq1 : sq2;
+			const sq1 = diff1X * diff1X + diff1Y * diff1Y + diff1Z * diff1Z;
+			const sq2 = diff2X * diff2X + diff2Y * diff2Y + diff2Z * diff2Z;
+			const d = sq1 < sq2 ? sq1 : sq2;
 			if(d < nearestSq) {
 				nearestSq = d;
 				idx = i;
@@ -22017,14 +22473,15 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		}
 		return idx;
 	}
+
 	totalUpdate(result,tf1,tf2) {
 		this.numOldPoints = this._manifold._numPoints;
 		let _g = 0;
-		let _g1 = this.numOldPoints;
+		const _g1 = this.numOldPoints;
 		while(_g < _g1) {
-			let i = _g++;
-			let _this = this.oldPoints[i];
-			let cp = this._manifold._points[i];
+			const i = _g++;
+			const _this = this.oldPoints[i];
+			const cp = this._manifold._points[i];
 			_this._localPos1X = cp._localPos1X;
 			_this._localPos1Y = cp._localPos1Y;
 			_this._localPos1Z = cp._localPos1Z;
@@ -22049,18 +22506,18 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			_this._warmStarted = cp._warmStarted;
 			_this._disabled = false;
 		}
-		let num = result.numPoints;
+		const num = result.numPoints;
 		this._manifold._numPoints = num;
 		let _g2 = 0;
 		while(_g2 < num) {
-			let i = _g2++;
-			let p = this._manifold._points[i];
-			let ref = result.points[i];
-			let v = ref.position1;
+			const i = _g2++;
+			const p = this._manifold._points[i];
+			const ref = result.points[i];
+			const v = ref.position1;
 			p._pos1X = v.x;
 			p._pos1Y = v.y;
 			p._pos1Z = v.z;
-			let v1 = ref.position2;
+			const v1 = ref.position2;
 			p._pos2X = v1.x;
 			p._pos2Y = v1.y;
 			p._pos2Z = v1.z;
@@ -22089,7 +22546,7 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			p._localPos2Y = __tmp__Y1;
 			p._localPos2Z = __tmp__Z1;
 			p._depth = ref.depth;
-			let _this = p._impulse;
+			const _this = p._impulse;
 			_this.impulseN = 0;
 			_this.impulseT = 0;
 			_this.impulseB = 0;
@@ -22101,9 +22558,9 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			p._warmStarted = false;
 			p._disabled = false;
 			let _g = 0;
-			let _g1 = this.numOldPoints;
+			const _g1 = this.numOldPoints;
 			while(_g < _g1) {
-				let ocp = this.oldPoints[_g++];
+				const ocp = this.oldPoints[_g++];
 				if(p._id == ocp._id) {
 					p._impulse.copyFrom(ocp._impulse);
 					p._warmStarted = true;
@@ -22112,22 +22569,23 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 			}
 		}
 	}
+
 	incrementalUpdate(result,tf1,tf2) {
 		this._manifold._updateDepthsAndPositions(tf1,tf2);
 		let _g = 0;
-		let _g1 = this._manifold._numPoints;
+		const _g1 = this._manifold._numPoints;
 		while(_g < _g1) this._manifold._points[_g++]._warmStarted = true;
-		let newPoint = result.points[0];
-		let index = this.findNearestContactPointIndex(newPoint,tf1,tf2);
+		const newPoint = result.points[0];
+		const index = this.findNearestContactPointIndex(newPoint,tf1,tf2);
 		if(index == -1) {
 			this.addManifoldPoint(newPoint,tf1,tf2);
 		} else {
-			let cp = this._manifold._points[index];
-			let v = newPoint.position1;
+			const cp = this._manifold._points[index];
+			const v = newPoint.position1;
 			cp._pos1X = v.x;
 			cp._pos1Y = v.y;
 			cp._pos1Z = v.z;
-			let v1 = newPoint.position2;
+			const v1 = newPoint.position2;
 			cp._pos2X = v1.x;
 			cp._pos2Y = v1.y;
 			cp._pos2Z = v1.z;
@@ -22159,7 +22617,7 @@ oimo.dynamics.constraint.contact.ManifoldUpdater = class oimo_dynamics_constrain
 		}
 		this.removeOutdatedPoints();
 	}
-}
+};
 if(!oimo.dynamics.constraint.info) oimo.dynamics.constraint.info = {};
 oimo.dynamics.constraint.info.JacobianRow = class oimo_dynamics_constraint_info_JacobianRow {
 	constructor() {
@@ -22177,6 +22635,7 @@ oimo.dynamics.constraint.info.JacobianRow = class oimo_dynamics_constraint_info_
 		this.ang2Z = 0;
 		this.flag = 0;
 	}
+
 	updateSparsity() {
 		this.flag = 0;
 		if(!(this.lin1X == 0 && this.lin1Y == 0 && this.lin1Z == 0) || !(this.lin2X == 0 && this.lin2Y == 0 && this.lin2Z == 0)) {
@@ -22186,7 +22645,7 @@ oimo.dynamics.constraint.info.JacobianRow = class oimo_dynamics_constraint_info_
 			this.flag |= 2;
 		}
 	}
-}
+};
 if(!oimo.dynamics.constraint.info.contact) oimo.dynamics.constraint.info.contact = {};
 oimo.dynamics.constraint.info.contact.ContactSolverInfo = class oimo_dynamics_constraint_info_contact_ContactSolverInfo {
 	constructor() {
@@ -22195,10 +22654,10 @@ oimo.dynamics.constraint.info.contact.ContactSolverInfo = class oimo_dynamics_co
 		this.numRows = 0;
 		this.rows = new Array(oimo.common.Setting.maxManifoldPoints);
 		let _g = 0;
-		let _g1 = this.rows.length;
+		const _g1 = this.rows.length;
 		while(_g < _g1) this.rows[_g++] = new oimo.dynamics.constraint.info.contact.ContactSolverInfoRow();
 	}
-}
+};
 oimo.dynamics.constraint.info.contact.ContactSolverInfoRow = class oimo_dynamics_constraint_info_contact_ContactSolverInfoRow {
 	constructor() {
 		this.jacobianN = new oimo.dynamics.constraint.info.JacobianRow();
@@ -22209,7 +22668,7 @@ oimo.dynamics.constraint.info.contact.ContactSolverInfoRow = class oimo_dynamics
 		this.friction = 0;
 		this.impulse = null;
 	}
-}
+};
 if(!oimo.dynamics.constraint.info.joint) oimo.dynamics.constraint.info.joint = {};
 oimo.dynamics.constraint.info.joint.JointSolverInfo = class oimo_dynamics_constraint_info_joint_JointSolverInfo {
 	constructor() {
@@ -22218,10 +22677,10 @@ oimo.dynamics.constraint.info.joint.JointSolverInfo = class oimo_dynamics_constr
 		this.numRows = 0;
 		this.rows = new Array(oimo.common.Setting.maxJacobianRows);
 		let _g = 0;
-		let _g1 = this.rows.length;
+		const _g1 = this.rows.length;
 		while(_g < _g1) this.rows[_g++] = new oimo.dynamics.constraint.info.joint.JointSolverInfoRow();
 	}
-}
+};
 oimo.dynamics.constraint.info.joint.JointSolverInfoRow = class oimo_dynamics_constraint_info_joint_JointSolverInfoRow {
 	constructor() {
 		this.jacobian = new oimo.dynamics.constraint.info.JacobianRow();
@@ -22233,7 +22692,7 @@ oimo.dynamics.constraint.info.joint.JointSolverInfoRow = class oimo_dynamics_con
 		this.motorMaxImpulse = 0;
 		this.impulse = null;
 	}
-}
+};
 if(!oimo.dynamics.constraint.joint) oimo.dynamics.constraint.joint = {};
 oimo.dynamics.constraint.joint.BasisTracker = class oimo_dynamics_constraint_joint_BasisTracker {
 	constructor(joint) {
@@ -22248,7 +22707,7 @@ oimo.dynamics.constraint.joint.BasisTracker = class oimo_dynamics_constraint_joi
 		this.zY = 0;
 		this.zZ = 0;
 	}
-}
+};
 oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Joint {
 	constructor(config,type) {
 		this._link1 = new oimo.dynamics.constraint.joint.JointLink(this);
@@ -22269,11 +22728,11 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			this._solver = new oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver(this);
 			break;
 		}
-		let v = config.localAnchor1;
+		const v = config.localAnchor1;
 		this._localAnchor1X = v.x;
 		this._localAnchor1Y = v.y;
 		this._localAnchor1Z = v.z;
-		let v1 = config.localAnchor2;
+		const v1 = config.localAnchor2;
 		this._localAnchor2X = v1.x;
 		this._localAnchor2Y = v1.y;
 		this._localAnchor2Z = v1.z;
@@ -22309,9 +22768,10 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._localBasisZ2Z = 0;
 		this._impulses = new Array(oimo.common.Setting.maxJacobianRows);
 		let _g = 0;
-		let _g1 = oimo.common.Setting.maxJacobianRows;
+		const _g1 = oimo.common.Setting.maxJacobianRows;
 		while(_g < _g1) this._impulses[_g++] = new oimo.dynamics.constraint.joint.JointImpulse();
 	}
+
 	buildLocalBasesFromX() {
 		if(this._localBasisX1X * this._localBasisX1X + this._localBasisX1Y * this._localBasisX1Y + this._localBasisX1Z * this._localBasisX1Z == 0) {
 			this._localBasisX1X = 1;
@@ -22357,12 +22817,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = this._localBasisX1X;
-			let y1 = this._localBasisX1Y;
-			let z1 = this._localBasisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = this._localBasisX1X;
+			const y1 = this._localBasisX1Y;
+			const z1 = this._localBasisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -22398,7 +22858,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			cX = this._localBasisX1Y * this._localBasisX2Z - this._localBasisX1Z * this._localBasisX2Y;
 			cY = this._localBasisX1Z * this._localBasisX2X - this._localBasisX1X * this._localBasisX2Z;
 			cZ = this._localBasisX1X * this._localBasisX2Y - this._localBasisX1Y * this._localBasisX2X;
-			let w = Math.sqrt((1 + d) * 0.5);
+			const w = Math.sqrt((1 + d) * 0.5);
 			d = 0.5 / w;
 			cX *= d;
 			cY *= d;
@@ -22408,22 +22868,22 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			slerpQZ = cZ;
 			slerpQW = w;
 		}
-		let x = slerpQX;
-		let y = slerpQY;
-		let z = slerpQZ;
-		let w = slerpQW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = slerpQX;
+		const y = slerpQY;
+		const z = slerpQZ;
+		const w = slerpQW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		slerpM00 = 1 - yy - zz;
 		slerpM01 = xy - wz;
 		slerpM02 = xz + wy;
@@ -22433,12 +22893,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		slerpM20 = xz - wy;
 		slerpM21 = yz + wx;
 		slerpM22 = 1 - xx - yy;
-		let x1 = this._localBasisX1X;
-		let y1 = this._localBasisX1Y;
-		let z1 = this._localBasisX1Z;
-		let x21 = x1 * x1;
-		let y21 = y1 * y1;
-		let z21 = z1 * z1;
+		const x1 = this._localBasisX1X;
+		const y1 = this._localBasisX1Y;
+		const z1 = this._localBasisX1Z;
+		const x21 = x1 * x1;
+		const y21 = y1 * y1;
+		const z21 = z1 * z1;
 		let d1;
 		if(x21 < y21) {
 			if(x21 < z21) {
@@ -22494,6 +22954,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._localBasisZ2Y = __tmp__Y2;
 		this._localBasisZ2Z = __tmp__Z2;
 	}
+
 	buildLocalBasesFromXY() {
 		if(this._localBasisX1X * this._localBasisX1X + this._localBasisX1Y * this._localBasisX1Y + this._localBasisX1Z * this._localBasisX1Z == 0) {
 			this._localBasisX1X = 1;
@@ -22528,12 +22989,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._localBasisZ2Y = this._localBasisX2Z * this._localBasisY2X - this._localBasisX2X * this._localBasisY2Z;
 		this._localBasisZ2Z = this._localBasisX2X * this._localBasisY2Y - this._localBasisX2Y * this._localBasisY2X;
 		if(this._localBasisZ1X * this._localBasisZ1X + this._localBasisZ1Y * this._localBasisZ1Y + this._localBasisZ1Z * this._localBasisZ1Z == 0) {
-			let x1 = this._localBasisX1X;
-			let y1 = this._localBasisX1Y;
-			let z1 = this._localBasisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = this._localBasisX1X;
+			const y1 = this._localBasisX1Y;
+			const z1 = this._localBasisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -22574,12 +23035,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			this._localBasisY1Z = this._localBasisZ1X * this._localBasisX1Y - this._localBasisZ1Y * this._localBasisX1X;
 		}
 		if(this._localBasisZ2X * this._localBasisZ2X + this._localBasisZ2Y * this._localBasisZ2Y + this._localBasisZ2Z * this._localBasisZ2Z == 0) {
-			let x1 = this._localBasisX2X;
-			let y1 = this._localBasisX2Y;
-			let z1 = this._localBasisX2Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = this._localBasisX2X;
+			const y1 = this._localBasisX2Y;
+			const z1 = this._localBasisX2Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -22620,6 +23081,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			this._localBasisY2Z = this._localBasisZ2X * this._localBasisX2Y - this._localBasisZ2Y * this._localBasisX2X;
 		}
 	}
+
 	buildLocalBasesFromX1Z2() {
 		if(this._localBasisX1X * this._localBasisX1X + this._localBasisX1Y * this._localBasisX1Y + this._localBasisX1Z * this._localBasisX1Z == 0) {
 			this._localBasisX1X = 1;
@@ -22647,8 +23109,8 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			this._localBasisZ2Y *= l;
 			this._localBasisZ2Z *= l;
 		}
-		let tf1 = this._b1._transform;
-		let tf2 = this._b2._transform;
+		const tf1 = this._b1._transform;
+		const tf2 = this._b2._transform;
 		let worldX1X;
 		let worldX1Y;
 		let worldX1Z;
@@ -22686,12 +23148,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		worldYY = worldZ2Z * worldX1X - worldZ2X * worldX1Z;
 		worldYZ = worldZ2X * worldX1Y - worldZ2Y * worldX1X;
 		if(worldYX * worldYX + worldYY * worldYY + worldYZ * worldYZ == 0) {
-			let x1 = worldX1X;
-			let y1 = worldX1Y;
-			let z1 = worldX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = worldX1X;
+			const y1 = worldX1Y;
+			const z1 = worldX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -22778,6 +23240,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._localBasisZ2Y = __tmp__Y7;
 		this._localBasisZ2Z = __tmp__Z7;
 	}
+
 	buildLocalBasesFromXY1X2() {
 		if(this._localBasisX1X * this._localBasisX1X + this._localBasisX1Y * this._localBasisX1Y + this._localBasisX1Z * this._localBasisX1Z == 0) {
 			this._localBasisX1X = 1;
@@ -22796,12 +23259,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._localBasisZ1Y = this._localBasisX1Z * this._localBasisY1X - this._localBasisX1X * this._localBasisY1Z;
 		this._localBasisZ1Z = this._localBasisX1X * this._localBasisY1Y - this._localBasisX1Y * this._localBasisY1X;
 		if(this._localBasisZ1X * this._localBasisZ1X + this._localBasisZ1Y * this._localBasisZ1Y + this._localBasisZ1Z * this._localBasisZ1Z == 0) {
-			let x1 = this._localBasisX1X;
-			let y1 = this._localBasisX1Y;
-			let z1 = this._localBasisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = this._localBasisX1X;
+			const y1 = this._localBasisX1Y;
+			const z1 = this._localBasisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -22859,12 +23322,12 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = this._localBasisX1X;
-			let y1 = this._localBasisX1Y;
-			let z1 = this._localBasisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = this._localBasisX1X;
+			const y1 = this._localBasisX1Y;
+			const z1 = this._localBasisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -22900,7 +23363,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			cX = this._localBasisX1Y * this._localBasisX2Z - this._localBasisX1Z * this._localBasisX2Y;
 			cY = this._localBasisX1Z * this._localBasisX2X - this._localBasisX1X * this._localBasisX2Z;
 			cZ = this._localBasisX1X * this._localBasisX2Y - this._localBasisX1Y * this._localBasisX2X;
-			let w = Math.sqrt((1 + d) * 0.5);
+			const w = Math.sqrt((1 + d) * 0.5);
 			d = 0.5 / w;
 			cX *= d;
 			cY *= d;
@@ -22910,22 +23373,22 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			slerpQZ = cZ;
 			slerpQW = w;
 		}
-		let x = slerpQX;
-		let y = slerpQY;
-		let z = slerpQZ;
-		let w = slerpQW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = slerpQX;
+		const y = slerpQY;
+		const z = slerpQZ;
+		const w = slerpQW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		slerpM00 = 1 - yy - zz;
 		slerpM01 = xy - wz;
 		slerpM02 = xz + wy;
@@ -22963,6 +23426,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._localBasisZ2Y = __tmp__Y2;
 		this._localBasisZ2Z = __tmp__Z2;
 	}
+
 	setSolverInfoRowLinear(row,diff,lm,mass,sd,timeStep,isPositionPart) {
 		let cfmFactor;
 		let erp;
@@ -22973,14 +23437,14 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		} else {
 			if(sd.frequency > 0) {
 				slop = 0;
-				let omega = 6.28318530717958 * sd.frequency;
+				const omega = 6.28318530717958 * sd.frequency;
 				let zeta = sd.dampingRatio;
 				if(zeta < oimo.common.Setting.minSpringDamperDampingRatio) {
 					zeta = oimo.common.Setting.minSpringDamperDampingRatio;
 				}
-				let h = timeStep.dt;
-				let c = 2 * zeta * omega;
-				let k = omega * omega;
+				const h = timeStep.dt;
+				const c = 2 * zeta * omega;
+				const k = omega * omega;
 				if(sd.useSymplecticEuler) {
 					cfmFactor = 1 / (h * c);
 					erp = k / c;
@@ -23000,8 +23464,8 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 				row.motorMaxImpulse = 0;
 			}
 		}
-		let lower = lm.lowerLimit;
-		let upper = lm.upperLimit;
+		const lower = lm.lowerLimit;
+		const upper = lm.upperLimit;
 		let minImp;
 		let maxImp;
 		let error;
@@ -23037,6 +23501,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		row.cfm = cfmFactor * (mass == 0 ? 0 : 1 / mass);
 		row.rhs = error * erp;
 	}
+
 	setSolverInfoRowAngular(row,diff,lm,mass,sd,timeStep,isPositionPart) {
 		let cfmFactor;
 		let erp;
@@ -23047,14 +23512,14 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		} else {
 			if(sd.frequency > 0) {
 				slop = 0;
-				let omega = 6.28318530717958 * sd.frequency;
+				const omega = 6.28318530717958 * sd.frequency;
 				let zeta = sd.dampingRatio;
 				if(zeta < oimo.common.Setting.minSpringDamperDampingRatio) {
 					zeta = oimo.common.Setting.minSpringDamperDampingRatio;
 				}
-				let h = timeStep.dt;
-				let c = 2 * zeta * omega;
-				let k = omega * omega;
+				const h = timeStep.dt;
+				const c = 2 * zeta * omega;
+				const k = omega * omega;
 				if(sd.useSymplecticEuler) {
 					cfmFactor = 1 / (h * c);
 					erp = k / c;
@@ -23074,9 +23539,9 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 				row.motorMaxImpulse = 0;
 			}
 		}
-		let lower = lm.lowerLimit;
-		let upper = lm.upperLimit;
-		let mid = (lower + upper) * 0.5;
+		const lower = lm.lowerLimit;
+		const upper = lm.upperLimit;
+		const mid = (lower + upper) * 0.5;
 		diff -= mid;
 		diff = ((diff + 3.14159265358979) % 6.28318530717958 + 6.28318530717958) % 6.28318530717958 - 3.14159265358979;
 		diff += mid;
@@ -23115,6 +23580,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		row.cfm = cfmFactor * (mass == 0 ? 0 : 1 / mass);
 		row.rhs = error * erp;
 	}
+
 	getErp(timeStep,isPositionPart) {
 		if(isPositionPart) {
 			return 1;
@@ -23124,6 +23590,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			return 0;
 		}
 	}
+
 	computeEffectiveInertiaMoment(axisX,axisY,axisZ) {
 		let ia1X;
 		let ia1Y;
@@ -23152,8 +23619,8 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		let invI1 = ia1X * axisX + ia1Y * axisY + ia1Z * axisZ;
 		let invI2 = ia2X * axisX + ia2Y * axisY + ia2Z * axisZ;
 		if(invI1 > 0) {
-			let dot = axisX * this._relativeAnchor1X + axisY * this._relativeAnchor1Y + axisZ * this._relativeAnchor1Z;
-			let projsq = this._relativeAnchor1X * this._relativeAnchor1X + this._relativeAnchor1Y * this._relativeAnchor1Y + this._relativeAnchor1Z * this._relativeAnchor1Z - dot * dot;
+			const dot = axisX * this._relativeAnchor1X + axisY * this._relativeAnchor1Y + axisZ * this._relativeAnchor1Z;
+			const projsq = this._relativeAnchor1X * this._relativeAnchor1X + this._relativeAnchor1Y * this._relativeAnchor1Y + this._relativeAnchor1Z * this._relativeAnchor1Z - dot * dot;
 			if(projsq > 0) {
 				if(this._b1._invMass > 0) {
 					invI1 = 1 / (1 / invI1 + this._b1._mass * projsq);
@@ -23163,8 +23630,8 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			}
 		}
 		if(invI2 > 0) {
-			let dot = axisX * this._relativeAnchor2X + axisY * this._relativeAnchor2Y + axisZ * this._relativeAnchor2Z;
-			let projsq = this._relativeAnchor2X * this._relativeAnchor2X + this._relativeAnchor2Y * this._relativeAnchor2Y + this._relativeAnchor2Z * this._relativeAnchor2Z - dot * dot;
+			const dot = axisX * this._relativeAnchor2X + axisY * this._relativeAnchor2Y + axisZ * this._relativeAnchor2Z;
+			const projsq = this._relativeAnchor2X * this._relativeAnchor2X + this._relativeAnchor2Y * this._relativeAnchor2Y + this._relativeAnchor2Z * this._relativeAnchor2Z - dot * dot;
 			if(projsq > 0) {
 				if(this._b2._invMass > 0) {
 					invI2 = 1 / (1 / invI2 + this._b2._mass * projsq);
@@ -23179,6 +23646,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			return 1 / (invI1 + invI2);
 		}
 	}
+
 	computeEffectiveInertiaMoment2(axis1X,axis1Y,axis1Z,axis2X,axis2Y,axis2Z) {
 		let ia1X;
 		let ia1Y;
@@ -23207,9 +23675,9 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		let invI1 = ia1X * axis1X + ia1Y * axis1Y + ia1Z * axis1Z;
 		let invI2 = ia2X * axis2X + ia2Y * axis2Y + ia2Z * axis2Z;
 		if(invI1 > 0) {
-			let rsq = this._relativeAnchor1X * this._relativeAnchor1X + this._relativeAnchor1Y * this._relativeAnchor1Y + this._relativeAnchor1Z * this._relativeAnchor1Z;
-			let dot = axis1X * this._relativeAnchor1X + axis1Y * this._relativeAnchor1Y + axis1Z * this._relativeAnchor1Z;
-			let projsq = rsq * rsq - dot * dot;
+			const rsq = this._relativeAnchor1X * this._relativeAnchor1X + this._relativeAnchor1Y * this._relativeAnchor1Y + this._relativeAnchor1Z * this._relativeAnchor1Z;
+			const dot = axis1X * this._relativeAnchor1X + axis1Y * this._relativeAnchor1Y + axis1Z * this._relativeAnchor1Z;
+			const projsq = rsq * rsq - dot * dot;
 			if(projsq > 0) {
 				if(this._b1._invMass > 0) {
 					invI1 = 1 / (1 / invI1 + this._b1._mass * projsq);
@@ -23219,9 +23687,9 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			}
 		}
 		if(invI2 > 0) {
-			let rsq = this._relativeAnchor2X * this._relativeAnchor2X + this._relativeAnchor2Y * this._relativeAnchor2Y + this._relativeAnchor2Z * this._relativeAnchor2Z;
-			let dot = axis2X * this._relativeAnchor2X + axis2Y * this._relativeAnchor2Y + axis2Z * this._relativeAnchor2Z;
-			let projsq = rsq * rsq - dot * dot;
+			const rsq = this._relativeAnchor2X * this._relativeAnchor2X + this._relativeAnchor2Y * this._relativeAnchor2Y + this._relativeAnchor2Z * this._relativeAnchor2Z;
+			const dot = axis2X * this._relativeAnchor2X + axis2Y * this._relativeAnchor2Y + axis2Z * this._relativeAnchor2Z;
+			const projsq = rsq * rsq - dot * dot;
 			if(projsq > 0) {
 				if(this._b2._invMass > 0) {
 					invI2 = 1 / (1 / invI2 + this._b2._mass * projsq);
@@ -23236,9 +23704,10 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 			return 1 / (invI1 + invI2);
 		}
 	}
+
 	_syncAnchors() {
-		let tf1 = this._b1._transform;
-		let tf2 = this._b2._transform;
+		const tf1 = this._b1._transform;
+		const tf2 = this._b2._transform;
 		let __tmp__X;
 		let __tmp__Y;
 		let __tmp__Z;
@@ -23318,86 +23787,101 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		this._basisZ2Y = __tmp__Y7;
 		this._basisZ2Z = __tmp__Z7;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		info.b1 = this._b1;
 		info.b2 = this._b2;
 		info.numRows = 0;
 	}
+
 	_getPositionSolverInfo(info) {
 		info.b1 = this._b1;
 		info.b2 = this._b2;
 		info.numRows = 0;
 	}
+
 	_checkDestruction() {
-		let torqueSq = this._appliedTorqueX * this._appliedTorqueX + this._appliedTorqueY * this._appliedTorqueY + this._appliedTorqueZ * this._appliedTorqueZ;
+		const torqueSq = this._appliedTorqueX * this._appliedTorqueX + this._appliedTorqueY * this._appliedTorqueY + this._appliedTorqueZ * this._appliedTorqueZ;
 		if(this._breakForce > 0 && this._appliedForceX * this._appliedForceX + this._appliedForceY * this._appliedForceY + this._appliedForceZ * this._appliedForceZ > this._breakForce * this._breakForce) {
 			this._world.removeJoint(this);
 			return;
 		}
 		if(this._breakTorque > 0 && torqueSq > this._breakTorque * this._breakTorque) {
 			this._world.removeJoint(this);
-			return;
+			
 		}
 	}
+
 	getRigidBody1() {
 		return this._b1;
 	}
+
 	getRigidBody2() {
 		return this._b2;
 	}
+
 	getType() {
 		return this._type;
 	}
+
 	getAnchor1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._anchor1X;
 		v.y = this._anchor1Y;
 		v.z = this._anchor1Z;
 		return v;
 	}
+
 	getAnchor2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._anchor2X;
 		v.y = this._anchor2Y;
 		v.z = this._anchor2Z;
 		return v;
 	}
+
 	getAnchor1To(anchor) {
 		anchor.x = this._anchor1X;
 		anchor.y = this._anchor1Y;
 		anchor.z = this._anchor1Z;
 	}
+
 	getAnchor2To(anchor) {
 		anchor.x = this._anchor2X;
 		anchor.y = this._anchor2Y;
 		anchor.z = this._anchor2Z;
 	}
+
 	getLocalAnchor1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localAnchor1X;
 		v.y = this._localAnchor1Y;
 		v.z = this._localAnchor1Z;
 		return v;
 	}
+
 	getLocalAnchor2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localAnchor2X;
 		v.y = this._localAnchor2Y;
 		v.z = this._localAnchor2Z;
 		return v;
 	}
+
 	getLocalAnchor1To(localAnchor) {
 		localAnchor.x = this._localAnchor1X;
 		localAnchor.y = this._localAnchor1Y;
 		localAnchor.z = this._localAnchor1Z;
 	}
+
 	getLocalAnchor2To(localAnchor) {
 		localAnchor.x = this._localAnchor2X;
 		localAnchor.y = this._localAnchor2Y;
 		localAnchor.z = this._localAnchor2Z;
 	}
+
 	getBasis1() {
-		let m = new oimo.common.Mat3();
+		const m = new oimo.common.Mat3();
 		let b00;
 		let b01;
 		let b02;
@@ -23427,8 +23911,9 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		m.e22 = b22;
 		return m;
 	}
+
 	getBasis2() {
-		let m = new oimo.common.Mat3();
+		const m = new oimo.common.Mat3();
 		let b00;
 		let b01;
 		let b02;
@@ -23458,6 +23943,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		m.e22 = b22;
 		return m;
 	}
+
 	getBasis1To(basis) {
 		let b00;
 		let b01;
@@ -23487,6 +23973,7 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		basis.e21 = b21;
 		basis.e22 = b22;
 	}
+
 	getBasis2To(basis) {
 		let b00;
 		let b01;
@@ -23516,75 +24003,89 @@ oimo.dynamics.constraint.joint.Joint = class oimo_dynamics_constraint_joint_Join
 		basis.e21 = b21;
 		basis.e22 = b22;
 	}
+
 	getAllowCollision() {
 		return this._allowCollision;
 	}
+
 	setAllowCollision(allowCollision) {
 		this._allowCollision = allowCollision;
 	}
+
 	getBreakForce() {
 		return this._breakForce;
 	}
+
 	setBreakForce(breakForce) {
 		this._breakForce = breakForce;
 	}
+
 	getBreakTorque() {
 		return this._breakTorque;
 	}
+
 	setBreakTorque(breakTorque) {
 		this._breakTorque = breakTorque;
 	}
+
 	getPositionCorrectionAlgorithm() {
 		return this._positionCorrectionAlgorithm;
 	}
+
 	setPositionCorrectionAlgorithm(positionCorrectionAlgorithm) {
 		switch(positionCorrectionAlgorithm) {
 		case 0:case 1:case 2:
 			break;
 		default:
-			throw new Error("invalid position correction algorithm id: " + positionCorrectionAlgorithm);
+			throw new Error('invalid position correction algorithm id: ' + positionCorrectionAlgorithm);
 		}
 		this._positionCorrectionAlgorithm = positionCorrectionAlgorithm;
 	}
+
 	getAppliedForce() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._appliedForceX;
 		v.y = this._appliedForceY;
 		v.z = this._appliedForceZ;
 		return v;
 	}
+
 	getAppliedForceTo(appliedForce) {
 		appliedForce.x = this._appliedForceX;
 		appliedForce.y = this._appliedForceY;
 		appliedForce.z = this._appliedForceZ;
 	}
+
 	getAppliedTorque() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._appliedTorqueX;
 		v.y = this._appliedTorqueY;
 		v.z = this._appliedTorqueZ;
 		return v;
 	}
+
 	getAppliedTorqueTo(appliedTorque) {
 		appliedTorque.x = this._appliedTorqueX;
 		appliedTorque.y = this._appliedTorqueY;
 		appliedTorque.z = this._appliedTorqueZ;
 	}
+
 	getPrev() {
 		return this._prev;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint_joint_CylindricalJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,2);
-		let v = config.localAxis1;
+		const v = config.localAxis1;
 		this._localBasisX1X = v.x;
 		this._localBasisX1Y = v.y;
 		this._localBasisX1Z = v.z;
-		let v1 = config.localAxis2;
+		const v1 = config.localAxis2;
 		this._localBasisX2X = v1.x;
 		this._localBasisX2Y = v1.y;
 		this._localBasisX2Z = v1.z;
@@ -23601,19 +24102,20 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		this._rotSd = config.rotationalSpringDamper.clone();
 		this._rotLm = config.rotationalLimitMotor.clone();
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
-		let erp = this.getErp(timeStep,isPositionPart);
-		let linRhsY = this.linearErrorY * erp;
-		let linRhsZ = this.linearErrorZ * erp;
-		let angRhsY = this.angularErrorY * erp;
-		let angRhsZ = this.angularErrorZ * erp;
+		const erp = this.getErp(timeStep,isPositionPart);
+		const linRhsY = this.linearErrorY * erp;
+		const linRhsZ = this.linearErrorZ * erp;
+		const angRhsY = this.angularErrorY * erp;
+		const angRhsZ = this.angularErrorZ * erp;
 		let j;
-		let translationalMotorMass = 1 / (this._b1._invMass + this._b2._invMass);
-		let rotationalMotorMass = this.computeEffectiveInertiaMoment(this._basis.xX,this._basis.xY,this._basis.xZ);
+		const translationalMotorMass = 1 / (this._b1._invMass + this._b2._invMass);
+		const rotationalMotorMass = this.computeEffectiveInertiaMoment(this._basis.xX,this._basis.xY,this._basis.xZ);
 		if(this._translSd.frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[0];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[0];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -23649,9 +24151,9 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			j.ang2Y = this._relativeAnchor2Z * this._basis.xX - this._relativeAnchor2X * this._basis.xZ;
 			j.ang2Z = this._relativeAnchor2X * this._basis.xY - this._relativeAnchor2Y * this._basis.xX;
 		}
-		let impulse = this._impulses[1];
-		let row = info.rows[info.numRows++];
-		let _this = row.jacobian;
+		const impulse = this._impulses[1];
+		const row = info.rows[info.numRows++];
+		const _this = row.jacobian;
 		_this.lin1X = 0;
 		_this.lin1Y = 0;
 		_this.lin1Z = 0;
@@ -23689,9 +24191,9 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		j.ang2X = this._relativeAnchor2Y * this._basis.yZ - this._relativeAnchor2Z * this._basis.yY;
 		j.ang2Y = this._relativeAnchor2Z * this._basis.yX - this._relativeAnchor2X * this._basis.yZ;
 		j.ang2Z = this._relativeAnchor2X * this._basis.yY - this._relativeAnchor2Y * this._basis.yX;
-		let impulse1 = this._impulses[2];
-		let row1 = info.rows[info.numRows++];
-		let _this1 = row1.jacobian;
+		const impulse1 = this._impulses[2];
+		const row1 = info.rows[info.numRows++];
+		const _this1 = row1.jacobian;
 		_this1.lin1X = 0;
 		_this1.lin1Y = 0;
 		_this1.lin1Z = 0;
@@ -23730,9 +24232,9 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		j.ang2Y = this._relativeAnchor2Z * this._basis.zX - this._relativeAnchor2X * this._basis.zZ;
 		j.ang2Z = this._relativeAnchor2X * this._basis.zY - this._relativeAnchor2Y * this._basis.zX;
 		if(this._rotSd.frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[3];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[3];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -23762,9 +24264,9 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			j.ang2Y = this._basis.xY;
 			j.ang2Z = this._basis.xZ;
 		}
-		let impulse2 = this._impulses[4];
-		let row2 = info.rows[info.numRows++];
-		let _this2 = row2.jacobian;
+		const impulse2 = this._impulses[4];
+		const row2 = info.rows[info.numRows++];
+		const _this2 = row2.jacobian;
 		_this2.lin1X = 0;
 		_this2.lin1Y = 0;
 		_this2.lin1Z = 0;
@@ -23796,9 +24298,9 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		j.ang2X = this._basis.yX;
 		j.ang2Y = this._basis.yY;
 		j.ang2Z = this._basis.yZ;
-		let impulse3 = this._impulses[5];
-		let row3 = info.rows[info.numRows++];
-		let _this3 = row3.jacobian;
+		const impulse3 = this._impulses[5];
+		const row3 = info.rows[info.numRows++];
+		const _this3 = row3.jacobian;
 		_this3.lin1X = 0;
 		_this3.lin1Y = 0;
 		_this3.lin1Z = 0;
@@ -23831,11 +24333,12 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		j.ang2Y = this._basis.zY;
 		j.ang2Z = this._basis.zZ;
 	}
+
 	_syncAnchors() {
 		super._syncAnchors();
-		let _this = this._basis;
-		let invM1 = _this.joint._b1._invMass;
-		let invM2 = _this.joint._b2._invMass;
+		const _this = this._basis;
+		const invM1 = _this.joint._b1._invMass;
+		const invM2 = _this.joint._b2._invMass;
 		let qX;
 		let qY;
 		let qZ;
@@ -23877,12 +24380,12 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = _this.joint._basisX1X;
-			let y1 = _this.joint._basisX1Y;
-			let z1 = _this.joint._basisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = _this.joint._basisX1X;
+			const y1 = _this.joint._basisX1Y;
+			const z1 = _this.joint._basisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -23918,7 +24421,7 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			cX = _this.joint._basisX1Y * _this.joint._basisX2Z - _this.joint._basisX1Z * _this.joint._basisX2Y;
 			cY = _this.joint._basisX1Z * _this.joint._basisX2X - _this.joint._basisX1X * _this.joint._basisX2Z;
 			cZ = _this.joint._basisX1X * _this.joint._basisX2Y - _this.joint._basisX1Y * _this.joint._basisX2X;
-			let w = Math.sqrt((1 + d) * 0.5);
+			const w = Math.sqrt((1 + d) * 0.5);
 			d = 0.5 / w;
 			cX *= d;
 			cY *= d;
@@ -23978,7 +24481,7 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			slerpQZ = q2Z * l;
 			slerpQW = q2W * l;
 		} else {
-			let theta = invM1 / (invM1 + invM2) * Math.acos(d1);
+			const theta = invM1 / (invM1 + invM2) * Math.acos(d1);
 			q2X += q1X * -d1;
 			q2Y += q1Y * -d1;
 			q2Z += q1Z * -d1;
@@ -23991,8 +24494,8 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			q2Y *= l;
 			q2Z *= l;
 			q2W *= l;
-			let sin = Math.sin(theta);
-			let cos = Math.cos(theta);
+			const sin = Math.sin(theta);
+			const cos = Math.cos(theta);
 			q1X *= cos;
 			q1Y *= cos;
 			q1Z *= cos;
@@ -24002,22 +24505,22 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			slerpQZ = q1Z + q2Z * sin;
 			slerpQW = q1W + q2W * sin;
 		}
-		let x = slerpQX;
-		let y = slerpQY;
-		let z = slerpQZ;
-		let w = slerpQW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = slerpQX;
+		const y = slerpQY;
+		const z = slerpQZ;
+		const w = slerpQW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		slerpM00 = 1 - yy - zz;
 		slerpM01 = xy - wz;
 		slerpM02 = xz + wy;
@@ -24047,12 +24550,12 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = prevXX;
-			let y1 = prevXY;
-			let z1 = prevXZ;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = prevXX;
+			const y1 = prevXY;
+			const z1 = prevXZ;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -24088,7 +24591,7 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			cX = prevXY * newXZ - prevXZ * newXY;
 			cY = prevXZ * newXX - prevXX * newXZ;
 			cZ = prevXX * newXY - prevXY * newXX;
-			let w = Math.sqrt((1 + d2) * 0.5);
+			const w = Math.sqrt((1 + d2) * 0.5);
 			d2 = 0.5 / w;
 			cX *= d2;
 			cY *= d2;
@@ -24098,22 +24601,22 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			slerpQZ = cZ;
 			slerpQW = w;
 		}
-		let x1 = slerpQX;
-		let y1 = slerpQY;
-		let z1 = slerpQZ;
-		let w1 = slerpQW;
-		let x21 = 2 * x1;
-		let y21 = 2 * y1;
-		let z21 = 2 * z1;
-		let xx1 = x1 * x21;
-		let yy1 = y1 * y21;
-		let zz1 = z1 * z21;
-		let xy1 = x1 * y21;
-		let yz1 = y1 * z21;
-		let xz1 = x1 * z21;
-		let wx1 = w1 * x21;
-		let wy1 = w1 * y21;
-		let wz1 = w1 * z21;
+		const x1 = slerpQX;
+		const y1 = slerpQY;
+		const z1 = slerpQZ;
+		const w1 = slerpQW;
+		const x21 = 2 * x1;
+		const y21 = 2 * y1;
+		const z21 = 2 * z1;
+		const xx1 = x1 * x21;
+		const yy1 = y1 * y21;
+		const zz1 = z1 * z21;
+		const xy1 = x1 * y21;
+		const yz1 = y1 * z21;
+		const xz1 = x1 * z21;
+		const wx1 = w1 * x21;
+		const wy1 = w1 * y21;
+		const wz1 = w1 * z21;
 		slerpM00 = 1 - yy1 - zz1;
 		slerpM01 = xy1 - wz1;
 		slerpM02 = xz1 + wy1;
@@ -24144,12 +24647,12 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 			newZY *= l;
 			newZZ *= l;
 		} else {
-			let x1 = newXX;
-			let y1 = newXY;
-			let z1 = newXZ;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = newXX;
+			const y1 = newXY;
+			const z1 = newXZ;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -24194,7 +24697,7 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		angErrorY = this._basisX1Z * this._basisX2X - this._basisX1X * this._basisX2Z;
 		angErrorZ = this._basisX1X * this._basisX2Y - this._basisX1Y * this._basisX2X;
 		let cos = this._basisX1X * this._basisX2X + this._basisX1Y * this._basisX2Y + this._basisX1Z * this._basisX2Z;
-		let theta = cos <= -1 ? 3.14159265358979 : cos >= 1 ? 0 : Math.acos(cos);
+		const theta = cos <= -1 ? 3.14159265358979 : cos >= 1 ? 0 : Math.acos(cos);
 		let l = angErrorX * angErrorX + angErrorY * angErrorY + angErrorZ * angErrorZ;
 		if(l > 0) {
 			l = 1 / Math.sqrt(l);
@@ -24228,81 +24731,97 @@ oimo.dynamics.constraint.joint.CylindricalJoint = class oimo_dynamics_constraint
 		this.linearErrorY = anchorDiffX * this._basis.yX + anchorDiffY * this._basis.yY + anchorDiffZ * this._basis.yZ;
 		this.linearErrorZ = anchorDiffX * this._basis.zX + anchorDiffY * this._basis.zY + anchorDiffZ * this._basis.zZ;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX1X;
 		v.y = this._basisX1Y;
 		v.z = this._basisX1Z;
 		return v;
 	}
+
 	getAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX2X;
 		v.y = this._basisX2Y;
 		v.z = this._basisX2Z;
 		return v;
 	}
+
 	getAxis1To(axis) {
 		axis.x = this._basisX1X;
 		axis.y = this._basisX1Y;
 		axis.z = this._basisX1Z;
 	}
+
 	getAxis2To(axis) {
 		axis.x = this._basisX2X;
 		axis.y = this._basisX2Y;
 		axis.z = this._basisX2Z;
 	}
+
 	getLocalAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX1X;
 		v.y = this._localBasisX1Y;
 		v.z = this._localBasisX1Z;
 		return v;
 	}
+
 	getLocalAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX2X;
 		v.y = this._localBasisX2Y;
 		v.z = this._localBasisX2Z;
 		return v;
 	}
+
 	getLocalAxis1To(axis) {
 		axis.x = this._localBasisX1X;
 		axis.y = this._localBasisX1Y;
 		axis.z = this._localBasisX1Z;
 	}
+
 	getLocalAxis2To(axis) {
 		axis.x = this._localBasisX2X;
 		axis.y = this._localBasisX2Y;
 		axis.z = this._localBasisX2Z;
 	}
+
 	getTranslationalSpringDamper() {
 		return this._translSd;
 	}
+
 	getRotationalSpringDamper() {
 		return this._rotSd;
 	}
+
 	getTranslationalLimitMotor() {
 		return this._translLm;
 	}
+
 	getRotationalLimitMotor() {
 		return this._rotLm;
 	}
+
 	getAngle() {
 		return this.angle;
 	}
+
 	getTranslation() {
 		return this.translation;
 	}
-}
+};
 oimo.dynamics.constraint.joint.JointConfig = class oimo_dynamics_constraint_joint_JointConfig {
 	constructor() {
 		this.rigidBody1 = null;
@@ -24315,11 +24834,12 @@ oimo.dynamics.constraint.joint.JointConfig = class oimo_dynamics_constraint_join
 		this.breakForce = 0;
 		this.breakTorque = 0;
 	}
+
 	_init(rb1,rb2,worldAnchor) {
 		this.rigidBody1 = rb1;
 		this.rigidBody2 = rb2;
-		let _this = this.rigidBody1;
-		let localPoint = this.localAnchor1;
+		const _this = this.rigidBody1;
+		const localPoint = this.localAnchor1;
 		let vX;
 		let vY;
 		let vZ;
@@ -24341,8 +24861,8 @@ oimo.dynamics.constraint.joint.JointConfig = class oimo_dynamics_constraint_join
 		localPoint.x = vX;
 		localPoint.y = vY;
 		localPoint.z = vZ;
-		let _this1 = this.rigidBody2;
-		let localPoint1 = this.localAnchor2;
+		const _this1 = this.rigidBody2;
+		const localPoint1 = this.localAnchor2;
 		let vX1;
 		let vY1;
 		let vZ1;
@@ -24365,7 +24885,7 @@ oimo.dynamics.constraint.joint.JointConfig = class oimo_dynamics_constraint_join
 		localPoint1.y = vY1;
 		localPoint1.z = vZ1;
 	}
-}
+};
 oimo.dynamics.constraint.joint.CylindricalJointConfig = class oimo_dynamics_constraint_joint_CylindricalJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
@@ -24376,9 +24896,10 @@ oimo.dynamics.constraint.joint.CylindricalJointConfig = class oimo_dynamics_cons
 		this.rotationalLimitMotor = new oimo.dynamics.constraint.joint.RotationalLimitMotor();
 		this.rotationalSpringDamper = new oimo.dynamics.constraint.joint.SpringDamper();
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor,worldAxis) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
-		let localVector = this.localAxis1;
+		const localVector = this.localAxis1;
 		let vX;
 		let vY;
 		let vZ;
@@ -24397,7 +24918,7 @@ oimo.dynamics.constraint.joint.CylindricalJointConfig = class oimo_dynamics_cons
 		localVector.x = vX;
 		localVector.y = vY;
 		localVector.z = vZ;
-		let localVector1 = this.localAxis2;
+		const localVector1 = this.localAxis2;
 		let vX1;
 		let vY1;
 		let vZ1;
@@ -24418,20 +24939,20 @@ oimo.dynamics.constraint.joint.CylindricalJointConfig = class oimo_dynamics_cons
 		localVector1.z = vZ1;
 		return this;
 	}
-}
+};
 oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joint_GenericJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,oimo.dynamics.constraint.joint.JointType.GENERIC);
 		let tmp;
-		let _this = config.localBasis1;
+		const _this = config.localBasis1;
 		if(!(_this.e00 * (_this.e11 * _this.e22 - _this.e12 * _this.e21) - _this.e01 * (_this.e10 * _this.e22 - _this.e12 * _this.e20) + _this.e02 * (_this.e10 * _this.e21 - _this.e11 * _this.e20) < 0)) {
-			let _this = config.localBasis2;
+			const _this = config.localBasis2;
 			tmp = _this.e00 * (_this.e11 * _this.e22 - _this.e12 * _this.e21) - _this.e01 * (_this.e10 * _this.e22 - _this.e12 * _this.e20) + _this.e02 * (_this.e10 * _this.e21 - _this.e11 * _this.e20) < 0;
 		} else {
 			tmp = true;
 		}
 		if(tmp) {
-			console.log("src/oimo/dynamics/constraint/joint/GenericJoint.hx:50:","[warning] joint basis must be right handed");
+			console.log('src/oimo/dynamics/constraint/joint/GenericJoint.hx:50:','[warning] joint basis must be right handed');
 		}
 		let lb100;
 		let lb101;
@@ -24451,7 +24972,7 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 		let lb220;
 		let lb221;
 		let lb222;
-		let m = config.localBasis1;
+		const m = config.localBasis1;
 		lb100 = m.e00;
 		lb101 = m.e01;
 		lb102 = m.e02;
@@ -24461,7 +24982,7 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 		lb120 = m.e20;
 		lb121 = m.e21;
 		lb122 = m.e22;
-		let m1 = config.localBasis2;
+		const m1 = config.localBasis2;
 		lb200 = m1.e00;
 		lb201 = m1.e01;
 		lb202 = m1.e02;
@@ -24515,16 +25036,17 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 		this._rotSds[1] = config.rotationalSpringDampers[1].clone();
 		this._rotSds[2] = config.rotationalSpringDampers[2].clone();
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
 		let j;
-		let translMotorMass = 1 / (this._b1._invMass + this._b2._invMass);
-		let motorMassX = this.computeEffectiveInertiaMoment(this._axisXX,this._axisXY,this._axisXZ);
-		let motorMassY = this.computeEffectiveInertiaMoment(this._axisYX,this._axisYY,this._axisYZ);
-		let motorMassZ = this.computeEffectiveInertiaMoment(this._axisZX,this._axisZY,this._axisZZ);
+		const translMotorMass = 1 / (this._b1._invMass + this._b2._invMass);
+		const motorMassX = this.computeEffectiveInertiaMoment(this._axisXX,this._axisXY,this._axisXZ);
+		const motorMassY = this.computeEffectiveInertiaMoment(this._axisYX,this._axisYY,this._axisYZ);
+		const motorMassZ = this.computeEffectiveInertiaMoment(this._axisZX,this._axisZY,this._axisZZ);
 		if(this._translSds[0].frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[0];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[0];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -24561,9 +25083,9 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this._relativeAnchor2X * this._basisX1Y - this._relativeAnchor2Y * this._basisX1X;
 		}
 		if(this._translSds[1].frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[1];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[1];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -24600,9 +25122,9 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this._relativeAnchor2X * this._basisY1Y - this._relativeAnchor2Y * this._basisY1X;
 		}
 		if(this._translSds[2].frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[2];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[2];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -24639,9 +25161,9 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this._relativeAnchor2X * this._basisZ1Y - this._relativeAnchor2Y * this._basisZ1X;
 		}
 		if(!this.xSingular && (this._rotSds[0].frequency <= 0 || !isPositionPart)) {
-			let impulse = this._impulses[3];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[3];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -24672,9 +25194,9 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this._axisXZ;
 		}
 		if(!this.ySingular && (this._rotSds[1].frequency <= 0 || !isPositionPart)) {
-			let impulse = this._impulses[4];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[4];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -24705,9 +25227,9 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this._axisYZ;
 		}
 		if(!this.zSingular && (this._rotSds[2].frequency <= 0 || !isPositionPart)) {
-			let impulse = this._impulses[5];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[5];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -24738,6 +25260,7 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this._axisZZ;
 		}
 	}
+
 	_syncAnchors() {
 		super._syncAnchors();
 		let angleAxisXX;
@@ -24858,14 +25381,14 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 		let anglesX;
 		let anglesY;
 		let anglesZ;
-		let sy = relRot02;
+		const sy = relRot02;
 		if(sy <= -1) {
-			let xSubZ = Math.atan2(relRot21,relRot11);
+			const xSubZ = Math.atan2(relRot21,relRot11);
 			anglesX = xSubZ * 0.5;
 			anglesY = -1.570796326794895;
 			anglesZ = -xSubZ * 0.5;
 		} else if(sy >= 1) {
-			let xAddZ = Math.atan2(relRot21,relRot11);
+			const xAddZ = Math.atan2(relRot21,relRot11);
 			anglesX = xAddZ * 0.5;
 			anglesY = 1.570796326794895;
 			anglesZ = xAddZ * 0.5;
@@ -24887,65 +25410,76 @@ oimo.dynamics.constraint.joint.GenericJoint = class oimo_dynamics_constraint_joi
 		this.translationY = anchorDiffX * this._basisY1X + anchorDiffY * this._basisY1Y + anchorDiffZ * this._basisY1Z;
 		this.translationZ = anchorDiffX * this._basisZ1X + anchorDiffY * this._basisZ1Y + anchorDiffZ * this._basisZ1Z;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getAxisX() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX1X;
 		v.y = this._basisX1Y;
 		v.z = this._basisX1Z;
 		return v;
 	}
+
 	getAxisY() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._axisYX;
 		v.y = this._axisYY;
 		v.z = this._axisYZ;
 		return v;
 	}
+
 	getAxisZ() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisZ2X;
 		v.y = this._basisZ2Y;
 		v.z = this._basisZ2Z;
 		return v;
 	}
+
 	getTranslationalSpringDampers() {
 		return this._translSds.slice(0);
 	}
+
 	getRotationalSpringDampers() {
 		return this._translSds.slice(0);
 	}
+
 	getTranslationalLimitMotors() {
 		return this._translLms.slice(0);
 	}
+
 	getRotationalLimitMotors() {
 		return this._rotLms.slice(0);
 	}
+
 	getAngles() {
 		return new oimo.common.Vec3(this._angleX,this._angleY,this._angleZ);
 	}
+
 	getTranslations() {
 		return new oimo.common.Vec3(this.translationX,this.translationY,this.translationZ);
 	}
-}
+};
 oimo.dynamics.constraint.joint.GenericJointConfig = class oimo_dynamics_constraint_joint_GenericJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
 		this.localBasis1 = new oimo.common.Mat3();
 		this.localBasis2 = new oimo.common.Mat3();
-		let _g = [];
+		const _g = [];
 		_g.push(new oimo.dynamics.constraint.joint.TranslationalLimitMotor().setLimits(0,0));
 		_g.push(new oimo.dynamics.constraint.joint.TranslationalLimitMotor().setLimits(0,0));
 		_g.push(new oimo.dynamics.constraint.joint.TranslationalLimitMotor().setLimits(0,0));
 		this.translationalLimitMotors = _g;
-		let _g1 = [];
+		const _g1 = [];
 		_g1.push(new oimo.dynamics.constraint.joint.RotationalLimitMotor().setLimits(0,0));
 		_g1.push(new oimo.dynamics.constraint.joint.RotationalLimitMotor().setLimits(0,0));
 		_g1.push(new oimo.dynamics.constraint.joint.RotationalLimitMotor().setLimits(0,0));
@@ -24953,10 +25487,11 @@ oimo.dynamics.constraint.joint.GenericJointConfig = class oimo_dynamics_constrai
 		this.translationalSpringDampers = [new oimo.dynamics.constraint.joint.SpringDamper(),new oimo.dynamics.constraint.joint.SpringDamper(),new oimo.dynamics.constraint.joint.SpringDamper()];
 		this.rotationalSpringDampers = [new oimo.dynamics.constraint.joint.SpringDamper(),new oimo.dynamics.constraint.joint.SpringDamper(),new oimo.dynamics.constraint.joint.SpringDamper()];
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor,worldBasis1,worldBasis2) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
-		let tf1 = rigidBody1._transform;
-		let tf2 = rigidBody2._transform;
+		const tf1 = rigidBody1._transform;
+		const tf2 = rigidBody2._transform;
 		let wb100;
 		let wb101;
 		let wb102;
@@ -25065,7 +25600,7 @@ oimo.dynamics.constraint.joint.GenericJointConfig = class oimo_dynamics_constrai
 		lb220 = __tmp__201;
 		lb221 = __tmp__211;
 		lb222 = __tmp__221;
-		let m = this.localBasis1;
+		const m = this.localBasis1;
 		m.e00 = lb100;
 		m.e01 = lb101;
 		m.e02 = lb102;
@@ -25075,7 +25610,7 @@ oimo.dynamics.constraint.joint.GenericJointConfig = class oimo_dynamics_constrai
 		m.e20 = lb120;
 		m.e21 = lb121;
 		m.e22 = lb122;
-		let m1 = this.localBasis2;
+		const m1 = this.localBasis2;
 		m1.e00 = lb200;
 		m1.e01 = lb201;
 		m1.e02 = lb202;
@@ -25087,43 +25622,47 @@ oimo.dynamics.constraint.joint.GenericJointConfig = class oimo_dynamics_constrai
 		m1.e22 = lb222;
 		return this;
 	}
-}
+};
 oimo.dynamics.constraint.joint.JointImpulse = class oimo_dynamics_constraint_joint_JointImpulse {
 	constructor() {
 		this.impulse = 0;
 		this.impulseM = 0;
 		this.impulseP = 0;
 	}
-}
+};
 oimo.dynamics.constraint.joint.JointLink = class oimo_dynamics_constraint_joint_JointLink {
 	constructor(joint) {
 		this._joint = joint;
 	}
+
 	getContact() {
 		return this._joint;
 	}
+
 	getOther() {
 		return this._other;
 	}
+
 	getPrev() {
 		return this._prev;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 oimo.dynamics.constraint.joint.JointMacro = class oimo_dynamics_constraint_joint_JointMacro {
-}
+};
 oimo.dynamics.constraint.joint.JointType = class oimo_dynamics_constraint_joint_JointType {
-}
+};
 oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_joint_PrismaticJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,oimo.dynamics.constraint.joint.JointType.PRISMATIC);
-		let v = config.localAxis1;
+		const v = config.localAxis1;
 		this._localBasisX1X = v.x;
 		this._localBasisX1Y = v.y;
 		this._localBasisX1Z = v.z;
-		let v1 = config.localAxis2;
+		const v1 = config.localAxis2;
 		this._localBasisX2X = v1.x;
 		this._localBasisX2Y = v1.y;
 		this._localBasisX2Z = v1.z;
@@ -25138,18 +25677,19 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		this._sd = config.springDamper.clone();
 		this._lm = config.limitMotor.clone();
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
-		let erp = this.getErp(timeStep,isPositionPart);
-		let linRhsY = this.linearErrorY * erp;
-		let linRhsZ = this.linearErrorZ * erp;
-		let angRhsX = this.angularErrorX * erp;
-		let angRhsY = this.angularErrorY * erp;
-		let angRhsZ = this.angularErrorZ * erp;
+		const erp = this.getErp(timeStep,isPositionPart);
+		const linRhsY = this.linearErrorY * erp;
+		const linRhsZ = this.linearErrorZ * erp;
+		const angRhsX = this.angularErrorX * erp;
+		const angRhsY = this.angularErrorY * erp;
+		const angRhsZ = this.angularErrorZ * erp;
 		let j;
 		if(this._sd.frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[0];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[0];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -25185,9 +25725,9 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			j.ang2Y = this._relativeAnchor2Z * this._basis.xX - this._relativeAnchor2X * this._basis.xZ;
 			j.ang2Z = this._relativeAnchor2X * this._basis.xY - this._relativeAnchor2Y * this._basis.xX;
 		}
-		let impulse = this._impulses[1];
-		let row = info.rows[info.numRows++];
-		let _this = row.jacobian;
+		const impulse = this._impulses[1];
+		const row = info.rows[info.numRows++];
+		const _this = row.jacobian;
 		_this.lin1X = 0;
 		_this.lin1Y = 0;
 		_this.lin1Z = 0;
@@ -25225,9 +25765,9 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		j.ang2X = this._relativeAnchor2Y * this._basis.yZ - this._relativeAnchor2Z * this._basis.yY;
 		j.ang2Y = this._relativeAnchor2Z * this._basis.yX - this._relativeAnchor2X * this._basis.yZ;
 		j.ang2Z = this._relativeAnchor2X * this._basis.yY - this._relativeAnchor2Y * this._basis.yX;
-		let impulse1 = this._impulses[2];
-		let row1 = info.rows[info.numRows++];
-		let _this1 = row1.jacobian;
+		const impulse1 = this._impulses[2];
+		const row1 = info.rows[info.numRows++];
+		const _this1 = row1.jacobian;
 		_this1.lin1X = 0;
 		_this1.lin1Y = 0;
 		_this1.lin1Z = 0;
@@ -25265,9 +25805,9 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		j.ang2X = this._relativeAnchor2Y * this._basis.zZ - this._relativeAnchor2Z * this._basis.zY;
 		j.ang2Y = this._relativeAnchor2Z * this._basis.zX - this._relativeAnchor2X * this._basis.zZ;
 		j.ang2Z = this._relativeAnchor2X * this._basis.zY - this._relativeAnchor2Y * this._basis.zX;
-		let impulse2 = this._impulses[3];
-		let row2 = info.rows[info.numRows++];
-		let _this2 = row2.jacobian;
+		const impulse2 = this._impulses[3];
+		const row2 = info.rows[info.numRows++];
+		const _this2 = row2.jacobian;
 		_this2.lin1X = 0;
 		_this2.lin1Y = 0;
 		_this2.lin1Z = 0;
@@ -25299,9 +25839,9 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		j.ang2X = 1;
 		j.ang2Y = 0;
 		j.ang2Z = 0;
-		let impulse3 = this._impulses[4];
-		let row3 = info.rows[info.numRows++];
-		let _this3 = row3.jacobian;
+		const impulse3 = this._impulses[4];
+		const row3 = info.rows[info.numRows++];
+		const _this3 = row3.jacobian;
 		_this3.lin1X = 0;
 		_this3.lin1Y = 0;
 		_this3.lin1Z = 0;
@@ -25333,9 +25873,9 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		j.ang2X = 0;
 		j.ang2Y = 1;
 		j.ang2Z = 0;
-		let impulse4 = this._impulses[5];
-		let row4 = info.rows[info.numRows++];
-		let _this4 = row4.jacobian;
+		const impulse4 = this._impulses[5];
+		const row4 = info.rows[info.numRows++];
+		const _this4 = row4.jacobian;
 		_this4.lin1X = 0;
 		_this4.lin1Y = 0;
 		_this4.lin1Z = 0;
@@ -25368,11 +25908,12 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		j.ang2Y = 0;
 		j.ang2Z = 1;
 	}
+
 	_syncAnchors() {
 		super._syncAnchors();
-		let _this = this._basis;
-		let invM1 = _this.joint._b1._invMass;
-		let invM2 = _this.joint._b2._invMass;
+		const _this = this._basis;
+		const invM1 = _this.joint._b1._invMass;
+		const invM2 = _this.joint._b2._invMass;
 		let qX;
 		let qY;
 		let qZ;
@@ -25414,12 +25955,12 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = _this.joint._basisX1X;
-			let y1 = _this.joint._basisX1Y;
-			let z1 = _this.joint._basisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = _this.joint._basisX1X;
+			const y1 = _this.joint._basisX1Y;
+			const z1 = _this.joint._basisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -25455,7 +25996,7 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			cX = _this.joint._basisX1Y * _this.joint._basisX2Z - _this.joint._basisX1Z * _this.joint._basisX2Y;
 			cY = _this.joint._basisX1Z * _this.joint._basisX2X - _this.joint._basisX1X * _this.joint._basisX2Z;
 			cZ = _this.joint._basisX1X * _this.joint._basisX2Y - _this.joint._basisX1Y * _this.joint._basisX2X;
-			let w = Math.sqrt((1 + d) * 0.5);
+			const w = Math.sqrt((1 + d) * 0.5);
 			d = 0.5 / w;
 			cX *= d;
 			cY *= d;
@@ -25515,7 +26056,7 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			slerpQZ = q2Z * l;
 			slerpQW = q2W * l;
 		} else {
-			let theta = invM1 / (invM1 + invM2) * Math.acos(d1);
+			const theta = invM1 / (invM1 + invM2) * Math.acos(d1);
 			q2X += q1X * -d1;
 			q2Y += q1Y * -d1;
 			q2Z += q1Z * -d1;
@@ -25528,8 +26069,8 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			q2Y *= l;
 			q2Z *= l;
 			q2W *= l;
-			let sin = Math.sin(theta);
-			let cos = Math.cos(theta);
+			const sin = Math.sin(theta);
+			const cos = Math.cos(theta);
 			q1X *= cos;
 			q1Y *= cos;
 			q1Z *= cos;
@@ -25539,22 +26080,22 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			slerpQZ = q1Z + q2Z * sin;
 			slerpQW = q1W + q2W * sin;
 		}
-		let x = slerpQX;
-		let y = slerpQY;
-		let z = slerpQZ;
-		let w = slerpQW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = slerpQX;
+		const y = slerpQY;
+		const z = slerpQZ;
+		const w = slerpQW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		slerpM00 = 1 - yy - zz;
 		slerpM01 = xy - wz;
 		slerpM02 = xz + wy;
@@ -25584,12 +26125,12 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = prevXX;
-			let y1 = prevXY;
-			let z1 = prevXZ;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = prevXX;
+			const y1 = prevXY;
+			const z1 = prevXZ;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -25625,7 +26166,7 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			cX = prevXY * newXZ - prevXZ * newXY;
 			cY = prevXZ * newXX - prevXX * newXZ;
 			cZ = prevXX * newXY - prevXY * newXX;
-			let w = Math.sqrt((1 + d2) * 0.5);
+			const w = Math.sqrt((1 + d2) * 0.5);
 			d2 = 0.5 / w;
 			cX *= d2;
 			cY *= d2;
@@ -25635,22 +26176,22 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			slerpQZ = cZ;
 			slerpQW = w;
 		}
-		let x1 = slerpQX;
-		let y1 = slerpQY;
-		let z1 = slerpQZ;
-		let w1 = slerpQW;
-		let x21 = 2 * x1;
-		let y21 = 2 * y1;
-		let z21 = 2 * z1;
-		let xx1 = x1 * x21;
-		let yy1 = y1 * y21;
-		let zz1 = z1 * z21;
-		let xy1 = x1 * y21;
-		let yz1 = y1 * z21;
-		let xz1 = x1 * z21;
-		let wx1 = w1 * x21;
-		let wy1 = w1 * y21;
-		let wz1 = w1 * z21;
+		const x1 = slerpQX;
+		const y1 = slerpQY;
+		const z1 = slerpQZ;
+		const w1 = slerpQW;
+		const x21 = 2 * x1;
+		const y21 = 2 * y1;
+		const z21 = 2 * z1;
+		const xx1 = x1 * x21;
+		const yy1 = y1 * y21;
+		const zz1 = z1 * z21;
+		const xy1 = x1 * y21;
+		const yz1 = y1 * z21;
+		const xz1 = x1 * z21;
+		const wx1 = w1 * x21;
+		const wy1 = w1 * y21;
+		const wz1 = w1 * z21;
 		slerpM00 = 1 - yy1 - zz1;
 		slerpM01 = xy1 - wz1;
 		slerpM02 = xz1 + wy1;
@@ -25681,12 +26222,12 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			newZY *= l;
 			newZZ *= l;
 		} else {
-			let x1 = newXX;
-			let y1 = newXY;
-			let z1 = newXZ;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = newXX;
+			const y1 = newXY;
+			const z1 = newXZ;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -25800,10 +26341,10 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		let relQY;
 		let relQZ;
 		let relQW;
-		let e00 = relRot00;
-		let e11 = relRot11;
-		let e22 = relRot22;
-		let t = e00 + e11 + e22;
+		const e00 = relRot00;
+		const e11 = relRot11;
+		const e22 = relRot22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -25843,8 +26384,8 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 			relQY = (relRot12 + relRot21) * s;
 			relQW = (relRot10 - relRot01) * s;
 		}
-		let cosHalfTheta = relQW;
-		let theta = (cosHalfTheta <= -1 ? 3.14159265358979 : cosHalfTheta >= 1 ? 0 : Math.acos(cosHalfTheta)) * 2;
+		const cosHalfTheta = relQW;
+		const theta = (cosHalfTheta <= -1 ? 3.14159265358979 : cosHalfTheta >= 1 ? 0 : Math.acos(cosHalfTheta)) * 2;
 		this.angularErrorX = relQX;
 		this.angularErrorY = relQY;
 		this.angularErrorZ = relQZ;
@@ -25868,72 +26409,85 @@ oimo.dynamics.constraint.joint.PrismaticJoint = class oimo_dynamics_constraint_j
 		this.linearErrorY = anchorDiffX * this._basis.yX + anchorDiffY * this._basis.yY + anchorDiffZ * this._basis.yZ;
 		this.linearErrorZ = anchorDiffX * this._basis.zX + anchorDiffY * this._basis.zY + anchorDiffZ * this._basis.zZ;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX1X;
 		v.y = this._basisX1Y;
 		v.z = this._basisX1Z;
 		return v;
 	}
+
 	getAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX2X;
 		v.y = this._basisX2Y;
 		v.z = this._basisX2Z;
 		return v;
 	}
+
 	getAxis1To(axis) {
 		axis.x = this._basisX1X;
 		axis.y = this._basisX1Y;
 		axis.z = this._basisX1Z;
 	}
+
 	getAxis2To(axis) {
 		axis.x = this._basisX2X;
 		axis.y = this._basisX2Y;
 		axis.z = this._basisX2Z;
 	}
+
 	getLocalAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX1X;
 		v.y = this._localBasisX1Y;
 		v.z = this._localBasisX1Z;
 		return v;
 	}
+
 	getLocalAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX2X;
 		v.y = this._localBasisX2Y;
 		v.z = this._localBasisX2Z;
 		return v;
 	}
+
 	getLocalAxis1To(axis) {
 		axis.x = this._localBasisX1X;
 		axis.y = this._localBasisX1Y;
 		axis.z = this._localBasisX1Z;
 	}
+
 	getLocalAxis2To(axis) {
 		axis.x = this._localBasisX2X;
 		axis.y = this._localBasisX2Y;
 		axis.z = this._localBasisX2Z;
 	}
+
 	getSpringDamper() {
 		return this._sd;
 	}
+
 	getLimitMotor() {
 		return this._lm;
 	}
+
 	getTranslation() {
 		return this.translation;
 	}
-}
+};
 oimo.dynamics.constraint.joint.PrismaticJointConfig = class oimo_dynamics_constraint_joint_PrismaticJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
@@ -25942,9 +26496,10 @@ oimo.dynamics.constraint.joint.PrismaticJointConfig = class oimo_dynamics_constr
 		this.limitMotor = new oimo.dynamics.constraint.joint.TranslationalLimitMotor();
 		this.springDamper = new oimo.dynamics.constraint.joint.SpringDamper();
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor,worldAxis) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
-		let localVector = this.localAxis1;
+		const localVector = this.localAxis1;
 		let vX;
 		let vY;
 		let vZ;
@@ -25963,7 +26518,7 @@ oimo.dynamics.constraint.joint.PrismaticJointConfig = class oimo_dynamics_constr
 		localVector.x = vX;
 		localVector.y = vY;
 		localVector.z = vZ;
-		let localVector1 = this.localAxis2;
+		const localVector1 = this.localAxis2;
 		let vX1;
 		let vY1;
 		let vZ1;
@@ -25984,19 +26539,19 @@ oimo.dynamics.constraint.joint.PrismaticJointConfig = class oimo_dynamics_constr
 		localVector1.z = vZ1;
 		return this;
 	}
-}
+};
 oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joint_RagdollJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,oimo.dynamics.constraint.joint.JointType.RAGDOLL);
-		let v = config.localTwistAxis1;
+		const v = config.localTwistAxis1;
 		this._localBasisX1X = v.x;
 		this._localBasisX1Y = v.y;
 		this._localBasisX1Z = v.z;
-		let v1 = config.localSwingAxis1;
+		const v1 = config.localSwingAxis1;
 		this._localBasisY1X = v1.x;
 		this._localBasisY1Y = v1.y;
 		this._localBasisY1Z = v1.z;
-		let v2 = config.localTwistAxis2;
+		const v2 = config.localTwistAxis2;
 		this._localBasisX2X = v2.x;
 		this._localBasisX2Y = v2.y;
 		this._localBasisX2Z = v2.z;
@@ -26025,8 +26580,9 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 		this.twistAxisY = 0;
 		this.twistAxisZ = 0;
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
-		let erp = this.getErp(timeStep,isPositionPart);
+		const erp = this.getErp(timeStep,isPositionPart);
 		let linearRhsX;
 		let linearRhsY;
 		let linearRhsZ;
@@ -26087,11 +26643,11 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 		crossR220 = -crossR220;
 		crossR221 = -crossR221;
 		crossR222 = -crossR222;
-		let swingMass = this.computeEffectiveInertiaMoment(this.swingAxisX,this.swingAxisY,this.swingAxisZ);
-		let twistMass = this.computeEffectiveInertiaMoment(this._basisX2X,this._basisX2Y,this._basisX2Z);
-		let impulse = this._impulses[0];
-		let row = info.rows[info.numRows++];
-		let _this = row.jacobian;
+		const swingMass = this.computeEffectiveInertiaMoment(this.swingAxisX,this.swingAxisY,this.swingAxisZ);
+		const twistMass = this.computeEffectiveInertiaMoment(this._basisX2X,this._basisX2Y,this._basisX2Z);
+		const impulse = this._impulses[0];
+		const row = info.rows[info.numRows++];
+		const _this = row.jacobian;
 		_this.lin1X = 0;
 		_this.lin1Y = 0;
 		_this.lin1Z = 0;
@@ -26129,9 +26685,9 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 		j.ang2X = crossR200;
 		j.ang2Y = crossR201;
 		j.ang2Z = crossR202;
-		let impulse1 = this._impulses[1];
-		let row1 = info.rows[info.numRows++];
-		let _this1 = row1.jacobian;
+		const impulse1 = this._impulses[1];
+		const row1 = info.rows[info.numRows++];
+		const _this1 = row1.jacobian;
 		_this1.lin1X = 0;
 		_this1.lin1Y = 0;
 		_this1.lin1Z = 0;
@@ -26169,9 +26725,9 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 		j.ang2X = crossR210;
 		j.ang2Y = crossR211;
 		j.ang2Z = crossR212;
-		let impulse2 = this._impulses[2];
-		let row2 = info.rows[info.numRows++];
-		let _this2 = row2.jacobian;
+		const impulse2 = this._impulses[2];
+		const row2 = info.rows[info.numRows++];
+		const _this2 = row2.jacobian;
 		_this2.lin1X = 0;
 		_this2.lin1Y = 0;
 		_this2.lin1Z = 0;
@@ -26210,9 +26766,9 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 		j.ang2Y = crossR221;
 		j.ang2Z = crossR222;
 		if(this.swingError > 0 && (this._swingSd.frequency <= 0 || !isPositionPart)) {
-			let impulse = this._impulses[3];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[3];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -26243,9 +26799,9 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this.swingAxisZ;
 		}
 		if(this._twistSd.frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[4];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[4];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -26276,6 +26832,7 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 			j.ang2Z = this.twistAxisZ;
 		}
 	}
+
 	_syncAnchors() {
 		super._syncAnchors();
 		let axis1X;
@@ -26329,12 +26886,12 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = axis1X;
-			let y1 = axis1Y;
-			let z1 = axis1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = axis1X;
+			const y1 = axis1Y;
+			const z1 = axis1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -26370,7 +26927,7 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 			cX = axis1Y * axis2Z - axis1Z * axis2Y;
 			cY = axis1Z * axis2X - axis1X * axis2Z;
 			cZ = axis1X * axis2Y - axis1Y * axis2X;
-			let w = Math.sqrt((1 + d) * 0.5);
+			const w = Math.sqrt((1 + d) * 0.5);
 			d = 0.5 / w;
 			cX *= d;
 			cY *= d;
@@ -26380,22 +26937,22 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 			swingQZ = cZ;
 			swingQW = w;
 		}
-		let x = swingQX;
-		let y = swingQY;
-		let z = swingQZ;
-		let w = swingQW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = swingQX;
+		const y = swingQY;
+		const z = swingQZ;
+		const w = swingQW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		swingM00 = 1 - yy - zz;
 		swingM01 = xy - wz;
 		swingM02 = xz + wy;
@@ -26448,28 +27005,28 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 
 		swingVY = __tmp__Y1;
 		swingVZ = __tmp__Z1;
-		let x1 = swingVY;
-		let y1 = swingVZ;
-		let a = this._maxSwingAngle1;
-		let b = this._maxSwingAngle2;
-		let invA2 = 1 / (a * a);
-		let invB2 = 1 / (b * b);
-		let w1 = x1 * x1 * invA2 + y1 * y1 * invB2;
+		const x1 = swingVY;
+		const y1 = swingVZ;
+		const a = this._maxSwingAngle1;
+		const b = this._maxSwingAngle2;
+		const invA2 = 1 / (a * a);
+		const invB2 = 1 / (b * b);
+		const w1 = x1 * x1 * invA2 + y1 * y1 * invB2;
 		if(w1 == 0) {
 			this.swingAxisX = 0;
 			this.swingAxisY = 0;
 			this.swingAxisZ = 0;
 			this.swingError = 0;
 		} else {
-			let t = Math.sqrt(1 / w1);
-			let x0 = x1 * t;
-			let y0 = y1 * t;
+			const t = Math.sqrt(1 / w1);
+			const x0 = x1 * t;
+			const y0 = y1 * t;
 			let nx = x0 * invA2;
 			let ny = y0 * invB2;
 			invLen = 1 / Math.sqrt(nx * nx + ny * ny);
 			nx *= invLen;
 			ny *= invLen;
-			let depth = (x1 - x0) * nx + (y1 - y0) * ny;
+			const depth = (x1 - x0) * nx + (y1 - y0) * ny;
 			if(depth > 0) {
 				this.swingError = depth;
 				this.swingAxisX = 0;
@@ -26501,90 +27058,107 @@ oimo.dynamics.constraint.joint.RagdollJoint = class oimo_dynamics_constraint_joi
 		this.linearErrorY = this._anchor2Y - this._anchor1Y;
 		this.linearErrorZ = this._anchor2Z - this._anchor1Z;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX1X;
 		v.y = this._basisX1Y;
 		v.z = this._basisX1Z;
 		return v;
 	}
+
 	getAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX2X;
 		v.y = this._basisX2Y;
 		v.z = this._basisX2Z;
 		return v;
 	}
+
 	getAxis1To(axis) {
 		axis.x = this._basisX1X;
 		axis.y = this._basisX1Y;
 		axis.z = this._basisX1Z;
 	}
+
 	getAxis2To(axis) {
 		axis.x = this._basisX2X;
 		axis.y = this._basisX2Y;
 		axis.z = this._basisX2Z;
 	}
+
 	getLocalAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX1X;
 		v.y = this._localBasisX1Y;
 		v.z = this._localBasisX1Z;
 		return v;
 	}
+
 	getLocalAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX2X;
 		v.y = this._localBasisX2Y;
 		v.z = this._localBasisX2Z;
 		return v;
 	}
+
 	getLocalAxis1To(axis) {
 		axis.x = this._localBasisX1X;
 		axis.y = this._localBasisX1Y;
 		axis.z = this._localBasisX1Z;
 	}
+
 	getLocalAxis2To(axis) {
 		axis.x = this._localBasisX2X;
 		axis.y = this._localBasisX2Y;
 		axis.z = this._localBasisX2Z;
 	}
+
 	getTwistSpringDamper() {
 		return this._twistSd;
 	}
+
 	getTwistLimitMotor() {
 		return this._twistLm;
 	}
+
 	getSwingSpringDamper() {
 		return this._swingSd;
 	}
+
 	getSwingAxis() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this.swingAxisX;
 		v.y = this.swingAxisY;
 		v.z = this.swingAxisZ;
 		return v;
 	}
+
 	getSwingAxisTo(axis) {
 		axis.x = this.swingAxisX;
 		axis.y = this.swingAxisY;
 		axis.z = this.swingAxisZ;
 	}
+
 	getSwingAngle() {
 		return this._swingAngle;
 	}
+
 	getTwistAngle() {
 		return this._twistAngle;
 	}
-}
+};
 oimo.dynamics.constraint.joint.RagdollJointConfig = class oimo_dynamics_constraint_joint_RagdollJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
@@ -26597,9 +27171,10 @@ oimo.dynamics.constraint.joint.RagdollJointConfig = class oimo_dynamics_constrai
 		this.maxSwingAngle1 = 3.14159265358979;
 		this.maxSwingAngle2 = 3.14159265358979;
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor,worldTwistAxis,worldSwingAxis) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
-		let localVector = this.localTwistAxis1;
+		const localVector = this.localTwistAxis1;
 		let vX;
 		let vY;
 		let vZ;
@@ -26618,7 +27193,7 @@ oimo.dynamics.constraint.joint.RagdollJointConfig = class oimo_dynamics_constrai
 		localVector.x = vX;
 		localVector.y = vY;
 		localVector.z = vZ;
-		let localVector1 = this.localTwistAxis2;
+		const localVector1 = this.localTwistAxis2;
 		let vX1;
 		let vY1;
 		let vZ1;
@@ -26637,7 +27212,7 @@ oimo.dynamics.constraint.joint.RagdollJointConfig = class oimo_dynamics_constrai
 		localVector1.x = vX1;
 		localVector1.y = vY1;
 		localVector1.z = vZ1;
-		let localVector2 = this.localSwingAxis1;
+		const localVector2 = this.localSwingAxis1;
 		let vX2;
 		let vY2;
 		let vZ2;
@@ -26658,15 +27233,15 @@ oimo.dynamics.constraint.joint.RagdollJointConfig = class oimo_dynamics_constrai
 		localVector2.z = vZ2;
 		return this;
 	}
-}
+};
 oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_joint_RevoluteJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,1);
-		let v = config.localAxis1;
+		const v = config.localAxis1;
 		this._localBasisX1X = v.x;
 		this._localBasisX1Y = v.y;
 		this._localBasisX1Z = v.z;
-		let v1 = config.localAxis2;
+		const v1 = config.localAxis2;
 		this._localBasisX2X = v1.x;
 		this._localBasisX2Y = v1.y;
 		this._localBasisX2Z = v1.z;
@@ -26678,16 +27253,17 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		this._sd = config.springDamper.clone();
 		this._lm = config.limitMotor.clone();
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
-		let erp = this.getErp(timeStep,isPositionPart);
+		const erp = this.getErp(timeStep,isPositionPart);
 		let linearRhsX;
 		let linearRhsY;
 		let linearRhsZ;
 		linearRhsX = this.linearErrorX * erp;
 		linearRhsY = this.linearErrorY * erp;
 		linearRhsZ = this.linearErrorZ * erp;
-		let angRhsY = this.angularErrorY * erp;
-		let angRhsZ = this.angularErrorZ * erp;
+		const angRhsY = this.angularErrorY * erp;
+		const angRhsZ = this.angularErrorZ * erp;
 		let crossR100;
 		let crossR101;
 		let crossR102;
@@ -26742,10 +27318,10 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		crossR220 = -crossR220;
 		crossR221 = -crossR221;
 		crossR222 = -crossR222;
-		let motorMass = this.computeEffectiveInertiaMoment(this._basis.xX,this._basis.xY,this._basis.xZ);
-		let impulse = this._impulses[0];
-		let row = info.rows[info.numRows++];
-		let _this = row.jacobian;
+		const motorMass = this.computeEffectiveInertiaMoment(this._basis.xX,this._basis.xY,this._basis.xZ);
+		const impulse = this._impulses[0];
+		const row = info.rows[info.numRows++];
+		const _this = row.jacobian;
 		_this.lin1X = 0;
 		_this.lin1Y = 0;
 		_this.lin1Z = 0;
@@ -26783,9 +27359,9 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		j.ang2X = crossR200;
 		j.ang2Y = crossR201;
 		j.ang2Z = crossR202;
-		let impulse1 = this._impulses[1];
-		let row1 = info.rows[info.numRows++];
-		let _this1 = row1.jacobian;
+		const impulse1 = this._impulses[1];
+		const row1 = info.rows[info.numRows++];
+		const _this1 = row1.jacobian;
 		_this1.lin1X = 0;
 		_this1.lin1Y = 0;
 		_this1.lin1Z = 0;
@@ -26823,9 +27399,9 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		j.ang2X = crossR210;
 		j.ang2Y = crossR211;
 		j.ang2Z = crossR212;
-		let impulse2 = this._impulses[2];
-		let row2 = info.rows[info.numRows++];
-		let _this2 = row2.jacobian;
+		const impulse2 = this._impulses[2];
+		const row2 = info.rows[info.numRows++];
+		const _this2 = row2.jacobian;
 		_this2.lin1X = 0;
 		_this2.lin1Y = 0;
 		_this2.lin1Z = 0;
@@ -26864,9 +27440,9 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		j.ang2Y = crossR221;
 		j.ang2Z = crossR222;
 		if(this._sd.frequency <= 0 || !isPositionPart) {
-			let impulse = this._impulses[3];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[3];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -26896,9 +27472,9 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			j.ang2Y = this._basis.xY;
 			j.ang2Z = this._basis.xZ;
 		}
-		let impulse3 = this._impulses[4];
-		let row3 = info.rows[info.numRows++];
-		let _this3 = row3.jacobian;
+		const impulse3 = this._impulses[4];
+		const row3 = info.rows[info.numRows++];
+		const _this3 = row3.jacobian;
 		_this3.lin1X = 0;
 		_this3.lin1Y = 0;
 		_this3.lin1Z = 0;
@@ -26930,9 +27506,9 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		j.ang2X = this._basis.yX;
 		j.ang2Y = this._basis.yY;
 		j.ang2Z = this._basis.yZ;
-		let impulse4 = this._impulses[5];
-		let row4 = info.rows[info.numRows++];
-		let _this4 = row4.jacobian;
+		const impulse4 = this._impulses[5];
+		const row4 = info.rows[info.numRows++];
+		const _this4 = row4.jacobian;
 		_this4.lin1X = 0;
 		_this4.lin1Y = 0;
 		_this4.lin1Z = 0;
@@ -26965,11 +27541,12 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		j.ang2Y = this._basis.zY;
 		j.ang2Z = this._basis.zZ;
 	}
+
 	_syncAnchors() {
 		super._syncAnchors();
-		let _this = this._basis;
-		let invM1 = _this.joint._b1._invMass;
-		let invM2 = _this.joint._b2._invMass;
+		const _this = this._basis;
+		const invM1 = _this.joint._b1._invMass;
+		const invM2 = _this.joint._b2._invMass;
 		let qX;
 		let qY;
 		let qZ;
@@ -27011,12 +27588,12 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = _this.joint._basisX1X;
-			let y1 = _this.joint._basisX1Y;
-			let z1 = _this.joint._basisX1Z;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = _this.joint._basisX1X;
+			const y1 = _this.joint._basisX1Y;
+			const z1 = _this.joint._basisX1Z;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -27052,7 +27629,7 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			cX = _this.joint._basisX1Y * _this.joint._basisX2Z - _this.joint._basisX1Z * _this.joint._basisX2Y;
 			cY = _this.joint._basisX1Z * _this.joint._basisX2X - _this.joint._basisX1X * _this.joint._basisX2Z;
 			cZ = _this.joint._basisX1X * _this.joint._basisX2Y - _this.joint._basisX1Y * _this.joint._basisX2X;
-			let w = Math.sqrt((1 + d) * 0.5);
+			const w = Math.sqrt((1 + d) * 0.5);
 			d = 0.5 / w;
 			cX *= d;
 			cY *= d;
@@ -27112,7 +27689,7 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			slerpQZ = q2Z * l;
 			slerpQW = q2W * l;
 		} else {
-			let theta = invM1 / (invM1 + invM2) * Math.acos(d1);
+			const theta = invM1 / (invM1 + invM2) * Math.acos(d1);
 			q2X += q1X * -d1;
 			q2Y += q1Y * -d1;
 			q2Z += q1Z * -d1;
@@ -27125,8 +27702,8 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			q2Y *= l;
 			q2Z *= l;
 			q2W *= l;
-			let sin = Math.sin(theta);
-			let cos = Math.cos(theta);
+			const sin = Math.sin(theta);
+			const cos = Math.cos(theta);
 			q1X *= cos;
 			q1Y *= cos;
 			q1Z *= cos;
@@ -27136,22 +27713,22 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			slerpQZ = q1Z + q2Z * sin;
 			slerpQW = q1W + q2W * sin;
 		}
-		let x = slerpQX;
-		let y = slerpQY;
-		let z = slerpQZ;
-		let w = slerpQW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = slerpQX;
+		const y = slerpQY;
+		const z = slerpQZ;
+		const w = slerpQW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		slerpM00 = 1 - yy - zz;
 		slerpM01 = xy - wz;
 		slerpM02 = xz + wy;
@@ -27181,12 +27758,12 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			let vX;
 			let vY;
 			let vZ;
-			let x1 = prevXX;
-			let y1 = prevXY;
-			let z1 = prevXZ;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = prevXX;
+			const y1 = prevXY;
+			const z1 = prevXZ;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -27222,7 +27799,7 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			cX = prevXY * newXZ - prevXZ * newXY;
 			cY = prevXZ * newXX - prevXX * newXZ;
 			cZ = prevXX * newXY - prevXY * newXX;
-			let w = Math.sqrt((1 + d2) * 0.5);
+			const w = Math.sqrt((1 + d2) * 0.5);
 			d2 = 0.5 / w;
 			cX *= d2;
 			cY *= d2;
@@ -27232,22 +27809,22 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			slerpQZ = cZ;
 			slerpQW = w;
 		}
-		let x1 = slerpQX;
-		let y1 = slerpQY;
-		let z1 = slerpQZ;
-		let w1 = slerpQW;
-		let x21 = 2 * x1;
-		let y21 = 2 * y1;
-		let z21 = 2 * z1;
-		let xx1 = x1 * x21;
-		let yy1 = y1 * y21;
-		let zz1 = z1 * z21;
-		let xy1 = x1 * y21;
-		let yz1 = y1 * z21;
-		let xz1 = x1 * z21;
-		let wx1 = w1 * x21;
-		let wy1 = w1 * y21;
-		let wz1 = w1 * z21;
+		const x1 = slerpQX;
+		const y1 = slerpQY;
+		const z1 = slerpQZ;
+		const w1 = slerpQW;
+		const x21 = 2 * x1;
+		const y21 = 2 * y1;
+		const z21 = 2 * z1;
+		const xx1 = x1 * x21;
+		const yy1 = y1 * y21;
+		const zz1 = z1 * z21;
+		const xy1 = x1 * y21;
+		const yz1 = y1 * z21;
+		const xz1 = x1 * z21;
+		const wx1 = w1 * x21;
+		const wy1 = w1 * y21;
+		const wz1 = w1 * z21;
 		slerpM00 = 1 - yy1 - zz1;
 		slerpM01 = xy1 - wz1;
 		slerpM02 = xz1 + wy1;
@@ -27278,12 +27855,12 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 			newZY *= l;
 			newZZ *= l;
 		} else {
-			let x1 = newXX;
-			let y1 = newXY;
-			let z1 = newXZ;
-			let x2 = x1 * x1;
-			let y2 = y1 * y1;
-			let z2 = z1 * z1;
+			const x1 = newXX;
+			const y1 = newXY;
+			const z1 = newXZ;
+			const x2 = x1 * x1;
+			const y2 = y1 * y1;
+			const z2 = z1 * z1;
 			let d;
 			if(x2 < y2) {
 				if(x2 < z2) {
@@ -27328,7 +27905,7 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		angErrorY = this._basisX1Z * this._basisX2X - this._basisX1X * this._basisX2Z;
 		angErrorZ = this._basisX1X * this._basisX2Y - this._basisX1Y * this._basisX2X;
 		let cos = this._basisX1X * this._basisX2X + this._basisX1Y * this._basisX2Y + this._basisX1Z * this._basisX2Z;
-		let theta = cos <= -1 ? 3.14159265358979 : cos >= 1 ? 0 : Math.acos(cos);
+		const theta = cos <= -1 ? 3.14159265358979 : cos >= 1 ? 0 : Math.acos(cos);
 		let l = angErrorX * angErrorX + angErrorY * angErrorY + angErrorZ * angErrorZ;
 		if(l > 0) {
 			l = 1 / Math.sqrt(l);
@@ -27356,72 +27933,85 @@ oimo.dynamics.constraint.joint.RevoluteJoint = class oimo_dynamics_constraint_jo
 		this.linearErrorY = this._anchor2Y - this._anchor1Y;
 		this.linearErrorZ = this._anchor2Z - this._anchor1Z;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX1X;
 		v.y = this._basisX1Y;
 		v.z = this._basisX1Z;
 		return v;
 	}
+
 	getAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX2X;
 		v.y = this._basisX2Y;
 		v.z = this._basisX2Z;
 		return v;
 	}
+
 	getAxis1To(axis) {
 		axis.x = this._basisX1X;
 		axis.y = this._basisX1Y;
 		axis.z = this._basisX1Z;
 	}
+
 	getAxis2To(axis) {
 		axis.x = this._basisX2X;
 		axis.y = this._basisX2Y;
 		axis.z = this._basisX2Z;
 	}
+
 	getLocalAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX1X;
 		v.y = this._localBasisX1Y;
 		v.z = this._localBasisX1Z;
 		return v;
 	}
+
 	getLocalAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX2X;
 		v.y = this._localBasisX2Y;
 		v.z = this._localBasisX2Z;
 		return v;
 	}
+
 	getLocalAxis1To(axis) {
 		axis.x = this._localBasisX1X;
 		axis.y = this._localBasisX1Y;
 		axis.z = this._localBasisX1Z;
 	}
+
 	getLocalAxis2To(axis) {
 		axis.x = this._localBasisX2X;
 		axis.y = this._localBasisX2Y;
 		axis.z = this._localBasisX2Z;
 	}
+
 	getSpringDamper() {
 		return this._sd;
 	}
+
 	getLimitMotor() {
 		return this._lm;
 	}
+
 	getAngle() {
 		return this.angle;
 	}
-}
+};
 oimo.dynamics.constraint.joint.RevoluteJointConfig = class oimo_dynamics_constraint_joint_RevoluteJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
@@ -27430,9 +28020,10 @@ oimo.dynamics.constraint.joint.RevoluteJointConfig = class oimo_dynamics_constra
 		this.springDamper = new oimo.dynamics.constraint.joint.SpringDamper();
 		this.limitMotor = new oimo.dynamics.constraint.joint.RotationalLimitMotor();
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor,worldAxis) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
-		let localVector = this.localAxis1;
+		const localVector = this.localAxis1;
 		let vX;
 		let vY;
 		let vZ;
@@ -27451,7 +28042,7 @@ oimo.dynamics.constraint.joint.RevoluteJointConfig = class oimo_dynamics_constra
 		localVector.x = vX;
 		localVector.y = vY;
 		localVector.z = vZ;
-		let localVector1 = this.localAxis2;
+		const localVector1 = this.localAxis2;
 		let vX1;
 		let vY1;
 		let vZ1;
@@ -27472,37 +28063,41 @@ oimo.dynamics.constraint.joint.RevoluteJointConfig = class oimo_dynamics_constra
 		localVector1.z = vZ1;
 		return this;
 	}
-}
+};
 oimo.dynamics.constraint.joint.RotationalLimitMotor = class oimo_dynamics_constraint_joint_RotationalLimitMotor {
 	constructor() {
 		this.lowerLimit = 1;
 		this.upperLimit = 0;
 		this.motorTorque = 0;
 	}
+
 	setLimits(lower,upper) {
 		this.lowerLimit = lower;
 		this.upperLimit = upper;
 		return this;
 	}
+
 	setMotor(speed,torque) {
 		this.motorSpeed = speed;
 		this.motorTorque = torque;
 		return this;
 	}
+
 	clone() {
-		let lm = new oimo.dynamics.constraint.joint.RotationalLimitMotor();
+		const lm = new oimo.dynamics.constraint.joint.RotationalLimitMotor();
 		lm.lowerLimit = this.lowerLimit;
 		lm.upperLimit = this.upperLimit;
 		lm.motorSpeed = this.motorSpeed;
 		lm.motorTorque = this.motorTorque;
 		return lm;
 	}
-}
+};
 oimo.dynamics.constraint.joint.SphericalJoint = class oimo_dynamics_constraint_joint_SphericalJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,0);
 		this._sd = config.springDamper.clone();
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
 		if(this._sd.frequency > 0 && isPositionPart) {
 			return;
@@ -27516,14 +28111,14 @@ oimo.dynamics.constraint.joint.SphericalJoint = class oimo_dynamics_constraint_j
 		let cfm;
 		let erp;
 		if(this._sd.frequency > 0) {
-			let omega = 6.28318530717958 * this._sd.frequency;
+			const omega = 6.28318530717958 * this._sd.frequency;
 			let zeta = this._sd.dampingRatio;
 			if(zeta < oimo.common.Setting.minSpringDamperDampingRatio) {
 				zeta = oimo.common.Setting.minSpringDamperDampingRatio;
 			}
-			let h = timeStep.dt;
-			let c = 2 * zeta * omega;
-			let k = omega * omega;
+			const h = timeStep.dt;
+			const c = 2 * zeta * omega;
+			const k = omega * omega;
 			if(this._sd.useSymplecticEuler) {
 				cfm = 1 / (h * c);
 				erp = k / c;
@@ -27596,9 +28191,9 @@ oimo.dynamics.constraint.joint.SphericalJoint = class oimo_dynamics_constraint_j
 		crossR220 = -crossR220;
 		crossR221 = -crossR221;
 		crossR222 = -crossR222;
-		let impulse = this._impulses[0];
-		let row = info.rows[info.numRows++];
-		let _this = row.jacobian;
+		const impulse = this._impulses[0];
+		const row = info.rows[info.numRows++];
+		const _this = row.jacobian;
 		_this.lin1X = 0;
 		_this.lin1Y = 0;
 		_this.lin1Z = 0;
@@ -27636,9 +28231,9 @@ oimo.dynamics.constraint.joint.SphericalJoint = class oimo_dynamics_constraint_j
 		j.ang2X = crossR200;
 		j.ang2Y = crossR201;
 		j.ang2Z = crossR202;
-		let impulse1 = this._impulses[1];
-		let row1 = info.rows[info.numRows++];
-		let _this1 = row1.jacobian;
+		const impulse1 = this._impulses[1];
+		const row1 = info.rows[info.numRows++];
+		const _this1 = row1.jacobian;
 		_this1.lin1X = 0;
 		_this1.lin1Y = 0;
 		_this1.lin1Z = 0;
@@ -27676,9 +28271,9 @@ oimo.dynamics.constraint.joint.SphericalJoint = class oimo_dynamics_constraint_j
 		j.ang2X = crossR210;
 		j.ang2Y = crossR211;
 		j.ang2Z = crossR212;
-		let impulse2 = this._impulses[2];
-		let row2 = info.rows[info.numRows++];
-		let _this2 = row2.jacobian;
+		const impulse2 = this._impulses[2];
+		const row2 = info.rows[info.numRows++];
+		const _this2 = row2.jacobian;
 		_this2.lin1X = 0;
 		_this2.lin1Y = 0;
 		_this2.lin1Z = 0;
@@ -27717,84 +28312,94 @@ oimo.dynamics.constraint.joint.SphericalJoint = class oimo_dynamics_constraint_j
 		j.ang2Y = crossR221;
 		j.ang2Z = crossR222;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getSpringDamper() {
 		return this._sd;
 	}
-}
+};
 oimo.dynamics.constraint.joint.SphericalJointConfig = class oimo_dynamics_constraint_joint_SphericalJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
 		this.springDamper = new oimo.dynamics.constraint.joint.SpringDamper();
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
 		return this;
 	}
-}
+};
 oimo.dynamics.constraint.joint.SpringDamper = class oimo_dynamics_constraint_joint_SpringDamper {
 	constructor() {
 		this.frequency = 0;
 		this.dampingRatio = 0;
 		this.useSymplecticEuler = false;
 	}
+
 	setSpring(frequency,dampingRatio) {
 		this.frequency = frequency;
 		this.dampingRatio = dampingRatio;
 		return this;
 	}
+
 	setSymplecticEuler(useSymplecticEuler) {
 		this.useSymplecticEuler = useSymplecticEuler;
 		return this;
 	}
+
 	clone() {
-		let sd = new oimo.dynamics.constraint.joint.SpringDamper();
+		const sd = new oimo.dynamics.constraint.joint.SpringDamper();
 		sd.frequency = this.frequency;
 		sd.dampingRatio = this.dampingRatio;
 		sd.useSymplecticEuler = this.useSymplecticEuler;
 		return sd;
 	}
-}
+};
 oimo.dynamics.constraint.joint.TranslationalLimitMotor = class oimo_dynamics_constraint_joint_TranslationalLimitMotor {
 	constructor() {
 		this.lowerLimit = 1;
 		this.upperLimit = 0;
 		this.motorForce = 0;
 	}
+
 	setLimits(lower,upper) {
 		this.lowerLimit = lower;
 		this.upperLimit = upper;
 		return this;
 	}
+
 	setMotor(speed,force) {
 		this.motorSpeed = speed;
 		this.motorForce = force;
 		return this;
 	}
+
 	clone() {
-		let lm = new oimo.dynamics.constraint.joint.TranslationalLimitMotor();
+		const lm = new oimo.dynamics.constraint.joint.TranslationalLimitMotor();
 		lm.lowerLimit = this.lowerLimit;
 		lm.upperLimit = this.upperLimit;
 		lm.motorSpeed = this.motorSpeed;
 		lm.motorForce = this.motorForce;
 		return lm;
 	}
-}
+};
 oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_joint_UniversalJoint extends oimo.dynamics.constraint.joint.Joint {
 	constructor(config) {
 		super(config,oimo.dynamics.constraint.joint.JointType.UNIVERSAL);
-		let v = config.localAxis1;
+		const v = config.localAxis1;
 		this._localBasisX1X = v.x;
 		this._localBasisX1Y = v.y;
 		this._localBasisX1Z = v.z;
-		let v1 = config.localAxis2;
+		const v1 = config.localAxis2;
 		this._localBasisZ2X = v1.x;
 		this._localBasisZ2Y = v1.y;
 		this._localBasisZ2Z = v1.z;
@@ -27810,15 +28415,16 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		this._lm1 = config.limitMotor1.clone();
 		this._lm2 = config.limitMotor2.clone();
 	}
+
 	getInfo(info,timeStep,isPositionPart) {
-		let erp = this.getErp(timeStep,isPositionPart);
+		const erp = this.getErp(timeStep,isPositionPart);
 		let linearRhsX;
 		let linearRhsY;
 		let linearRhsZ;
 		linearRhsX = this.linearErrorX * erp;
 		linearRhsY = this.linearErrorY * erp;
 		linearRhsZ = this.linearErrorZ * erp;
-		let angRhsY = this._angleY * erp;
+		const angRhsY = this._angleY * erp;
 		let crossR100;
 		let crossR101;
 		let crossR102;
@@ -27873,11 +28479,11 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		crossR220 = -crossR220;
 		crossR221 = -crossR221;
 		crossR222 = -crossR222;
-		let motorMassX = this.computeEffectiveInertiaMoment(this._axisXX,this._axisXY,this._axisXZ);
-		let motorMassZ = this.computeEffectiveInertiaMoment(this._axisZX,this._axisZY,this._axisZZ);
-		let impulse = this._impulses[0];
-		let row = info.rows[info.numRows++];
-		let _this = row.jacobian;
+		const motorMassX = this.computeEffectiveInertiaMoment(this._axisXX,this._axisXY,this._axisXZ);
+		const motorMassZ = this.computeEffectiveInertiaMoment(this._axisZX,this._axisZY,this._axisZZ);
+		const impulse = this._impulses[0];
+		const row = info.rows[info.numRows++];
+		const _this = row.jacobian;
 		_this.lin1X = 0;
 		_this.lin1Y = 0;
 		_this.lin1Z = 0;
@@ -27915,9 +28521,9 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		j.ang2X = crossR200;
 		j.ang2Y = crossR201;
 		j.ang2Z = crossR202;
-		let impulse1 = this._impulses[1];
-		let row1 = info.rows[info.numRows++];
-		let _this1 = row1.jacobian;
+		const impulse1 = this._impulses[1];
+		const row1 = info.rows[info.numRows++];
+		const _this1 = row1.jacobian;
 		_this1.lin1X = 0;
 		_this1.lin1Y = 0;
 		_this1.lin1Z = 0;
@@ -27955,9 +28561,9 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		j.ang2X = crossR210;
 		j.ang2Y = crossR211;
 		j.ang2Z = crossR212;
-		let impulse2 = this._impulses[2];
-		let row2 = info.rows[info.numRows++];
-		let _this2 = row2.jacobian;
+		const impulse2 = this._impulses[2];
+		const row2 = info.rows[info.numRows++];
+		const _this2 = row2.jacobian;
 		_this2.lin1X = 0;
 		_this2.lin1Y = 0;
 		_this2.lin1Z = 0;
@@ -27996,9 +28602,9 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		j.ang2Y = crossR221;
 		j.ang2Z = crossR222;
 		if(!this.xSingular && (this._sd1.frequency <= 0 || !isPositionPart)) {
-			let impulse = this._impulses[3];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[3];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -28029,9 +28635,9 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 			j.ang2Z = this._axisXZ;
 		}
 		if(!this.ySingular) {
-			let impulse = this._impulses[4];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[4];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -28065,9 +28671,9 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 			j.ang2Z = this._axisYZ;
 		}
 		if(!this.zSingular && (this._sd2.frequency <= 0 || !isPositionPart)) {
-			let impulse = this._impulses[5];
-			let row = info.rows[info.numRows++];
-			let _this = row.jacobian;
+			const impulse = this._impulses[5];
+			const row = info.rows[info.numRows++];
+			const _this = row.jacobian;
 			_this.lin1X = 0;
 			_this.lin1Y = 0;
 			_this.lin1Z = 0;
@@ -28098,6 +28704,7 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 			j.ang2Z = this._axisZZ;
 		}
 	}
+
 	_syncAnchors() {
 		super._syncAnchors();
 		let angleAxisXX;
@@ -28218,14 +28825,14 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		let anglesX;
 		let anglesY;
 		let anglesZ;
-		let sy = relRot02;
+		const sy = relRot02;
 		if(sy <= -1) {
-			let xSubZ = Math.atan2(relRot21,relRot11);
+			const xSubZ = Math.atan2(relRot21,relRot11);
 			anglesX = xSubZ * 0.5;
 			anglesY = -1.570796326794895;
 			anglesZ = -xSubZ * 0.5;
 		} else if(sy >= 1) {
-			let xAddZ = Math.atan2(relRot21,relRot11);
+			const xAddZ = Math.atan2(relRot21,relRot11);
 			anglesX = xAddZ * 0.5;
 			anglesY = 1.570796326794895;
 			anglesZ = xAddZ * 0.5;
@@ -28241,81 +28848,97 @@ oimo.dynamics.constraint.joint.UniversalJoint = class oimo_dynamics_constraint_j
 		this.linearErrorY = this._anchor2Y - this._anchor1Y;
 		this.linearErrorZ = this._anchor2Z - this._anchor1Z;
 	}
+
 	_getVelocitySolverInfo(timeStep,info) {
 		super._getVelocitySolverInfo(timeStep,info);
 		this.getInfo(info,timeStep,false);
 	}
+
 	_getPositionSolverInfo(info) {
 		super._getPositionSolverInfo(info);
 		this.getInfo(info,null,true);
 	}
+
 	getAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisX1X;
 		v.y = this._basisX1Y;
 		v.z = this._basisX1Z;
 		return v;
 	}
+
 	getAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._basisZ2X;
 		v.y = this._basisZ2Y;
 		v.z = this._basisZ2Z;
 		return v;
 	}
+
 	getAxis1To(axis) {
 		axis.x = this._basisX1X;
 		axis.y = this._basisX1Y;
 		axis.z = this._basisX1Z;
 	}
+
 	getAxis2To(axis) {
 		axis.x = this._basisZ2X;
 		axis.y = this._basisZ2Y;
 		axis.z = this._basisZ2Z;
 	}
+
 	getLocalAxis1() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisX1X;
 		v.y = this._localBasisX1Y;
 		v.z = this._localBasisX1Z;
 		return v;
 	}
+
 	getLocalAxis2() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._localBasisZ2X;
 		v.y = this._localBasisZ2Y;
 		v.z = this._localBasisZ2Z;
 		return v;
 	}
+
 	getLocalAxis1To(axis) {
 		axis.x = this._localBasisX1X;
 		axis.y = this._localBasisX1Y;
 		axis.z = this._localBasisX1Z;
 	}
+
 	getLocalAxis2To(axis) {
 		axis.x = this._localBasisZ2X;
 		axis.y = this._localBasisZ2Y;
 		axis.z = this._localBasisZ2Z;
 	}
+
 	getSpringDamper1() {
 		return this._sd1;
 	}
+
 	getSpringDamper2() {
 		return this._sd2;
 	}
+
 	getLimitMotor1() {
 		return this._lm1;
 	}
+
 	getLimitMotor2() {
 		return this._lm2;
 	}
+
 	getAngle1() {
 		return this._angleX;
 	}
+
 	getAngle2() {
 		return this._angleZ;
 	}
-}
+};
 oimo.dynamics.constraint.joint.UniversalJointConfig = class oimo_dynamics_constraint_joint_UniversalJointConfig extends oimo.dynamics.constraint.joint.JointConfig {
 	constructor() {
 		super();
@@ -28326,9 +28949,10 @@ oimo.dynamics.constraint.joint.UniversalJointConfig = class oimo_dynamics_constr
 		this.limitMotor1 = new oimo.dynamics.constraint.joint.RotationalLimitMotor();
 		this.limitMotor2 = new oimo.dynamics.constraint.joint.RotationalLimitMotor();
 	}
+
 	init(rigidBody1,rigidBody2,worldAnchor,worldAxis1,worldAxis2) {
 		this._init(rigidBody1,rigidBody2,worldAnchor);
-		let localVector = this.localAxis1;
+		const localVector = this.localAxis1;
 		let vX;
 		let vY;
 		let vZ;
@@ -28347,7 +28971,7 @@ oimo.dynamics.constraint.joint.UniversalJointConfig = class oimo_dynamics_constr
 		localVector.x = vX;
 		localVector.y = vY;
 		localVector.z = vZ;
-		let localVector1 = this.localAxis2;
+		const localVector1 = this.localAxis2;
 		let vX1;
 		let vY1;
 		let vZ1;
@@ -28368,10 +28992,10 @@ oimo.dynamics.constraint.joint.UniversalJointConfig = class oimo_dynamics_constr
 		localVector1.z = vZ1;
 		return this;
 	}
-}
+};
 if(!oimo.dynamics.constraint.solver) oimo.dynamics.constraint.solver = {};
 oimo.dynamics.constraint.solver.ConstraintSolverType = class oimo_dynamics_constraint_solver_ConstraintSolverType {
-}
+};
 if(!oimo.dynamics.constraint.solver.common) oimo.dynamics.constraint.solver.common = {};
 oimo.dynamics.constraint.solver.common.ContactSolverMassDataRow = class oimo_dynamics_constraint_solver_common_ContactSolverMassDataRow {
 	constructor() {
@@ -28417,7 +29041,7 @@ oimo.dynamics.constraint.solver.common.ContactSolverMassDataRow = class oimo_dyn
 		this.massTB10 = 0;
 		this.massTB11 = 0;
 	}
-}
+};
 oimo.dynamics.constraint.solver.common.JointSolverMassDataRow = class oimo_dynamics_constraint_solver_common_JointSolverMassDataRow {
 	constructor() {
 		this.invMLin1X = 0;
@@ -28435,7 +29059,7 @@ oimo.dynamics.constraint.solver.common.JointSolverMassDataRow = class oimo_dynam
 		this.mass = 0;
 		this.massWithoutCfm = 0;
 	}
-}
+};
 if(!oimo.dynamics.constraint.solver.direct) oimo.dynamics.constraint.solver.direct = {};
 oimo.dynamics.constraint.solver.direct.Boundary = class oimo_dynamics_constraint_solver_direct_Boundary {
 	constructor(maxRows) {
@@ -28447,55 +29071,57 @@ oimo.dynamics.constraint.solver.direct.Boundary = class oimo_dynamics_constraint
 		this.numUnbounded = 0;
 		this.matrixId = 0;
 	}
+
 	init(buildInfo) {
 		this.numBounded = buildInfo.numBounded;
 		let _g = 0;
-		let _g1 = this.numBounded;
+		const _g1 = this.numBounded;
 		while(_g < _g1) {
-			let i = _g++;
+			const i = _g++;
 			this.iBounded[i] = buildInfo.iBounded[i];
 			this.signs[i] = buildInfo.signs[i];
 		}
 		this.numUnbounded = buildInfo.numUnbounded;
 		this.matrixId = 0;
 		let _g2 = 0;
-		let _g3 = this.numUnbounded;
+		const _g3 = this.numUnbounded;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let idx = buildInfo.iUnbounded[i];
+			const i = _g2++;
+			const idx = buildInfo.iUnbounded[i];
 			this.iUnbounded[i] = idx;
 			this.matrixId |= 1 << idx;
 		}
 	}
+
 	computeImpulses(info,mass,relVels,impulses,dImpulses,impulseFactor,noCheck) {
 		let _g = 0;
-		let _g1 = this.numUnbounded;
+		const _g1 = this.numUnbounded;
 		while(_g < _g1) {
-			let idx = this.iUnbounded[_g++];
-			let row = info.rows[idx];
+			const idx = this.iUnbounded[_g++];
+			const row = info.rows[idx];
 			this.b[idx] = row.rhs * impulseFactor - relVels[idx] - row.cfm * impulses[idx];
 		}
-		let invMassWithoutCfm = mass._invMassWithoutCfm;
+		const invMassWithoutCfm = mass._invMassWithoutCfm;
 		let _g2 = 0;
-		let _g3 = this.numBounded;
+		const _g3 = this.numBounded;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let idx = this.iBounded[i];
-			let sign = this.signs[i];
-			let row = info.rows[idx];
-			let dImpulse = (sign < 0 ? row.minImpulse : sign > 0 ? row.maxImpulse : 0) - impulses[idx];
+			const i = _g2++;
+			const idx = this.iBounded[i];
+			const sign = this.signs[i];
+			const row = info.rows[idx];
+			const dImpulse = (sign < 0 ? row.minImpulse : sign > 0 ? row.maxImpulse : 0) - impulses[idx];
 			dImpulses[idx] = dImpulse;
 			if(dImpulse != 0) {
 				let _g = 0;
-				let _g1 = this.numUnbounded;
+				const _g1 = this.numUnbounded;
 				while(_g < _g1) {
-					let idx2 = this.iUnbounded[_g++];
+					const idx2 = this.iUnbounded[_g++];
 					this.b[idx2] -= invMassWithoutCfm[idx][idx2] * dImpulse;
 				}
 			}
 		}
-		let indices = this.iUnbounded;
-		let n = this.numUnbounded;
+		const indices = this.iUnbounded;
+		const n = this.numUnbounded;
 		let id = 0;
 		let _g4 = 0;
 		while(_g4 < n) id |= 1 << indices[_g4++];
@@ -28509,17 +29135,17 @@ oimo.dynamics.constraint.solver.direct.Boundary = class oimo_dynamics_constraint
 		}
 		let ok = true;
 		let _g5 = 0;
-		let _g6 = this.numUnbounded;
+		const _g6 = this.numUnbounded;
 		while(_g5 < _g6) {
-			let i = _g5++;
-			let idx = this.iUnbounded[i];
-			let row = info.rows[idx];
-			let oldImpulse = impulses[idx];
+			const i = _g5++;
+			const idx = this.iUnbounded[i];
+			const row = info.rows[idx];
+			const oldImpulse = impulses[idx];
 			let impulse = oldImpulse;
 			let _g = 0;
-			let _g1 = this.numUnbounded;
+			const _g1 = this.numUnbounded;
 			while(_g < _g1) {
-				let j = _g++;
+				const j = _g++;
 				impulse += this.b[this.iUnbounded[j]] * massMatrix[i][j];
 			}
 			if(impulse < row.minImpulse - oimo.common.Setting.directMlcpSolverEps || impulse > row.maxImpulse + oimo.common.Setting.directMlcpSolverEps) {
@@ -28535,19 +29161,19 @@ oimo.dynamics.constraint.solver.direct.Boundary = class oimo_dynamics_constraint
 			return false;
 		}
 		let _g7 = 0;
-		let _g8 = this.numBounded;
+		const _g8 = this.numBounded;
 		while(_g7 < _g8) {
-			let i = _g7++;
-			let idx = this.iBounded[i];
-			let row = info.rows[idx];
-			let sign = this.signs[i];
+			const i = _g7++;
+			const idx = this.iBounded[i];
+			const row = info.rows[idx];
+			const sign = this.signs[i];
 			let error = 0;
-			let newImpulse = impulses[idx] + dImpulses[idx];
+			const newImpulse = impulses[idx] + dImpulses[idx];
 			let relVel = relVels[idx];
 			let _g = 0;
-			let _g1 = info.numRows;
+			const _g1 = info.numRows;
 			while(_g < _g1) {
-				let j = _g++;
+				const j = _g++;
 				relVel += invMassWithoutCfm[idx][j] * dImpulses[j];
 			}
 			error = row.rhs * impulseFactor - relVel - row.cfm * newImpulse;
@@ -28558,7 +29184,7 @@ oimo.dynamics.constraint.solver.direct.Boundary = class oimo_dynamics_constraint
 		}
 		return ok;
 	}
-}
+};
 oimo.dynamics.constraint.solver.direct.BoundaryBuildInfo = class oimo_dynamics_constraint_solver_direct_BoundaryBuildInfo {
 	constructor(size) {
 		this.size = size;
@@ -28568,7 +29194,7 @@ oimo.dynamics.constraint.solver.direct.BoundaryBuildInfo = class oimo_dynamics_c
 		this.numUnbounded = 0;
 		this.iUnbounded = new Array(size);
 	}
-}
+};
 oimo.dynamics.constraint.solver.direct.BoundaryBuilder = class oimo_dynamics_constraint_solver_direct_BoundaryBuilder {
 	constructor(maxRows) {
 		this.maxRows = maxRows;
@@ -28576,6 +29202,7 @@ oimo.dynamics.constraint.solver.direct.BoundaryBuilder = class oimo_dynamics_con
 		this.boundaries = new Array(1 << maxRows);
 		this.bbInfo = new oimo.dynamics.constraint.solver.direct.BoundaryBuildInfo(maxRows);
 	}
+
 	buildBoundariesRecursive(info,i) {
 		if(i == info.numRows) {
 			if(this.boundaries[this.numBoundaries] == null) {
@@ -28584,11 +29211,11 @@ oimo.dynamics.constraint.solver.direct.BoundaryBuilder = class oimo_dynamics_con
 			this.boundaries[this.numBoundaries++].init(this.bbInfo);
 			return;
 		}
-		let row = info.rows[i];
-		let lowerLimitEnabled = row.minImpulse > -1e65536;
-		let upperLimitEnabled = row.maxImpulse < 1e65536;
+		const row = info.rows[i];
+		const lowerLimitEnabled = row.minImpulse > -1e65536;
+		const upperLimitEnabled = row.maxImpulse < 1e65536;
 		if(row.minImpulse == 0 && row.maxImpulse == 0) {
-			let _this = this.bbInfo;
+			const _this = this.bbInfo;
 			_this.iBounded[_this.numBounded] = i;
 			_this.signs[_this.numBounded] = 0;
 			_this.numBounded++;
@@ -28596,13 +29223,13 @@ oimo.dynamics.constraint.solver.direct.BoundaryBuilder = class oimo_dynamics_con
 			this.bbInfo.numBounded--;
 			return;
 		}
-		let _this = this.bbInfo;
+		const _this = this.bbInfo;
 		_this.iUnbounded[_this.numUnbounded] = i;
 		_this.numUnbounded++;
 		this.buildBoundariesRecursive(info,i + 1);
 		this.bbInfo.numUnbounded--;
 		if(lowerLimitEnabled) {
-			let _this = this.bbInfo;
+			const _this = this.bbInfo;
 			_this.iBounded[_this.numBounded] = i;
 			_this.signs[_this.numBounded] = -1;
 			_this.numBounded++;
@@ -28610,7 +29237,7 @@ oimo.dynamics.constraint.solver.direct.BoundaryBuilder = class oimo_dynamics_con
 			this.bbInfo.numBounded--;
 		}
 		if(upperLimitEnabled) {
-			let _this = this.bbInfo;
+			const _this = this.bbInfo;
 			_this.iBounded[_this.numBounded] = i;
 			_this.signs[_this.numBounded] = 1;
 			_this.numBounded++;
@@ -28618,14 +29245,15 @@ oimo.dynamics.constraint.solver.direct.BoundaryBuilder = class oimo_dynamics_con
 			this.bbInfo.numBounded--;
 		}
 	}
+
 	buildBoundaries(info) {
 		this.numBoundaries = 0;
-		let _this = this.bbInfo;
+		const _this = this.bbInfo;
 		_this.numBounded = 0;
 		_this.numUnbounded = 0;
 		this.buildBoundariesRecursive(info,0);
 	}
-}
+};
 oimo.dynamics.constraint.solver.direct.BoundarySelector = class oimo_dynamics_constraint_solver_direct_BoundarySelector {
 	constructor(n) {
 		this.n = n;
@@ -28633,30 +29261,33 @@ oimo.dynamics.constraint.solver.direct.BoundarySelector = class oimo_dynamics_co
 		this.tmpIndices = new Array(n);
 		let _g = 0;
 		while(_g < n) {
-			let i = _g++;
+			const i = _g++;
 			this.indices[i] = i;
 		}
 	}
+
 	getIndex(i) {
 		return this.indices[i];
 	}
+
 	select(index) {
 		let i = 0;
 		while(this.indices[i] != index) ++i;
 		while(i > 0) {
-			let tmp = this.indices[i];
+			const tmp = this.indices[i];
 			this.indices[i] = this.indices[i - 1];
 			this.indices[i - 1] = tmp;
 			--i;
 		}
 	}
+
 	setSize(size) {
 		let numSmaller = 0;
 		let numGreater = 0;
 		let _g = 0;
-		let _g1 = this.n;
+		const _g1 = this.n;
 		while(_g < _g1) {
-			let idx = this.indices[_g++];
+			const idx = this.indices[_g++];
 			if(idx < size) {
 				this.tmpIndices[numSmaller] = idx;
 				++numSmaller;
@@ -28665,24 +29296,24 @@ oimo.dynamics.constraint.solver.direct.BoundarySelector = class oimo_dynamics_co
 				++numGreater;
 			}
 		}
-		let tmp = this.indices;
+		const tmp = this.indices;
 		this.indices = this.tmpIndices;
 		this.tmpIndices = tmp;
 	}
-}
+};
 oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_dynamics_constraint_solver_direct_DirectJointConstraintSolver extends oimo.dynamics.constraint.ConstraintSolver {
 	constructor(joint) {
 		super();
 		this.joint = joint;
 		this.info = new oimo.dynamics.constraint.info.joint.JointSolverInfo();
-		let maxRows = oimo.common.Setting.maxJacobianRows;
+		const maxRows = oimo.common.Setting.maxJacobianRows;
 		this.massMatrix = new oimo.dynamics.constraint.solver.direct.MassMatrix(maxRows);
 		this.boundaryBuilder = new oimo.dynamics.constraint.solver.direct.BoundaryBuilder(maxRows);
 		this.massData = new Array(maxRows);
 		let _g = 0;
-		let _g1 = this.massData.length;
+		const _g1 = this.massData.length;
 		while(_g < _g1) this.massData[_g++] = new oimo.dynamics.constraint.solver.common.JointSolverMassDataRow();
-		let numMaxBoundaries = this.boundaryBuilder.boundaries.length;
+		const numMaxBoundaries = this.boundaryBuilder.boundaries.length;
 		this.velBoundarySelector = new oimo.dynamics.constraint.solver.direct.BoundarySelector(numMaxBoundaries);
 		this.posBoundarySelector = new oimo.dynamics.constraint.solver.direct.BoundarySelector(numMaxBoundaries);
 		this.relVels = new Array(maxRows);
@@ -28691,33 +29322,34 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		this.dTotalImpulses = new Array(maxRows);
 		let _g2 = 0;
 		while(_g2 < maxRows) {
-			let i = _g2++;
+			const i = _g2++;
 			this.relVels[i] = 0;
 			this.impulses[i] = 0;
 			this.dImpulses[i] = 0;
 			this.dTotalImpulses[i] = 0;
 		}
 	}
+
 	preSolveVelocity(timeStep) {
 		this.joint._syncAnchors();
 		this.joint._getVelocitySolverInfo(timeStep,this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
 		this.massMatrix.computeInvMass(this.info,this.massData);
-		let _this = this.boundaryBuilder;
+		const _this = this.boundaryBuilder;
 		_this.numBoundaries = 0;
-		let _this1 = _this.bbInfo;
+		const _this1 = _this.bbInfo;
 		_this1.numBounded = 0;
 		_this1.numUnbounded = 0;
 		_this.buildBoundariesRecursive(this.info,0);
-		let _this2 = this.velBoundarySelector;
-		let size = this.boundaryBuilder.numBoundaries;
+		const _this2 = this.velBoundarySelector;
+		const size = this.boundaryBuilder.numBoundaries;
 		let numSmaller = 0;
 		let numGreater = 0;
 		let _g = 0;
-		let _g1 = _this2.n;
+		const _g1 = _this2.n;
 		while(_g < _g1) {
-			let idx = _this2.indices[_g++];
+			const idx = _this2.indices[_g++];
 			if(idx < size) {
 				_this2.tmpIndices[numSmaller] = idx;
 				++numSmaller;
@@ -28726,18 +29358,19 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 				++numGreater;
 			}
 		}
-		let tmp = _this2.indices;
+		const tmp = _this2.indices;
 		_this2.indices = _this2.tmpIndices;
 		_this2.tmpIndices = tmp;
 	}
+
 	warmStart(timeStep) {
 		let factor = this.joint._positionCorrectionAlgorithm == oimo.dynamics.constraint.PositionCorrectionAlgorithm.BAUMGARTE ? oimo.common.Setting.jointWarmStartingFactorForBaungarte : oimo.common.Setting.jointWarmStartingFactor;
 		factor *= timeStep.dtRatio;
 		if(factor <= 0) {
 			let _g = 0;
-			let _g1 = this.info.numRows;
+			const _g1 = this.info.numRows;
 			while(_g < _g1) {
-				let _this = this.info.rows[_g++].impulse;
+				const _this = this.info.rows[_g++].impulse;
 				_this.impulse = 0;
 				_this.impulseM = 0;
 				_this.impulseP = 0;
@@ -28745,11 +29378,11 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			return;
 		}
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let imp = row.impulse;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const imp = row.impulse;
 			let impulse = imp.impulse * factor;
 			if(impulse < row.minImpulse) {
 				impulse = row.minImpulse;
@@ -28759,7 +29392,7 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			imp.impulse = impulse;
 			if(row.motorMaxImpulse > 0) {
 				let impulseM = imp.impulseM * factor;
-				let max = row.motorMaxImpulse;
+				const max = row.motorMaxImpulse;
 				if(impulseM < -max) {
 					impulseM = -max;
 				} else if(impulseM > max) {
@@ -28771,7 +29404,7 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			}
 			this.dImpulses[i] = imp.impulse + imp.impulseM;
 		}
-		let impulses = this.dImpulses;
+		const impulses = this.dImpulses;
 		let linearSet = false;
 		let angularSet = false;
 		let lv1X;
@@ -28799,12 +29432,12 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		av2Y = this._b2._angVelY;
 		av2Z = this._b2._angVelZ;
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let j = this.info.rows[i].jacobian;
-			let md = this.massData[i];
-			let imp = impulses[i];
+			const i = _g2++;
+			const j = this.info.rows[i].jacobian;
+			const md = this.massData[i];
+			const imp = impulses[i];
 			if((j.flag & 1) != 0) {
 				lv1X += md.invMLin1X * imp;
 				lv1Y += md.invMLin1Y * imp;
@@ -28841,8 +29474,9 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			this._b2._angVelZ = av2Z;
 		}
 	}
+
 	solveVelocity() {
-		let numRows = this.info.numRows;
+		const numRows = this.info.numRows;
 		let lv1X;
 		let lv1Y;
 		let lv1Z;
@@ -28869,9 +29503,9 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		av2Z = this._b2._angVelZ;
 		let _g = 0;
 		while(_g < numRows) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let j = row.jacobian;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const j = row.jacobian;
 			let relVel = 0;
 			relVel += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			relVel -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
@@ -28881,45 +29515,45 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			this.impulses[i] = row.impulse.impulse;
 			this.dTotalImpulses[i] = 0;
 		}
-		let invMass = this.massMatrix._invMassWithoutCfm;
+		const invMass = this.massMatrix._invMassWithoutCfm;
 		let _g1 = 0;
 		while(_g1 < numRows) {
-			let i = _g1++;
-			let row = this.info.rows[i];
-			let imp = row.impulse;
+			const i = _g1++;
+			const row = this.info.rows[i];
+			const imp = row.impulse;
 			if(row.motorMaxImpulse > 0) {
-				let oldImpulseM = imp.impulseM;
+				const oldImpulseM = imp.impulseM;
 				let impulseM = oldImpulseM + this.massData[i].massWithoutCfm * (-row.motorSpeed - this.relVels[i]);
-				let maxImpulseM = row.motorMaxImpulse;
+				const maxImpulseM = row.motorMaxImpulse;
 				if(impulseM < -maxImpulseM) {
 					impulseM = -maxImpulseM;
 				} else if(impulseM > maxImpulseM) {
 					impulseM = maxImpulseM;
 				}
 				imp.impulseM = impulseM;
-				let dImpulseM = impulseM - oldImpulseM;
+				const dImpulseM = impulseM - oldImpulseM;
 				this.dTotalImpulses[i] = dImpulseM;
 				let _g = 0;
 				while(_g < numRows) {
-					let j = _g++;
+					const j = _g++;
 					this.relVels[j] += dImpulseM * invMass[i][j];
 				}
 			}
 		}
 		let solved = false;
 		let _g2 = 0;
-		let _g3 = this.boundaryBuilder.numBoundaries;
+		const _g3 = this.boundaryBuilder.numBoundaries;
 		while(_g2 < _g3) {
-			let idx = this.velBoundarySelector.indices[_g2++];
+			const idx = this.velBoundarySelector.indices[_g2++];
 			if(this.boundaryBuilder.boundaries[idx].computeImpulses(this.info,this.massMatrix,this.relVels,this.impulses,this.dImpulses,1,false)) {
 				let _g = 0;
 				while(_g < numRows) {
-					let j = _g++;
-					let dimp = this.dImpulses[j];
+					const j = _g++;
+					const dimp = this.dImpulses[j];
 					this.info.rows[j].impulse.impulse += dimp;
 					this.dTotalImpulses[j] += dimp;
 				}
-				let impulses = this.dTotalImpulses;
+				const impulses = this.dTotalImpulses;
 				let linearSet = false;
 				let angularSet = false;
 				let lv1X;
@@ -28947,12 +29581,12 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 				av2Y = this._b2._angVelY;
 				av2Z = this._b2._angVelZ;
 				let _g1 = 0;
-				let _g2 = this.info.numRows;
+				const _g2 = this.info.numRows;
 				while(_g1 < _g2) {
-					let i = _g1++;
-					let j = this.info.rows[i].jacobian;
-					let md = this.massData[i];
-					let imp = impulses[i];
+					const i = _g1++;
+					const j = this.info.rows[i].jacobian;
+					const md = this.massData[i];
+					const imp = impulses[i];
 					if((j.flag & 1) != 0) {
 						lv1X += md.invMLin1X * imp;
 						lv1Y += md.invMLin1Y * imp;
@@ -28988,11 +29622,11 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					this._b2._angVelY = av2Y;
 					this._b2._angVelZ = av2Z;
 				}
-				let _this = this.velBoundarySelector;
+				const _this = this.velBoundarySelector;
 				let i = 0;
 				while(_this.indices[i] != idx) ++i;
 				while(i > 0) {
-					let tmp = _this.indices[i];
+					const tmp = _this.indices[i];
 					_this.indices[i] = _this.indices[i - 1];
 					_this.indices[i - 1] = tmp;
 					--i;
@@ -29002,10 +29636,11 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			}
 		}
 		if(!solved) {
-			console.log("src/oimo/dynamics/constraint/solver/direct/DirectJointConstraintSolver.hx:335:","could not find solution. (velocity)");
-			return;
+			console.log('src/oimo/dynamics/constraint/solver/direct/DirectJointConstraintSolver.hx:335:','could not find solution. (velocity)');
+			
 		}
 	}
+
 	postSolveVelocity(timeStep) {
 		let linX;
 		let linY;
@@ -29020,11 +29655,11 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		angY = 0;
 		angZ = 0;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let row = this.info.rows[_g++];
-			let imp = row.impulse;
-			let j = row.jacobian;
+			const row = this.info.rows[_g++];
+			const imp = row.impulse;
+			const j = row.jacobian;
 			if((j.flag & 1) != 0) {
 				linX += j.lin1X * imp.impulse;
 				linY += j.lin1Y * imp.impulse;
@@ -29042,26 +29677,27 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		this.joint._appliedTorqueY = angY * timeStep.invDt;
 		this.joint._appliedTorqueZ = angZ * timeStep.invDt;
 	}
+
 	preSolvePosition(timeStep) {
 		this.joint._syncAnchors();
 		this.joint._getPositionSolverInfo(this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
 		this.massMatrix.computeInvMass(this.info,this.massData);
-		let _this = this.boundaryBuilder;
+		const _this = this.boundaryBuilder;
 		_this.numBoundaries = 0;
-		let _this1 = _this.bbInfo;
+		const _this1 = _this.bbInfo;
 		_this1.numBounded = 0;
 		_this1.numUnbounded = 0;
 		_this.buildBoundariesRecursive(this.info,0);
-		let _this2 = this.posBoundarySelector;
-		let size = this.boundaryBuilder.numBoundaries;
+		const _this2 = this.posBoundarySelector;
+		const size = this.boundaryBuilder.numBoundaries;
 		let numSmaller = 0;
 		let numGreater = 0;
 		let _g = 0;
-		let _g1 = _this2.n;
+		const _g1 = _this2.n;
 		while(_g < _g1) {
-			let idx = _this2.indices[_g++];
+			const idx = _this2.indices[_g++];
 			if(idx < size) {
 				_this2.tmpIndices[numSmaller] = idx;
 				++numSmaller;
@@ -29070,15 +29706,16 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 				++numGreater;
 			}
 		}
-		let tmp = _this2.indices;
+		const tmp = _this2.indices;
 		_this2.indices = _this2.tmpIndices;
 		_this2.tmpIndices = tmp;
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) this.info.rows[_g2++].impulse.impulseP = 0;
 	}
+
 	solvePositionSplitImpulse() {
-		let numRows = this.info.numRows;
+		const numRows = this.info.numRows;
 		let lv1X;
 		let lv1Y;
 		let lv1Z;
@@ -29105,9 +29742,9 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		av2Z = this._b2._angPseudoVelZ;
 		let _g = 0;
 		while(_g < numRows) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let j = row.jacobian;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const j = row.jacobian;
 			let relVel = 0;
 			relVel += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			relVel -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
@@ -29118,16 +29755,16 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 		}
 		let solved = false;
 		let _g1 = 0;
-		let _g2 = this.boundaryBuilder.numBoundaries;
+		const _g2 = this.boundaryBuilder.numBoundaries;
 		while(_g1 < _g2) {
-			let idx = this.posBoundarySelector.indices[_g1++];
+			const idx = this.posBoundarySelector.indices[_g1++];
 			if(this.boundaryBuilder.boundaries[idx].computeImpulses(this.info,this.massMatrix,this.relVels,this.impulses,this.dImpulses,oimo.common.Setting.positionSplitImpulseBaumgarte,false)) {
 				let _g = 0;
 				while(_g < numRows) {
-					let j = _g++;
+					const j = _g++;
 					this.info.rows[j].impulse.impulseP += this.dImpulses[j];
 				}
-				let impulses = this.dImpulses;
+				const impulses = this.dImpulses;
 				let linearSet = false;
 				let angularSet = false;
 				let lv1X;
@@ -29155,12 +29792,12 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 				av2Y = this._b2._angPseudoVelY;
 				av2Z = this._b2._angPseudoVelZ;
 				let _g1 = 0;
-				let _g2 = this.info.numRows;
+				const _g2 = this.info.numRows;
 				while(_g1 < _g2) {
-					let i = _g1++;
-					let j = this.info.rows[i].jacobian;
-					let md = this.massData[i];
-					let imp = impulses[i];
+					const i = _g1++;
+					const j = this.info.rows[i].jacobian;
+					const md = this.massData[i];
+					const imp = impulses[i];
 					if((j.flag & 1) != 0) {
 						lv1X += md.invMLin1X * imp;
 						lv1Y += md.invMLin1Y * imp;
@@ -29196,11 +29833,11 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					this._b2._angPseudoVelY = av2Y;
 					this._b2._angPseudoVelZ = av2Z;
 				}
-				let _this = this.posBoundarySelector;
+				const _this = this.posBoundarySelector;
 				let i = 0;
 				while(_this.indices[i] != idx) ++i;
 				while(i > 0) {
-					let tmp = _this.indices[i];
+					const tmp = _this.indices[i];
 					_this.indices[i] = _this.indices[i - 1];
 					_this.indices[i - 1] = tmp;
 					--i;
@@ -29210,30 +29847,31 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			}
 		}
 		if(!solved) {
-			console.log("src/oimo/dynamics/constraint/solver/direct/DirectJointConstraintSolver.hx:450:","could not find solution. (split impulse)");
-			return;
+			console.log('src/oimo/dynamics/constraint/solver/direct/DirectJointConstraintSolver.hx:450:','could not find solution. (split impulse)');
+			
 		}
 	}
+
 	solvePositionNgs(timeStep) {
 		this.joint._syncAnchors();
 		this.joint._getPositionSolverInfo(this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
 		this.massMatrix.computeInvMass(this.info,this.massData);
-		let _this = this.boundaryBuilder;
+		const _this = this.boundaryBuilder;
 		_this.numBoundaries = 0;
-		let _this1 = _this.bbInfo;
+		const _this1 = _this.bbInfo;
 		_this1.numBounded = 0;
 		_this1.numUnbounded = 0;
 		_this.buildBoundariesRecursive(this.info,0);
-		let _this2 = this.posBoundarySelector;
-		let size = this.boundaryBuilder.numBoundaries;
+		const _this2 = this.posBoundarySelector;
+		const size = this.boundaryBuilder.numBoundaries;
 		let numSmaller = 0;
 		let numGreater = 0;
 		let _g = 0;
-		let _g1 = _this2.n;
+		const _g1 = _this2.n;
 		while(_g < _g1) {
-			let idx = _this2.indices[_g++];
+			const idx = _this2.indices[_g++];
 			if(idx < size) {
 				_this2.tmpIndices[numSmaller] = idx;
 				++numSmaller;
@@ -29242,29 +29880,29 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 				++numGreater;
 			}
 		}
-		let tmp = _this2.indices;
+		const tmp = _this2.indices;
 		_this2.indices = _this2.tmpIndices;
 		_this2.tmpIndices = tmp;
-		let numRows = this.info.numRows;
+		const numRows = this.info.numRows;
 		let _g2 = 0;
 		while(_g2 < numRows) {
-			let i = _g2++;
-			let imp = this.info.rows[i].impulse;
+			const i = _g2++;
+			const imp = this.info.rows[i].impulse;
 			this.relVels[i] = 0;
 			this.impulses[i] = imp.impulseP;
 		}
 		let solved = false;
 		let _g3 = 0;
-		let _g4 = this.boundaryBuilder.numBoundaries;
+		const _g4 = this.boundaryBuilder.numBoundaries;
 		while(_g3 < _g4) {
-			let idx = this.posBoundarySelector.indices[_g3++];
+			const idx = this.posBoundarySelector.indices[_g3++];
 			if(this.boundaryBuilder.boundaries[idx].computeImpulses(this.info,this.massMatrix,this.relVels,this.impulses,this.dImpulses,oimo.common.Setting.positionNgsBaumgarte,false)) {
 				let _g = 0;
 				while(_g < numRows) {
-					let j = _g++;
+					const j = _g++;
 					this.info.rows[j].impulse.impulseP += this.dImpulses[j];
 				}
-				let impulses = this.dImpulses;
+				const impulses = this.dImpulses;
 				let linearSet = false;
 				let angularSet = false;
 				let lv1X;
@@ -29292,12 +29930,12 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 				av2Y = 0;
 				av2Z = 0;
 				let _g1 = 0;
-				let _g2 = this.info.numRows;
+				const _g2 = this.info.numRows;
 				while(_g1 < _g2) {
-					let i = _g1++;
-					let j = this.info.rows[i].jacobian;
-					let md = this.massData[i];
-					let imp = impulses[i];
+					const i = _g1++;
+					const j = this.info.rows[i].jacobian;
+					const md = this.massData[i];
+					const imp = impulses[i];
 					if((j.flag & 1) != 0) {
 						lv1X += md.invMLin1X * imp;
 						lv1Y += md.invMLin1Y * imp;
@@ -29318,23 +29956,23 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					}
 				}
 				if(linearSet) {
-					let _this = this._b1;
+					const _this = this._b1;
 					_this._transform._positionX += lv1X;
 					_this._transform._positionY += lv1Y;
 					_this._transform._positionZ += lv1Z;
-					let _this1 = this._b2;
+					const _this1 = this._b2;
 					_this1._transform._positionX += lv2X;
 					_this1._transform._positionY += lv2Y;
 					_this1._transform._positionZ += lv2Z;
 				}
 				if(angularSet) {
-					let _this = this._b1;
-					let theta = Math.sqrt(av1X * av1X + av1Y * av1Y + av1Z * av1Z);
-					let halfTheta = theta * 0.5;
+					const _this = this._b1;
+					const theta = Math.sqrt(av1X * av1X + av1Y * av1Y + av1Z * av1Z);
+					const halfTheta = theta * 0.5;
 					let rotationToSinAxisFactor;
 					let cosHalfTheta;
 					if(halfTheta < 0.5) {
-						let ht2 = halfTheta * halfTheta;
+						const ht2 = halfTheta * halfTheta;
 						rotationToSinAxisFactor = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 						cosHalfTheta = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 					} else {
@@ -29359,10 +29997,10 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					let qY;
 					let qZ;
 					let qW;
-					let e00 = _this._transform._rotation00;
-					let e11 = _this._transform._rotation11;
-					let e22 = _this._transform._rotation22;
-					let t = e00 + e11 + e22;
+					const e00 = _this._transform._rotation00;
+					const e11 = _this._transform._rotation11;
+					const e22 = _this._transform._rotation22;
+					const t = e00 + e11 + e22;
 					let s;
 					if(t > 0) {
 						s = Math.sqrt(t + 1);
@@ -29414,22 +30052,22 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					qY *= l;
 					qZ *= l;
 					qW *= l;
-					let x = qX;
-					let y = qY;
-					let z = qZ;
-					let w = qW;
-					let x2 = 2 * x;
-					let y2 = 2 * y;
-					let z2 = 2 * z;
-					let xx = x * x2;
-					let yy = y * y2;
-					let zz = z * z2;
-					let xy = x * y2;
-					let yz = y * z2;
-					let xz = x * z2;
-					let wx = w * x2;
-					let wy = w * y2;
-					let wz = w * z2;
+					const x = qX;
+					const y = qY;
+					const z = qZ;
+					const w = qW;
+					const x2 = 2 * x;
+					const y2 = 2 * y;
+					const z2 = 2 * z;
+					const xx = x * x2;
+					const yy = y * y2;
+					const zz = z * z2;
+					const xy = x * y2;
+					const yz = y * z2;
+					const xz = x * z2;
+					const wx = w * x2;
+					const wy = w * y2;
+					const wz = w * z2;
 					_this._transform._rotation00 = 1 - yy - zz;
 					_this._transform._rotation01 = xy - wz;
 					_this._transform._rotation02 = xz + wy;
@@ -29502,13 +30140,13 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					_this._invInertia20 *= _this._rotFactor.z;
 					_this._invInertia21 *= _this._rotFactor.z;
 					_this._invInertia22 *= _this._rotFactor.z;
-					let _this1 = this._b2;
-					let theta1 = Math.sqrt(av2X * av2X + av2Y * av2Y + av2Z * av2Z);
-					let halfTheta1 = theta1 * 0.5;
+					const _this1 = this._b2;
+					const theta1 = Math.sqrt(av2X * av2X + av2Y * av2Y + av2Z * av2Z);
+					const halfTheta1 = theta1 * 0.5;
 					let rotationToSinAxisFactor1;
 					let cosHalfTheta1;
 					if(halfTheta1 < 0.5) {
-						let ht2 = halfTheta1 * halfTheta1;
+						const ht2 = halfTheta1 * halfTheta1;
 						rotationToSinAxisFactor1 = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 						cosHalfTheta1 = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 					} else {
@@ -29533,10 +30171,10 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					let qY1;
 					let qZ1;
 					let qW1;
-					let e001 = _this1._transform._rotation00;
-					let e111 = _this1._transform._rotation11;
-					let e221 = _this1._transform._rotation22;
-					let t1 = e001 + e111 + e221;
+					const e001 = _this1._transform._rotation00;
+					const e111 = _this1._transform._rotation11;
+					const e221 = _this1._transform._rotation22;
+					const t1 = e001 + e111 + e221;
 					let s1;
 					if(t1 > 0) {
 						s1 = Math.sqrt(t1 + 1);
@@ -29588,22 +30226,22 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					qY1 *= l1;
 					qZ1 *= l1;
 					qW1 *= l1;
-					let x1 = qX1;
-					let y1 = qY1;
-					let z1 = qZ1;
-					let w1 = qW1;
-					let x21 = 2 * x1;
-					let y21 = 2 * y1;
-					let z21 = 2 * z1;
-					let xx1 = x1 * x21;
-					let yy1 = y1 * y21;
-					let zz1 = z1 * z21;
-					let xy1 = x1 * y21;
-					let yz1 = y1 * z21;
-					let xz1 = x1 * z21;
-					let wx1 = w1 * x21;
-					let wy1 = w1 * y21;
-					let wz1 = w1 * z21;
+					const x1 = qX1;
+					const y1 = qY1;
+					const z1 = qZ1;
+					const w1 = qW1;
+					const x21 = 2 * x1;
+					const y21 = 2 * y1;
+					const z21 = 2 * z1;
+					const xx1 = x1 * x21;
+					const yy1 = y1 * y21;
+					const zz1 = z1 * z21;
+					const xy1 = x1 * y21;
+					const yz1 = y1 * z21;
+					const xz1 = x1 * z21;
+					const wx1 = w1 * x21;
+					const wy1 = w1 * y21;
+					const wz1 = w1 * z21;
 					_this1._transform._rotation00 = 1 - yy1 - zz1;
 					_this1._transform._rotation01 = xy1 - wz1;
 					_this1._transform._rotation02 = xz1 + wy1;
@@ -29677,11 +30315,11 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 					_this1._invInertia21 *= _this1._rotFactor.z;
 					_this1._invInertia22 *= _this1._rotFactor.z;
 				}
-				let _this = this.posBoundarySelector;
+				const _this = this.posBoundarySelector;
 				let i = 0;
 				while(_this.indices[i] != idx) ++i;
 				while(i > 0) {
-					let tmp = _this.indices[i];
+					const tmp = _this.indices[i];
 					_this.indices[i] = _this.indices[i - 1];
 					_this.indices[i - 1] = tmp;
 					--i;
@@ -29691,15 +30329,16 @@ oimo.dynamics.constraint.solver.direct.DirectJointConstraintSolver = class oimo_
 			}
 		}
 		if(!solved) {
-			console.log("src/oimo/dynamics/constraint/solver/direct/DirectJointConstraintSolver.hx:502:","could not find solution. (NGS)");
-			return;
+			console.log('src/oimo/dynamics/constraint/solver/direct/DirectJointConstraintSolver.hx:502:','could not find solution. (NGS)');
+			
 		}
 	}
+
 	postSolve() {
 		this.joint._syncAnchors();
 		this.joint._checkDestruction();
 	}
-}
+};
 oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constraint_solver_direct_MassMatrix {
 	constructor(size) {
 		this._size = size;
@@ -29707,16 +30346,16 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 		this._invMass = new Array(this._size);
 		this._invMassWithoutCfm = new Array(this._size);
 		let _g = 0;
-		let _g1 = this._size;
+		const _g1 = this._size;
 		while(_g < _g1) {
-			let i = _g++;
+			const i = _g++;
 			this.tmpMatrix[i] = new Array(this._size);
 			this._invMass[i] = new Array(this._size);
 			this._invMassWithoutCfm[i] = new Array(this._size);
 			let _g1 = 0;
-			let _g2 = this._size;
+			const _g2 = this._size;
 			while(_g1 < _g2) {
-				let j = _g1++;
+				const j = _g1++;
 				this.tmpMatrix[i][j] = 0;
 				this._invMass[i][j] = 0;
 				this._invMassWithoutCfm[i][j] = 0;
@@ -29726,18 +30365,18 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 		this._cacheComputed = new Array(this._maxSubmatrixId);
 		this._cachedSubmatrices = new Array(this._maxSubmatrixId);
 		let _g2 = 0;
-		let _g3 = this._maxSubmatrixId;
+		const _g3 = this._maxSubmatrixId;
 		while(_g2 < _g3) {
-			let i = _g2++;
+			const i = _g2++;
 			let t;
 			t = (i & 85) + (i >> 1 & 85);
 			t = (t & 51) + (t >> 2 & 51);
 			t = (t & 15) + (t >> 4 & 15);
-			let matrixSize = t;
-			let subMatrix = new Array(matrixSize);
+			const matrixSize = t;
+			const subMatrix = new Array(matrixSize);
 			let _g = 0;
 			while(_g < matrixSize) {
-				let j = _g++;
+				const j = _g++;
 				subMatrix[j] = new Array(matrixSize);
 				let _g1 = 0;
 				while(_g1 < matrixSize) subMatrix[j][_g1++] = 0;
@@ -29746,19 +30385,20 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 			this._cachedSubmatrices[i] = subMatrix;
 		}
 	}
+
 	computeSubmatrix(id,indices,size) {
 		let _g = 0;
 		while(_g < size) {
-			let i = _g++;
-			let ii = indices[i];
+			const i = _g++;
+			const ii = indices[i];
 			let _g1 = 0;
 			while(_g1 < size) {
-				let j = _g1++;
+				const j = _g1++;
 				this.tmpMatrix[i][j] = this._invMass[ii][indices[j]];
 			}
 		}
-		let src = this.tmpMatrix;
-		let dst = this._cachedSubmatrices[id];
+		const src = this.tmpMatrix;
+		const dst = this._cachedSubmatrices[id];
 		let srci;
 		let dsti;
 		let srcj;
@@ -30326,10 +30966,10 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 		default:
 			let _g1 = 0;
 			while(_g1 < size) {
-				let i = _g1++;
+				const i = _g1++;
 				srci = src[i];
 				dsti = dst[i];
-				let diag = 1 / srci[i];
+				const diag = 1 / srci[i];
 				dsti[i] = diag;
 				let _g = 0;
 				while(_g < i) dsti[_g++] *= diag;
@@ -30337,59 +30977,60 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 				while(_g2 < size) srci[_g2++] *= diag;
 				let _g3 = 0;
 				while(_g3 < i) {
-					let j = _g3++;
+					const j = _g3++;
 					srcj = src[j];
 					dstj = dst[j];
 					let _g = 0;
-					let _g1 = j + 1;
+					const _g1 = j + 1;
 					while(_g < _g1) {
-						let k = _g++;
+						const k = _g++;
 						dstj[k] -= dsti[k] * srcj[i];
 					}
 					let _g2 = i + 1;
 					while(_g2 < size) {
-						let k = _g2++;
+						const k = _g2++;
 						srcj[k] -= srci[k] * srcj[i];
 					}
 				}
 				let _g4 = i + 1;
 				while(_g4 < size) {
-					let j = _g4++;
+					const j = _g4++;
 					srcj = src[j];
 					dstj = dst[j];
 					let _g = 0;
 					while(_g < i) {
-						let k = _g++;
+						const k = _g++;
 						dstj[k] -= dsti[k] * srcj[i];
 					}
 					dstj[i] = -diag * srcj[i];
 					let _g1 = i + 1;
 					while(_g1 < size) {
-						let k = _g1++;
+						const k = _g1++;
 						srcj[k] -= srci[k] * srcj[i];
 					}
 				}
 			}
 			let _g2 = 1;
 			while(_g2 < size) {
-				let i = _g2++;
+				const i = _g2++;
 				dsti = dst[i];
 				let _g = 0;
 				while(_g < i) {
-					let j = _g++;
+					const j = _g++;
 					dst[j][i] = dsti[j];
 				}
 			}
 		}
 	}
+
 	computeInvMass(info,massData) {
-		let invMass = this._invMass;
-		let invMassWithoutCfm = this._invMassWithoutCfm;
-		let numRows = info.numRows;
-		let b1 = info.b1;
-		let b2 = info.b2;
-		let invM1 = b1._invMass;
-		let invM2 = b2._invMass;
+		const invMass = this._invMass;
+		const invMassWithoutCfm = this._invMassWithoutCfm;
+		const numRows = info.numRows;
+		const b1 = info.b1;
+		const b2 = info.b2;
+		const invM1 = b1._invMass;
+		const invM2 = b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -30428,9 +31069,9 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 		invI222 = b2._invInertia22;
 		let _g = 0;
 		while(_g < numRows) {
-			let i = _g++;
-			let j = info.rows[i].jacobian;
-			let md = massData[i];
+			const i = _g++;
+			const j = info.rows[i].jacobian;
+			const md = massData[i];
 			j.updateSparsity();
 			if((j.flag & 1) != 0) {
 				md.invMLin1X = j.lin1X * invM1;
@@ -30477,13 +31118,13 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 		}
 		let _g1 = 0;
 		while(_g1 < numRows) {
-			let i = _g1++;
-			let j1 = info.rows[i].jacobian;
+			const i = _g1++;
+			const j1 = info.rows[i].jacobian;
 			let _g = i;
 			while(_g < numRows) {
-				let j = _g++;
-				let md2 = massData[j];
-				let val = j1.lin1X * md2.invMLin1X + j1.lin1Y * md2.invMLin1Y + j1.lin1Z * md2.invMLin1Z + (j1.ang1X * md2.invMAng1X + j1.ang1Y * md2.invMAng1Y + j1.ang1Z * md2.invMAng1Z) + (j1.lin2X * md2.invMLin2X + j1.lin2Y * md2.invMLin2Y + j1.lin2Z * md2.invMLin2Z) + (j1.ang2X * md2.invMAng2X + j1.ang2Y * md2.invMAng2Y + j1.ang2Z * md2.invMAng2Z);
+				const j = _g++;
+				const md2 = massData[j];
+				const val = j1.lin1X * md2.invMLin1X + j1.lin1Y * md2.invMLin1Y + j1.lin1Z * md2.invMLin1Z + (j1.ang1X * md2.invMAng1X + j1.ang1Y * md2.invMAng1Y + j1.ang1Z * md2.invMAng1Z) + (j1.lin2X * md2.invMLin2X + j1.lin2Y * md2.invMLin2Y + j1.lin2Z * md2.invMLin2Z) + (j1.ang2X * md2.invMAng2X + j1.ang2Y * md2.invMAng2Y + j1.ang2Z * md2.invMAng2Z);
 				if(i == j) {
 					invMass[i][j] = val + info.rows[i].cfm;
 					invMassWithoutCfm[i][j] = val;
@@ -30504,10 +31145,10 @@ oimo.dynamics.constraint.solver.direct.MassMatrix = class oimo_dynamics_constrai
 			}
 		}
 		let _g2 = 0;
-		let _g3 = this._maxSubmatrixId;
+		const _g3 = this._maxSubmatrixId;
 		while(_g2 < _g3) this._cacheComputed[_g2++] = false;
 	}
-}
+};
 if(!oimo.dynamics.constraint.solver.pgs) oimo.dynamics.constraint.solver.pgs = {};
 oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dynamics_constraint_solver_pgs_PgsContactConstraintSolver extends oimo.dynamics.constraint.ConstraintSolver {
 	constructor(constraint) {
@@ -30516,15 +31157,16 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		this.info = new oimo.dynamics.constraint.info.contact.ContactSolverInfo();
 		this.massData = new Array(oimo.common.Setting.maxManifoldPoints);
 		let _g = 0;
-		let _g1 = this.massData.length;
+		const _g1 = this.massData.length;
 		while(_g < _g1) this.massData[_g++] = new oimo.dynamics.constraint.solver.common.ContactSolverMassDataRow();
 	}
+
 	preSolveVelocity(timeStep) {
 		this.constraint._getVelocitySolverInfo(timeStep,this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
-		let invM1 = this._b1._invMass;
-		let invM2 = this._b2._invMass;
+		const invM1 = this._b1._invMass;
+		const invM2 = this._b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -30562,12 +31204,12 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		invI221 = this._b2._invInertia21;
 		invI222 = this._b2._invInertia22;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let j = row.jacobianN;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const j = row.jacobianN;
 			md.invMLinN1X = j.lin1X * invM1;
 			md.invMLinN1Y = j.lin1Y * invM1;
 			md.invMLinN1Z = j.lin1Z * invM1;
@@ -30596,8 +31238,8 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			if(md.massN != 0) {
 				md.massN = 1 / md.massN;
 			}
-			let jt = row.jacobianT;
-			let jb = row.jacobianB;
+			const jt = row.jacobianT;
+			const jb = row.jacobianB;
 			md.invMLinT1X = jt.lin1X * invM1;
 			md.invMLinT1Y = jt.lin1Y * invM1;
 			md.invMLinT1Z = jt.lin1Z * invM1;
@@ -30646,9 +31288,9 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			md.invMAngB2X = __tmp__X5;
 			md.invMAngB2Y = __tmp__Y5;
 			md.invMAngB2Z = __tmp__Z5;
-			let invMassTB00 = invM1 + invM2 + (md.invMAngT1X * jt.ang1X + md.invMAngT1Y * jt.ang1Y + md.invMAngT1Z * jt.ang1Z) + (md.invMAngT2X * jt.ang2X + md.invMAngT2Y * jt.ang2Y + md.invMAngT2Z * jt.ang2Z);
-			let invMassTB01 = md.invMAngT1X * jb.ang1X + md.invMAngT1Y * jb.ang1Y + md.invMAngT1Z * jb.ang1Z + (md.invMAngT2X * jb.ang2X + md.invMAngT2Y * jb.ang2Y + md.invMAngT2Z * jb.ang2Z);
-			let invMassTB11 = invM1 + invM2 + (md.invMAngB1X * jb.ang1X + md.invMAngB1Y * jb.ang1Y + md.invMAngB1Z * jb.ang1Z) + (md.invMAngB2X * jb.ang2X + md.invMAngB2Y * jb.ang2Y + md.invMAngB2Z * jb.ang2Z);
+			const invMassTB00 = invM1 + invM2 + (md.invMAngT1X * jt.ang1X + md.invMAngT1Y * jt.ang1Y + md.invMAngT1Z * jt.ang1Z) + (md.invMAngT2X * jt.ang2X + md.invMAngT2Y * jt.ang2Y + md.invMAngT2Z * jt.ang2Z);
+			const invMassTB01 = md.invMAngT1X * jb.ang1X + md.invMAngT1Y * jb.ang1Y + md.invMAngT1Z * jb.ang1Z + (md.invMAngT2X * jb.ang2X + md.invMAngT2Y * jb.ang2Y + md.invMAngT2Z * jb.ang2Z);
+			const invMassTB11 = invM1 + invM2 + (md.invMAngB1X * jb.ang1X + md.invMAngB1Y * jb.ang1Y + md.invMAngB1Z * jb.ang1Z) + (md.invMAngB2X * jb.ang2X + md.invMAngB2Y * jb.ang2Y + md.invMAngB2Z * jb.ang2Z);
 			let invDet = invMassTB00 * invMassTB11 - invMassTB01 * invMassTB01;
 			if(invDet != 0) {
 				invDet = 1 / invDet;
@@ -30659,6 +31301,7 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			md.massTB11 = invMassTB00 * invDet;
 		}
 	}
+
 	warmStart(timeStep) {
 		let lv1X;
 		let lv1Y;
@@ -30685,17 +31328,17 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		av2Y = this._b2._angVelY;
 		av2Z = this._b2._angVelZ;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let imp = row.impulse;
-			let md = this.massData[i];
-			let jt = row.jacobianT;
-			let jb = row.jacobianB;
-			let impulseN = imp.impulseN;
-			let impulseT = imp.impulseLX * jt.lin1X + imp.impulseLY * jt.lin1Y + imp.impulseLZ * jt.lin1Z;
-			let impulseB = imp.impulseLX * jb.lin1X + imp.impulseLY * jb.lin1Y + imp.impulseLZ * jb.lin1Z;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const imp = row.impulse;
+			const md = this.massData[i];
+			const jt = row.jacobianT;
+			const jb = row.jacobianB;
+			const impulseN = imp.impulseN;
+			const impulseT = imp.impulseLX * jt.lin1X + imp.impulseLY * jt.lin1Y + imp.impulseLZ * jt.lin1Z;
+			const impulseB = imp.impulseLX * jb.lin1X + imp.impulseLY * jb.lin1Y + imp.impulseLZ * jb.lin1Z;
 			imp.impulseT = impulseT;
 			imp.impulseB = impulseB;
 			imp.impulseN *= timeStep.dtRatio;
@@ -30751,6 +31394,7 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		this._b2._angVelY = av2Y;
 		this._b2._angVelZ = av2Z;
 	}
+
 	solveVelocity() {
 		let lv1X;
 		let lv1Y;
@@ -30777,12 +31421,12 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		av2Y = this._b2._angVelY;
 		av2Z = this._b2._angVelZ;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
 			let rvt = 0;
 			let j = row.jacobianT;
 			rvt += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
@@ -30797,18 +31441,18 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			rvb -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseT = -(rvt * md.massTB00 + rvb * md.massTB01);
 			let impulseB = -(rvt * md.massTB10 + rvb * md.massTB11);
-			let oldImpulseT = imp.impulseT;
-			let oldImpulseB = imp.impulseB;
+			const oldImpulseT = imp.impulseT;
+			const oldImpulseB = imp.impulseB;
 			imp.impulseT += impulseT;
 			imp.impulseB += impulseB;
-			let maxImpulse = row.friction * imp.impulseN;
+			const maxImpulse = row.friction * imp.impulseN;
 			if(maxImpulse == 0) {
 				imp.impulseT = 0;
 				imp.impulseB = 0;
 			} else {
-				let impulseLengthSq = imp.impulseT * imp.impulseT + imp.impulseB * imp.impulseB;
+				const impulseLengthSq = imp.impulseT * imp.impulseT + imp.impulseB * imp.impulseB;
 				if(impulseLengthSq > maxImpulse * maxImpulse) {
-					let invL = maxImpulse / Math.sqrt(impulseLengthSq);
+					const invL = maxImpulse / Math.sqrt(impulseLengthSq);
 					imp.impulseT *= invL;
 					imp.impulseB *= invL;
 				}
@@ -30841,20 +31485,20 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			av2Z += md.invMAngB2Z * -impulseB;
 		}
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
+			const i = _g2++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
 			let rvn = 0;
-			let j = row.jacobianN;
+			const j = row.jacobianN;
 			rvn += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			rvn -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
 			rvn += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rvn -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseN = (row.rhs - rvn) * md.massN;
-			let oldImpulseN = imp.impulseN;
+			const oldImpulseN = imp.impulseN;
 			imp.impulseN += impulseN;
 			if(imp.impulseN < 0) {
 				imp.impulseN = 0;
@@ -30886,11 +31530,12 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		this._b2._angVelY = av2Y;
 		this._b2._angVelZ = av2Z;
 	}
+
 	preSolvePosition(timeStep) {
 		this.constraint._syncManifold();
 		this.constraint._getPositionSolverInfo(this.info);
-		let invM1 = this._b1._invMass;
-		let invM2 = this._b2._invMass;
+		const invM1 = this._b1._invMass;
+		const invM2 = this._b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -30928,11 +31573,11 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		invI221 = this._b2._invInertia21;
 		invI222 = this._b2._invInertia22;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let md = this.massData[i];
-			let j = this.info.rows[i].jacobianN;
+			const i = _g++;
+			const md = this.massData[i];
+			const j = this.info.rows[i].jacobianN;
 			md.invMLinN1X = j.lin1X * invM1;
 			md.invMLinN1Y = j.lin1Y * invM1;
 			md.invMLinN1Z = j.lin1Z * invM1;
@@ -30963,9 +31608,10 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			}
 		}
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) this.info.rows[_g2++].impulse.impulseP = 0;
 	}
+
 	solvePositionSplitImpulse() {
 		let lv1X;
 		let lv1Y;
@@ -30992,20 +31638,20 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		av2Y = this._b2._angPseudoVelY;
 		av2Z = this._b2._angPseudoVelZ;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
-			let j = row.jacobianN;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
+			const j = row.jacobianN;
 			let rvn = 0;
 			rvn += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			rvn -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
 			rvn += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rvn -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseP = (row.rhs - rvn) * md.massN * oimo.common.Setting.positionSplitImpulseBaumgarte;
-			let oldImpulseP = imp.impulseP;
+			const oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if(imp.impulseP < 0) {
 				imp.impulseP = 0;
@@ -31037,11 +31683,12 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		this._b2._angPseudoVelY = av2Y;
 		this._b2._angPseudoVelZ = av2Z;
 	}
+
 	solvePositionNgs(timeStep) {
 		this.constraint._syncManifold();
 		this.constraint._getPositionSolverInfo(this.info);
-		let invM1 = this._b1._invMass;
-		let invM2 = this._b2._invMass;
+		const invM1 = this._b1._invMass;
+		const invM2 = this._b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -31079,11 +31726,11 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		invI221 = this._b2._invInertia21;
 		invI222 = this._b2._invInertia22;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let md = this.massData[i];
-			let j = this.info.rows[i].jacobianN;
+			const i = _g++;
+			const md = this.massData[i];
+			const j = this.info.rows[i].jacobianN;
 			md.invMLinN1X = j.lin1X * invM1;
 			md.invMLinN1Y = j.lin1Y * invM1;
 			md.invMLinN1Z = j.lin1Z * invM1;
@@ -31138,20 +31785,20 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		av2Y = 0;
 		av2Z = 0;
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
-			let j = row.jacobianN;
+			const i = _g2++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
+			const j = row.jacobianN;
 			let rvn = 0;
 			rvn += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			rvn -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
 			rvn += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rvn -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseP = (row.rhs - rvn) * md.massN * oimo.common.Setting.positionNgsBaumgarte;
-			let oldImpulseP = imp.impulseP;
+			const oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if(imp.impulseP < 0) {
 				imp.impulseP = 0;
@@ -31170,21 +31817,21 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 			av2Y += md.invMAngN2Y * -impulseP;
 			av2Z += md.invMAngN2Z * -impulseP;
 		}
-		let _this = this._b1;
+		const _this = this._b1;
 		_this._transform._positionX += lv1X;
 		_this._transform._positionY += lv1Y;
 		_this._transform._positionZ += lv1Z;
-		let _this1 = this._b2;
+		const _this1 = this._b2;
 		_this1._transform._positionX += lv2X;
 		_this1._transform._positionY += lv2Y;
 		_this1._transform._positionZ += lv2Z;
-		let _this2 = this._b1;
-		let theta = Math.sqrt(av1X * av1X + av1Y * av1Y + av1Z * av1Z);
-		let halfTheta = theta * 0.5;
+		const _this2 = this._b1;
+		const theta = Math.sqrt(av1X * av1X + av1Y * av1Y + av1Z * av1Z);
+		const halfTheta = theta * 0.5;
 		let rotationToSinAxisFactor;
 		let cosHalfTheta;
 		if(halfTheta < 0.5) {
-			let ht2 = halfTheta * halfTheta;
+			const ht2 = halfTheta * halfTheta;
 			rotationToSinAxisFactor = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 			cosHalfTheta = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 		} else {
@@ -31209,10 +31856,10 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		let qY;
 		let qZ;
 		let qW;
-		let e00 = _this2._transform._rotation00;
-		let e11 = _this2._transform._rotation11;
-		let e22 = _this2._transform._rotation22;
-		let t = e00 + e11 + e22;
+		const e00 = _this2._transform._rotation00;
+		const e11 = _this2._transform._rotation11;
+		const e22 = _this2._transform._rotation22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -31264,22 +31911,22 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		qY *= l;
 		qZ *= l;
 		qW *= l;
-		let x = qX;
-		let y = qY;
-		let z = qZ;
-		let w = qW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = qX;
+		const y = qY;
+		const z = qZ;
+		const w = qW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		_this2._transform._rotation00 = 1 - yy - zz;
 		_this2._transform._rotation01 = xy - wz;
 		_this2._transform._rotation02 = xz + wy;
@@ -31352,13 +31999,13 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		_this2._invInertia20 *= _this2._rotFactor.z;
 		_this2._invInertia21 *= _this2._rotFactor.z;
 		_this2._invInertia22 *= _this2._rotFactor.z;
-		let _this3 = this._b2;
-		let theta1 = Math.sqrt(av2X * av2X + av2Y * av2Y + av2Z * av2Z);
-		let halfTheta1 = theta1 * 0.5;
+		const _this3 = this._b2;
+		const theta1 = Math.sqrt(av2X * av2X + av2Y * av2Y + av2Z * av2Z);
+		const halfTheta1 = theta1 * 0.5;
 		let rotationToSinAxisFactor1;
 		let cosHalfTheta1;
 		if(halfTheta1 < 0.5) {
-			let ht2 = halfTheta1 * halfTheta1;
+			const ht2 = halfTheta1 * halfTheta1;
 			rotationToSinAxisFactor1 = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 			cosHalfTheta1 = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 		} else {
@@ -31383,10 +32030,10 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		let qY1;
 		let qZ1;
 		let qW1;
-		let e001 = _this3._transform._rotation00;
-		let e111 = _this3._transform._rotation11;
-		let e221 = _this3._transform._rotation22;
-		let t1 = e001 + e111 + e221;
+		const e001 = _this3._transform._rotation00;
+		const e111 = _this3._transform._rotation11;
+		const e221 = _this3._transform._rotation22;
+		const t1 = e001 + e111 + e221;
 		let s1;
 		if(t1 > 0) {
 			s1 = Math.sqrt(t1 + 1);
@@ -31438,22 +32085,22 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		qY1 *= l1;
 		qZ1 *= l1;
 		qW1 *= l1;
-		let x1 = qX1;
-		let y1 = qY1;
-		let z1 = qZ1;
-		let w1 = qW1;
-		let x21 = 2 * x1;
-		let y21 = 2 * y1;
-		let z21 = 2 * z1;
-		let xx1 = x1 * x21;
-		let yy1 = y1 * y21;
-		let zz1 = z1 * z21;
-		let xy1 = x1 * y21;
-		let yz1 = y1 * z21;
-		let xz1 = x1 * z21;
-		let wx1 = w1 * x21;
-		let wy1 = w1 * y21;
-		let wz1 = w1 * z21;
+		const x1 = qX1;
+		const y1 = qY1;
+		const z1 = qZ1;
+		const w1 = qW1;
+		const x21 = 2 * x1;
+		const y21 = 2 * y1;
+		const z21 = 2 * z1;
+		const xx1 = x1 * x21;
+		const yy1 = y1 * y21;
+		const zz1 = z1 * z21;
+		const xy1 = x1 * y21;
+		const yz1 = y1 * z21;
+		const xz1 = x1 * z21;
+		const wx1 = w1 * x21;
+		const wy1 = w1 * y21;
+		const wz1 = w1 * z21;
 		_this3._transform._rotation00 = 1 - yy1 - zz1;
 		_this3._transform._rotation01 = xy1 - wz1;
 		_this3._transform._rotation02 = xz1 + wy1;
@@ -31527,6 +32174,7 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		_this3._invInertia21 *= _this3._rotFactor.z;
 		_this3._invInertia22 *= _this3._rotFactor.z;
 	}
+
 	postSolve() {
 		let lin1X;
 		let lin1Y;
@@ -31547,16 +32195,16 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		ang2Y = 0;
 		ang2Z = 0;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let row = this.info.rows[_g++];
-			let imp = row.impulse;
-			let jn = row.jacobianN;
-			let jt = row.jacobianT;
-			let jb = row.jacobianB;
-			let impN = imp.impulseN;
-			let impT = imp.impulseT;
-			let impB = imp.impulseB;
+			const row = this.info.rows[_g++];
+			const imp = row.impulse;
+			const jn = row.jacobianN;
+			const jt = row.jacobianT;
+			const jb = row.jacobianB;
+			const impN = imp.impulseN;
+			const impT = imp.impulseT;
+			const impB = imp.impulseB;
 			let impulseLX;
 			let impulseLY;
 			let impulseLZ;
@@ -31614,7 +32262,7 @@ oimo.dynamics.constraint.solver.pgs.PgsContactConstraintSolver = class oimo_dyna
 		this._b2._angularContactImpulseZ -= ang2Z;
 		this.constraint._syncManifold();
 	}
-}
+};
 oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynamics_constraint_solver_pgs_PgsJointConstraintSolver extends oimo.dynamics.constraint.ConstraintSolver {
 	constructor(joint) {
 		super();
@@ -31622,16 +32270,17 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		this.info = new oimo.dynamics.constraint.info.joint.JointSolverInfo();
 		this.massData = new Array(oimo.common.Setting.maxJacobianRows);
 		let _g = 0;
-		let _g1 = this.massData.length;
+		const _g1 = this.massData.length;
 		while(_g < _g1) this.massData[_g++] = new oimo.dynamics.constraint.solver.common.JointSolverMassDataRow();
 	}
+
 	preSolveVelocity(timeStep) {
 		this.joint._syncAnchors();
 		this.joint._getVelocitySolverInfo(timeStep,this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
-		let invM1 = this._b1._invMass;
-		let invM2 = this._b2._invMass;
+		const invM1 = this._b1._invMass;
+		const invM2 = this._b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -31669,12 +32318,12 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		invI221 = this._b2._invInertia21;
 		invI222 = this._b2._invInertia22;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let j = row.jacobian;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const j = row.jacobian;
 			j.updateSparsity();
 			if((j.flag & 1) != 0) {
 				md.invMLin1X = j.lin1X * invM1;
@@ -31728,14 +32377,15 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 			}
 		}
 	}
+
 	warmStart(timeStep) {
 		let factor = this.joint._positionCorrectionAlgorithm == oimo.dynamics.constraint.PositionCorrectionAlgorithm.BAUMGARTE ? oimo.common.Setting.jointWarmStartingFactorForBaungarte : oimo.common.Setting.jointWarmStartingFactor;
 		factor *= timeStep.dtRatio;
 		if(factor <= 0) {
 			let _g = 0;
-			let _g1 = this.info.numRows;
+			const _g1 = this.info.numRows;
 			while(_g < _g1) {
-				let _this = this.info.rows[_g++].impulse;
+				const _this = this.info.rows[_g++].impulse;
 				_this.impulse = 0;
 				_this.impulseM = 0;
 				_this.impulseP = 0;
@@ -31767,14 +32417,14 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		av2Y = this._b2._angVelY;
 		av2Z = this._b2._angVelZ;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let md = this.massData[i];
-			let imp = this.info.rows[i].impulse;
+			const i = _g++;
+			const md = this.massData[i];
+			const imp = this.info.rows[i].impulse;
 			imp.impulse *= factor;
 			imp.impulseM *= factor;
-			let impulse = imp.impulse + imp.impulseM;
+			const impulse = imp.impulse + imp.impulseM;
 			lv1X += md.invMLin1X * impulse;
 			lv1Y += md.invMLin1Y * impulse;
 			lv1Z += md.invMLin1Z * impulse;
@@ -31801,6 +32451,7 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		this._b2._angVelY = av2Y;
 		this._b2._angVelZ = av2Z;
 	}
+
 	solveVelocity() {
 		let lv1X;
 		let lv1Y;
@@ -31827,13 +32478,13 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		av2Y = this._b2._angVelY;
 		av2Z = this._b2._angVelZ;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
-			let j = row.jacobian;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
+			const j = row.jacobian;
 			if(row.motorMaxImpulse == 0) {
 				continue;
 			}
@@ -31843,7 +32494,7 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 			rv += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rv -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseM = (-row.motorSpeed - rv) * md.massWithoutCfm;
-			let oldImpulseM = imp.impulseM;
+			const oldImpulseM = imp.impulseM;
 			imp.impulseM += impulseM;
 			if(imp.impulseM < -row.motorMaxImpulse) {
 				imp.impulseM = -row.motorMaxImpulse;
@@ -31869,20 +32520,20 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 			}
 		}
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
-			let j = row.jacobian;
+			const i = _g2++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
+			const j = row.jacobian;
 			let rv = 0;
 			rv += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			rv -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
 			rv += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rv -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulse = (row.rhs - rv - imp.impulse * row.cfm) * md.mass;
-			let oldImpulse = imp.impulse;
+			const oldImpulse = imp.impulse;
 			imp.impulse += impulse;
 			if(imp.impulse < row.minImpulse) {
 				imp.impulse = row.minImpulse;
@@ -31920,6 +32571,7 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		this._b2._angVelY = av2Y;
 		this._b2._angVelZ = av2Z;
 	}
+
 	postSolveVelocity(timeStep) {
 		let linX;
 		let linY;
@@ -31934,11 +32586,11 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		angY = 0;
 		angZ = 0;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let row = this.info.rows[_g++];
-			let imp = row.impulse;
-			let j = row.jacobian;
+			const row = this.info.rows[_g++];
+			const imp = row.impulse;
+			const j = row.jacobian;
 			if((j.flag & 1) != 0) {
 				linX += j.lin1X * imp.impulse;
 				linY += j.lin1Y * imp.impulse;
@@ -31956,13 +32608,14 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		this.joint._appliedTorqueY = angY * timeStep.invDt;
 		this.joint._appliedTorqueZ = angZ * timeStep.invDt;
 	}
+
 	preSolvePosition(timeStep) {
 		this.joint._syncAnchors();
 		this.joint._getPositionSolverInfo(this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
-		let invM1 = this._b1._invMass;
-		let invM2 = this._b2._invMass;
+		const invM1 = this._b1._invMass;
+		const invM2 = this._b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -32000,11 +32653,11 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		invI221 = this._b2._invInertia21;
 		invI222 = this._b2._invInertia22;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let md = this.massData[i];
-			let j = this.info.rows[i].jacobian;
+			const i = _g++;
+			const md = this.massData[i];
+			const j = this.info.rows[i].jacobian;
 			md.invMLin1X = j.lin1X * invM1;
 			md.invMLin1Y = j.lin1Y * invM1;
 			md.invMLin1Z = j.lin1Z * invM1;
@@ -32035,9 +32688,10 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 			}
 		}
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) this.info.rows[_g2++].impulse.impulseP = 0;
 	}
+
 	solvePositionSplitImpulse() {
 		let lv1X;
 		let lv1Y;
@@ -32064,20 +32718,20 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		av2Y = this._b2._angPseudoVelY;
 		av2Z = this._b2._angPseudoVelZ;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
-			let j = row.jacobian;
+			const i = _g++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
+			const j = row.jacobian;
 			let rv = 0;
 			rv += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			rv -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
 			rv += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rv -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseP = (row.rhs * oimo.common.Setting.positionSplitImpulseBaumgarte - rv) * md.mass;
-			let oldImpulseP = imp.impulseP;
+			const oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if(imp.impulseP < row.minImpulse) {
 				imp.impulseP = row.minImpulse;
@@ -32111,13 +32765,14 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		this._b2._angPseudoVelY = av2Y;
 		this._b2._angPseudoVelZ = av2Z;
 	}
+
 	solvePositionNgs(timeStep) {
 		this.joint._syncAnchors();
 		this.joint._getPositionSolverInfo(this.info);
 		this._b1 = this.info.b1;
 		this._b2 = this.info.b2;
-		let invM1 = this._b1._invMass;
-		let invM2 = this._b2._invMass;
+		const invM1 = this._b1._invMass;
+		const invM2 = this._b2._invMass;
 		let invI100;
 		let invI101;
 		let invI102;
@@ -32155,11 +32810,11 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		invI221 = this._b2._invInertia21;
 		invI222 = this._b2._invInertia22;
 		let _g = 0;
-		let _g1 = this.info.numRows;
+		const _g1 = this.info.numRows;
 		while(_g < _g1) {
-			let i = _g++;
-			let md = this.massData[i];
-			let j = this.info.rows[i].jacobian;
+			const i = _g++;
+			const md = this.massData[i];
+			const j = this.info.rows[i].jacobian;
 			md.invMLin1X = j.lin1X * invM1;
 			md.invMLin1Y = j.lin1Y * invM1;
 			md.invMLin1Z = j.lin1Z * invM1;
@@ -32214,20 +32869,20 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		av2Y = 0;
 		av2Z = 0;
 		let _g2 = 0;
-		let _g3 = this.info.numRows;
+		const _g3 = this.info.numRows;
 		while(_g2 < _g3) {
-			let i = _g2++;
-			let row = this.info.rows[i];
-			let md = this.massData[i];
-			let imp = row.impulse;
-			let j = row.jacobian;
+			const i = _g2++;
+			const row = this.info.rows[i];
+			const md = this.massData[i];
+			const imp = row.impulse;
+			const j = row.jacobian;
 			let rv = 0;
 			rv += lv1X * j.lin1X + lv1Y * j.lin1Y + lv1Z * j.lin1Z;
 			rv -= lv2X * j.lin2X + lv2Y * j.lin2Y + lv2Z * j.lin2Z;
 			rv += av1X * j.ang1X + av1Y * j.ang1Y + av1Z * j.ang1Z;
 			rv -= av2X * j.ang2X + av2Y * j.ang2Y + av2Z * j.ang2Z;
 			let impulseP = (row.rhs * oimo.common.Setting.positionNgsBaumgarte - rv) * md.mass;
-			let oldImpulseP = imp.impulseP;
+			const oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if(imp.impulseP < row.minImpulse) {
 				imp.impulseP = row.minImpulse;
@@ -32248,21 +32903,21 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 			av2Y += md.invMAng2Y * -impulseP;
 			av2Z += md.invMAng2Z * -impulseP;
 		}
-		let _this = this._b1;
+		const _this = this._b1;
 		_this._transform._positionX += lv1X;
 		_this._transform._positionY += lv1Y;
 		_this._transform._positionZ += lv1Z;
-		let _this1 = this._b2;
+		const _this1 = this._b2;
 		_this1._transform._positionX += lv2X;
 		_this1._transform._positionY += lv2Y;
 		_this1._transform._positionZ += lv2Z;
-		let _this2 = this._b1;
-		let theta = Math.sqrt(av1X * av1X + av1Y * av1Y + av1Z * av1Z);
-		let halfTheta = theta * 0.5;
+		const _this2 = this._b1;
+		const theta = Math.sqrt(av1X * av1X + av1Y * av1Y + av1Z * av1Z);
+		const halfTheta = theta * 0.5;
 		let rotationToSinAxisFactor;
 		let cosHalfTheta;
 		if(halfTheta < 0.5) {
-			let ht2 = halfTheta * halfTheta;
+			const ht2 = halfTheta * halfTheta;
 			rotationToSinAxisFactor = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 			cosHalfTheta = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 		} else {
@@ -32287,10 +32942,10 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		let qY;
 		let qZ;
 		let qW;
-		let e00 = _this2._transform._rotation00;
-		let e11 = _this2._transform._rotation11;
-		let e22 = _this2._transform._rotation22;
-		let t = e00 + e11 + e22;
+		const e00 = _this2._transform._rotation00;
+		const e11 = _this2._transform._rotation11;
+		const e22 = _this2._transform._rotation22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -32342,22 +32997,22 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		qY *= l;
 		qZ *= l;
 		qW *= l;
-		let x = qX;
-		let y = qY;
-		let z = qZ;
-		let w = qW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = qX;
+		const y = qY;
+		const z = qZ;
+		const w = qW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		_this2._transform._rotation00 = 1 - yy - zz;
 		_this2._transform._rotation01 = xy - wz;
 		_this2._transform._rotation02 = xz + wy;
@@ -32430,13 +33085,13 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		_this2._invInertia20 *= _this2._rotFactor.z;
 		_this2._invInertia21 *= _this2._rotFactor.z;
 		_this2._invInertia22 *= _this2._rotFactor.z;
-		let _this3 = this._b2;
-		let theta1 = Math.sqrt(av2X * av2X + av2Y * av2Y + av2Z * av2Z);
-		let halfTheta1 = theta1 * 0.5;
+		const _this3 = this._b2;
+		const theta1 = Math.sqrt(av2X * av2X + av2Y * av2Y + av2Z * av2Z);
+		const halfTheta1 = theta1 * 0.5;
 		let rotationToSinAxisFactor1;
 		let cosHalfTheta1;
 		if(halfTheta1 < 0.5) {
-			let ht2 = halfTheta1 * halfTheta1;
+			const ht2 = halfTheta1 * halfTheta1;
 			rotationToSinAxisFactor1 = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 			cosHalfTheta1 = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 		} else {
@@ -32461,10 +33116,10 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		let qY1;
 		let qZ1;
 		let qW1;
-		let e001 = _this3._transform._rotation00;
-		let e111 = _this3._transform._rotation11;
-		let e221 = _this3._transform._rotation22;
-		let t1 = e001 + e111 + e221;
+		const e001 = _this3._transform._rotation00;
+		const e111 = _this3._transform._rotation11;
+		const e221 = _this3._transform._rotation22;
+		const t1 = e001 + e111 + e221;
 		let s1;
 		if(t1 > 0) {
 			s1 = Math.sqrt(t1 + 1);
@@ -32516,22 +33171,22 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		qY1 *= l1;
 		qZ1 *= l1;
 		qW1 *= l1;
-		let x1 = qX1;
-		let y1 = qY1;
-		let z1 = qZ1;
-		let w1 = qW1;
-		let x21 = 2 * x1;
-		let y21 = 2 * y1;
-		let z21 = 2 * z1;
-		let xx1 = x1 * x21;
-		let yy1 = y1 * y21;
-		let zz1 = z1 * z21;
-		let xy1 = x1 * y21;
-		let yz1 = y1 * z21;
-		let xz1 = x1 * z21;
-		let wx1 = w1 * x21;
-		let wy1 = w1 * y21;
-		let wz1 = w1 * z21;
+		const x1 = qX1;
+		const y1 = qY1;
+		const z1 = qZ1;
+		const w1 = qW1;
+		const x21 = 2 * x1;
+		const y21 = 2 * y1;
+		const z21 = 2 * z1;
+		const xx1 = x1 * x21;
+		const yy1 = y1 * y21;
+		const zz1 = z1 * z21;
+		const xy1 = x1 * y21;
+		const yz1 = y1 * z21;
+		const xz1 = x1 * z21;
+		const wx1 = w1 * x21;
+		const wy1 = w1 * y21;
+		const wz1 = w1 * z21;
 		_this3._transform._rotation00 = 1 - yy1 - zz1;
 		_this3._transform._rotation01 = xy1 - wz1;
 		_this3._transform._rotation02 = xz1 + wy1;
@@ -32605,18 +33260,19 @@ oimo.dynamics.constraint.solver.pgs.PgsJointConstraintSolver = class oimo_dynami
 		_this3._invInertia21 *= _this3._rotFactor.z;
 		_this3._invInertia22 *= _this3._rotFactor.z;
 	}
+
 	postSolve() {
 		this.joint._syncAnchors();
 		this.joint._checkDestruction();
 	}
-}
+};
 if(!oimo.dynamics.rigidbody) oimo.dynamics.rigidbody = {};
 oimo.dynamics.rigidbody.MassData = class oimo_dynamics_rigidbody_MassData {
 	constructor() {
 		this.mass = 0;
 		this.localInertia = new oimo.common.Mat3();
 	}
-}
+};
 oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 	constructor(config) {
 		this._next = null;
@@ -32630,11 +33286,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._jointLinkList = null;
 		this._jointLinkListLast = null;
 		this._numJointLinks = 0;
-		let v = config.linearVelocity;
+		const v = config.linearVelocity;
 		this._velX = v.x;
 		this._velY = v.y;
 		this._velZ = v.z;
-		let v1 = config.angularVelocity;
+		const v1 = config.angularVelocity;
 		this._angVelX = v1.x;
 		this._angVelY = v1.y;
 		this._angVelZ = v1.z;
@@ -32646,11 +33302,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._angPseudoVelZ = 0;
 		this._ptransform = new oimo.common.Transform();
 		this._transform = new oimo.common.Transform();
-		let v2 = config.position;
+		const v2 = config.position;
 		this._ptransform._positionX = v2.x;
 		this._ptransform._positionY = v2.y;
 		this._ptransform._positionZ = v2.z;
-		let m = config.rotation;
+		const m = config.rotation;
 		this._ptransform._rotation00 = m.e00;
 		this._ptransform._rotation01 = m.e01;
 		this._ptransform._rotation02 = m.e02;
@@ -32660,8 +33316,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._ptransform._rotation20 = m.e20;
 		this._ptransform._rotation21 = m.e21;
 		this._ptransform._rotation22 = m.e22;
-		let dst = this._transform;
-		let src = this._ptransform;
+		const dst = this._transform;
+		const src = this._ptransform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -32735,6 +33391,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._gravityScale = 1;
 		this._world = null;
 	}
+
 	_integrate(dt) {
 		switch(this._type) {
 		case 1:
@@ -32764,13 +33421,13 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			rotationX = this._angVelX * dt;
 			rotationY = this._angVelY * dt;
 			rotationZ = this._angVelZ * dt;
-			let translationLengthSq = translationX * translationX + translationY * translationY + translationZ * translationZ;
-			let rotationLengthSq = rotationX * rotationX + rotationY * rotationY + rotationZ * rotationZ;
+			const translationLengthSq = translationX * translationX + translationY * translationY + translationZ * translationZ;
+			const rotationLengthSq = rotationX * rotationX + rotationY * rotationY + rotationZ * rotationZ;
 			if(translationLengthSq == 0 && rotationLengthSq == 0) {
 				return;
 			}
 			if(translationLengthSq > oimo.common.Setting.maxTranslationPerStep * oimo.common.Setting.maxTranslationPerStep) {
-				let l = oimo.common.Setting.maxTranslationPerStep / Math.sqrt(translationLengthSq);
+				const l = oimo.common.Setting.maxTranslationPerStep / Math.sqrt(translationLengthSq);
 				this._velX *= l;
 				this._velY *= l;
 				this._velZ *= l;
@@ -32779,7 +33436,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				translationZ *= l;
 			}
 			if(rotationLengthSq > oimo.common.Setting.maxRotationPerStep * oimo.common.Setting.maxRotationPerStep) {
-				let l = oimo.common.Setting.maxRotationPerStep / Math.sqrt(rotationLengthSq);
+				const l = oimo.common.Setting.maxRotationPerStep / Math.sqrt(rotationLengthSq);
 				this._angVelX *= l;
 				this._angVelY *= l;
 				this._angVelZ *= l;
@@ -32790,12 +33447,12 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			this._transform._positionX += translationX;
 			this._transform._positionY += translationY;
 			this._transform._positionZ += translationZ;
-			let theta = Math.sqrt(rotationX * rotationX + rotationY * rotationY + rotationZ * rotationZ);
-			let halfTheta = theta * 0.5;
+			const theta = Math.sqrt(rotationX * rotationX + rotationY * rotationY + rotationZ * rotationZ);
+			const halfTheta = theta * 0.5;
 			let rotationToSinAxisFactor;
 			let cosHalfTheta;
 			if(halfTheta < 0.5) {
-				let ht2 = halfTheta * halfTheta;
+				const ht2 = halfTheta * halfTheta;
 				rotationToSinAxisFactor = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 				cosHalfTheta = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 			} else {
@@ -32820,10 +33477,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			let qY;
 			let qZ;
 			let qW;
-			let e00 = this._transform._rotation00;
-			let e11 = this._transform._rotation11;
-			let e22 = this._transform._rotation22;
-			let t = e00 + e11 + e22;
+			const e00 = this._transform._rotation00;
+			const e11 = this._transform._rotation11;
+			const e22 = this._transform._rotation22;
+			const t = e00 + e11 + e22;
 			let s;
 			if(t > 0) {
 				s = Math.sqrt(t + 1);
@@ -32875,22 +33532,22 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			qY *= l;
 			qZ *= l;
 			qW *= l;
-			let x = qX;
-			let y = qY;
-			let z = qZ;
-			let w = qW;
-			let x2 = 2 * x;
-			let y2 = 2 * y;
-			let z2 = 2 * z;
-			let xx = x * x2;
-			let yy = y * y2;
-			let zz = z * z2;
-			let xy = x * y2;
-			let yz = y * z2;
-			let xz = x * z2;
-			let wx = w * x2;
-			let wy = w * y2;
-			let wz = w * z2;
+			const x = qX;
+			const y = qY;
+			const z = qZ;
+			const w = qW;
+			const x2 = 2 * x;
+			const y2 = 2 * y;
+			const z2 = 2 * z;
+			const xx = x * x2;
+			const yy = y * y2;
+			const zz = z * z2;
+			const xy = x * y2;
+			const yz = y * z2;
+			const xz = x * z2;
+			const wx = w * x2;
+			const wy = w * y2;
+			const wz = w * z2;
 			this._transform._rotation00 = 1 - yy - zz;
 			this._transform._rotation01 = xy - wz;
 			this._transform._rotation02 = xz + wy;
@@ -32966,6 +33623,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			break;
 		}
 	}
+
 	_integratePseudoVelocity() {
 		if(this._pseudoVelX * this._pseudoVelX + this._pseudoVelY * this._pseudoVelY + this._pseudoVelZ * this._pseudoVelZ == 0 && this._angPseudoVelX * this._angPseudoVelX + this._angPseudoVelY * this._angPseudoVelY + this._angPseudoVelZ * this._angPseudoVelZ == 0) {
 			return;
@@ -33001,12 +33659,12 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			this._transform._positionX += translationX;
 			this._transform._positionY += translationY;
 			this._transform._positionZ += translationZ;
-			let theta = Math.sqrt(rotationX * rotationX + rotationY * rotationY + rotationZ * rotationZ);
-			let halfTheta = theta * 0.5;
+			const theta = Math.sqrt(rotationX * rotationX + rotationY * rotationY + rotationZ * rotationZ);
+			const halfTheta = theta * 0.5;
 			let rotationToSinAxisFactor;
 			let cosHalfTheta;
 			if(halfTheta < 0.5) {
-				let ht2 = halfTheta * halfTheta;
+				const ht2 = halfTheta * halfTheta;
 				rotationToSinAxisFactor = 0.5 * (1 - ht2 * 0.16666666666666666 + ht2 * ht2 * 0.0083333333333333332);
 				cosHalfTheta = 1 - ht2 * 0.5 + ht2 * ht2 * 0.041666666666666664;
 			} else {
@@ -33031,10 +33689,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			let qY;
 			let qZ;
 			let qW;
-			let e00 = this._transform._rotation00;
-			let e11 = this._transform._rotation11;
-			let e22 = this._transform._rotation22;
-			let t = e00 + e11 + e22;
+			const e00 = this._transform._rotation00;
+			const e11 = this._transform._rotation11;
+			const e22 = this._transform._rotation22;
+			const t = e00 + e11 + e22;
 			let s;
 			if(t > 0) {
 				s = Math.sqrt(t + 1);
@@ -33086,22 +33744,22 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			qY *= l;
 			qZ *= l;
 			qW *= l;
-			let x = qX;
-			let y = qY;
-			let z = qZ;
-			let w = qW;
-			let x2 = 2 * x;
-			let y2 = 2 * y;
-			let z2 = 2 * z;
-			let xx = x * x2;
-			let yy = y * y2;
-			let zz = z * z2;
-			let xy = x * y2;
-			let yz = y * z2;
-			let xz = x * z2;
-			let wx = w * x2;
-			let wy = w * y2;
-			let wz = w * z2;
+			const x = qX;
+			const y = qY;
+			const z = qZ;
+			const w = qW;
+			const x2 = 2 * x;
+			const y2 = 2 * y;
+			const z2 = 2 * z;
+			const xx = x * x2;
+			const yy = y * y2;
+			const zz = z * z2;
+			const xy = x * y2;
+			const yz = y * z2;
+			const xz = x * z2;
+			const wx = w * x2;
+			const wy = w * y2;
+			const wz = w * z2;
 			this._transform._rotation00 = 1 - yy - zz;
 			this._transform._rotation01 = xy - wz;
 			this._transform._rotation02 = xz + wy;
@@ -33177,6 +33835,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			break;
 		}
 	}
+
 	updateMass() {
 		let totalInertia00;
 		let totalInertia01;
@@ -33199,10 +33858,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		let totalMass = 0;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let g = s._geom;
+			const n = s._next;
+			const g = s._geom;
 			g._updateMass();
-			let mass = s._density * g._volume;
+			const mass = s._density * g._volume;
 			let inertia00;
 			let inertia01;
 			let inertia02;
@@ -33284,12 +33943,12 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			let cogInertia20;
 			let cogInertia21;
 			let cogInertia22;
-			let xx = s._localTransform._positionX * s._localTransform._positionX;
-			let yy = s._localTransform._positionY * s._localTransform._positionY;
-			let zz = s._localTransform._positionZ * s._localTransform._positionZ;
-			let xy = -s._localTransform._positionX * s._localTransform._positionY;
-			let yz = -s._localTransform._positionY * s._localTransform._positionZ;
-			let zx = -s._localTransform._positionZ * s._localTransform._positionX;
+			const xx = s._localTransform._positionX * s._localTransform._positionX;
+			const yy = s._localTransform._positionY * s._localTransform._positionY;
+			const zz = s._localTransform._positionZ * s._localTransform._positionZ;
+			const xy = -s._localTransform._positionX * s._localTransform._positionY;
+			const yz = -s._localTransform._positionY * s._localTransform._positionZ;
+			const zx = -s._localTransform._positionZ * s._localTransform._positionX;
 			cogInertia00 = yy + zz;
 			cogInertia01 = xy;
 			cogInertia02 = zx;
@@ -33332,9 +33991,9 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._localInertia22 = totalInertia22;
 		if(this._mass > 0 && this._localInertia00 * (this._localInertia11 * this._localInertia22 - this._localInertia12 * this._localInertia21) - this._localInertia01 * (this._localInertia10 * this._localInertia22 - this._localInertia12 * this._localInertia20) + this._localInertia02 * (this._localInertia10 * this._localInertia21 - this._localInertia11 * this._localInertia20) > 0 && this._type == 0) {
 			this._invMass = 1 / this._mass;
-			let d00 = this._localInertia11 * this._localInertia22 - this._localInertia12 * this._localInertia21;
-			let d01 = this._localInertia10 * this._localInertia22 - this._localInertia12 * this._localInertia20;
-			let d02 = this._localInertia10 * this._localInertia21 - this._localInertia11 * this._localInertia20;
+			const d00 = this._localInertia11 * this._localInertia22 - this._localInertia12 * this._localInertia21;
+			const d01 = this._localInertia10 * this._localInertia22 - this._localInertia12 * this._localInertia20;
+			const d02 = this._localInertia10 * this._localInertia21 - this._localInertia11 * this._localInertia20;
 			let d = this._localInertia00 * d00 - this._localInertia01 * d01 + this._localInertia02 * d02;
 			if(d < -1e-32 || d > 1e-32) {
 				d = 1 / d;
@@ -33456,24 +34115,27 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getPosition() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._transform._positionX;
 		v.y = this._transform._positionY;
 		v.z = this._transform._positionZ;
 		return v;
 	}
+
 	getPositionTo(position) {
 		position.x = this._transform._positionX;
 		position.y = this._transform._positionY;
 		position.z = this._transform._positionZ;
 	}
+
 	setPosition(position) {
 		this._transform._positionX = position.x;
 		this._transform._positionY = position.y;
 		this._transform._positionZ = position.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -33488,11 +34150,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -33532,8 +34194,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -33600,7 +34262,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -33611,6 +34273,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	translate(translation) {
 		let diffX;
 		let diffY;
@@ -33621,8 +34284,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._transform._positionX += diffX;
 		this._transform._positionY += diffY;
 		this._transform._positionZ += diffZ;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -33637,11 +34300,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -33681,8 +34344,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -33749,7 +34412,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -33760,8 +34423,9 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getRotation() {
-		let m = new oimo.common.Mat3();
+		const m = new oimo.common.Mat3();
 		m.e00 = this._transform._rotation00;
 		m.e01 = this._transform._rotation01;
 		m.e02 = this._transform._rotation02;
@@ -33773,6 +34437,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		m.e22 = this._transform._rotation22;
 		return m;
 	}
+
 	getRotationTo(rotation) {
 		rotation.e00 = this._transform._rotation00;
 		rotation.e01 = this._transform._rotation01;
@@ -33784,6 +34449,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		rotation.e21 = this._transform._rotation21;
 		rotation.e22 = this._transform._rotation22;
 	}
+
 	setRotation(rotation) {
 		this._transform._rotation00 = rotation.e00;
 		this._transform._rotation01 = rotation.e01;
@@ -33857,8 +34523,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._invInertia20 *= this._rotFactor.z;
 		this._invInertia21 *= this._rotFactor.z;
 		this._invInertia22 *= this._rotFactor.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -33873,11 +34539,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -33917,8 +34583,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -33985,7 +34651,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -33996,6 +34662,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	setRotationXyz(eulerAngles) {
 		let xyzX;
 		let xyzY;
@@ -34003,12 +34670,12 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		xyzX = eulerAngles.x;
 		xyzY = eulerAngles.y;
 		xyzZ = eulerAngles.z;
-		let sx = Math.sin(xyzX);
-		let sy = Math.sin(xyzY);
-		let sz = Math.sin(xyzZ);
-		let cx = Math.cos(xyzX);
-		let cy = Math.cos(xyzY);
-		let cz = Math.cos(xyzZ);
+		const sx = Math.sin(xyzX);
+		const sy = Math.sin(xyzY);
+		const sz = Math.sin(xyzZ);
+		const cx = Math.cos(xyzX);
+		const cy = Math.cos(xyzY);
+		const cz = Math.cos(xyzZ);
 		this._transform._rotation00 = cy * cz;
 		this._transform._rotation01 = -cy * sz;
 		this._transform._rotation02 = sy;
@@ -34081,8 +34748,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._invInertia20 *= this._rotFactor.z;
 		this._invInertia21 *= this._rotFactor.z;
 		this._invInertia22 *= this._rotFactor.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -34097,11 +34764,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -34141,8 +34808,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -34209,7 +34876,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -34220,6 +34887,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	rotate(rotation) {
 		let rot00;
 		let rot01;
@@ -34329,8 +34997,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._invInertia20 *= this._rotFactor.z;
 		this._invInertia21 *= this._rotFactor.z;
 		this._invInertia22 *= this._rotFactor.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -34345,11 +35013,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -34389,8 +35057,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -34457,7 +35125,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -34468,6 +35136,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	rotateXyz(eulerAngles) {
 		let xyzX;
 		let xyzY;
@@ -34484,12 +35153,12 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		xyzX = eulerAngles.x;
 		xyzY = eulerAngles.y;
 		xyzZ = eulerAngles.z;
-		let sx = Math.sin(xyzX);
-		let sy = Math.sin(xyzY);
-		let sz = Math.sin(xyzZ);
-		let cx = Math.cos(xyzX);
-		let cy = Math.cos(xyzY);
-		let cz = Math.cos(xyzZ);
+		const sx = Math.sin(xyzX);
+		const sy = Math.sin(xyzY);
+		const sz = Math.sin(xyzZ);
+		const cx = Math.cos(xyzX);
+		const cy = Math.cos(xyzY);
+		const cz = Math.cos(xyzZ);
 		rot00 = cy * cz;
 		rot01 = -cy * sz;
 		rot02 = sy;
@@ -34589,8 +35258,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._invInertia20 *= this._rotFactor.z;
 		this._invInertia21 *= this._rotFactor.z;
 		this._invInertia22 *= this._rotFactor.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -34605,11 +35274,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -34649,8 +35318,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -34717,7 +35386,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -34728,16 +35397,17 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getOrientation() {
-		let q = new oimo.common.Quat();
+		const q = new oimo.common.Quat();
 		let iqX;
 		let iqY;
 		let iqZ;
 		let iqW;
-		let e00 = this._transform._rotation00;
-		let e11 = this._transform._rotation11;
-		let e22 = this._transform._rotation22;
-		let t = e00 + e11 + e22;
+		const e00 = this._transform._rotation00;
+		const e11 = this._transform._rotation11;
+		const e22 = this._transform._rotation22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -34783,15 +35453,16 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		q.w = iqW;
 		return q;
 	}
+
 	getOrientationTo(orientation) {
 		let iqX;
 		let iqY;
 		let iqZ;
 		let iqW;
-		let e00 = this._transform._rotation00;
-		let e11 = this._transform._rotation11;
-		let e22 = this._transform._rotation22;
-		let t = e00 + e11 + e22;
+		const e00 = this._transform._rotation00;
+		const e11 = this._transform._rotation11;
+		const e22 = this._transform._rotation22;
+		const t = e00 + e11 + e22;
 		let s;
 		if(t > 0) {
 			s = Math.sqrt(t + 1);
@@ -34836,6 +35507,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		orientation.z = iqZ;
 		orientation.w = iqW;
 	}
+
 	setOrientation(quaternion) {
 		let qX;
 		let qY;
@@ -34845,22 +35517,22 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		qY = quaternion.y;
 		qZ = quaternion.z;
 		qW = quaternion.w;
-		let x = qX;
-		let y = qY;
-		let z = qZ;
-		let w = qW;
-		let x2 = 2 * x;
-		let y2 = 2 * y;
-		let z2 = 2 * z;
-		let xx = x * x2;
-		let yy = y * y2;
-		let zz = z * z2;
-		let xy = x * y2;
-		let yz = y * z2;
-		let xz = x * z2;
-		let wx = w * x2;
-		let wy = w * y2;
-		let wz = w * z2;
+		const x = qX;
+		const y = qY;
+		const z = qZ;
+		const w = qW;
+		const x2 = 2 * x;
+		const y2 = 2 * y;
+		const z2 = 2 * z;
+		const xx = x * x2;
+		const yy = y * y2;
+		const zz = z * z2;
+		const xy = x * y2;
+		const yz = y * z2;
+		const xz = x * z2;
+		const wx = w * x2;
+		const wy = w * y2;
+		const wz = w * z2;
 		this._transform._rotation00 = 1 - yy - zz;
 		this._transform._rotation01 = xy - wz;
 		this._transform._rotation02 = xz + wy;
@@ -34933,8 +35605,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._invInertia20 *= this._rotFactor.z;
 		this._invInertia21 *= this._rotFactor.z;
 		this._invInertia22 *= this._rotFactor.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -34949,11 +35621,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -34993,8 +35665,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -35061,7 +35733,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -35072,9 +35744,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getTransform() {
-		let _this = this._transform;
-		let tf = new oimo.common.Transform();
+		const _this = this._transform;
+		const tf = new oimo.common.Transform();
 		tf._positionX = _this._positionX;
 		tf._positionY = _this._positionY;
 		tf._positionZ = _this._positionZ;
@@ -35089,8 +35762,9 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		tf._rotation22 = _this._rotation22;
 		return tf;
 	}
+
 	getTransformTo(transform) {
-		let transform1 = this._transform;
+		const transform1 = this._transform;
 		transform._positionX = transform1._positionX;
 		transform._positionY = transform1._positionY;
 		transform._positionZ = transform1._positionZ;
@@ -35104,6 +35778,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		transform._rotation21 = transform1._rotation21;
 		transform._rotation22 = transform1._rotation22;
 	}
+
 	setTransform(transform) {
 		this._transform._positionX = transform._positionX;
 		this._transform._positionY = transform._positionY;
@@ -35180,8 +35855,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._invInertia20 *= this._rotFactor.z;
 		this._invInertia21 *= this._rotFactor.z;
 		this._invInertia22 *= this._rotFactor.z;
-		let dst = this._ptransform;
-		let src = this._transform;
+		const dst = this._ptransform;
+		const src = this._transform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -35196,11 +35871,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		dst._rotation22 = src._rotation22;
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -35240,8 +35915,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -35308,7 +35983,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -35319,11 +35994,13 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getMass() {
 		return this._mass;
 	}
+
 	getLocalInertia() {
-		let m = new oimo.common.Mat3();
+		const m = new oimo.common.Mat3();
 		m.e00 = this._localInertia00;
 		m.e01 = this._localInertia01;
 		m.e02 = this._localInertia02;
@@ -35335,6 +36012,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		m.e22 = this._localInertia22;
 		return m;
 	}
+
 	getLocalInertiaTo(inertia) {
 		inertia.e00 = this._localInertia00;
 		inertia.e01 = this._localInertia01;
@@ -35346,10 +36024,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		inertia.e21 = this._localInertia21;
 		inertia.e22 = this._localInertia22;
 	}
+
 	getMassData() {
-		let md = new oimo.dynamics.rigidbody.MassData();
+		const md = new oimo.dynamics.rigidbody.MassData();
 		md.mass = this._mass;
-		let m = md.localInertia;
+		const m = md.localInertia;
 		m.e00 = this._localInertia00;
 		m.e01 = this._localInertia01;
 		m.e02 = this._localInertia02;
@@ -35361,9 +36040,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		m.e22 = this._localInertia22;
 		return md;
 	}
+
 	getMassDataTo(massData) {
 		massData.mass = this._mass;
-		let m = massData.localInertia;
+		const m = massData.localInertia;
 		m.e00 = this._localInertia00;
 		m.e01 = this._localInertia01;
 		m.e02 = this._localInertia02;
@@ -35374,9 +36054,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		m.e21 = this._localInertia21;
 		m.e22 = this._localInertia22;
 	}
+
 	setMassData(massData) {
 		this._mass = massData.mass;
-		let m = massData.localInertia;
+		const m = massData.localInertia;
 		this._localInertia00 = m.e00;
 		this._localInertia01 = m.e01;
 		this._localInertia02 = m.e02;
@@ -35388,9 +36069,9 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._localInertia22 = m.e22;
 		if(this._mass > 0 && this._localInertia00 * (this._localInertia11 * this._localInertia22 - this._localInertia12 * this._localInertia21) - this._localInertia01 * (this._localInertia10 * this._localInertia22 - this._localInertia12 * this._localInertia20) + this._localInertia02 * (this._localInertia10 * this._localInertia21 - this._localInertia11 * this._localInertia20) > 0 && this._type == 0) {
 			this._invMass = 1 / this._mass;
-			let d00 = this._localInertia11 * this._localInertia22 - this._localInertia12 * this._localInertia21;
-			let d01 = this._localInertia10 * this._localInertia22 - this._localInertia12 * this._localInertia20;
-			let d02 = this._localInertia10 * this._localInertia21 - this._localInertia11 * this._localInertia20;
+			const d00 = this._localInertia11 * this._localInertia22 - this._localInertia12 * this._localInertia21;
+			const d01 = this._localInertia10 * this._localInertia22 - this._localInertia12 * this._localInertia20;
+			const d02 = this._localInertia10 * this._localInertia21 - this._localInertia11 * this._localInertia20;
 			let d = this._localInertia00 * d00 - this._localInertia01 * d01 + this._localInertia02 * d02;
 			if(d < -1e-32 || d > 1e-32) {
 				d = 1 / d;
@@ -35512,12 +36193,14 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getRotationFactor() {
-		let _this = this._rotFactor;
+		const _this = this._rotFactor;
 		return new oimo.common.Vec3(_this.x,_this.y,_this.z);
 	}
+
 	setRotationFactor(rotationFactor) {
-		let _this = this._rotFactor;
+		const _this = this._rotFactor;
 		_this.x = rotationFactor.x;
 		_this.y = rotationFactor.y;
 		_this.z = rotationFactor.z;
@@ -35587,18 +36270,21 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getLinearVelocity() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._velX;
 		v.y = this._velY;
 		v.z = this._velZ;
 		return v;
 	}
+
 	getLinearVelocityTo(linearVelocity) {
 		linearVelocity.x = this._velX;
 		linearVelocity.y = this._velY;
 		linearVelocity.z = this._velZ;
 	}
+
 	setLinearVelocity(linearVelocity) {
 		if(this._type == 1) {
 			this._velX = 0;
@@ -35612,18 +36298,21 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getAngularVelocity() {
-		let v = new oimo.common.Vec3();
+		const v = new oimo.common.Vec3();
 		v.x = this._angVelX;
 		v.y = this._angVelY;
 		v.z = this._angVelZ;
 		return v;
 	}
+
 	getAngularVelocityTo(angularVelocity) {
 		angularVelocity.x = this._velX;
 		angularVelocity.y = this._velY;
 		angularVelocity.z = this._velZ;
 	}
+
 	setAngularVelocity(angularVelocity) {
 		if(this._type == 1) {
 			this._angVelX = 0;
@@ -35637,6 +36326,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	addLinearVelocity(linearVelocityChange) {
 		if(this._type != 1) {
 			let dX;
@@ -35652,6 +36342,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	addAngularVelocity(angularVelocityChange) {
 		if(this._type != 1) {
 			let dX;
@@ -35667,6 +36358,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	applyImpulse(impulse,positionInWorld) {
 		let impX;
 		let impY;
@@ -35707,6 +36399,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	applyLinearImpulse(impulse) {
 		let impX;
 		let impY;
@@ -35720,6 +36413,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	applyAngularImpulse(impulse) {
 		let impX;
 		let impY;
@@ -35742,6 +36436,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	applyForce(force,positionInWorld) {
 		let iforceX;
 		let iforceY;
@@ -35773,6 +36468,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	applyForceToCenter(force) {
 		let iforceX;
 		let iforceY;
@@ -35786,6 +36482,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	applyTorque(torque) {
 		let itorqueX;
 		let itorqueY;
@@ -35799,38 +36496,45 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getLinearContactImpulse() {
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = this._linearContactImpulseX;
 		res.y = this._linearContactImpulseY;
 		res.z = this._linearContactImpulseZ;
 		return res;
 	}
+
 	getLinearContactImpulseTo(linearContactImpulse) {
 		linearContactImpulse.x = this._linearContactImpulseX;
 		linearContactImpulse.y = this._linearContactImpulseY;
 		linearContactImpulse.z = this._linearContactImpulseZ;
 	}
+
 	getAngularContactImpulse() {
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = this._angularContactImpulseX;
 		res.y = this._angularContactImpulseY;
 		res.z = this._angularContactImpulseZ;
 		return res;
 	}
+
 	getAngularContactImpulseTo(angularContactImpulse) {
 		angularContactImpulse.x = this._angularContactImpulseX;
 		angularContactImpulse.y = this._angularContactImpulseY;
 		angularContactImpulse.z = this._angularContactImpulseZ;
 	}
+
 	getGravityScale() {
 		return this._gravityScale;
 	}
+
 	setGravityScale(gravityScale) {
 		this._gravityScale = gravityScale;
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getLocalPoint(worldPoint) {
 		let vX;
 		let vY;
@@ -35850,12 +36554,13 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		vX = __tmp__X;
 		vY = __tmp__Y;
 		vZ = __tmp__Z;
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = vX;
 		res.y = vY;
 		res.z = vZ;
 		return res;
 	}
+
 	getLocalPointTo(worldPoint,localPoint) {
 		let vX;
 		let vY;
@@ -35879,6 +36584,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		localPoint.y = vY;
 		localPoint.z = vZ;
 	}
+
 	getLocalVector(worldVector) {
 		let vX;
 		let vY;
@@ -35895,12 +36601,13 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		vX = __tmp__X;
 		vY = __tmp__Y;
 		vZ = __tmp__Z;
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = vX;
 		res.y = vY;
 		res.z = vZ;
 		return res;
 	}
+
 	getLocalVectorTo(worldVector,localVector) {
 		let vX;
 		let vY;
@@ -35921,6 +36628,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		localVector.y = vY;
 		localVector.z = vZ;
 	}
+
 	getWorldPoint(localPoint) {
 		let vX;
 		let vY;
@@ -35940,12 +36648,13 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		vX += this._transform._positionX;
 		vY += this._transform._positionY;
 		vZ += this._transform._positionZ;
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = vX;
 		res.y = vY;
 		res.z = vZ;
 		return res;
 	}
+
 	getWorldPointTo(localPoint,worldPoint) {
 		let vX;
 		let vY;
@@ -35969,6 +36678,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		worldPoint.y = vY;
 		worldPoint.z = vZ;
 	}
+
 	getWorldVector(localVector) {
 		let vX;
 		let vY;
@@ -35985,12 +36695,13 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		vX = __tmp__X;
 		vY = __tmp__Y;
 		vZ = __tmp__Z;
-		let res = new oimo.common.Vec3();
+		const res = new oimo.common.Vec3();
 		res.x = vX;
 		res.y = vY;
 		res.z = vZ;
 		return res;
 	}
+
 	getWorldVectorTo(localVector,worldVector) {
 		let vX;
 		let vY;
@@ -36011,24 +36722,31 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		worldVector.y = vY;
 		worldVector.z = vZ;
 	}
+
 	getNumShapes() {
 		return this._numShapes;
 	}
+
 	getShapeList() {
 		return this._shapeList;
 	}
+
 	getNumContectLinks() {
 		return this._numContactLinks;
 	}
+
 	getContactLinkList() {
 		return this._contactLinkList;
 	}
+
 	getNumJointLinks() {
 		return this._numJointLinks;
 	}
+
 	getJointLinkList() {
 		return this._jointLinkList;
 	}
+
 	addShape(shape) {
 		if(this._shapeList == null) {
 			this._shapeList = shape;
@@ -36041,7 +36759,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._numShapes++;
 		shape._rigidBody = this;
 		if(this._world != null) {
-			let _this = this._world;
+			const _this = this._world;
 			shape._proxy = _this._broadPhase.createProxy(shape,shape._aabb);
 			shape._id = _this._shapeIdCount++;
 			_this._numShapes++;
@@ -36049,11 +36767,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this.updateMass();
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -36093,8 +36811,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -36161,7 +36879,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -36170,9 +36888,10 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			s = n;
 		}
 	}
+
 	removeShape(shape) {
-		let prev = shape._prev;
-		let next = shape._next;
+		const prev = shape._prev;
+		const next = shape._next;
 		if(prev != null) {
 			prev._next = next;
 		}
@@ -36190,21 +36909,21 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this._numShapes--;
 		shape._rigidBody = null;
 		if(this._world != null) {
-			let _this = this._world;
+			const _this = this._world;
 			_this._broadPhase.destroyProxy(shape._proxy);
 			shape._proxy = null;
 			shape._id = -1;
 			let cl = shape._rigidBody._contactLinkList;
 			while(cl != null) {
-				let n = cl._next;
-				let c = cl._contact;
+				const n = cl._next;
+				const c = cl._contact;
 				if(c._s1 == shape || c._s2 == shape) {
-					let _this1 = cl._other;
+					const _this1 = cl._other;
 					_this1._sleeping = false;
 					_this1._sleepTime = 0;
-					let _this2 = _this._contactManager;
-					let prev = c._prev;
-					let next = c._next;
+					const _this2 = _this._contactManager;
+					const prev = c._prev;
+					const next = c._next;
 					if(prev != null) {
 						prev._next = next;
 					}
@@ -36220,7 +36939,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 					c._next = null;
 					c._prev = null;
 					if(c._touching) {
-						let cc1 = c._s1._contactCallback;
+						const cc1 = c._s1._contactCallback;
 						let cc2 = c._s2._contactCallback;
 						if(cc1 == cc2) {
 							cc2 = null;
@@ -36232,8 +36951,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 							cc2.endContact(c);
 						}
 					}
-					let prev1 = c._link1._prev;
-					let next1 = c._link1._next;
+					const prev1 = c._link1._prev;
+					const next1 = c._link1._next;
 					if(prev1 != null) {
 						prev1._next = next1;
 					}
@@ -36248,8 +36967,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 					}
 					c._link1._next = null;
 					c._link1._prev = null;
-					let prev2 = c._link2._prev;
-					let next2 = c._link2._next;
+					const prev2 = c._link2._prev;
+					const next2 = c._link2._next;
 					if(prev2 != null) {
 						prev2._next = next2;
 					}
@@ -36278,7 +36997,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 					c._cachedDetectorData._clear();
 					c._manifold._clear();
 					c._detector = null;
-					let _this3 = c._contactConstraint;
+					const _this3 = c._contactConstraint;
 					_this3._s1 = null;
 					_this3._s2 = null;
 					_this3._b1 = null;
@@ -36296,11 +37015,11 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 		this.updateMass();
 		let s = this._shapeList;
 		while(s != null) {
-			let n = s._next;
-			let tf1 = this._ptransform;
-			let tf2 = this._transform;
-			let dst = s._ptransform;
-			let src1 = s._localTransform;
+			const n = s._next;
+			const tf1 = this._ptransform;
+			const tf2 = this._transform;
+			const dst = s._ptransform;
+			const src1 = s._localTransform;
 			let __tmp__00;
 			let __tmp__01;
 			let __tmp__02;
@@ -36340,8 +37059,8 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			dst._positionX += tf1._positionX;
 			dst._positionY += tf1._positionY;
 			dst._positionZ += tf1._positionZ;
-			let dst1 = s._transform;
-			let src11 = s._localTransform;
+			const dst1 = s._transform;
+			const src11 = s._localTransform;
 			let __tmp__001;
 			let __tmp__011;
 			let __tmp__021;
@@ -36408,7 +37127,7 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 				dX = s._transform._positionX - s._ptransform._positionX;
 				dY = s._transform._positionY - s._ptransform._positionY;
 				dZ = s._transform._positionZ - s._ptransform._positionZ;
-				let v = s.displacement;
+				const v = s.displacement;
 				v.x = dX;
 				v.y = dY;
 				v.z = dZ;
@@ -36417,51 +37136,64 @@ oimo.dynamics.rigidbody.RigidBody = class oimo_dynamics_rigidbody_RigidBody {
 			s = n;
 		}
 	}
+
 	getType() {
 		return this._type;
 	}
+
 	setType(type) {
 		this._type = type;
 		this.updateMass();
 	}
+
 	wakeUp() {
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	sleep() {
 		this._sleeping = true;
 		this._sleepTime = 0;
 	}
+
 	isSleeping() {
 		return this._sleeping;
 	}
+
 	getSleepTime() {
 		return this._sleepTime;
 	}
+
 	setAutoSleep(autoSleepEnabled) {
 		this._autoSleep = autoSleepEnabled;
 		this._sleeping = false;
 		this._sleepTime = 0;
 	}
+
 	getLinearDamping() {
 		return this._linearDamping;
 	}
+
 	setLinearDamping(damping) {
 		this._linearDamping = damping;
 	}
+
 	getAngularDamping() {
 		return this._angularDamping;
 	}
+
 	setAngularDamping(damping) {
 		this._angularDamping = damping;
 	}
+
 	getPrev() {
 		return this._prev;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 oimo.dynamics.rigidbody.RigidBodyConfig = class oimo_dynamics_rigidbody_RigidBodyConfig {
 	constructor() {
 		this.position = new oimo.common.Vec3();
@@ -36473,20 +37205,20 @@ oimo.dynamics.rigidbody.RigidBodyConfig = class oimo_dynamics_rigidbody_RigidBod
 		this.linearDamping = 0;
 		this.angularDamping = 0;
 	}
-}
+};
 oimo.dynamics.rigidbody.RigidBodyType = class oimo_dynamics_rigidbody_RigidBodyType {
-}
+};
 oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 	constructor(config) {
 		this._id = -1;
 		this._localTransform = new oimo.common.Transform();
 		this._ptransform = new oimo.common.Transform();
 		this._transform = new oimo.common.Transform();
-		let v = config.position;
+		const v = config.position;
 		this._localTransform._positionX = v.x;
 		this._localTransform._positionY = v.y;
 		this._localTransform._positionZ = v.z;
-		let m = config.rotation;
+		const m = config.rotation;
 		this._localTransform._rotation00 = m.e00;
 		this._localTransform._rotation01 = m.e01;
 		this._localTransform._rotation02 = m.e02;
@@ -36496,8 +37228,8 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		this._localTransform._rotation20 = m.e20;
 		this._localTransform._rotation21 = m.e21;
 		this._localTransform._rotation22 = m.e22;
-		let dst = this._ptransform;
-		let src = this._localTransform;
+		const dst = this._ptransform;
+		const src = this._localTransform;
 		dst._positionX = src._positionX;
 		dst._positionY = src._positionY;
 		dst._positionZ = src._positionZ;
@@ -36510,8 +37242,8 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		dst._rotation20 = src._rotation20;
 		dst._rotation21 = src._rotation21;
 		dst._rotation22 = src._rotation22;
-		let dst1 = this._transform;
-		let src1 = this._localTransform;
+		const dst1 = this._transform;
+		const src1 = this._localTransform;
 		dst1._positionX = src1._positionX;
 		dst1._positionY = src1._positionY;
 		dst1._positionZ = src1._positionZ;
@@ -36535,21 +37267,26 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		this._proxy = null;
 		this.displacement = new oimo.common.Vec3();
 	}
+
 	getFriction() {
 		return this._friction;
 	}
+
 	setFriction(friction) {
 		this._friction = friction;
 	}
+
 	getRestitution() {
 		return this._restitution;
 	}
+
 	setRestitution(restitution) {
 		this._restitution = restitution;
 	}
+
 	getLocalTransform() {
-		let _this = this._localTransform;
-		let tf = new oimo.common.Transform();
+		const _this = this._localTransform;
+		const tf = new oimo.common.Transform();
 		tf._positionX = _this._positionX;
 		tf._positionY = _this._positionY;
 		tf._positionZ = _this._positionZ;
@@ -36564,8 +37301,9 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		tf._rotation22 = _this._rotation22;
 		return tf;
 	}
+
 	getLocalTransformTo(transform) {
-		let transform1 = this._localTransform;
+		const transform1 = this._localTransform;
 		transform._positionX = transform1._positionX;
 		transform._positionY = transform1._positionY;
 		transform._positionZ = transform1._positionZ;
@@ -36579,9 +37317,10 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		transform._rotation21 = transform1._rotation21;
 		transform._rotation22 = transform1._rotation22;
 	}
+
 	getTransform() {
-		let _this = this._transform;
-		let tf = new oimo.common.Transform();
+		const _this = this._transform;
+		const tf = new oimo.common.Transform();
 		tf._positionX = _this._positionX;
 		tf._positionY = _this._positionY;
 		tf._positionZ = _this._positionZ;
@@ -36596,8 +37335,9 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		tf._rotation22 = _this._rotation22;
 		return tf;
 	}
+
 	getTransformTo(transform) {
-		let transform1 = this._transform;
+		const transform1 = this._transform;
 		transform._positionX = transform1._positionX;
 		transform._positionY = transform1._positionY;
 		transform._positionZ = transform1._positionZ;
@@ -36611,8 +37351,9 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		transform._rotation21 = transform1._rotation21;
 		transform._rotation22 = transform1._rotation22;
 	}
+
 	setLocalTransform(transform) {
-		let _this = this._localTransform;
+		const _this = this._localTransform;
 		_this._positionX = transform._positionX;
 		_this._positionY = transform._positionY;
 		_this._positionZ = transform._positionZ;
@@ -36626,15 +37367,15 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 		_this._rotation21 = transform._rotation21;
 		_this._rotation22 = transform._rotation22;
 		if(this._rigidBody != null) {
-			let _this = this._rigidBody;
+			const _this = this._rigidBody;
 			_this.updateMass();
 			let s = _this._shapeList;
 			while(s != null) {
-				let n = s._next;
-				let tf1 = _this._ptransform;
-				let tf2 = _this._transform;
-				let dst = s._ptransform;
-				let src1 = s._localTransform;
+				const n = s._next;
+				const tf1 = _this._ptransform;
+				const tf2 = _this._transform;
+				const dst = s._ptransform;
+				const src1 = s._localTransform;
 				let __tmp__00;
 				let __tmp__01;
 				let __tmp__02;
@@ -36674,8 +37415,8 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 				dst._positionX += tf1._positionX;
 				dst._positionY += tf1._positionY;
 				dst._positionZ += tf1._positionZ;
-				let dst1 = s._transform;
-				let src11 = s._localTransform;
+				const dst1 = s._transform;
+				const src11 = s._localTransform;
 				let __tmp__001;
 				let __tmp__011;
 				let __tmp__021;
@@ -36742,7 +37483,7 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 					dX = s._transform._positionX - s._ptransform._positionX;
 					dY = s._transform._positionY - s._ptransform._positionY;
 					dZ = s._transform._positionZ - s._ptransform._positionZ;
-					let v = s.displacement;
+					const v = s.displacement;
 					v.x = dX;
 					v.y = dY;
 					v.z = dZ;
@@ -36752,21 +37493,23 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 			}
 		}
 	}
+
 	getDensity() {
 		return this._density;
 	}
+
 	setDensity(density) {
 		this._density = density;
 		if(this._rigidBody != null) {
-			let _this = this._rigidBody;
+			const _this = this._rigidBody;
 			_this.updateMass();
 			let s = _this._shapeList;
 			while(s != null) {
-				let n = s._next;
-				let tf1 = _this._ptransform;
-				let tf2 = _this._transform;
-				let dst = s._ptransform;
-				let src1 = s._localTransform;
+				const n = s._next;
+				const tf1 = _this._ptransform;
+				const tf2 = _this._transform;
+				const dst = s._ptransform;
+				const src1 = s._localTransform;
 				let __tmp__00;
 				let __tmp__01;
 				let __tmp__02;
@@ -36806,8 +37549,8 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 				dst._positionX += tf1._positionX;
 				dst._positionY += tf1._positionY;
 				dst._positionZ += tf1._positionZ;
-				let dst1 = s._transform;
-				let src11 = s._localTransform;
+				const dst1 = s._transform;
+				const src11 = s._localTransform;
 				let __tmp__001;
 				let __tmp__011;
 				let __tmp__021;
@@ -36874,7 +37617,7 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 					dX = s._transform._positionX - s._ptransform._positionX;
 					dY = s._transform._positionY - s._ptransform._positionY;
 					dZ = s._transform._positionZ - s._ptransform._positionZ;
-					let v = s.displacement;
+					const v = s.displacement;
 					v.x = dX;
 					v.y = dY;
 					v.z = dZ;
@@ -36884,43 +37627,55 @@ oimo.dynamics.rigidbody.Shape = class oimo_dynamics_rigidbody_Shape {
 			}
 		}
 	}
+
 	getAabb() {
 		return this._aabb.clone();
 	}
+
 	getAabbTo(aabb) {
 		aabb.copyFrom(this._aabb);
 	}
+
 	getGeometry() {
 		return this._geom;
 	}
+
 	getRigidBody() {
 		return this._rigidBody;
 	}
+
 	getCollisionGroup() {
 		return this._collisionGroup;
 	}
+
 	setCollisionGroup(collisionGroup) {
 		this._collisionGroup = collisionGroup;
 	}
+
 	getCollisionMask() {
 		return this._collisionMask;
 	}
+
 	setCollisionMask(collisionMask) {
 		this._collisionMask = collisionMask;
 	}
+
 	getContactCallback() {
 		return this._contactCallback;
 	}
+
 	setContactCallback(callback) {
 		this._contactCallback = callback;
 	}
+
 	getPrev() {
 		return this._prev;
 	}
+
 	getNext() {
 		return this._next;
 	}
-}
+};
 oimo.dynamics.rigidbody.ShapeConfig = class oimo_dynamics_rigidbody_ShapeConfig {
 	constructor() {
 		this.position = new oimo.common.Vec3();
@@ -36933,10 +37688,10 @@ oimo.dynamics.rigidbody.ShapeConfig = class oimo_dynamics_rigidbody_ShapeConfig 
 		this.geometry = null;
 		this.contactCallback = null;
 	}
-}
+};
 if(!oimo.m) oimo.m = {};
 oimo.m.M = class oimo_m_M {
-}
+};
 
 oimo.collision.broadphase.BroadPhaseType._BRUTE_FORCE = 1;
 oimo.collision.broadphase.BroadPhaseType._BVH = 2;

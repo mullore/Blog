@@ -474,9 +474,9 @@ class LightningStrike extends BufferGeometry {
 
 			const subray = scope.currentSubray;
 
-			if ( time < subray.birthTime ) { //&& ( ! this.rayParameters.isEternal || scope.currentSubray.recursion > 0 ) ) {
+			if ( time < subray.birthTime ) { // && ( ! this.rayParameters.isEternal || scope.currentSubray.recursion > 0 ) ) {
 
-				return;
+				
 
 			} else if ( this.rayParameters.isEternal && scope.currentSubray.recursion == 0 ) {
 
@@ -524,7 +524,7 @@ class LightningStrike extends BufferGeometry {
 
 	}
 
-	addNewSubray( /*rayParameters*/ ) {
+	addNewSubray( /* rayParameters */ ) {
 
 		return this.subrays[ this.numSubrays ++ ];
 
@@ -776,7 +776,7 @@ class LightningStrike extends BufferGeometry {
 
 	}
 
-	createPrismFaces( vertex/*, index*/ ) {
+	createPrismFaces( vertex/*, index */ ) {
 
 		const indices = this.indices;
 		vertex = this.currentVertex - 6;

@@ -51,8 +51,8 @@ class BlurNode extends TempNode {
 			const blurCode = [];
 			let code;
 
-			const blurX = builder.include( BlurNode.Nodes.blurX ),
-				blurY = builder.include( BlurNode.Nodes.blurY );
+			const blurX = builder.include( BlurNode.Nodes.blurX );
+				const blurY = builder.include( BlurNode.Nodes.blurY );
 
 			if ( this.blurX ) {
 

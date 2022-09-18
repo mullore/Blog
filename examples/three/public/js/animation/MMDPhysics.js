@@ -916,7 +916,7 @@
 			const manager = this.manager;
 
 			const form = this._getBoneTransform(); // TODO: check the most appropriate way to set
-			//this.body.setWorldTransform( form );
+			// this.body.setWorldTransform( form );
 
 
 			this.body.setCenterOfMassTransform( form );
@@ -934,7 +934,7 @@
 			const tr = manager.allocTransform();
 			this.body.getMotionState().getWorldTransform( tr );
 			manager.copyOrigin( tr, form ); // TODO: check the most appropriate way to set
-			//this.body.setWorldTransform( tr );
+			// this.body.setWorldTransform( tr );
 
 			this.body.setCenterOfMassTransform( tr );
 			this.body.getMotionState().setWorldTransform( tr );
@@ -956,7 +956,7 @@
 			thQ.set( q.x(), q.y(), q.z(), q.w() );
 			thQ2.setFromRotationMatrix( this.bone.matrixWorld );
 			thQ2.conjugate();
-			thQ2.multiply( thQ ); //this.bone.quaternion.multiply( thQ2 );
+			thQ2.multiply( thQ ); // this.bone.quaternion.multiply( thQ2 );
 
 			thQ3.setFromRotationMatrix( this.bone.matrix ); // Renormalizing quaternion here because repeatedly transforming
 			// quaternion continuously accumulates floating point error and

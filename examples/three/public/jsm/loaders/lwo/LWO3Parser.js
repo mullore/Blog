@@ -273,7 +273,7 @@ LWO3Parser.prototype = {
 			// LWO2 Spec chunks: these are needed since the SURF FORMs are often in LWO2 format
 			case 'SMAN':
 				var maxSmoothingAngle = this.IFF.reader.getFloat32();
-				this.IFF.currentSurface.attributes.smooth = ( maxSmoothingAngle < 0 ) ? false : true;
+				this.IFF.currentSurface.attributes.smooth = !(( maxSmoothingAngle < 0 ));
 				break;
 
 			// LWO2: Basic Surface Parameters

@@ -20,31 +20,31 @@ class Node {
 
 	}
 
-	getHash( /*builder*/ ) {
+	getHash( /* builder */ ) {
 
 		return this.uuid;
 
 	}
 
-	getUpdateType( /*builder*/ ) {
+	getUpdateType( /* builder */ ) {
 
 		return this.updateType;
 
 	}
 
-	getNodeType( /*builder*/ ) {
+	getNodeType( /* builder */ ) {
 
 		return this.nodeType;
 
 	}
 
-	update( /*frame*/ ) {
+	update( /* frame */ ) {
 
 		console.warn( 'Abstract function.' );
 
 	}
 
-	generate( /*builder, output*/ ) {
+	generate( /* builder, output */ ) {
 
 		console.warn( 'Abstract function.' );
 

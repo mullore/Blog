@@ -7,9 +7,7 @@ import {
 	WebGLRenderTarget
 } from 'three';
 import { Pass, FullScreenQuad } from './Pass.js';
-import { SMAAEdgesShader } from '../shaders/SMAAShader.js';
-import { SMAAWeightsShader } from '../shaders/SMAAShader.js';
-import { SMAABlendShader } from '../shaders/SMAAShader.js';
+import { SMAAEdgesShader , SMAAWeightsShader , SMAABlendShader } from '../shaders/SMAAShader.js';
 
 class SMAAPass extends Pass {
 
@@ -75,7 +73,7 @@ class SMAAPass extends Pass {
 
 		this.uniformsEdges = UniformsUtils.clone( SMAAEdgesShader.uniforms );
 
-		this.uniformsEdges[ 'resolution' ].value.set( 1 / width, 1 / height );
+		this.uniformsEdges.resolution.value.set( 1 / width, 1 / height );
 
 		this.materialEdges = new ShaderMaterial( {
 			defines: Object.assign( {}, SMAAEdgesShader.defines ),
@@ -88,10 +86,10 @@ class SMAAPass extends Pass {
 
 		this.uniformsWeights = UniformsUtils.clone( SMAAWeightsShader.uniforms );
 
-		this.uniformsWeights[ 'resolution' ].value.set( 1 / width, 1 / height );
-		this.uniformsWeights[ 'tDiffuse' ].value = this.edgesRT.texture;
-		this.uniformsWeights[ 'tArea' ].value = this.areaTexture;
-		this.uniformsWeights[ 'tSearch' ].value = this.searchTexture;
+		this.uniformsWeights.resolution.value.set( 1 / width, 1 / height );
+		this.uniformsWeights.tDiffuse.value = this.edgesRT.texture;
+		this.uniformsWeights.tArea.value = this.areaTexture;
+		this.uniformsWeights.tSearch.value = this.searchTexture;
 
 		this.materialWeights = new ShaderMaterial( {
 			defines: Object.assign( {}, SMAAWeightsShader.defines ),
@@ -104,8 +102,8 @@ class SMAAPass extends Pass {
 
 		this.uniformsBlend = UniformsUtils.clone( SMAABlendShader.uniforms );
 
-		this.uniformsBlend[ 'resolution' ].value.set( 1 / width, 1 / height );
-		this.uniformsBlend[ 'tDiffuse' ].value = this.weightsRT.texture;
+		this.uniformsBlend.resolution.value.set( 1 / width, 1 / height );
+		this.uniformsBlend.tDiffuse.value = this.weightsRT.texture;
 
 		this.materialBlend = new ShaderMaterial( {
 			uniforms: this.uniformsBlend,
@@ -119,11 +117,11 @@ class SMAAPass extends Pass {
 
 	}
 
-	render( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive*/ ) {
+	render( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive */ ) {
 
 		// pass 1
 
-		this.uniformsEdges[ 'tDiffuse' ].value = readBuffer.texture;
+		this.uniformsEdges.tDiffuse.value = readBuffer.texture;
 
 		this.fsQuad.material = this.materialEdges;
 
@@ -141,7 +139,7 @@ class SMAAPass extends Pass {
 
 		// pass 3
 
-		this.uniformsBlend[ 'tColor' ].value = readBuffer.texture;
+		this.uniformsBlend.tColor.value = readBuffer.texture;
 
 		this.fsQuad.material = this.materialBlend;
 
@@ -165,9 +163,9 @@ class SMAAPass extends Pass {
 		this.edgesRT.setSize( width, height );
 		this.weightsRT.setSize( width, height );
 
-		this.materialEdges.uniforms[ 'resolution' ].value.set( 1 / width, 1 / height );
-		this.materialWeights.uniforms[ 'resolution' ].value.set( 1 / width, 1 / height );
-		this.materialBlend.uniforms[ 'resolution' ].value.set( 1 / width, 1 / height );
+		this.materialEdges.uniforms.resolution.value.set( 1 / width, 1 / height );
+		this.materialWeights.uniforms.resolution.value.set( 1 / width, 1 / height );
+		this.materialBlend.uniforms.resolution.value.set( 1 / width, 1 / height );
 
 	}
 

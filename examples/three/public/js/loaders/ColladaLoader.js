@@ -1543,8 +1543,8 @@
 				} //
 
 
-				let transparent = parameters[ 'transparent' ];
-				let transparency = parameters[ 'transparency' ]; // <transparency> does not exist but <transparent>
+				let transparent = parameters.transparent;
+				let transparency = parameters.transparency; // <transparency> does not exist but <transparent>
 
 				if ( transparency === undefined && transparent ) {
 

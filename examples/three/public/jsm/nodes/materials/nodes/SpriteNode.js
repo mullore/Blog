@@ -130,9 +130,9 @@ class SpriteNode extends Node {
 
 			// build code
 
-			const mask = this.mask ? this.mask.flow( builder, 'b' ) : undefined,
-				alpha = this.alpha ? this.alpha.flow( builder, 'f' ) : undefined,
-				color = this.color.flow( builder, 'c', { slot: 'color' } );
+			const mask = this.mask ? this.mask.flow( builder, 'b' ) : undefined;
+				const alpha = this.alpha ? this.alpha.flow( builder, 'f' ) : undefined;
+				const color = this.color.flow( builder, 'c', { slot: 'color' } );
 
 			output = [];
 

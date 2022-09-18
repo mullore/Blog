@@ -14,8 +14,8 @@ class OperatorNode extends TempNode {
 
 	getType( builder ) {
 
-		const a = this.a.getType( builder ),
-			b = this.b.getType( builder );
+		const a = this.a.getType( builder );
+			const b = this.b.getType( builder );
 
 		if ( builder.isTypeMatrix( a ) ) {
 
@@ -37,8 +37,8 @@ class OperatorNode extends TempNode {
 
 		const type = this.getType( builder );
 
-		const a = this.a.build( builder, type ),
-			b = this.b.build( builder, type );
+		const a = this.a.build( builder, type );
+			const b = this.b.build( builder, type );
 
 		return builder.format( '( ' + a + ' ' + this.op + ' ' + b + ' )', type, output );
 

@@ -11,7 +11,7 @@ class ConvertNode extends Node {
 
 	}
 
-	getNodeType( /*builder*/ ) {
+	getNodeType( /* builder */ ) {
 
 		return this.convertTo;
 

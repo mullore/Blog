@@ -11,8 +11,7 @@ import {
 } from 'three';
 import { CopyShader } from '../shaders/CopyShader.js';
 import { ShaderPass } from './ShaderPass.js';
-import { MaskPass } from './MaskPass.js';
-import { ClearMaskPass } from './MaskPass.js';
+import { MaskPass , ClearMaskPass } from './MaskPass.js';
 
 class EffectComposer {
 
@@ -155,12 +154,12 @@ class EffectComposer {
 					const context = this.renderer.getContext();
 					const stencil = this.renderer.state.buffers.stencil;
 
-					//context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
+					// context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
 					stencil.setFunc( context.NOTEQUAL, 1, 0xffffffff );
 
 					this.copyPass.render( this.renderer, this.writeBuffer, this.readBuffer, deltaTime );
 
-					//context.stencilFunc( context.EQUAL, 1, 0xffffffff );
+					// context.stencilFunc( context.EQUAL, 1, 0xffffffff );
 					stencil.setFunc( context.EQUAL, 1, 0xffffffff );
 
 				}

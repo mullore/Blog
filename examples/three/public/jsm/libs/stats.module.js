@@ -34,7 +34,7 @@ var Stats = function () {
 
 	//
 
-	var beginTime = ( performance || Date ).now(), prevTime = beginTime, frames = 0;
+	var beginTime = ( performance || Date ).now(); var prevTime = beginTime; var frames = 0;
 
 	var fpsPanel = addPanel( new Stats.Panel( 'FPS', '#0ff', '#002' ) );
 	var msPanel = addPanel( new Stats.Panel( 'MS', '#0f0', '#020' ) );
@@ -107,13 +107,13 @@ var Stats = function () {
 
 Stats.Panel = function ( name, fg, bg ) {
 
-	var min = Infinity, max = 0, round = Math.round;
+	var min = Infinity; var max = 0; var round = Math.round;
 	var PR = round( window.devicePixelRatio || 1 );
 
-	var WIDTH = 80 * PR, HEIGHT = 48 * PR,
-		TEXT_X = 3 * PR, TEXT_Y = 2 * PR,
-		GRAPH_X = 3 * PR, GRAPH_Y = 15 * PR,
-		GRAPH_WIDTH = 74 * PR, GRAPH_HEIGHT = 30 * PR;
+	var WIDTH = 80 * PR; var HEIGHT = 48 * PR;
+		var TEXT_X = 3 * PR; var TEXT_Y = 2 * PR;
+		var GRAPH_X = 3 * PR; var GRAPH_Y = 15 * PR;
+		var GRAPH_WIDTH = 74 * PR; var GRAPH_HEIGHT = 30 * PR;
 
 	var canvas = document.createElement( 'canvas' );
 	canvas.width = WIDTH;

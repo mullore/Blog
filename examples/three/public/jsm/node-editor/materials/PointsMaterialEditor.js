@@ -88,7 +88,7 @@ export class PointsMaterialEditor extends BaseNode {
 
 		const { material, opacity } = this;
 
-		material.transparent = opacity.getLinkedObject() || material.opacity < 1 ? true : false;
+		material.transparent = !!(opacity.getLinkedObject() || material.opacity < 1);
 
 		opacity.setIcon( material.transparent ? 'ti ti-layers-intersect' : 'ti ti-layers-subtract' );
 

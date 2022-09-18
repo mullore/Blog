@@ -43,12 +43,12 @@ class ShadowMapViewer {
 
 	constructor( light ) {
 
-		//- Internals
+		// - Internals
 		const scope = this;
 		const doRenderLabel = ( light.name !== undefined && light.name !== '' );
 		let userAutoClearSetting;
 
-		//Holds the initial position and dimension of the HUD
+		// Holds the initial position and dimension of the HUD
 		const frame = {
 			x: 10,
 			y: 10,
@@ -60,7 +60,7 @@ class ShadowMapViewer {
 		camera.position.set( 0, 0, 2 );
 		const scene = new Scene();
 
-		//HUD for shadow map
+		// HUD for shadow map
 		const shader = UnpackDepthRGBAShader;
 
 		const uniforms = UniformsUtils.clone( shader.uniforms );
@@ -75,7 +75,7 @@ class ShadowMapViewer {
 		scene.add( mesh );
 
 
-		//Label for light's name
+		// Label for light's name
 		let labelCanvas, labelMesh;
 
 		if ( doRenderLabel ) {
@@ -87,7 +87,7 @@ class ShadowMapViewer {
 
 			const labelWidth = context.measureText( light.name ).width;
 			labelCanvas.width = labelWidth;
-			labelCanvas.height = 25;	//25 to account for g, p, etc.
+			labelCanvas.height = 25;	// 25 to account for g, p, etc.
 
 			context.font = 'Bold 20px Arial';
 			context.fillStyle = 'rgba( 255, 0, 0, 1 )';
@@ -115,7 +115,7 @@ class ShadowMapViewer {
 
 		}
 
-		//- API
+		// - API
 		// Set to false to disable displaying this shadow map
 		this.enabled = true;
 
@@ -130,7 +130,7 @@ class ShadowMapViewer {
 
 				mesh.scale.set( this.width / frame.width, this.height / frame.height, 1 );
 
-				//Reset the position as it is off when we scale stuff
+				// Reset the position as it is off when we scale stuff
 				resetPosition();
 
 			}
@@ -159,18 +159,18 @@ class ShadowMapViewer {
 
 			if ( this.enabled ) {
 
-				//Because a light's .shadowMap is only initialised after the first render pass
-				//we have to make sure the correct map is sent into the shader, otherwise we
-				//always end up with the scene's first added shadow casting light's shadowMap
-				//in the shader
-				//See: https://github.com/mrdoob/three.js/issues/5932
+				// Because a light's .shadowMap is only initialised after the first render pass
+				// we have to make sure the correct map is sent into the shader, otherwise we
+				// always end up with the scene's first added shadow casting light's shadowMap
+				// in the shader
+				// See: https://github.com/mrdoob/three.js/issues/5932
 				uniforms.tDiffuse.value = light.shadow.map.texture;
 
 				userAutoClearSetting = renderer.autoClear;
 				renderer.autoClear = false; // To allow render overlay
 				renderer.clearDepth();
 				renderer.render( scene, camera );
-				renderer.autoClear = userAutoClearSetting;	//Restore user's setting
+				renderer.autoClear = userAutoClearSetting;	// Restore user's setting
 
 			}
 
@@ -199,7 +199,7 @@ class ShadowMapViewer {
 
 		};
 
-		//Force an update to set position/size
+		// Force an update to set position/size
 		this.update();
 
 	}

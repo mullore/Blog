@@ -435,7 +435,7 @@ function GLTFRegistry() {
 }
 
 /*********************************/
-/********** EXTENSIONS ***********/
+/** ******** EXTENSIONS ***********/
 /*********************************/
 
 const EXTENSIONS = {
@@ -1460,7 +1460,7 @@ class GLTFMeshStandardSGMaterial extends MeshStandardMaterial {
 
 		this.isGLTFSpecularGlossinessMaterial = true;
 
-		//various chunks that need replacing
+		// various chunks that need replacing
 		const specularMapParsFragmentChunk = [
 			'#ifdef USE_SPECULARMAP',
 			'	uniform sampler2D specularMap;',
@@ -1789,7 +1789,7 @@ class GLTFMeshQuantizationExtension {
 }
 
 /*********************************/
-/********** INTERPOLATION ********/
+/** ******** INTERPOLATION ********/
 /*********************************/
 
 // Spline Interpolation
@@ -1807,10 +1807,10 @@ class GLTFCubicSplineInterpolant extends Interpolant {
 		// Copies a sample value to the result buffer. See description of glTF
 		// CUBICSPLINE values layout in interpolate_() function below.
 
-		const result = this.resultBuffer,
-			values = this.sampleValues,
-			valueSize = this.valueSize,
-			offset = index * valueSize * 3 + valueSize;
+		const result = this.resultBuffer;
+			const values = this.sampleValues;
+			const valueSize = this.valueSize;
+			const offset = index * valueSize * 3 + valueSize;
 
 		for ( let i = 0; i !== valueSize; i ++ ) {
 
@@ -1886,14 +1886,14 @@ class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
 
 
 /*********************************/
-/********** INTERNALS ************/
+/** ******** INTERNALS ************/
 /*********************************/
 
 /* CONSTANTS */
 
 const WEBGL_CONSTANTS = {
 	FLOAT: 5126,
-	//FLOAT_MAT2: 35674,
+	// FLOAT_MAT2: 35674,
 	FLOAT_MAT3: 35675,
 	FLOAT_MAT4: 35676,
 	FLOAT_VEC2: 35664,
@@ -1983,9 +1983,9 @@ const ALPHA_MODES = {
  */
 function createDefaultMaterial( cache ) {
 
-	if ( cache[ 'DefaultMaterial' ] === undefined ) {
+	if ( cache.DefaultMaterial === undefined ) {
 
-		cache[ 'DefaultMaterial' ] = new MeshStandardMaterial( {
+		cache.DefaultMaterial = new MeshStandardMaterial( {
 			color: 0xFFFFFF,
 			emissive: 0x000000,
 			metalness: 1,
@@ -1997,7 +1997,7 @@ function createDefaultMaterial( cache ) {
 
 	}
 
-	return cache[ 'DefaultMaterial' ];
+	return cache.DefaultMaterial;
 
 }
 

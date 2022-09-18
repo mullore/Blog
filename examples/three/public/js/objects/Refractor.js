@@ -29,9 +29,9 @@
 				transparent: true // ensures, refractors are drawn from farthest to closest
 
 			} );
-			this.material.uniforms[ 'color' ].value = color;
-			this.material.uniforms[ 'tDiffuse' ].value = renderTarget.texture;
-			this.material.uniforms[ 'textureMatrix' ].value = textureMatrix; // functions
+			this.material.uniforms.color.value = color;
+			this.material.uniforms.tDiffuse.value = renderTarget.texture;
+			this.material.uniforms.textureMatrix.value = textureMatrix; // functions
 
 			const visible = function () {
 

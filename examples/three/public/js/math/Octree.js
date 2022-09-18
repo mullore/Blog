@@ -303,8 +303,8 @@
 			_sphere.copy( sphere );
 
 			const triangles = [];
-			let result,
-				hit = false;
+			let result;
+				let hit = false;
 			this.getSphereTriangles( sphere, triangles );
 
 			for ( let i = 0; i < triangles.length; i ++ ) {
@@ -340,8 +340,8 @@
 			_capsule.copy( capsule );
 
 			const triangles = [];
-			let result,
-				hit = false;
+			let result;
+				let hit = false;
 			this.getCapsuleTriangles( _capsule, triangles );
 
 			for ( let i = 0; i < triangles.length; i ++ ) {
@@ -376,9 +376,9 @@
 
 			if ( ray.direction.length() === 0 ) return;
 			const triangles = [];
-			let triangle,
-				position,
-				distance = 1e100;
+			let triangle;
+				let position;
+				let distance = 1e100;
 			this.getRayTriangles( ray, triangles );
 
 			for ( let i = 0; i < triangles.length; i ++ ) {
@@ -416,8 +416,8 @@
 
 				if ( obj.isMesh === true ) {
 
-					let geometry,
-						isTemp = false;
+					let geometry;
+						let isTemp = false;
 
 					if ( obj.geometry.index !== null ) {
 

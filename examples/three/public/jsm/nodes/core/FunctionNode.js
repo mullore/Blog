@@ -1,8 +1,8 @@
 import { TempNode } from './TempNode.js';
 import { NodeLib } from './NodeLib.js';
 
-const declarationRegexp = /^\s*([a-z_0-9]+)\s+([a-z_0-9]+)\s*\(([\s\S]*?)\)/i,
-	propertiesRegexp = /[a-z_0-9]+/ig;
+const declarationRegexp = /^\s*([a-z_0-9]+)\s+([a-z_0-9]+)\s*\(([\s\S]*?)\)/i;
+	const propertiesRegexp = /[a-z_0-9]+/ig;
 
 class FunctionNode extends TempNode {
 
@@ -63,7 +63,7 @@ class FunctionNode extends TempNode {
 
 	generate( builder, output ) {
 
-		let match, offset = 0, src = this.src;
+		let match; let offset = 0; let src = this.src;
 
 		for ( let i = 0; i < this.includes.length; i ++ ) {
 
@@ -85,8 +85,8 @@ class FunctionNode extends TempNode {
 
 			const match = matches[ i ];
 
-			const prop = match[ 0 ],
-				isGlobal = this.isMethod ? ! this.getInputByName( prop ) : true;
+			const prop = match[ 0 ];
+				const isGlobal = this.isMethod ? ! this.getInputByName( prop ) : true;
 
 			let reference = prop;
 

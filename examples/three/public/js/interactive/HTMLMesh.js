@@ -90,10 +90,10 @@
 				}
 
 				if ( clips.length === 0 ) return;
-				var minX = - Infinity,
-					minY = - Infinity;
-				var maxX = Infinity,
-					maxY = Infinity;
+				var minX = - Infinity;
+					var minY = - Infinity;
+				var maxX = Infinity;
+					var maxY = Infinity;
 
 				for ( var i = 0; i < clips.length; i ++ ) {
 
@@ -169,10 +169,10 @@
 
 		function drawElement( element, style ) {
 
-			var x = 0,
-				y = 0,
-				width = 0,
-				height = 0;
+			var x = 0;
+				var y = 0;
+				var width = 0;
+				var height = 0;
 
 			if ( element.nodeType === 3 ) {
 
@@ -263,7 +263,7 @@
 		}
 
 		const context = canvas.getContext( '2d'
-			/*, { alpha: false }*/
+			/*, { alpha: false } */
 		);
 		const clipper = new Clipper( context ); // console.time( 'drawElement' );
 

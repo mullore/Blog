@@ -29,8 +29,8 @@
 			const oldAutoClear = renderer.autoClear;
 			renderer.autoClear = false;
 			this.fsQuad.material = this.material;
-			this.uniforms[ 'opacity' ].value = this.opacity;
-			this.uniforms[ 'tDiffuse' ].value = this.map;
+			this.uniforms.opacity.value = this.opacity;
+			this.uniforms.tDiffuse.value = this.map;
 			this.material.transparent = this.opacity < 1.0;
 			renderer.setRenderTarget( this.renderToScreen ? null : readBuffer );
 			if ( this.clear ) renderer.clear();

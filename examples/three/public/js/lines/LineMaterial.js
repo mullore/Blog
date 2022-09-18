@@ -36,7 +36,7 @@
 		} // todo FIX - maybe change to totalSize
 
 	};
-	THREE.ShaderLib[ 'line' ] = {
+	THREE.ShaderLib.line = {
 		uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib.common, THREE.UniformsLib.fog, THREE.UniformsLib.line ] ),
 		vertexShader:
   /* glsl */
@@ -439,9 +439,9 @@
 
 			super( {
 				type: 'LineMaterial',
-				uniforms: THREE.UniformsUtils.clone( THREE.ShaderLib[ 'line' ].uniforms ),
-				vertexShader: THREE.ShaderLib[ 'line' ].vertexShader,
-				fragmentShader: THREE.ShaderLib[ 'line' ].fragmentShader,
+				uniforms: THREE.UniformsUtils.clone( THREE.ShaderLib.line.uniforms ),
+				vertexShader: THREE.ShaderLib.line.vertexShader,
+				fragmentShader: THREE.ShaderLib.line.fragmentShader,
 				clipping: true // required for clipping support
 
 			} );

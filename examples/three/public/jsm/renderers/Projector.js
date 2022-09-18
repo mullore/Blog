@@ -126,32 +126,32 @@ class Projector {
 
 	constructor() {
 
-		let _object, _objectCount, _objectPoolLength = 0,
-			_vertex, _vertexCount, _vertexPoolLength = 0,
-			_face, _faceCount, _facePoolLength = 0,
-			_line, _lineCount, _linePoolLength = 0,
-			_sprite, _spriteCount, _spritePoolLength = 0,
-			_modelMatrix;
+		let _object; let _objectCount; let _objectPoolLength = 0;
+			let _vertex; let _vertexCount; let _vertexPoolLength = 0;
+			let _face; let _faceCount; let _facePoolLength = 0;
+			let _line; let _lineCount; let _linePoolLength = 0;
+			let _sprite; let _spriteCount; let _spritePoolLength = 0;
+			let _modelMatrix;
 
 		const
 
-			_renderData = { objects: [], lights: [], elements: [] },
+			_renderData = { objects: [], lights: [], elements: [] };
 
-			_vector3 = new Vector3(),
-			_vector4 = new Vector4(),
+			const _vector3 = new Vector3();
+			const _vector4 = new Vector4();
 
-			_clipBox = new Box3( new Vector3( - 1, - 1, - 1 ), new Vector3( 1, 1, 1 ) ),
-			_boundingBox = new Box3(),
-			_points3 = new Array( 3 ),
+			const _clipBox = new Box3( new Vector3( - 1, - 1, - 1 ), new Vector3( 1, 1, 1 ) );
+			const _boundingBox = new Box3();
+			const _points3 = new Array( 3 );
 
-			_viewMatrix = new Matrix4(),
-			_viewProjectionMatrix = new Matrix4(),
+			const _viewMatrix = new Matrix4();
+			const _viewProjectionMatrix = new Matrix4();
 
-			_modelViewProjectionMatrix = new Matrix4(),
+			const _modelViewProjectionMatrix = new Matrix4();
 
-			_frustum = new Frustum(),
+			const _frustum = new Frustum();
 
-			_objectPool = [], _vertexPool = [], _facePool = [], _linePool = [], _spritePool = [];
+			const _objectPool = []; const _vertexPool = []; const _facePool = []; const _linePool = []; const _spritePool = [];
 
 		//
 
@@ -891,15 +891,15 @@ class Projector {
 
 		function clipLine( s1, s2 ) {
 
-			let alpha1 = 0, alpha2 = 1;
+			let alpha1 = 0; let alpha2 = 1;
 
 			// Calculate the boundary coordinate of each vertex for the near and far clip planes,
 			// Z = -1 and Z = +1, respectively.
 
-			const bc1near = s1.z + s1.w,
-				bc2near = s2.z + s2.w,
-				bc1far = - s1.z + s1.w,
-				bc2far = - s2.z + s2.w;
+			const bc1near = s1.z + s1.w;
+				const bc2near = s2.z + s2.w;
+				const bc1far = - s1.z + s1.w;
+				const bc2far = - s2.z + s2.w;
 
 			if ( bc1near >= 0 && bc2near >= 0 && bc1far >= 0 && bc2far >= 0 ) {
 

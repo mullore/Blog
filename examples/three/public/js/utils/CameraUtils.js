@@ -1,20 +1,20 @@
 ( function () {
 
-	const _va = /*@__PURE__*/new THREE.Vector3(),
+	const _va = /* @__PURE__ */new THREE.Vector3();
 		// from pe to pa
-		_vb = /*@__PURE__*/new THREE.Vector3(),
+		const _vb = /* @__PURE__ */new THREE.Vector3();
 		// from pe to pb
-		_vc = /*@__PURE__*/new THREE.Vector3(),
+		const _vc = /* @__PURE__ */new THREE.Vector3();
 		// from pe to pc
-		_vr = /*@__PURE__*/new THREE.Vector3(),
+		const _vr = /* @__PURE__ */new THREE.Vector3();
 		// right axis of screen
-		_vu = /*@__PURE__*/new THREE.Vector3(),
+		const _vu = /* @__PURE__ */new THREE.Vector3();
 		// up axis of screen
-		_vn = /*@__PURE__*/new THREE.Vector3(),
+		const _vn = /* @__PURE__ */new THREE.Vector3();
 		// normal vector of screen
-		_vec = /*@__PURE__*/new THREE.Vector3(),
+		const _vec = /* @__PURE__ */new THREE.Vector3();
 		// temporary vector
-		_quat = /*@__PURE__*/new THREE.Quaternion(); // temporary quaternion
+		const _quat = /* @__PURE__ */new THREE.Quaternion(); // temporary quaternion
 
 	/** Set a PerspectiveCamera's projectionMatrix and quaternion
  * to exactly frame the corners of an arbitrary rectangle.
@@ -28,14 +28,14 @@
 
 	function frameCorners( camera, bottomLeftCorner, bottomRightCorner, topLeftCorner, estimateViewFrustum = false ) {
 
-		const pa = bottomLeftCorner,
-			pb = bottomRightCorner,
-			pc = topLeftCorner;
+		const pa = bottomLeftCorner;
+			const pb = bottomRightCorner;
+			const pc = topLeftCorner;
 		const pe = camera.position; // eye position
 
 		const n = camera.near; // distance of near clipping plane
 
-		const f = camera.far; //distance of far clipping plane
+		const f = camera.far; // distance of far clipping plane
 
 		_vr.copy( pb ).sub( pa ).normalize();
 

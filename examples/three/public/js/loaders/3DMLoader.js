@@ -108,7 +108,7 @@
 
 				if ( worker && taskID ) {
 
-					this._releaseTask( worker, taskID ); //this.debug();
+					this._releaseTask( worker, taskID ); // this.debug();
 
 				}
 
@@ -197,7 +197,7 @@
 				color: diffusecolor,
 				name: material.name,
 				side: 2,
-				transparent: material.transparency > 0 ? true : false,
+				transparent: material.transparency > 0,
 				opacity: 1.0 - material.transparency
 			} );
 			const textureLoader = new THREE.TextureLoader();
@@ -250,11 +250,11 @@
 			const instanceDefinitionObjects = [];
 			const instanceDefinitions = [];
 			const instanceReferences = [];
-			object.userData[ 'layers' ] = data.layers;
-			object.userData[ 'groups' ] = data.groups;
-			object.userData[ 'settings' ] = data.settings;
-			object.userData[ 'objectType' ] = 'File3dm';
-			object.userData[ 'materials' ] = null;
+			object.userData.layers = data.layers;
+			object.userData.groups = data.groups;
+			object.userData.settings = data.settings;
+			object.userData.objectType = 'File3dm';
+			object.userData.materials = null;
 			object.name = this.url;
 			let objects = data.objects;
 			const materials = data.materials;
@@ -369,7 +369,7 @@
 
 			}
 
-			object.userData[ 'materials' ] = this.materials;
+			object.userData.materials = this.materials;
 			return object;
 
 		}
@@ -409,8 +409,8 @@
 
 					material = this._compareMaterials( material );
 					const points = new THREE.Points( geometry, material );
-					points.userData[ 'attributes' ] = attributes;
-					points.userData[ 'objectType' ] = obj.objectType;
+					points.userData.attributes = attributes;
+					points.userData.objectType = obj.objectType;
 
 					if ( attributes.name ) {
 
@@ -443,8 +443,8 @@
 					const mesh = new THREE.Mesh( geometry, mat );
 					mesh.castShadow = attributes.castsShadows;
 					mesh.receiveShadow = attributes.receivesShadows;
-					mesh.userData[ 'attributes' ] = attributes;
-					mesh.userData[ 'objectType' ] = obj.objectType;
+					mesh.userData.attributes = attributes;
+					mesh.userData.objectType = obj.objectType;
 
 					if ( attributes.name ) {
 
@@ -463,8 +463,8 @@
 					} );
 					material = this._compareMaterials( material );
 					const lines = new THREE.Line( geometry, material );
-					lines.userData[ 'attributes' ] = attributes;
-					lines.userData[ 'objectType' ] = obj.objectType;
+					lines.userData.attributes = attributes;
+					lines.userData.objectType = obj.objectType;
 
 					if ( attributes.name ) {
 
@@ -506,8 +506,8 @@
 					const sprite = new THREE.Sprite( material );
 					sprite.position.set( geometry.point[ 0 ], geometry.point[ 1 ], geometry.point[ 2 ] );
 					sprite.scale.set( width / 10, height / 10, 1.0 );
-					sprite.userData[ 'attributes' ] = attributes;
-					sprite.userData[ 'objectType' ] = obj.objectType;
+					sprite.userData.attributes = attributes;
+					sprite.userData.objectType = obj.objectType;
 
 					if ( attributes.name ) {
 
@@ -572,8 +572,8 @@
 						_color = geometry.diffuse;
 						color = new THREE.Color( _color.r / 255.0, _color.g / 255.0, _color.b / 255.0 );
 						light.color = color;
-						light.userData[ 'attributes' ] = attributes;
-						light.userData[ 'objectType' ] = obj.objectType;
+						light.userData.attributes = attributes;
+						light.userData.objectType = obj.objectType;
 
 					}
 
@@ -606,7 +606,7 @@
 				} );
 				this.libraryPending = Promise.all( [ jsContent, binaryContent ] ).then( ( [ jsContent, binaryContent ] ) => {
 
-					//this.libraryBinary = binaryContent;
+					// this.libraryBinary = binaryContent;
 					this.libraryConfig.wasmBinary = binaryContent;
 					const fn = Rhino3dmWorker.toString();
 					const body = [ '/* rhino3dm.js */', jsContent, '/* worker */', fn.substring( fn.indexOf( '{' ) + 1, fn.lastIndexOf( '}' ) ) ].join( '\n' );
@@ -783,7 +783,7 @@
 			const views = [];
 			const namedViews = [];
 			const groups = [];
-			const strings = []; //Handle objects
+			const strings = []; // Handle objects
 
 			const objs = doc.objects();
 			const cnt = objs.count;
@@ -966,7 +966,7 @@
 			} // Handle settings
 
 
-			const settings = extractProperties( doc.settings() ); //TODO: Handle other document stuff like dimstyles, instance definitions, bitmaps etc.
+			const settings = extractProperties( doc.settings() ); // TODO: Handle other document stuff like dimstyles, instance definitions, bitmaps etc.
 			// Handle dimstyles
 			// console.log( `Dimstyle Count: ${doc.dimstyles().count()}` );
 			// Handle bitmaps
@@ -974,7 +974,7 @@
 			// Handle strings
 			// console.log( `Document Strings Count: ${doc.strings().count()}` );
 			// Note: doc.strings().documentUserTextCount() counts any doc.strings defined in a section
-			//console.log( `Document User Text Count: ${doc.strings().documentUserTextCount()}` );
+			// console.log( `Document User Text Count: ${doc.strings().documentUserTextCount()}` );
 
 			const strings_count = doc.strings().count();
 
@@ -1006,7 +1006,7 @@
 
 			let objectType = _geometry.objectType;
 			let geometry, attributes, position, data, mesh; // skip instance definition objects
-			//if( _attributes.isInstanceDefinitionObject ) { continue; }
+			// if( _attributes.isInstanceDefinitionObject ) { continue; }
 			// TODO: handle other geometry types
 
 			switch ( objectType ) {
@@ -1245,7 +1245,7 @@
 					}
 
 				} else { // these are functions that could be called to extract more data.
-					//console.log( `${property}: ${object[ property ].constructor.name}` );
+					// console.log( `${property}: ${object[ property ].constructor.name}` );
 				}
 
 			}

@@ -15,8 +15,8 @@ class UVTransformNode extends ExpressionNode {
 
 	generate( builder, output ) {
 
-		this.keywords[ 'uvNode' ] = this.uv;
-		this.keywords[ 'uvTransform' ] = this.position;
+		this.keywords.uvNode = this.uv;
+		this.keywords.uvTransform = this.position;
 
 		return super.generate( builder, output );
 

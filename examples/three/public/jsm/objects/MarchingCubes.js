@@ -94,9 +94,9 @@ class MarchingCubes extends Mesh {
 
 		};
 
-		///////////////////////
+		/// ////////////////////
 		// Polygonization
-		///////////////////////
+		/// ////////////////////
 
 		function lerp( a, b, t ) {
 
@@ -106,8 +106,8 @@ class MarchingCubes extends Mesh {
 
 		function VIntX( q, offset, isol, x, y, z, valp1, valp2, c_offset1, c_offset2 ) {
 
-			const mu = ( isol - valp1 ) / ( valp2 - valp1 ),
-				nc = scope.normal_cache;
+			const mu = ( isol - valp1 ) / ( valp2 - valp1 );
+				const nc = scope.normal_cache;
 
 			vlist[ offset + 0 ] = x + mu * scope.delta;
 			vlist[ offset + 1 ] = y;
@@ -125,8 +125,8 @@ class MarchingCubes extends Mesh {
 
 		function VIntY( q, offset, isol, x, y, z, valp1, valp2, c_offset1, c_offset2 ) {
 
-			const mu = ( isol - valp1 ) / ( valp2 - valp1 ),
-				nc = scope.normal_cache;
+			const mu = ( isol - valp1 ) / ( valp2 - valp1 );
+				const nc = scope.normal_cache;
 
 			vlist[ offset + 0 ] = x;
 			vlist[ offset + 1 ] = y + mu * scope.delta;
@@ -146,8 +146,8 @@ class MarchingCubes extends Mesh {
 
 		function VIntZ( q, offset, isol, x, y, z, valp1, valp2, c_offset1, c_offset2 ) {
 
-			const mu = ( isol - valp1 ) / ( valp2 - valp1 ),
-				nc = scope.normal_cache;
+			const mu = ( isol - valp1 ) / ( valp2 - valp1 );
+				const nc = scope.normal_cache;
 
 			vlist[ offset + 0 ] = x;
 			vlist[ offset + 1 ] = y;
@@ -187,23 +187,23 @@ class MarchingCubes extends Mesh {
 		function polygonize( fx, fy, fz, q, isol ) {
 
 			// cache indices
-			const q1 = q + 1,
-				qy = q + scope.yd,
-				qz = q + scope.zd,
-				q1y = q1 + scope.yd,
-				q1z = q1 + scope.zd,
-				qyz = q + scope.yd + scope.zd,
-				q1yz = q1 + scope.yd + scope.zd;
+			const q1 = q + 1;
+				const qy = q + scope.yd;
+				const qz = q + scope.zd;
+				const q1y = q1 + scope.yd;
+				const q1z = q1 + scope.zd;
+				const qyz = q + scope.yd + scope.zd;
+				const q1yz = q1 + scope.yd + scope.zd;
 
 			let cubeindex = 0;
-			const field0 = scope.field[ q ],
-				field1 = scope.field[ q1 ],
-				field2 = scope.field[ qy ],
-				field3 = scope.field[ q1y ],
-				field4 = scope.field[ qz ],
-				field5 = scope.field[ q1z ],
-				field6 = scope.field[ qyz ],
-				field7 = scope.field[ q1yz ];
+			const field0 = scope.field[ q ];
+				const field1 = scope.field[ q1 ];
+				const field2 = scope.field[ qy ];
+				const field3 = scope.field[ q1y ];
+				const field4 = scope.field[ qz ];
+				const field5 = scope.field[ q1z ];
+				const field6 = scope.field[ qyz ];
+				const field7 = scope.field[ q1yz ];
 
 			if ( field0 < isol ) cubeindex |= 1;
 			if ( field1 < isol ) cubeindex |= 2;
@@ -219,10 +219,10 @@ class MarchingCubes extends Mesh {
 			const bits = edgeTable[ cubeindex ];
 			if ( bits === 0 ) return 0;
 
-			const d = scope.delta,
-				fx2 = fx + d,
-				fy2 = fy + d,
-				fz2 = fz + d;
+			const d = scope.delta;
+				const fx2 = fx + d;
+				const fy2 = fy + d;
+				const fz2 = fz + d;
 
 			// top of the cube
 
@@ -360,11 +360,11 @@ class MarchingCubes extends Mesh {
 
 			cubeindex <<= 4; // re-purpose cubeindex into an offset into triTable
 
-			let o1,
-				o2,
-				o3,
-				numtris = 0,
-				i = 0;
+			let o1;
+				let o2;
+				let o3;
+				let numtris = 0;
+				let i = 0;
 
 			// here is where triangles are created
 
@@ -485,9 +485,9 @@ class MarchingCubes extends Mesh {
 
 		}
 
-		/////////////////////////////////////
+		/// //////////////////////////////////
 		// Metaballs
-		/////////////////////////////////////
+		/// //////////////////////////////////
 
 		// Adds a reciprocal ball (nice and blobby) that, to be fast, fades to zero after
 		// a fixed distance, determined by strength and subtract.
@@ -529,10 +529,10 @@ class MarchingCubes extends Mesh {
 			// radius^2 = strength / subtract
 			// radius = sqrt(strength / subtract)
 
-			const radius = this.size * Math.sqrt( strength / subtract ),
-				zs = ballz * this.size,
-				ys = bally * this.size,
-				xs = ballx * this.size;
+			const radius = this.size * Math.sqrt( strength / subtract );
+				const zs = ballz * this.size;
+				const ys = bally * this.size;
+				const xs = ballx * this.size;
 
 			let min_z = Math.floor( zs - radius );
 			if ( min_z < 1 ) min_z = 1;
@@ -595,19 +595,19 @@ class MarchingCubes extends Mesh {
 		this.addPlaneX = function ( strength, subtract ) {
 
 			// cache attribute lookups
-			const size = this.size,
-				yd = this.yd,
-				zd = this.zd,
-				field = this.field;
+			const size = this.size;
+				const yd = this.yd;
+				const zd = this.zd;
+				const field = this.field;
 
-			let x,
-				y,
-				z,
-				xx,
-				val,
-				xdiv,
-				cxy,
-				dist = size * Math.sqrt( strength / subtract );
+			let x;
+				let y;
+				let z;
+				let xx;
+				let val;
+				let xdiv;
+				let cxy;
+				let dist = size * Math.sqrt( strength / subtract );
 
 			if ( dist > size ) dist = size;
 
@@ -640,20 +640,20 @@ class MarchingCubes extends Mesh {
 		this.addPlaneY = function ( strength, subtract ) {
 
 			// cache attribute lookups
-			const size = this.size,
-				yd = this.yd,
-				zd = this.zd,
-				field = this.field;
+			const size = this.size;
+				const yd = this.yd;
+				const zd = this.zd;
+				const field = this.field;
 
-			let x,
-				y,
-				z,
-				yy,
-				val,
-				ydiv,
-				cy,
-				cxy,
-				dist = size * Math.sqrt( strength / subtract );
+			let x;
+				let y;
+				let z;
+				let yy;
+				let val;
+				let ydiv;
+				let cy;
+				let cxy;
+				let dist = size * Math.sqrt( strength / subtract );
 
 			if ( dist > size ) dist = size;
 
@@ -685,20 +685,20 @@ class MarchingCubes extends Mesh {
 
 			// cache attribute lookups
 
-			const size = this.size,
-				yd = this.yd,
-				zd = this.zd,
-				field = this.field;
+			const size = this.size;
+				const yd = this.yd;
+				const zd = this.zd;
+				const field = this.field;
 
-			let x,
-				y,
-				z,
-				zz,
-				val,
-				zdiv,
-				cz,
-				cyz,
-				dist = size * Math.sqrt( strength / subtract );
+			let x;
+				let y;
+				let z;
+				let zz;
+				let val;
+				let zdiv;
+				let cz;
+				let cyz;
+				let dist = size * Math.sqrt( strength / subtract );
 
 			if ( dist > size ) dist = size;
 
@@ -725,9 +725,9 @@ class MarchingCubes extends Mesh {
 
 		};
 
-		/////////////////////////////////////
+		/// //////////////////////////////////
 		// Updates
-		/////////////////////////////////////
+		/// //////////////////////////////////
 
 		this.setCell = function ( x, y, z, value ) {
 
@@ -823,16 +823,16 @@ class MarchingCubes extends Mesh {
 			for ( let z = 1; z < smin2; z ++ ) {
 
 				const z_offset = this.size2 * z;
-				const fz = ( z - this.halfsize ) / this.halfsize; //+ 1
+				const fz = ( z - this.halfsize ) / this.halfsize; // + 1
 
 				for ( let y = 1; y < smin2; y ++ ) {
 
 					const y_offset = z_offset + this.size * y;
-					const fy = ( y - this.halfsize ) / this.halfsize; //+ 1
+					const fy = ( y - this.halfsize ) / this.halfsize; // + 1
 
 					for ( let x = 1; x < smin2; x ++ ) {
 
-						const fx = ( x - this.halfsize ) / this.halfsize; //+ 1
+						const fx = ( x - this.halfsize ) / this.halfsize; // + 1
 						const q = y_offset + x;
 
 						 polygonize( fx, fy, fz, q, this.isolation );
@@ -873,9 +873,9 @@ class MarchingCubes extends Mesh {
 
 MarchingCubes.prototype.isMarchingCubes = true;
 
-/////////////////////////////////////
+/// //////////////////////////////////
 // Marching cubes lookup tables
-/////////////////////////////////////
+/// //////////////////////////////////
 
 // These tables are straight from Paul Bourke's page:
 // http://paulbourke.net/geometry/polygonise/

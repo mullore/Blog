@@ -454,7 +454,7 @@ class WebGPUNodeBuilder extends NodeBuilder {
 
 			if ( shaderStage === 'vertex' ) {
 
-				this.bindingsOffset[ 'fragment' ] = bindings.length;
+				this.bindingsOffset.fragment = bindings.length;
 
 			}
 

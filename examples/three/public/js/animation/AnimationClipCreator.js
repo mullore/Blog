@@ -4,8 +4,8 @@
 
 		static CreateRotationAnimation( period, axis = 'x' ) {
 
-			const times = [ 0, period ],
-				values = [ 0, 360 ];
+			const times = [ 0, period ];
+				const values = [ 0, 360 ];
 			const trackName = '.rotation[' + axis + ']';
 			const track = new THREE.NumberKeyframeTrack( trackName, times, values );
 			return new THREE.AnimationClip( null, period, [ track ] );
@@ -14,8 +14,8 @@
 
 		static CreateScaleAxisAnimation( period, axis = 'x' ) {
 
-			const times = [ 0, period ],
-				values = [ 0, 1 ];
+			const times = [ 0, period ];
+				const values = [ 0, 1 ];
 			const trackName = '.scale[' + axis + ']';
 			const track = new THREE.NumberKeyframeTrack( trackName, times, values );
 			return new THREE.AnimationClip( null, period, [ track ] );
@@ -24,9 +24,9 @@
 
 		static CreateShakeAnimation( duration, shakeScale ) {
 
-			const times = [],
-				values = [],
-				tmp = new THREE.Vector3();
+			const times = [];
+				const values = [];
+				const tmp = new THREE.Vector3();
 
 			for ( let i = 0; i < duration * 10; i ++ ) {
 
@@ -43,9 +43,9 @@
 
 		static CreatePulsationAnimation( duration, pulseScale ) {
 
-			const times = [],
-				values = [],
-				tmp = new THREE.Vector3();
+			const times = [];
+				const values = [];
+				const tmp = new THREE.Vector3();
 
 			for ( let i = 0; i < duration * 10; i ++ ) {
 
@@ -63,8 +63,8 @@
 
 		static CreateVisibilityAnimation( duration ) {
 
-			const times = [ 0, duration / 2, duration ],
-				values = [ true, false, true ];
+			const times = [ 0, duration / 2, duration ];
+				const values = [ true, false, true ];
 			const trackName = '.visible';
 			const track = new THREE.BooleanKeyframeTrack( trackName, times, values );
 			return new THREE.AnimationClip( null, duration, [ track ] );
@@ -73,9 +73,9 @@
 
 		static CreateMaterialColorAnimation( duration, colors ) {
 
-			const times = [],
-				values = [],
-				timeStep = duration / colors.length;
+			const times = [];
+				const values = [];
+				const timeStep = duration / colors.length;
 
 			for ( let i = 0; i <= colors.length; i ++ ) {
 

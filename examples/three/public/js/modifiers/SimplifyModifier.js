@@ -8,8 +8,8 @@
  *    - http://www.melax.com/polychop/
  */
 
-	const _cb = new THREE.Vector3(),
-		_ab = new THREE.Vector3();
+	const _cb = new THREE.Vector3();
+		const _ab = new THREE.Vector3();
 
 	class SimplifyModifier {
 

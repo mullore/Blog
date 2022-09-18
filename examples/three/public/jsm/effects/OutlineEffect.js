@@ -91,7 +91,7 @@ class OutlineEffect {
 		// save before render and release after render.
 		const originalOnBeforeRenders = {};
 
-		//this.cache = cache;  // for debug
+		// this.cache = cache;  // for debug
 
 		const uniformsOutline = {
 			outlineThickness: { value: defaultThickness },
@@ -178,8 +178,8 @@ class OutlineEffect {
 			return new ShaderMaterial( {
 				type: 'OutlineEffect',
 				uniforms: UniformsUtils.merge( [
-					UniformsLib[ 'fog' ],
-					UniformsLib[ 'displacementmap' ],
+					UniformsLib.fog,
+					UniformsLib.displacementmap,
 					uniformsOutline
 				] ),
 				vertexShader: vertexShader,

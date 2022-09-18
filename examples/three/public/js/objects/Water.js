@@ -41,7 +41,7 @@
 			const mirrorCamera = new THREE.PerspectiveCamera();
 			const renderTarget = new THREE.WebGLRenderTarget( textureWidth, textureHeight );
 			const mirrorShader = {
-				uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib[ 'fog' ], THREE.UniformsLib[ 'lights' ], {
+				uniforms: THREE.UniformsUtils.merge( [ THREE.UniformsLib.fog, THREE.UniformsLib.lights, {
 					'normalSampler': {
 						value: null
 					},
@@ -186,16 +186,16 @@
 				side: side,
 				fog: fog
 			} );
-			material.uniforms[ 'mirrorSampler' ].value = renderTarget.texture;
-			material.uniforms[ 'textureMatrix' ].value = textureMatrix;
-			material.uniforms[ 'alpha' ].value = alpha;
-			material.uniforms[ 'time' ].value = time;
-			material.uniforms[ 'normalSampler' ].value = normalSampler;
-			material.uniforms[ 'sunColor' ].value = sunColor;
-			material.uniforms[ 'waterColor' ].value = waterColor;
-			material.uniforms[ 'sunDirection' ].value = sunDirection;
-			material.uniforms[ 'distortionScale' ].value = distortionScale;
-			material.uniforms[ 'eye' ].value = eye;
+			material.uniforms.mirrorSampler.value = renderTarget.texture;
+			material.uniforms.textureMatrix.value = textureMatrix;
+			material.uniforms.alpha.value = alpha;
+			material.uniforms.time.value = time;
+			material.uniforms.normalSampler.value = normalSampler;
+			material.uniforms.sunColor.value = sunColor;
+			material.uniforms.waterColor.value = waterColor;
+			material.uniforms.sunDirection.value = sunDirection;
+			material.uniforms.distortionScale.value = distortionScale;
+			material.uniforms.eye.value = eye;
 			scope.material = material;
 
 			scope.onBeforeRender = function ( renderer, scene, camera ) {

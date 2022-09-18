@@ -282,7 +282,7 @@
 		}
 
 		parseMaterialLwo2( materialData, name
-			/*, textures*/
+			/*, textures */
 		) {
 
 			let params = {
@@ -534,7 +534,7 @@
 		}
 
 		parsePhysicalAttributes( params, attributes
-			/*, maps*/
+			/*, maps */
 		) {
 
 			if ( attributes.Clearcoat && attributes.Clearcoat.value > 0 ) {

@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import qiankun from 'vite-plugin-qiankun';
-const useDevMode = true
+const useDevMode = true;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,4 +19,4 @@ export default defineConfig({
     origin: 'http://localhost:8081'
   },
 
-})
+});

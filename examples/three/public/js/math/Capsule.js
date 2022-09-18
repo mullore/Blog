@@ -73,11 +73,11 @@
 
 			const w = _v3.copy( line2.start ).sub( line1.start );
 
-			const a = r.dot( s ),
-				b = r.dot( r ),
-				c = s.dot( s ),
-				d = s.dot( w ),
-				e = r.dot( w );
+			const a = r.dot( s );
+				const b = r.dot( r );
+				const c = s.dot( s );
+				const d = s.dot( w );
+				const e = r.dot( w );
 			let t1, t2;
 			const divisor = b * c - a * a;
 

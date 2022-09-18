@@ -81,7 +81,7 @@ class ConvexHull {
 				if ( geometry.isGeometry ) {
 
 					console.error( 'THREE.ConvexHull no longer supports Geometry. Use THREE.BufferGeometry instead.' );
-					return;
+					
 
 				} else if ( geometry.isBufferGeometry ) {
 
@@ -705,7 +705,7 @@ class ConvexHull {
 
 		if ( this.assigned.isEmpty() === false ) {
 
-			let eyeVertex, maxDistance = 0;
+			let eyeVertex; let maxDistance = 0;
 
 			// grap the first available face and start with the first visible vertex of that face
 

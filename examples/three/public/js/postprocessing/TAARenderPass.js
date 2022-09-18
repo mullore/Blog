@@ -61,8 +61,8 @@
 
 			if ( this.accumulateIndex >= 0 && this.accumulateIndex < jitterOffsets.length ) {
 
-				this.copyUniforms[ 'opacity' ].value = sampleWeight;
-				this.copyUniforms[ 'tDiffuse' ].value = writeBuffer.texture; // render the scene multiple times, each slightly jitter offset from the last and accumulate the results.
+				this.copyUniforms.opacity.value = sampleWeight;
+				this.copyUniforms.tDiffuse.value = writeBuffer.texture; // render the scene multiple times, each slightly jitter offset from the last and accumulate the results.
 
 				const numSamplesPerFrame = Math.pow( 2, this.sampleLevel );
 
@@ -97,8 +97,8 @@
 
 			if ( accumulationWeight > 0 ) {
 
-				this.copyUniforms[ 'opacity' ].value = 1.0;
-				this.copyUniforms[ 'tDiffuse' ].value = this.sampleRenderTarget.texture;
+				this.copyUniforms.opacity.value = 1.0;
+				this.copyUniforms.tDiffuse.value = this.sampleRenderTarget.texture;
 				renderer.setRenderTarget( writeBuffer );
 				renderer.clear();
 				this.fsQuad.render( renderer );
@@ -107,8 +107,8 @@
 
 			if ( accumulationWeight < 1.0 ) {
 
-				this.copyUniforms[ 'opacity' ].value = 1.0 - accumulationWeight;
-				this.copyUniforms[ 'tDiffuse' ].value = this.holdRenderTarget.texture;
+				this.copyUniforms.opacity.value = 1.0 - accumulationWeight;
+				this.copyUniforms.tDiffuse.value = this.holdRenderTarget.texture;
 				renderer.setRenderTarget( writeBuffer );
 				if ( accumulationWeight === 0 ) renderer.clear();
 				this.fsQuad.render( renderer );

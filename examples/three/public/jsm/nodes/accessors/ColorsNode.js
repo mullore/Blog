@@ -1,7 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
 
-var vertexDict = [ 'color', 'color2' ],
-	fragmentDict = [ 'vColor', 'vColor2' ];
+var vertexDict = [ 'color', 'color2' ];
+	var fragmentDict = [ 'vColor', 'vColor2' ];
 
 class ColorsNode extends TempNode {
 
